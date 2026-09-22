@@ -1,148 +1,137 @@
 @extends('layouts.app')
 
-@section('title', 'Form Registrasi Peserta - Kadin 2026')
-
 @section('content')
-<div class="max-w-2xl mx-auto">
-    <!-- Header Page -->
-    <div class="mb-6">
-        <div class="inline-block px-2.5 py-1 bg-blue-100 text-blue-800 font-bold text-xs uppercase tracking-wider mb-2 rounded-none">
-            Registrasi Kehadiran
+<div class="min-h-screen bg-slate-950 py-10 px-4 sm:px-6 lg:px-8 flex flex-col justify-center items-center">
+    <div class="w-full max-w-xl">
+        <!-- Header Brand & Title -->
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-14 h-14 rounded-lg bg-blue-600 text-white font-bold text-xl mb-3 shadow-md">
+                KADIN
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">Form Pendaftaran Peserta</h1>
+            <p class="text-sm text-slate-400 mt-1.5">Silakan isi data diri Anda di bawah ini dengan benar</p>
         </div>
-        <h1 class="text-2xl font-black text-slate-900 tracking-tight">Form Pendaftaran Peserta Kadin 2026</h1>
-        <p class="text-sm text-slate-600 mt-1">
-            Silakan lengkapi formulir di bawah ini. Tiket QR Code dan konfirmasi kehadiran akan disiapkan untuk blast WhatsApp.
-        </p>
-    </div>
 
-    <!-- Card Form Solid Flat -->
-    <div class="bg-white border border-slate-300 rounded-none p-6 sm:p-8 shadow-none">
-        <form action="{{ route('participants.store') }}" method="POST" class="space-y-5">
-            @csrf
-
-            <!-- Field 1: Nama Lengkap -->
-            <div>
-                <label for="name" class="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1.5">
-                    Nama Lengkap <span class="text-rose-600">*</span>
-                </label>
-                <input 
-                    type="text" 
-                    name="name" 
-                    id="name" 
-                    value="{{ old('name') }}" 
-                    placeholder="Contoh: Budi Santoso, S.E."
-                    required
-                    class="w-full px-3.5 py-2.5 bg-slate-50 border {{ $errors->has('name') ? 'border-rose-500 bg-rose-50/50' : 'border-slate-300' }} text-slate-900 text-sm rounded-none focus:outline-none focus:ring-1 focus:ring-blue-700 focus:border-blue-700 transition"
-                >
-                @error('name')
-                    <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p>
-                @enderror
+        <!-- Alert Error / Success -->
+        @if(session('success'))
+            <div class="mb-5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-4 py-3 rounded-lg text-sm">
+                {{ session('success') }}
             </div>
+        @endif
 
-            <!-- Field 2: Email -->
-            <div>
-                <label for="email" class="block text-xs font-bold text-slate-800 uppercase tracking-wider mb-1.5">
-                    Alamat Email <span class="text-rose-600">*</span>
-                </label>
-                <input 
-                    type="email" 
-                    name="email" 
-                    id="email" 
-                    value="{{ old('email') }}" 
-                    placeholder="nama@perusahaan.com"
-                    required
-                    class="w-full px-3.5 py-2.5 bg-slate-50 border {{ $errors->has('email') ? 'border-rose-500 bg-rose-50/50' : 'border-slate-300' }} text-slate-900 text-sm rounded-none focus:outline-none focus:ring-1 focus:ring-blue-700 focus:border-blue-700 transition"
-                >
-                @error('email')
-                    <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p>
-                @enderror
+        @if($errors->any())
+            <div class="mb-5 bg-rose-500/10 border border-rose-500/30 text-rose-400 px-4 py-3 rounded-lg text-sm">
+                <ul class="list-disc list-inside space-y-1">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
             </div>
+        @endif
 
-            <!-- Field 3: Nomor WhatsApp / Telepon -->
-            <div>
-                <div class="flex items-center justify-between mb-1.5">
-                    <label for="phone_number" class="block text-xs font-bold text-slate-800 uppercase tracking-wider">
-                        Nomor WhatsApp / Telepon <span class="text-rose-600">*</span>
+        <!-- Card Form Halus -->
+        <div class="bg-slate-900 border border-slate-800 rounded-xl shadow-2xl p-6 sm:p-8 space-y-5">
+            <form action="{{ route('participants.store') }}" method="POST" class="space-y-5">
+                @csrf
+
+                <!-- Nama Lengkap -->
+                <div>
+                    <label for="name" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+                        Nama Lengkap <span class="text-rose-400">*</span>
                     </label>
-                    <span class="text-[11px] font-semibold text-emerald-700">Untuk blast WA</span>
-                </div>
-                <div class="relative">
                     <input 
                         type="text" 
-                        name="phone_number" 
-                        id="phone_number" 
-                        value="{{ old('phone_number') }}" 
-                        placeholder="Contoh: 08123456789 atau 628123456789"
-                        required
-                        class="w-full px-3.5 py-2.5 bg-slate-50 border {{ $errors->has('phone_number') ? 'border-rose-500 bg-rose-50/50' : 'border-slate-300' }} text-slate-900 text-sm rounded-none focus:outline-none focus:ring-1 focus:ring-blue-700 focus:border-blue-700 transition"
+                        name="name" 
+                        id="name" 
+                        value="{{ old('name') }}" 
+                        required 
+                        placeholder="Contoh: Budi Santoso, S.E."
+                        class="w-full px-4 py-2.5 bg-slate-950/70 border border-slate-700/80 rounded-lg text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
                     >
                 </div>
-                <p class="mt-1 text-xs text-slate-500">Nomor ini akan digunakan sebagai target pengiriman tiket QR via WhatsApp.</p>
-                @error('phone_number')
-                    <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p>
-                @enderror
-            </div>
 
-            <!-- Field 4: Instansi / Perusahaan / Jabatan (Opsional) -->
-            <div>
-                <div class="flex items-center justify-between mb-1.5">
-                    <label for="institution" class="block text-xs font-bold text-slate-800 uppercase tracking-wider">
-                        Instansi / Perusahaan / Jabatan
+                <!-- Instansi / Perusahaan -->
+                <div>
+                    <label for="company" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+                        Instansi / Perusahaan <span class="text-rose-400">*</span>
                     </label>
-                    <span class="text-[11px] text-slate-400 font-medium">(Opsional)</span>
+                    <input 
+                        type="text" 
+                        name="company" 
+                        id="company" 
+                        value="{{ old('company') }}" 
+                        required 
+                        placeholder="Nama instansi, organisasi, atau perusahaan"
+                        class="w-full px-4 py-2.5 bg-slate-950/70 border border-slate-700/80 rounded-lg text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                    >
                 </div>
-                <input 
-                    type="text" 
-                    name="institution" 
-                    id="institution" 
-                    value="{{ old('institution') }}" 
-                    placeholder="Contoh: PT Sumber Rezeki / Bidang Perdagangan"
-                    class="w-full px-3.5 py-2.5 bg-slate-50 border {{ $errors->has('institution') ? 'border-rose-500' : 'border-slate-300' }} text-slate-900 text-sm rounded-none focus:outline-none focus:ring-1 focus:ring-blue-700 focus:border-blue-700 transition"
-                >
-                @error('institution')
-                    <p class="mt-1 text-xs text-rose-600 font-medium">{{ $message }}</p>
-                @enderror
-            </div>
 
-            <!-- Field 5: Catatan Tambahan (Opsional) -->
-            <div>
-                <div class="flex items-center justify-between mb-1.5">
-                    <label for="notes" class="block text-xs font-bold text-slate-800 uppercase tracking-wider">
-                        Catatan Tambahan
+                <!-- Jabatan -->
+                <div>
+                    <label for="position" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+                        Jabatan / Posisi <span class="text-rose-400">*</span>
                     </label>
-                    <span class="text-[11px] text-slate-400 font-medium">(Opsional)</span>
+                    <input 
+                        type="text" 
+                        name="position" 
+                        id="position" 
+                        value="{{ old('position') }}" 
+                        required 
+                        placeholder="Contoh: Direktur Utama / Staf Ahli"
+                        class="w-full px-4 py-2.5 bg-slate-950/70 border border-slate-700/80 rounded-lg text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                    >
                 </div>
-                <textarea 
-                    name="notes" 
-                    id="notes" 
-                    rows="2" 
-                    placeholder="Tambahkan keterangan jika ada..."
-                    class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 text-slate-900 text-sm rounded-none focus:outline-none focus:ring-1 focus:ring-blue-700 focus:border-blue-700 transition"
-                >{{ old('notes') }}</textarea>
-            </div>
 
-            <!-- Notice Box Flat -->
-            <div class="p-3 bg-blue-50 border border-blue-200 text-xs text-blue-900 flex items-start space-x-2">
-                <svg class="w-4 h-4 text-blue-700 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span>Setelah pendaftaran disimpan, sistem akan langsung membuat <strong>Tiket QR Code</strong> resmi yang siap di-blast ke WhatsApp peserta.</span>
-            </div>
+                <!-- Grid Kontak (WhatsApp & Email) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="phone" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+                            Nomor WhatsApp <span class="text-rose-400">*</span>
+                        </label>
+                        <input 
+                            type="tel" 
+                            name="phone" 
+                            id="phone" 
+                            value="{{ old('phone') }}" 
+                            required 
+                            placeholder="081234567890"
+                            class="w-full px-4 py-2.5 bg-slate-950/70 border border-slate-700/80 rounded-lg text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                        >
+                    </div>
 
-            <!-- Submit Button -->
-            <div class="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3">
-                <button 
-                    type="submit" 
-                    class="w-full sm:w-auto px-6 py-3 bg-blue-700 hover:bg-blue-800 text-white font-bold text-sm uppercase tracking-wider rounded-none border border-blue-800 cursor-pointer transition shadow-none"
-                >
-                    Simpan & Buat Tiket QR
-                </button>
+                    <div>
+                        <label for="email" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
+                            Email <span class="text-slate-500 font-normal lowercase">(opsional)</span>
+                        </label>
+                        <input 
+                            type="email" 
+                            name="email" 
+                            id="email" 
+                            value="{{ old('email') }}" 
+                            placeholder="nama@perusahaan.com"
+                            class="w-full px-4 py-2.5 bg-slate-950/70 border border-slate-700/80 rounded-lg text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                        >
+                    </div>
+                </div>
 
-                <a href="{{ route('participants.index') }}" class="text-xs font-bold text-slate-600 hover:text-slate-900 uppercase tracking-wider underline">
-                    Lihat Daftar Peserta →
-                </a>
-            </div>
-        </form>
+                <!-- Tombol Submit -->
+                <div class="pt-3">
+                    <button 
+                        type="submit" 
+                        class="w-full py-3 px-4 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-semibold text-sm rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900 transition-all duration-150 flex items-center justify-center gap-2"
+                    >
+                        <span>Kirim Pendaftaran</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <p class="text-center text-xs text-slate-500 mt-6">
+            &copy; {{ date('Y') }} KADIN. Hak Cipta Dilindungi.
+        </p>
     </div>
 </div>
 @endsection
