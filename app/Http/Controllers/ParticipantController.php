@@ -169,6 +169,26 @@ class ParticipantController extends Controller
 
         return redirect()->back()->with('success', 'Data peserta berhasil dihapus.');
     }
+
+    /**
+     * Endpoint raw image PNG QR Code untuk media Twilio WhatsApp
+     */
+    public function qrImage(string $token)
+    {
+        $participant = Participant::where('qr_token', $token)->firstOrFail();
+        $qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=" . urlencode($participant->qr_token);
+
+        try {
+            $imageContent = \Illuminate\Support\Facades\Http::timeout(5)->get($qrUrl)->body();
+            return response($imageContent, 200, [
+                'Content-Type' => 'image/png',
+                'Cache-Control' => 'public, max-age=86400',
+            ]);
+        } catch (\Throwable $e) {
+            return redirect($qrUrl);
+        }
+    }
 }
+
 
 

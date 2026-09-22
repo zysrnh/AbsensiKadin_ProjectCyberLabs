@@ -1,8 +1,10 @@
 @extends('layouts.admin')
 
 @section('title', 'Dashboard Pendaftar - Kadin 2026')
+@section('page_title', 'Dashboard Pendaftar')
 
 @section('content')
+
 <div class="space-y-6">
 
     <!-- Top Header & Action Buttons -->
@@ -235,29 +237,39 @@
                         <td class="py-3.5 px-4 text-center">
                             <div class="flex items-center justify-center space-x-1.5">
                                 
-                                <!-- Blast WhatsApp Button -->
+                                <!-- Blast WhatsApp Web Button -->
                                 <a 
                                     href="{{ $item->whatsapp_blast_url }}" 
                                     target="_blank" 
                                     rel="noopener noreferrer"
-                                    class="px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-[11px] rounded-sm transition-colors flex items-center space-x-1 shadow-2xs"
-                                    title="Kirim tiket QR ke WhatsApp peserta ini"
+                                    class="px-2 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-[11px] rounded-sm transition-colors flex items-center space-x-1 shadow-2xs"
+                                    title="Kirim via WhatsApp Web manual"
                                 >
-                                    <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-                                        <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.299.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.353.101.173.45 0.742.966 1.202.664.591 1.224.774 1.397.86.173.086.275.072.376-.044.101-.116.433-.506.549-.68.116-.173.231-.144.39-.086.159.058 1.011.477 1.184.564.173.087.289.13.332.202.043.073.043.419-.101.824z"/>
-                                    </svg>
-                                    <span>Blast WA</span>
+                                    <span>WA Web</span>
                                 </a>
+
+                                <!-- Kirim via Twilio API -->
+                                <form action="{{ route('admin.participants.twilio', $item) }}" method="POST" class="inline" onsubmit="return confirmTwilio(event, '{{ $item->name }}')">
+                                    @csrf
+                                    <button 
+                                        type="submit" 
+                                        class="px-2 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-medium text-[11px] rounded-sm transition-colors flex items-center space-x-1 shadow-2xs cursor-pointer"
+                                        title="Kirim WhatsApp otomatis via API Twilio"
+                                    >
+                                        <span>Twilio</span>
+                                    </button>
+                                </form>
 
                                 <!-- Buka Tiket QR -->
                                 <a 
                                     href="{{ route('participants.card', $item->qr_token) }}" 
                                     target="_blank"
-                                    class="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-medium text-[11px] rounded-sm border border-slate-300 transition-colors"
+                                    class="px-2 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-medium text-[11px] rounded-sm border border-slate-300 transition-colors"
                                     title="Lihat Tiket QR"
                                 >
                                     Tiket QR
                                 </a>
+
 
                                 <!-- Hapus Button -->
                                 <form action="{{ route('admin.participants.destroy', $item) }}" method="POST" onsubmit="return confirmDelete(event, '{{ $item->name }}')">
@@ -309,6 +321,31 @@
             confirmButtonColor: '#0f172a',
             cancelButtonColor: '#64748b',
             confirmButtonText: 'Ya, Hapus',
+            cancelButtonText: 'Batal',
+            customClass: {
+                popup: 'rounded-sm border border-slate-200',
+                confirmButton: 'rounded-sm font-semibold text-xs',
+                cancelButton: 'rounded-sm font-semibold text-xs'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+        return false;
+    }
+
+    function confirmTwilio(e, name) {
+        e.preventDefault();
+        const form = e.target;
+        Swal.fire({
+            title: 'Kirim via Twilio?',
+            text: `Kirim pesan WhatsApp presensi ke "${name}" via API Twilio?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#2563eb',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Ya, Kirim Twilio',
             cancelButtonText: 'Batal',
             customClass: {
                 popup: 'rounded-sm border border-slate-200',
