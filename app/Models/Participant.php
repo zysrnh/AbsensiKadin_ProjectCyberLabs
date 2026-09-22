@@ -11,9 +11,10 @@ class Participant extends Model
 
     protected $fillable = [
         'name',
+        'company',
+        'position',
+        'phone',
         'email',
-        'phone_number',
-        'institution',
         'qr_token',
         'status',
         'attended_at',
@@ -25,19 +26,20 @@ class Participant extends Model
     ];
 
     /**
-     * Konversi nomor HP ke format internasional WhatsApp (628xxx)
+     * Konversi nomor HP/WA ke format internasional (628xxx)
      */
     public function getFormattedPhoneAttribute(): string
     {
-        $phone = preg_replace('/[^0-9]/', '', (string)$this->phone_number);
+        $raw = (string)($this->phone ?? $this->phone_number ?? '');
+        $digits = preg_replace('/[^0-9]/', '', $raw);
 
-        if (str_starts_with($phone, '0')) {
-            $phone = '62' . substr($phone, 1);
-        } elseif (str_starts_with($phone, '8')) {
-            $phone = '62' . $phone;
+        if (str_starts_with($digits, '0')) {
+            $digits = '62' . substr($digits, 1);
+        } elseif (str_starts_with($digits, '8')) {
+            $digits = '62' . $digits;
         }
 
-        return $phone;
+        return $digits;
     }
 
     /**
@@ -59,4 +61,5 @@ class Participant extends Model
         return "https://wa.me/{$phone}?text=" . rawurlencode($text);
     }
 }
+
 

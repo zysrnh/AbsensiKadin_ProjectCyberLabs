@@ -1,27 +1,31 @@
 @extends('layouts.app')
 
+@section('title', 'Pendaftaran Peserta - Kadin 2026')
+
 @section('content')
-<div class="min-h-screen bg-slate-950 py-10 px-4 sm:px-6 lg:px-8 flex flex-col justify-center items-center">
-    <div class="w-full max-w-xl">
-        <!-- Header Brand & Title -->
-        <div class="text-center mb-8">
-            <div class="inline-flex items-center justify-center w-14 h-14 rounded-lg bg-blue-600 text-white font-bold text-xl mb-3 shadow-md">
-                KADIN
+<div class="py-10 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-xl mx-auto">
+        
+        <!-- Header Form Resmi & Bersih -->
+        <div class="mb-6 text-center">
+            <div class="inline-flex items-center gap-2 px-3 py-1 bg-slate-100 border border-slate-200 rounded-sm mb-3">
+                <span class="w-2 h-2 rounded-full bg-emerald-600"></span>
+                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-700">Registrasi Kegiatan Kadin 2026</span>
             </div>
-            <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">Form Pendaftaran Peserta</h1>
-            <p class="text-sm text-slate-400 mt-1.5">Silakan isi data diri Anda di bawah ini dengan benar</p>
+            <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Formulir Pendaftaran Peserta</h1>
+            <p class="text-xs text-slate-500 mt-1">Lengkapi data berikut untuk penerbitan tiket QR Code kehadiran resmi Anda.</p>
         </div>
 
-        <!-- Alert Error / Success -->
-        @if(session('success'))
-            <div class="mb-5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-4 py-3 rounded-lg text-sm">
-                {{ session('success') }}
-            </div>
-        @endif
-
+        <!-- Alert Error Validasi -->
         @if($errors->any())
-            <div class="mb-5 bg-rose-500/10 border border-rose-500/30 text-rose-400 px-4 py-3 rounded-lg text-sm">
-                <ul class="list-disc list-inside space-y-1">
+            <div class="mb-5 p-4 bg-rose-50 border border-rose-200 text-rose-800 rounded-sm text-xs">
+                <div class="font-bold mb-1 flex items-center gap-1.5">
+                    <svg class="w-4 h-4 text-rose-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>Mohon periksa kembali isian formulir:</span>
+                </div>
+                <ul class="list-disc list-inside space-y-0.5 ml-5 text-rose-700">
                     @foreach($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
@@ -29,15 +33,15 @@
             </div>
         @endif
 
-        <!-- Card Form Halus -->
-        <div class="bg-slate-900 border border-slate-800 rounded-xl shadow-2xl p-6 sm:p-8 space-y-5">
-            <form action="{{ route('participants.store') }}" method="POST" class="space-y-5">
+        <!-- Card Form Clean White Solid Flat -->
+        <div class="bg-white border border-slate-200 rounded-sm shadow-xs p-6 sm:p-8">
+            <form action="{{ route('participants.store') }}" method="POST" class="space-y-4">
                 @csrf
 
                 <!-- Nama Lengkap -->
                 <div>
-                    <label for="name" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                        Nama Lengkap <span class="text-rose-400">*</span>
+                    <label for="name" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+                        Nama Lengkap <span class="text-rose-500">*</span>
                     </label>
                     <input 
                         type="text" 
@@ -46,14 +50,14 @@
                         value="{{ old('name') }}" 
                         required 
                         placeholder="Contoh: Budi Santoso, S.E."
-                        class="w-full px-4 py-2.5 bg-slate-950/70 border border-slate-700/80 rounded-lg text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                        class="w-full px-3.5 py-2.5 bg-white border {{ $errors->has('name') ? 'border-rose-400 bg-rose-50/30' : 'border-slate-300' }} rounded-sm text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-colors"
                     >
                 </div>
 
                 <!-- Instansi / Perusahaan -->
                 <div>
-                    <label for="company" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                        Instansi / Perusahaan <span class="text-rose-400">*</span>
+                    <label for="company" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+                        Instansi / Perusahaan <span class="text-rose-500">*</span>
                     </label>
                     <input 
                         type="text" 
@@ -61,15 +65,15 @@
                         id="company" 
                         value="{{ old('company') }}" 
                         required 
-                        placeholder="Nama instansi, organisasi, atau perusahaan"
-                        class="w-full px-4 py-2.5 bg-slate-950/70 border border-slate-700/80 rounded-lg text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                        placeholder="Contoh: PT Sumber Pangan / Kadin Jawa Barat"
+                        class="w-full px-3.5 py-2.5 bg-white border {{ $errors->has('company') ? 'border-rose-400 bg-rose-50/30' : 'border-slate-300' }} rounded-sm text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-colors"
                     >
                 </div>
 
-                <!-- Jabatan -->
+                <!-- Jabatan / Posisi -->
                 <div>
-                    <label for="position" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                        Jabatan / Posisi <span class="text-rose-400">*</span>
+                    <label for="position" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+                        Jabatan / Posisi <span class="text-rose-500">*</span>
                     </label>
                     <input 
                         type="text" 
@@ -77,17 +81,21 @@
                         id="position" 
                         value="{{ old('position') }}" 
                         required 
-                        placeholder="Contoh: Direktur Utama / Staf Ahli"
-                        class="w-full px-4 py-2.5 bg-slate-950/70 border border-slate-700/80 rounded-lg text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                        placeholder="Contoh: Direktur Utama / Manajer Operasional"
+                        class="w-full px-3.5 py-2.5 bg-white border {{ $errors->has('position') ? 'border-rose-400 bg-rose-50/30' : 'border-slate-300' }} rounded-sm text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-colors"
                     >
                 </div>
 
-                <!-- Grid Kontak (WhatsApp & Email) -->
+                <!-- Baris Grid: Nomor WhatsApp & Email -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Nomor WhatsApp -->
                     <div>
-                        <label for="phone" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                            Nomor WhatsApp <span class="text-rose-400">*</span>
-                        </label>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <label for="phone" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider">
+                                Nomor WhatsApp <span class="text-rose-500">*</span>
+                            </label>
+                            <span class="text-[10px] font-medium text-emerald-700">Untuk blast tiket</span>
+                        </div>
                         <input 
                             type="tel" 
                             name="phone" 
@@ -95,32 +103,44 @@
                             value="{{ old('phone') }}" 
                             required 
                             placeholder="081234567890"
-                            class="w-full px-4 py-2.5 bg-slate-950/70 border border-slate-700/80 rounded-lg text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                            class="w-full px-3.5 py-2.5 bg-white border {{ $errors->has('phone') ? 'border-rose-400 bg-rose-50/30' : 'border-slate-300' }} rounded-sm text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-colors"
                         >
                     </div>
 
+                    <!-- Email -->
                     <div>
-                        <label for="email" class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                            Email <span class="text-slate-500 font-normal lowercase">(opsional)</span>
-                        </label>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <label for="email" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider">
+                                Email
+                            </label>
+                            <span class="text-[10px] text-slate-400 font-normal">(opsional)</span>
+                        </div>
                         <input 
                             type="email" 
                             name="email" 
                             id="email" 
                             value="{{ old('email') }}" 
                             placeholder="nama@perusahaan.com"
-                            class="w-full px-4 py-2.5 bg-slate-950/70 border border-slate-700/80 rounded-lg text-slate-100 placeholder-slate-500 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                            class="w-full px-3.5 py-2.5 bg-white border {{ $errors->has('email') ? 'border-rose-400 bg-rose-50/30' : 'border-slate-300' }} rounded-sm text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-colors"
                         >
                     </div>
                 </div>
 
-                <!-- Tombol Submit -->
-                <div class="pt-3">
+                <!-- Info Box Bersih -->
+                <div class="p-3 bg-slate-50 border border-slate-200 rounded-sm text-[11px] text-slate-600 flex items-start gap-2">
+                    <svg class="w-4 h-4 text-slate-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>Setelah registrasi, Anda akan langsung mendapatkan <strong>Tiket QR Code</strong> resmi yang dapat disimpan dan dikirim langsung ke WhatsApp.</span>
+                </div>
+
+                <!-- Tombol Submit Solid Charcoal/Hitam Formal -->
+                <div class="pt-2">
                     <button 
                         type="submit" 
-                        class="w-full py-3 px-4 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-semibold text-sm rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900 transition-all duration-150 flex items-center justify-center gap-2"
+                        class="w-full py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm rounded-sm transition-colors cursor-pointer flex items-center justify-center gap-2 border border-slate-900"
                     >
-                        <span>Kirim Pendaftaran</span>
+                        <span>Kirim Pendaftaran & Terbitkan Tiket QR</span>
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
                         </svg>
@@ -129,9 +149,12 @@
             </form>
         </div>
 
-        <p class="text-center text-xs text-slate-500 mt-6">
-            &copy; {{ date('Y') }} KADIN. Hak Cipta Dilindungi.
-        </p>
+        <div class="mt-4 text-center">
+            <a href="{{ route('participants.index') }}" class="text-xs text-slate-500 hover:text-slate-900 underline font-medium">
+                Masuk ke Panel Data Peserta & WA Blast →
+            </a>
+        </div>
+
     </div>
 </div>
 @endsection

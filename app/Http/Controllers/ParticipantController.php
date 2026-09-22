@@ -23,16 +23,17 @@ class ParticipantController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:participants,email',
-            'phone_number' => 'required|string|max:25',
-            'institution' => 'nullable|string|max:255',
+            'company' => 'required|string|max:255',
+            'position' => 'required|string|max:255',
+            'phone' => 'required|string|max:25',
+            'email' => 'nullable|email|max:255',
             'notes' => 'nullable|string|max:500',
         ], [
             'name.required' => 'Nama lengkap wajib diisi.',
-            'email.required' => 'Email wajib diisi.',
+            'company.required' => 'Instansi / perusahaan wajib diisi.',
+            'position.required' => 'Jabatan / posisi wajib diisi.',
+            'phone.required' => 'Nomor WhatsApp wajib diisi.',
             'email.email' => 'Format email tidak valid.',
-            'email.unique' => 'Email ini sudah terdaftar sebelumnya.',
-            'phone_number.required' => 'Nomor WhatsApp / telepon wajib diisi untuk blast tiket.',
         ]);
 
         // Generate Token QR unik: KD26-XXXXXXXX
@@ -42,16 +43,17 @@ class ParticipantController extends Controller
 
         $participant = Participant::create([
             'name' => $validated['name'],
-            'email' => $validated['email'],
-            'phone_number' => $validated['phone_number'],
-            'institution' => $validated['institution'] ?? null,
+            'company' => $validated['company'],
+            'position' => $validated['position'],
+            'phone' => $validated['phone'],
+            'email' => $validated['email'] ?? null,
             'notes' => $validated['notes'] ?? null,
             'qr_token' => $token,
             'status' => 'registered',
         ]);
 
         return redirect()->route('participants.card', $participant->qr_token)
-            ->with('success', 'Registrasi berhasil! Tiket QR Code telah dibuat.');
+            ->with('success', 'Pendaftaran berhasil! Tiket QR Code Anda telah diterbitkan.');
     }
 
     /**
@@ -75,9 +77,10 @@ class ParticipantController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('company', 'like', "%{$search}%")
+                  ->orWhere('position', 'like', "%{$search}%")
+                  ->orWhere('phone', 'like', "%{$search}%")
                   ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('phone_number', 'like', "%{$search}%")
-                  ->orWhere('institution', 'like', "%{$search}%")
                   ->orWhere('qr_token', 'like', "%{$search}%");
             });
         }
@@ -149,7 +152,8 @@ class ParticipantController extends Controller
             'message' => "Absensi berhasil dicatat! Selamat datang, <b>{$participant->name}</b>.",
             'participant' => [
                 'name' => $participant->name,
-                'institution' => $participant->institution ?? '-',
+                'company' => $participant->company ?? '-',
+                'position' => $participant->position ?? '-',
                 'time' => $participant->attended_at->format('H:i:s'),
                 'qr_token' => $participant->qr_token,
             ],
@@ -166,4 +170,5 @@ class ParticipantController extends Controller
         return redirect()->back()->with('success', 'Data peserta berhasil dihapus.');
     }
 }
+
 

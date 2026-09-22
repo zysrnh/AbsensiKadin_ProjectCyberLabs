@@ -14,12 +14,13 @@ return new class extends Migration
         Schema::create('participants', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email')->unique();
-            $table->string('phone_number'); // Untuk keperluan blast WA
-            $table->string('institution')->nullable(); // Instansi / Perusahaan (opsional)
-            $table->string('qr_token')->unique(); // Token identitas QR Code
+            $table->string('company'); // Instansi / Perusahaan
+            $table->string('position'); // Jabatan / Posisi
+            $table->string('phone'); // Nomor WhatsApp untuk blast
+            $table->string('email')->nullable(); // Email (opsional)
+            $table->string('qr_token')->unique(); // Token unik QR Code
             $table->enum('status', ['registered', 'attended', 'cancelled'])->default('registered');
-            $table->timestamp('attended_at')->nullable(); // Waktu check-in absensi
+            $table->timestamp('attended_at')->nullable();
             $table->text('notes')->nullable();
             $table->timestamps();
         });
@@ -33,4 +34,5 @@ return new class extends Migration
         Schema::dropIfExists('participants');
     }
 };
+
 

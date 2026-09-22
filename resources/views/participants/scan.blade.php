@@ -6,29 +6,29 @@
 <style>
     #reader video {
         object-fit: cover !important;
-        border-radius: 0 !important;
+        border-radius: 2px !important;
     }
 </style>
 @endpush
 
 @section('content')
-<div class="space-y-6">
+<div class="py-8 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto space-y-6">
 
     <!-- Header Section -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-            <div class="inline-block px-2.5 py-0.5 bg-blue-100 text-blue-800 font-bold text-xs uppercase tracking-wider mb-1 rounded-none">
-                Pos Kedatangan / Resepsionis
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-slate-100 border border-slate-200 rounded-sm mb-1 text-[11px] font-bold uppercase tracking-wider text-slate-700">
+                Pos Kedatangan
             </div>
-            <h1 class="text-2xl font-black text-slate-900 tracking-tight">Scanner Absensi Kehadiran QR</h1>
-            <p class="text-xs text-slate-500 mt-0.5">Arahkan kamera ke tiket QR peserta atau ketikkan kode token untuk memverifikasi kehadiran.</p>
+            <h1 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Scanner Absensi Kehadiran</h1>
+            <p class="text-xs text-slate-500 mt-0.5">Arahkan kamera ke tiket QR peserta atau ketikkan kode tiket untuk memverifikasi kehadiran.</p>
         </div>
 
         <div class="flex items-center space-x-2">
-            <a href="{{ route('participants.index') }}" class="px-3.5 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-xs uppercase tracking-wider rounded-none border border-slate-300 transition">
+            <a href="{{ route('participants.index') }}" class="px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-800 font-semibold text-xs rounded-sm border border-slate-300 transition-colors">
                 Data Peserta
             </a>
-            <a href="{{ route('participants.create') }}" class="px-3.5 py-2 bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs uppercase tracking-wider rounded-none border border-blue-800 transition">
+            <a href="{{ route('participants.create') }}" class="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs rounded-sm transition-colors">
                 + Tambah Peserta
             </a>
         </div>
@@ -40,47 +40,45 @@
         <!-- Left Column: Camera Scanner & Manual Input -->
         <div class="lg:col-span-7 space-y-4">
             
-            <!-- Camera Scanner Box Flat -->
-            <div class="bg-white border-2 border-slate-900 rounded-none p-4">
-                <div class="flex items-center justify-between pb-3 border-b border-slate-200 mb-3">
-                    <span class="text-xs font-bold uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
-                        <span class="w-2.5 h-2.5 bg-emerald-500 animate-pulse"></span>
-                        <span>Kamera Scanner Aktif</span>
+            <!-- Camera Scanner Box Clean Flat -->
+            <div class="bg-white border border-slate-200 rounded-sm p-4 shadow-xs">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+                        <span>Pemindai Kamera</span>
                     </span>
                     <button 
                         type="button" 
                         id="toggleCameraBtn" 
-                        class="px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider bg-slate-800 hover:bg-slate-900 text-white border border-slate-900 cursor-pointer"
+                        class="px-3 py-1 text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-white rounded-sm cursor-pointer transition-colors"
                     >
                         Nyalakan Kamera
                     </button>
                 </div>
 
                 <!-- Viewfinder Div -->
-                <div id="reader" class="w-full bg-slate-900 min-h-[300px] flex items-center justify-center border border-slate-300 text-white text-xs">
-                    <span class="text-slate-400">Klik "Nyalakan Kamera" untuk mulai scanning</span>
+                <div id="reader" class="w-full bg-slate-100 min-h-[300px] flex items-center justify-center border border-slate-200 rounded-sm text-slate-500 text-xs">
+                    <span>Klik "Nyalakan Kamera" untuk mulai scanning</span>
                 </div>
 
-                <div class="mt-3 p-2 bg-slate-50 border border-slate-200 text-[11px] text-slate-500 text-center">
-                    Pastikan QR Code tiket peserta berada di dalam kotak bidik scanner kamera.
-                </div>
+                <p class="mt-2 text-[11px] text-slate-400 text-center">Pastikan QR Code tiket berada tepat di tengah area pemindaian.</p>
             </div>
 
-            <!-- Manual Token Input Box Flat -->
-            <div class="bg-white border border-slate-300 rounded-none p-4">
-                <div class="text-xs font-bold uppercase tracking-wider text-slate-800 mb-2">
-                    Input Token Manual / Gunakan Barcode Scanner Fisik
-                </div>
+            <!-- Manual Token Input Box Clean -->
+            <div class="bg-white border border-slate-200 rounded-sm p-4 shadow-xs">
+                <label for="manualTokenInput" class="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-2">
+                    Input Kode Tiket Manual / Barcode Scanner Fisik
+                </label>
                 <form id="manualScanForm" class="flex gap-2">
                     <input 
                         type="text" 
                         id="manualTokenInput" 
                         placeholder="Contoh: KD26-A8F9B2C1" 
-                        class="flex-grow px-3.5 py-2.5 bg-slate-50 border border-slate-300 text-xs font-mono font-bold text-slate-900 rounded-none focus:outline-none focus:ring-1 focus:ring-blue-700 focus:border-blue-700 uppercase"
+                        class="flex-grow px-3.5 py-2 bg-slate-50 border border-slate-200 text-xs font-mono font-bold text-slate-900 rounded-sm focus:outline-none focus:border-slate-900 focus:bg-white uppercase"
                     >
                     <button 
                         type="submit" 
-                        class="px-5 py-2.5 bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs uppercase tracking-wider rounded-none border border-blue-800 transition cursor-pointer"
+                        class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs rounded-sm transition-colors cursor-pointer"
                     >
                         Verifikasi
                     </button>
@@ -89,12 +87,12 @@
 
         </div>
 
-        <!-- Right Column: Recent Attendances Log -->
+        <!-- Right Column: Recent Attendances Log Clean -->
         <div class="lg:col-span-5">
-            <div class="bg-white border border-slate-300 rounded-none overflow-hidden h-full flex flex-col">
-                <div class="bg-slate-900 text-white p-3 border-b border-slate-900 flex items-center justify-between">
-                    <span class="text-xs font-bold uppercase tracking-wider">Kehadiran Baru Saja Terverifikasi</span>
-                    <span class="text-[10px] text-slate-400 font-mono">Live Monitor</span>
+            <div class="bg-white border border-slate-200 rounded-sm overflow-hidden h-full flex flex-col shadow-xs">
+                <div class="bg-slate-50 p-3.5 border-b border-slate-200 flex items-center justify-between">
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-800">Kehadiran Baru Terverifikasi</span>
+                    <span class="text-[10px] text-slate-400 font-mono">Live</span>
                 </div>
 
                 <div class="p-3 divide-y divide-slate-100 overflow-y-auto flex-grow max-h-[500px]" id="recentAttendedList">
@@ -102,10 +100,10 @@
                     <div class="py-2.5 flex items-center justify-between text-xs">
                         <div>
                             <span class="font-bold text-slate-900 block">{{ $attendee->name }}</span>
-                            <span class="text-[11px] text-slate-500">{{ $attendee->institution ?? 'Kadin' }}</span>
+                            <span class="text-[11px] text-slate-500">{{ $attendee->company ?? 'Kadin' }}</span>
                         </div>
                         <div class="text-right">
-                            <span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold text-[10px] uppercase rounded-none block">
+                            <span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-[10px] uppercase rounded-sm block">
                                 {{ $attendee->attended_at ? $attendee->attended_at->format('H:i:s') : 'Hadir' }}
                             </span>
                             <span class="text-[10px] font-mono text-slate-400">{{ $attendee->qr_token }}</span>
@@ -113,7 +111,7 @@
                     </div>
                     @empty
                     <div class="py-12 text-center text-slate-400 text-xs" id="emptyPlaceholder">
-                        Belum ada peserta yang hadir hari ini.
+                        Belum ada peserta yang absen hari ini.
                     </div>
                     @endforelse
                 </div>
@@ -137,7 +135,6 @@
     const manualInput = document.getElementById('manualTokenInput');
     const recentList = document.getElementById('recentAttendedList');
 
-    // Toggle Camera
     toggleBtn.addEventListener('click', function() {
         if (isCameraRunning) {
             stopCamera();
@@ -157,13 +154,13 @@
         ).then(() => {
             isCameraRunning = true;
             toggleBtn.textContent = 'Matikan Kamera';
-            toggleBtn.className = 'px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider bg-rose-700 hover:bg-rose-800 text-white border border-rose-800 cursor-pointer';
+            toggleBtn.className = 'px-3 py-1 text-xs font-semibold bg-rose-600 hover:bg-rose-700 text-white rounded-sm cursor-pointer transition-colors';
         }).catch(err => {
             console.error(err);
             Swal.fire({
                 icon: 'error',
-                title: 'Kamera Gagal Dibuka',
-                text: 'Pastikan browser memiliki izin akses kamera atau gunakan input token manual.',
+                title: 'Kamera Gagal',
+                text: 'Pastikan browser memiliki izin akses kamera atau gunakan input manual.',
                 confirmButtonColor: '#0f172a'
             });
         });
@@ -174,20 +171,18 @@
             html5QrCode.stop().then(() => {
                 isCameraRunning = false;
                 toggleBtn.textContent = 'Nyalakan Kamera';
-                toggleBtn.className = 'px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider bg-slate-800 hover:bg-slate-900 text-white border border-slate-900 cursor-pointer';
-                document.getElementById('reader').innerHTML = '<span class="text-slate-400">Klik "Nyalakan Kamera" untuk mulai scanning</span>';
+                toggleBtn.className = 'px-3 py-1 text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-white rounded-sm cursor-pointer transition-colors';
+                document.getElementById('reader').innerHTML = '<span>Klik "Nyalakan Kamera" untuk mulai scanning</span>';
             });
         }
     }
 
-    // When QR successfully scanned by Camera
     function onScanSuccess(decodedText) {
         if (isProcessing) return;
         isProcessing = true;
         processAttendance(decodedText);
     }
 
-    // Manual input submit
     manualForm.addEventListener('submit', function(e) {
         e.preventDefault();
         const token = manualInput.value.trim();
@@ -197,9 +192,7 @@
         processAttendance(token);
     });
 
-    // Send Verification Request to Server
     function processAttendance(token) {
-        // Play subtle beep sound or vibration
         if (navigator.vibrate) navigator.vibrate(100);
 
         fetch("{{ route('participants.scan.verify') }}", {
@@ -216,23 +209,19 @@
             manualInput.value = '';
 
             if (status === 200 && data.success) {
-                // Success
                 Swal.fire({
                     icon: 'success',
-                    title: 'Absensi Berhasil!',
+                    title: 'Absensi Berhasil',
                     html: data.message,
                     timer: 2500,
                     showConfirmButton: false,
                     customClass: {
-                        popup: 'rounded-none border-2 border-slate-900'
+                        popup: 'rounded-sm border border-slate-200'
                     }
                 });
-
-                // Add to recent attendances list UI
                 addRecentAttendee(data.participant);
 
             } else if (status === 409) {
-                // Already attended
                 Swal.fire({
                     icon: 'warning',
                     title: 'Sudah Pernah Absen',
@@ -240,21 +229,20 @@
                     confirmButtonColor: '#0f172a',
                     confirmButtonText: 'Tutup',
                     customClass: {
-                        popup: 'rounded-none border-2 border-slate-900',
-                        confirmButton: 'rounded-none font-bold uppercase text-xs'
+                        popup: 'rounded-sm border border-slate-200',
+                        confirmButton: 'rounded-sm font-semibold text-xs'
                     }
                 });
             } else {
-                // Not found or error
                 Swal.fire({
                     icon: 'error',
                     title: 'Tidak Ditemukan',
                     text: data.message || 'QR Code tidak terdaftar.',
-                    confirmButtonColor: '#dc2626',
+                    confirmButtonColor: '#0f172a',
                     confirmButtonText: 'Tutup',
                     customClass: {
-                        popup: 'rounded-none border-2 border-slate-900',
-                        confirmButton: 'rounded-none font-bold uppercase text-xs'
+                        popup: 'rounded-sm border border-slate-200',
+                        confirmButton: 'rounded-sm font-semibold text-xs'
                     }
                 });
             }
@@ -263,13 +251,12 @@
             console.error(err);
             Swal.fire({
                 icon: 'error',
-                title: 'Error Koneksi',
-                text: 'Terjadi masalah koneksi ke server.',
+                title: 'Koneksi Terganggu',
+                text: 'Terjadi masalah koneksi.',
                 confirmButtonColor: '#0f172a'
             });
         })
         .finally(() => {
-            // Resume scanning after 2 seconds
             setTimeout(() => {
                 isProcessing = false;
             }, 2000);
@@ -281,14 +268,14 @@
         if (placeholder) placeholder.remove();
 
         const row = document.createElement('div');
-        row.className = 'py-2.5 flex items-center justify-between text-xs bg-emerald-50/70 p-2 border border-emerald-200 mb-2 transition';
+        row.className = 'py-2.5 flex items-center justify-between text-xs bg-emerald-50/50 p-2.5 border border-emerald-100 rounded-sm mb-2 transition-colors';
         row.innerHTML = `
             <div>
                 <span class="font-bold text-slate-900 block">${p.name}</span>
-                <span class="text-[11px] text-slate-500">${p.institution || 'Kadin'}</span>
+                <span class="text-[11px] text-slate-500">${p.company || 'Kadin'}</span>
             </div>
             <div class="text-right">
-                <span class="px-2 py-0.5 bg-emerald-600 text-white font-bold text-[10px] uppercase rounded-none block">
+                <span class="px-2 py-0.5 bg-emerald-600 text-white font-bold text-[10px] uppercase rounded-sm block">
                     ${p.time}
                 </span>
                 <span class="text-[10px] font-mono text-slate-400">${p.qr_token}</span>

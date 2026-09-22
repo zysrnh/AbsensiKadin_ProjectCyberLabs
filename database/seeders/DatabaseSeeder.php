@@ -27,28 +27,31 @@ class DatabaseSeeder extends Seeder
 
         // Contoh Peserta 1
         Participant::firstOrCreate(
-            ['email' => 'hendra.wijaya@example.com'],
+            ['qr_token' => 'KD26-HNDR8890'],
             [
                 'name' => 'Hendra Wijaya, S.E.',
-                'phone_number' => '081234567890',
-                'institution' => 'Kadin Jawa Barat / Komite Perdagangan',
-                'qr_token' => 'KD26-HNDR8890',
+                'company' => 'Kadin Jawa Barat',
+                'position' => 'Wakil Ketua Bidang Perdagangan',
+                'phone' => '081234567890',
+                'email' => 'hendra.wijaya@example.com',
                 'status' => 'registered',
             ]
         );
 
         // Contoh Peserta 2
         Participant::firstOrCreate(
-            ['email' => 'siti.nurhaliza@example.com'],
+            ['qr_token' => 'KD26-CYBER001'],
             [
                 'name' => 'Ir. Hj. Siti Nurhaliza',
-                'phone_number' => '082198765432',
-                'institution' => 'PT Cyberlabs Teknologi Indonesia',
-                'qr_token' => 'KD26-CYBER001',
+                'company' => 'PT Cyberlabs Teknologi Indonesia',
+                'position' => 'Chief Technology Officer',
+                'phone' => '082198765432',
+                'email' => 'siti.nurhaliza@example.com',
                 'status' => 'attended',
                 'attended_at' => now()->subMinutes(15),
             ]
         );
     }
 }
+
 
