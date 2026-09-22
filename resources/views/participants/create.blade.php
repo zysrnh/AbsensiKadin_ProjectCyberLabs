@@ -126,13 +126,13 @@
                 <span>Setelah registrasi dikirim, Anda akan langsung menerima <strong>Tiket Presensi QR Code</strong> resmi yang dapat disimpan dan ditunjukkan saat tiba di lokasi.</span>
             </div>
 
-            <!-- Tombol Submit Solid Charcoal/Hitam Formal -->
+            <!-- Tombol Submit Solid Charcoal/Hitam Formal: Kirim Pendaftaran Aja -->
             <div class="pt-2">
                 <button 
                     type="submit" 
                     class="w-full py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm rounded-sm transition-colors cursor-pointer flex items-center justify-center gap-2 border border-slate-900"
                 >
-                    <span>Kirim Pendaftaran & Terbitkan Tiket QR</span>
+                    <span>Kirim Pendaftaran</span>
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
                     </svg>
