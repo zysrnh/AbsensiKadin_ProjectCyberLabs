@@ -1,16 +1,12 @@
 @extends('layouts.guest')
 
-@section('title', 'Formulir Pendaftaran Peserta - Kadin 2026')
+@section('title', 'Formulir Pendaftaran Peserta - KADIN')
 
 @section('content')
 <div class="w-full max-w-xl px-4 sm:px-6">
     
     <!-- Header Form Bersih -->
     <div class="mb-6 text-center">
-        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-slate-100 border border-slate-200 rounded-sm mb-3">
-            <span class="w-2 h-2 rounded-full bg-emerald-600"></span>
-            <span class="text-[11px] font-bold uppercase tracking-wider text-slate-700">Pendaftaran Peserta Kadin 2026</span>
-        </div>
         <h1 class="text-2xl font-bold text-slate-900 tracking-tight">Formulir Pendaftaran</h1>
         <p class="text-xs text-slate-500 mt-1">Lengkapi data diri Anda di bawah ini untuk penerbitan tiket presensi QR Code.</p>
     </div>
@@ -89,12 +85,9 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <!-- Nomor WhatsApp -->
                 <div>
-                    <div class="flex items-center justify-between mb-1.5">
-                        <label for="phone" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                            Nomor WhatsApp <span class="text-rose-500">*</span>
-                        </label>
-                        <span class="text-[10px] font-medium text-emerald-700">Untuk blast tiket</span>
-                    </div>
+                    <label for="phone" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+                        Nomor WhatsApp <span class="text-rose-500">*</span>
+                    </label>
                     <input 
                         type="tel" 
                         name="phone" 

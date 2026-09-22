@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Pendaftaran Peserta - Kadin 2026')</title>
+    <title>@yield('title', 'Pendaftaran Peserta - KADIN')</title>
 
     <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,21 +28,12 @@
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col justify-between">
 
-    <!-- Clean Public Header: Formal KADIN Identity Only (No Internal Admin Links) -->
+    <!-- Clean Public Header: KADIN Saja -->
     <header class="bg-white border-b border-slate-200 py-3.5 px-4 sm:px-6">
-        <div class="max-w-xl mx-auto flex items-center justify-between">
-            <div class="flex items-center space-x-2.5">
-                <span class="px-2 py-0.5 bg-slate-900 text-white font-extrabold text-xs tracking-wider rounded-sm">
+        <div class="max-w-xl mx-auto flex items-center justify-center">
+            <div class="flex items-center space-x-2">
+                <span class="px-3 py-1 bg-slate-900 text-white font-black text-sm tracking-widest rounded-sm">
                     KADIN
-                </span>
-                <div class="leading-none">
-                    <span class="font-bold text-xs sm:text-sm text-slate-900 tracking-tight block">Kamar Dagang dan Industri Indonesia</span>
-                    <span class="text-[10px] text-slate-500 font-medium">Sistem Registrasi & Presensi 2026</span>
-                </div>
-            </div>
-            <div class="hidden sm:block">
-                <span class="text-[11px] font-semibold text-slate-500 uppercase tracking-wider bg-slate-100 px-2 py-1 rounded-sm border border-slate-200">
-                    Formulir Resmi
                 </span>
             </div>
         </div>
@@ -54,9 +45,9 @@
     </main>
 
     <!-- Footer Simple -->
-    <footer class="bg-white border-t border-slate-200 py-4">
+    <footer class="bg-white border-t border-slate-200 py-3.5">
         <div class="max-w-xl mx-auto px-4 text-center text-xs text-slate-400">
-            &copy; {{ date('Y') }} KADIN Indonesia. Seluruh hak cipta dilindungi.
+            &copy; {{ date('Y') }} KADIN. Hak Cipta Dilindungi.
         </div>
     </footer>
 
