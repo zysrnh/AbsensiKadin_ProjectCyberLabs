@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Participant;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -15,11 +16,39 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Admin
+        User::firstOrCreate(
+            ['email' => 'admin@kadin.id'],
+            [
+                'name' => 'Administrator Kadin',
+                'password' => bcrypt('password'),
+            ]
+        );
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // Contoh Peserta 1
+        Participant::firstOrCreate(
+            ['email' => 'hendra.wijaya@example.com'],
+            [
+                'name' => 'Hendra Wijaya, S.E.',
+                'phone_number' => '081234567890',
+                'institution' => 'Kadin Jawa Barat / Komite Perdagangan',
+                'qr_token' => 'KD26-HNDR8890',
+                'status' => 'registered',
+            ]
+        );
+
+        // Contoh Peserta 2
+        Participant::firstOrCreate(
+            ['email' => 'siti.nurhaliza@example.com'],
+            [
+                'name' => 'Ir. Hj. Siti Nurhaliza',
+                'phone_number' => '082198765432',
+                'institution' => 'PT Cyberlabs Teknologi Indonesia',
+                'qr_token' => 'KD26-CYBER001',
+                'status' => 'attended',
+                'attended_at' => now()->subMinutes(15),
+            ]
+        );
     }
 }
+
