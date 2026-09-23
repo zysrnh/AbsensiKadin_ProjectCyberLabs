@@ -10,7 +10,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
             <h1 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Pengaturan WhatsApp & Twilio</h1>
-            <p class="text-xs text-slate-500 mt-0.5">Sesuaikan template pesan presensi, lampiran gambar QR, dan integrasi WhatsApp API Twilio.</p>
+            <p class="text-xs text-slate-500 mt-0.5">Kelola mode pengiriman (Sandbox / Meta Template), template teks presensi, dan gambar tiket QR langsung.</p>
         </div>
 
         <div class="flex items-center gap-2">
@@ -29,15 +29,103 @@
             <form action="{{ route('admin.wa-settings.update') }}" method="POST" class="space-y-5">
                 @csrf
 
-                <!-- Card 1: Template Pesan -->
+                <!-- Card 1: Pilihan Mode Twilio -->
                 <div class="bg-white border border-slate-200 rounded-sm p-5 shadow-2xs space-y-4">
                     <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
                         <div>
-                            <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Template Pesan WhatsApp</h2>
-                            <p class="text-[11px] text-slate-400">Pesan yang dikirimkan ke nomor WhatsApp peserta.</p>
+                            <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Mode Pengiriman Twilio</h2>
+                            <p class="text-[11px] text-slate-400">Pilih skema pengiriman pesan WhatsApp sesuai status akun Twilio Anda.</p>
+                        </div>
+                        <span class="px-2 py-0.5 bg-slate-100 text-slate-700 text-[10px] font-bold rounded-sm border border-slate-300 font-mono">
+                            Twilio Mode
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <!-- Mode A: Sandbox / Freeform -->
+                        <label class="border border-slate-200 rounded-sm p-3.5 cursor-pointer hover:border-slate-400 transition-colors flex items-start gap-3 bg-slate-50/50 has-[:checked]:border-slate-900 has-[:checked]:bg-slate-100/50">
+                            <input 
+                                type="radio" 
+                                name="twilio_mode" 
+                                value="freeform" 
+                                id="modeFreeform"
+                                {{ old('twilio_mode', $twilioMode) === 'freeform' ? 'checked' : '' }}
+                                class="mt-0.5 text-slate-900 focus:ring-slate-900 cursor-pointer"
+                                onchange="switchMode('freeform')"
+                            >
+                            <div class="space-y-1">
+                                <span class="text-xs font-bold text-slate-900 block">Mode Sandbox / Bebas</span>
+                                <p class="text-[11px] text-slate-500 leading-normal">
+                                    Cocok untuk uji coba. Mengirim teks kustom dari box template + gambar QR langsung tanpa perlu approval Meta.
+                                </p>
+                            </div>
+                        </label>
+
+                        <!-- Mode B: Meta Content Template SID -->
+                        <label class="border border-slate-200 rounded-sm p-3.5 cursor-pointer hover:border-slate-400 transition-colors flex items-start gap-3 bg-slate-50/50 has-[:checked]:border-slate-900 has-[:checked]:bg-slate-100/50">
+                            <input 
+                                type="radio" 
+                                name="twilio_mode" 
+                                value="template" 
+                                id="modeTemplate"
+                                {{ old('twilio_mode', $twilioMode) === 'template' ? 'checked' : '' }}
+                                class="mt-0.5 text-slate-900 focus:ring-slate-900 cursor-pointer"
+                                onchange="switchMode('template')"
+                            >
+                            <div class="space-y-1">
+                                <span class="text-xs font-bold text-slate-900 block">Mode Meta Template (Resmi)</span>
+                                <p class="text-[11px] text-slate-500 leading-normal">
+                                    Wajib untuk akun WhatsApp Business resmi (Production). Menggunakan Twilio Content SID yang disetujui Meta.
+                                </p>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Meta Content Template Guide Box -->
+                    <div id="metaTemplateGuide" class="p-3.5 bg-blue-50/80 border border-blue-200 rounded-sm text-[11px] text-slate-700 space-y-2 {{ old('twilio_mode', $twilioMode) === 'template' ? '' : 'hidden' }}">
+                        <div class="font-bold text-blue-900 flex items-center gap-1.5">
+                            <svg class="w-4 h-4 text-blue-700 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>Panduan Variabel Meta Approved Template:</span>
+                        </div>
+                        <p class="leading-relaxed text-slate-600">
+                            Di Twilio Content Builder, buat template kategori <strong>UTILITY</strong> dengan header <strong>Media (Image)</strong>. Sistem otomatis mengirim variabel berikut:
+                        </p>
+                        <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-center pt-1 font-mono text-[10px]">
+                            <div class="bg-white p-1.5 rounded-sm border border-blue-200">
+                                <span class="font-bold text-blue-700 block">&#123;&#123;1&#125;&#125;</span>
+                                <span class="text-slate-500 font-sans">Nama</span>
+                            </div>
+                            <div class="bg-white p-1.5 rounded-sm border border-blue-200">
+                                <span class="font-bold text-blue-700 block">&#123;&#123;2&#125;&#125;</span>
+                                <span class="text-slate-500 font-sans">Instansi</span>
+                            </div>
+                            <div class="bg-white p-1.5 rounded-sm border border-blue-200">
+                                <span class="font-bold text-blue-700 block">&#123;&#123;3&#125;&#125;</span>
+                                <span class="text-slate-500 font-sans">Jabatan</span>
+                            </div>
+                            <div class="bg-white p-1.5 rounded-sm border border-blue-200">
+                                <span class="font-bold text-blue-700 block">&#123;&#123;4&#125;&#125;</span>
+                                <span class="text-slate-500 font-sans">Kode Tiket</span>
+                            </div>
+                            <div class="bg-white p-1.5 rounded-sm border border-blue-200">
+                                <span class="font-bold text-blue-700 block">&#123;&#123;5&#125;&#125;</span>
+                                <span class="text-slate-500 font-sans">Link Web</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Template Pesan (Freeform) -->
+                <div id="freeformTemplateCard" class="bg-white border border-slate-200 rounded-sm p-5 shadow-2xs space-y-4">
+                    <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+                        <div>
+                            <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Format Teks Pesan</h2>
+                            <p class="text-[11px] text-slate-400">Digunakan untuk Mode Sandbox / Teks Bebas atau fallback.</p>
                         </div>
                         <span class="px-2 py-0.5 bg-blue-50 text-blue-700 text-[10px] font-bold rounded-sm border border-blue-200">
-                            WhatsApp Blast
+                            Pesan Teks Bebas
                         </span>
                     </div>
 
@@ -66,7 +154,7 @@
                     <!-- Textarea Template -->
                     <div>
                         <label for="waTemplateInput" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
-                            Format Teks Pesan <span class="text-rose-500">*</span>
+                            Isi Pesan WhatsApp <span class="text-rose-500">*</span>
                         </label>
                         <textarea 
                             name="wa_template" 
@@ -89,21 +177,21 @@
                                 class="mt-0.5 rounded-sm border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer"
                             >
                             <div>
-                                <span class="text-xs font-bold text-slate-800 block">Kirim Gambar QR Code Langsung (MediaUrl)</span>
+                                <span class="text-xs font-bold text-slate-800 block">Kirim Gambar QR Langsung (Sebagai Foto/Media Asli)</span>
                                 <span class="text-[11px] text-slate-500 leading-normal block">
-                                    Twilio akan otomatis mengunduh gambar QR peserta dari endpoint sistem dan melampirkannya sebagai gambar langsung di chat WhatsApp.
+                                    WhatsApp peserta akan langsung menampilkan gambar QR Code secara visual (bukan tautan teks) dengan pesan di atas sebagai keterangannya.
                                 </span>
                             </div>
                         </label>
                     </div>
                 </div>
 
-                <!-- Card 2: Kredensial Twilio -->
+                <!-- Card 3: Kredensial Twilio & Template ID -->
                 <div class="bg-white border border-slate-200 rounded-sm p-5 shadow-2xs space-y-4">
                     <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
                         <div>
                             <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Kredensial Twilio API</h2>
-                            <p class="text-[11px] text-slate-400">Hubungkan akun Twilio untuk broadcast pesan via WhatsApp Business API.</p>
+                            <p class="text-[11px] text-slate-400">Konfigurasi Account SID, Auth Token, dan Template SID Twilio.</p>
                         </div>
                         <span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 text-[10px] font-bold rounded-sm border border-emerald-200">
                             Twilio REST API
@@ -156,13 +244,13 @@
                                 placeholder="+14155238886 (sandbox) atau nomor resmi"
                                 class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-sm text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-900 focus:bg-white"
                             >
-                            <span class="text-[10px] text-slate-400 mt-1 block">Gunakan <code>+14155238886</code> jika menggunakan Twilio Sandbox.</span>
+                            <span class="text-[10px] text-slate-400 mt-1 block">Gunakan <code>+14155238886</code> jika memakai Twilio Sandbox.</span>
                         </div>
 
-                        <!-- Template Content SID (Opsional) -->
+                        <!-- Template Content SID -->
                         <div>
                             <label for="twilio_template_id" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
-                                Content SID / Template ID <span class="text-slate-400 font-normal">(opsional)</span>
+                                Twilio Content SID <span class="text-slate-400 font-normal">(Template ID)</span>
                             </label>
                             <input 
                                 type="text" 
@@ -172,7 +260,7 @@
                                 placeholder="HXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
                                 class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-sm text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-900 focus:bg-white"
                             >
-                            <span class="text-[10px] text-slate-400 mt-1 block">Wajib jika memakai template resmi Meta yang telah di-approve.</span>
+                            <span class="text-[10px] text-slate-400 mt-1 block">Didapat dari Twilio Console &gt; Content Template Builder.</span>
                         </div>
                     </div>
 
@@ -182,10 +270,10 @@
                             <svg class="w-3.5 h-3.5 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <span>Aturan WhatsApp Business API:</span>
+                            <span>Catatan Gambar QR Langsung:</span>
                         </div>
                         <p class="leading-relaxed">
-                            Jika menggunakan akun <strong>Twilio Sandbox</strong>, nomor penerima harus join terlebih dahulu (misal kirim <code>join &lt;kata-kunci&gt;</code> ke nomor Twilio). Jika akun <strong>Production</strong>, pastikan isi template telah disetujui di Meta / Twilio Console.
+                            Twilio memerlukan endpoint gambar yang dapat diakses publik. Pada pengujian lokal, gunakan tunnel seperti <strong>Ngrok</strong> agar Twilio dapat mengunduh gambar QR peserta secara otomatis dan mengirimkannya ke WhatsApp.
                         </p>
                     </div>
 
@@ -205,11 +293,11 @@
                 </div>
             </form>
 
-            <!-- Card 3: Uji Coba Kirim Pesan Tes -->
+            <!-- Card 4: Uji Coba Kirim Pesan Tes -->
             <div class="bg-white border border-slate-200 rounded-sm p-5 shadow-2xs space-y-3">
                 <div class="border-b border-slate-100 pb-2">
                     <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Tes Kirim WhatsApp Twilio</h3>
-                    <p class="text-[11px] text-slate-500">Kirim 1 pesan uji coba ke nomor Anda untuk memastikan koneksi Twilio dan gambar QR berjalan.</p>
+                    <p class="text-[11px] text-slate-500">Kirim 1 pesan uji coba ke nomor Anda untuk memastikan template dan gambar QR masuk ke WhatsApp.</p>
                 </div>
 
                 <form action="{{ route('admin.wa-settings.test') }}" method="POST" class="flex gap-2">
@@ -273,7 +361,7 @@
                                 <div id="previewQrcode" class="p-1.5 bg-white border border-slate-300 inline-block shadow-2xs"></div>
                             </div>
                             <span class="font-mono font-bold text-[11px] text-slate-800 mt-2 block">{{ $sample->qr_token }}</span>
-                            <span class="text-[9px] text-slate-400 block">Lampiran Gambar Tiket QR (MediaUrl)</span>
+                            <span class="text-[9px] text-slate-400 block">Lampiran Gambar Tiket QR (Media Asli)</span>
                         </div>
 
                         <!-- Text Body Message Live -->
@@ -294,7 +382,7 @@
 
                 <!-- Mockup Chat Input Footer -->
                 <div class="bg-slate-100 border-t border-slate-200 p-2.5 flex items-center justify-between text-[11px] text-slate-400">
-                    <span>Simulasi pesan yang akan diterima di HP peserta</span>
+                    <span>Penerima melihat gambar QR langsung di chat</span>
                     <span class="font-mono">WhatsApp Web / App</span>
                 </div>
 
@@ -320,6 +408,16 @@
     const previewBody = document.getElementById('previewMessageBody');
     const checkboxAttach = document.getElementById('attachQrCheckbox');
     const previewQr = document.getElementById('previewQrContainer');
+    const metaGuide = document.getElementById('metaTemplateGuide');
+
+    // Switch mode
+    function switchMode(mode) {
+        if (mode === 'template') {
+            metaGuide.classList.remove('hidden');
+        } else {
+            metaGuide.classList.add('hidden');
+        }
+    }
 
     // Render Preview QR Code
     document.addEventListener('DOMContentLoaded', function() {

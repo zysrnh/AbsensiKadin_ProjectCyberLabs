@@ -26,6 +26,7 @@ class WaSettingController extends Controller
 
         $template = Setting::get('wa_template', $defaultTemplate);
         $attachQr = Setting::get('wa_attach_qr', '1');
+        $twilioMode = Setting::get('twilio_mode', 'freeform');
         $twilioSid = Setting::get('twilio_sid', env('TWILIO_SID', ''));
         $twilioToken = Setting::get('twilio_token', env('TWILIO_AUTH_TOKEN', ''));
         $twilioFrom = Setting::get('twilio_from', env('TWILIO_WHATSAPP_FROM', '+14155238886'));
@@ -45,6 +46,7 @@ class WaSettingController extends Controller
         return view('admin.wa-settings', compact(
             'template',
             'attachQr',
+            'twilioMode',
             'twilioSid',
             'twilioToken',
             'twilioFrom',
@@ -61,6 +63,7 @@ class WaSettingController extends Controller
     {
         $request->validate([
             'wa_template' => 'required|string',
+            'twilio_mode' => 'required|in:freeform,template',
             'twilio_sid' => 'nullable|string',
             'twilio_token' => 'nullable|string',
             'twilio_from' => 'nullable|string',
@@ -69,6 +72,7 @@ class WaSettingController extends Controller
 
         Setting::set('wa_template', $request->wa_template);
         Setting::set('wa_attach_qr', $request->has('wa_attach_qr') ? '1' : '0');
+        Setting::set('twilio_mode', $request->twilio_mode);
         Setting::set('twilio_sid', $request->twilio_sid);
         Setting::set('twilio_token', $request->twilio_token);
         Setting::set('twilio_from', $request->twilio_from);
@@ -86,9 +90,6 @@ class WaSettingController extends Controller
             'test_phone' => 'required|string',
         ]);
 
-        $template = Setting::get('wa_template');
-        $attachQr = Setting::get('wa_attach_qr', '1') === '1';
-
         $sample = Participant::first() ?? new Participant([
             'name' => 'Tester KADIN',
             'company' => 'Kadin Indonesia',
@@ -97,10 +98,7 @@ class WaSettingController extends Controller
             'qr_token' => 'KD26-TEST001',
         ]);
 
-        $message = TwilioService::parseTemplate($template, $sample);
-        $mediaUrl = $attachQr ? route('participants.qr-image', $sample->qr_token) : null;
-
-        $result = TwilioService::send($request->test_phone, $message, $mediaUrl);
+        $result = TwilioService::sendTicket($sample, $request->test_phone);
 
         if ($result['success']) {
             return redirect()->back()->with('success', $result['message']);
@@ -114,13 +112,7 @@ class WaSettingController extends Controller
      */
     public function blastTwilio(Participant $participant)
     {
-        $template = Setting::get('wa_template');
-        $attachQr = Setting::get('wa_attach_qr', '1') === '1';
-
-        $message = TwilioService::parseTemplate($template, $participant);
-        $mediaUrl = $attachQr ? route('participants.qr-image', $participant->qr_token) : null;
-
-        $result = TwilioService::send($participant->phone, $message, $mediaUrl);
+        $result = TwilioService::sendTicket($participant);
 
         if ($result['success']) {
             return redirect()->back()->with('success', "Tiket berhasil dikirim ke WhatsApp {$participant->name} via Twilio!");
