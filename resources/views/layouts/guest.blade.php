@@ -30,24 +30,28 @@
 
     <!-- Clean Public Header: KADIN Saja -->
     <header class="bg-white border-b border-slate-200 py-3.5 px-4 sm:px-6">
-        <div class="max-w-xl mx-auto flex items-center justify-center">
+        <div class="max-w-6xl mx-auto flex items-center justify-between">
             <div class="flex items-center space-x-2">
                 <span class="px-3 py-1 bg-slate-900 text-white font-black text-sm tracking-widest rounded-sm">
                     KADIN
                 </span>
+                <span class="text-xs font-bold text-slate-700 tracking-tight">KADIN INDONESIA 2026</span>
             </div>
+            <a href="{{ route('admin.dashboard') }}" class="text-[11px] font-semibold text-slate-500 hover:text-slate-900 transition-colors">
+                Portal Admin →
+            </a>
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="flex-grow flex items-center justify-center py-8">
+    <main class="flex-grow py-6 sm:py-10">
         @yield('content')
     </main>
 
     <!-- Footer Simple -->
-    <footer class="bg-white border-t border-slate-200 py-3.5">
-        <div class="max-w-xl mx-auto px-4 text-center text-xs text-slate-400">
-            &copy; {{ date('Y') }} KADIN. Hak Cipta Dilindungi.
+    <footer class="bg-white border-t border-slate-200 py-4">
+        <div class="max-w-6xl mx-auto px-4 text-center text-xs text-slate-400">
+            &copy; {{ date('Y') }} KADIN Indonesia. Sistem Presensi & Pendaftaran Resmi.
         </div>
     </footer>
 

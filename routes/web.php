@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EventSettingController;
 use App\Http\Controllers\ParticipantController;
 use App\Http\Controllers\WaSettingController;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +28,10 @@ Route::prefix('admin')->group(function () {
     Route::get('/wa-settings', [WaSettingController::class, 'index'])->name('admin.wa-settings');
     Route::post('/wa-settings', [WaSettingController::class, 'update'])->name('admin.wa-settings.update');
     Route::post('/wa-settings/test', [WaSettingController::class, 'testSend'])->name('admin.wa-settings.test');
+
+    // Pengaturan Acara (Luma Event Landing)
+    Route::get('/event-settings', [EventSettingController::class, 'index'])->name('admin.event-settings');
+    Route::post('/event-settings', [EventSettingController::class, 'update'])->name('admin.event-settings.update');
 
     // Scanner Presensi Admin
     Route::get('/scan', function () {

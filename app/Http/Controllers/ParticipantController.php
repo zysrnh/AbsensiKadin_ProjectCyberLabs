@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Participant;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -13,7 +14,21 @@ class ParticipantController extends Controller
      */
     public function create()
     {
-        return view('participants.create');
+        $settings = [
+            'event_title' => Setting::get('event_title', 'Musyawarah & Temu Bisnis KADIN Indonesia 2026'),
+            'event_organizer' => Setting::get('event_organizer', 'KADIN Indonesia'),
+            'event_date' => Setting::get('event_date', '28 Oktober 2026'),
+            'event_time' => Setting::get('event_time', '08:30 - 16:30 WIB'),
+            'event_venue_name' => Setting::get('event_venue_name', 'Grand Ballroom Menara Kadin Indonesia'),
+            'event_venue_address' => Setting::get('event_venue_address', 'Jl. H. R. Rasuna Said Blok X-5 Kav. 2-3, Setiabudi, Jakarta Selatan'),
+            'event_maps_url' => Setting::get('event_maps_url', 'https://maps.google.com/?q=Menara+Kadin+Indonesia'),
+            'event_maps_iframe' => Setting::get('event_maps_iframe', ''),
+            'event_dresscode' => Setting::get('event_dresscode', 'Batik Formal / Pakaian Bisnis Rapi'),
+            'event_description' => Setting::get('event_description', 'Pertemuan strategis para pelaku usaha, pimpinan asosiasi, dan pemangku kepentingan industri nasional dalam rangka akselerasi ekonomi dan kolaborasi bisnis berkelanjutan.'),
+            'event_flyer' => Setting::get('event_flyer', ''),
+        ];
+
+        return view('participants.create', compact('settings'));
     }
 
     /**
@@ -23,13 +38,12 @@ class ParticipantController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'phone' => 'required|string|max:25',
             'position' => 'required|string|max:255',
             'company' => 'required|string|max:255',
-            'phone' => 'nullable|string|max:25',
-            'email' => 'nullable|email|max:255',
-            'notes' => 'nullable|string|max:500',
         ], [
-            'name.required' => 'Nama wajib diisi.',
+            'name.required' => 'Nama lengkap wajib diisi.',
+            'phone.required' => 'Nomor telepon / WhatsApp wajib diisi.',
             'position.required' => 'Jabatan wajib diisi.',
             'company.required' => 'Company wajib diisi.',
         ]);
@@ -41,11 +55,11 @@ class ParticipantController extends Controller
 
         $participant = Participant::create([
             'name' => $validated['name'],
+            'phone' => $validated['phone'],
             'position' => $validated['position'],
             'company' => $validated['company'],
-            'phone' => $validated['phone'] ?? '-',
-            'email' => $validated['email'] ?? null,
-            'notes' => $validated['notes'] ?? null,
+            'email' => null,
+            'notes' => null,
             'qr_token' => $token,
             'status' => 'registered',
         ]);
