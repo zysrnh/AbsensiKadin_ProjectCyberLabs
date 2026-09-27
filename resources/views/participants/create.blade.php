@@ -5,28 +5,29 @@
 @section('content')
 <div class="max-w-5xl mx-auto px-4 sm:px-6">
 
-    <!-- Kontainer Acara Ala Luma Asli (2 Kolom Seimbang) -->
-    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-10 items-start">
+    <!-- Container Grid 2 Kolom dengan Fallback CSS Grid Manual (Tahan Purging) -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem;">
 
-        <!-- ================= SISI KIRI (Col 5): Poster Acara, Deskripsi, & Peta ================= -->
-        <div class="md:col-span-5 space-y-6">
+        <!-- ================= SISI KIRI: Poster Acara, Deskripsi & Peta ================= -->
+        <div class="space-y-6" style="min-width: 300px;">
 
-            <!-- 1. Poster / Flyer Acara (Rasio 1:1 Persegi Otentik Luma) -->
+            <!-- 1. Poster / Flyer Acara (Rasio Persegi Mantap) -->
             <div class="border border-slate-200 rounded-sm bg-white overflow-hidden shadow-xs">
                 @if(!empty($settings['event_flyer']))
                     <img 
                         src="{{ asset($settings['event_flyer']) }}" 
                         alt="{{ $settings['event_title'] }}" 
-                        class="w-full aspect-square object-cover"
+                        class="w-full h-auto object-cover"
+                        style="aspect-ratio: 1/1; width: 100%; object-fit: cover;"
                     >
                 @else
-                    <!-- Poster Grafis Default KADIN yang Proporsional & Rapi -->
-                    <div class="w-full aspect-square bg-slate-900 text-white p-6 sm:p-7 flex flex-col justify-between border-b-4 border-blue-600">
+                    <!-- Poster Grafis Default KADIN yang Proporsional -->
+                    <div class="bg-slate-900 text-white p-6 sm:p-7 flex flex-col justify-between border-b-4 border-blue-600" style="aspect-ratio: 1/1; min-height: 320px;">
                         <div class="flex items-center justify-between">
-                            <span class="px-2 py-0.5 bg-blue-600 text-white font-black text-[10px] tracking-widest uppercase rounded-xs">
+                            <span class="px-2 py-0.5 bg-blue-600 text-white font-black text-xs tracking-widest uppercase rounded-xs">
                                 KADIN
                             </span>
-                            <span class="text-[10px] font-mono text-slate-400 uppercase tracking-wider">
+                            <span class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">
                                 TAHUN 2026
                             </span>
                         </div>
@@ -41,15 +42,15 @@
                             <p class="text-xs text-slate-400 mt-2 font-medium">Kamar Dagang dan Industri Indonesia</p>
                         </div>
 
-                        <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-[10px] text-slate-400">
-                            <span>Sistem Presensi Digital</span>
+                        <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
+                            <span>Presensi Digital</span>
                             <span class="font-mono text-slate-300">E-Ticket QR</span>
                         </div>
                     </div>
                 @endif
             </div>
 
-            <!-- 2. Tentang Acara (Deskripsi) -->
+            <!-- 2. Tentang Acara -->
             @if(!empty($settings['event_description']))
                 <div class="bg-white border border-slate-200 rounded-sm p-5 shadow-xs space-y-2">
                     <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Tentang Kegiatan</h3>
@@ -59,7 +60,7 @@
                 </div>
             @endif
 
-            <!-- 3. Peta Lokasi Acara (Embed Google Maps jika ada) -->
+            <!-- 3. Peta Lokasi (Iframe Embed) -->
             @if(!empty($settings['event_maps_iframe']))
                 <div class="bg-white border border-slate-200 rounded-sm p-4 shadow-xs space-y-2">
                     <span class="text-xs font-bold text-slate-900 uppercase tracking-wider block">Peta Lokasi</span>
@@ -71,12 +72,11 @@
 
         </div>
 
-        <!-- ================= SISI KANAN (Col 7): Header Acara, Detail, & Form Registrasi ================= -->
-        <div class="md:col-span-7 space-y-6">
+        <!-- ================= SISI KANAN: Header, Detail Logistik, & Form Pendaftaran ================= -->
+        <div class="space-y-6" style="min-width: 320px;">
 
-            <!-- 1. Header Informasi Acara (Judul Utama & Host) -->
-            <div class="space-y-3">
-                <!-- Host Profil Verified -->
+            <!-- 1. Header Informasi Acara -->
+            <div class="space-y-2">
                 <div class="flex items-center gap-2">
                     <span class="px-2 py-0.5 bg-slate-900 text-white font-bold text-[10px] rounded-xs">
                         HOST
@@ -89,13 +89,12 @@
                     </span>
                 </div>
 
-                <!-- Judul Acara Besar & Gagah -->
                 <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">
                     {{ $settings['event_title'] }}
                 </h1>
             </div>
 
-            <!-- 2. Kotak Detail Logistik (Waktu, Dresscode, Lokasi Ala Luma) -->
+            <!-- 2. Detail Logistik (Waktu, Dresscode, Lokasi) -->
             <div class="bg-white border border-slate-200 rounded-sm divide-y divide-slate-100 shadow-xs text-xs">
                 
                 <!-- Waktu & Tanggal -->
@@ -158,7 +157,7 @@
 
             </div>
 
-            <!-- 3. Card Form Registrasi Peserta (Elegan & Terintegrasi) -->
+            <!-- 3. Form Registrasi Peserta -->
             <div class="bg-white border border-slate-200 rounded-sm shadow-xs p-5 sm:p-6 space-y-4">
                 
                 <div class="flex items-center justify-between border-b border-slate-100 pb-3">
