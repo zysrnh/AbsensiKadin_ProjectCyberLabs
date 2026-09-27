@@ -11,8 +11,8 @@
         <!-- Header Hijau/Emerald Bersih -->
         <div class="p-6 sm:p-8 text-center border-b border-slate-100 bg-slate-50/50">
             <!-- Icon Checklist Sukses -->
-            <div class="w-14 h-14 bg-emerald-100 border border-emerald-200 text-emerald-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="w-14 h-14 bg-emerald-100 border border-emerald-200 text-emerald-800 rounded-full flex items-center justify-center mx-auto mb-4" style="width: 56px; height: 56px;">
+                <svg width="28" height="28" style="width: 28px; height: 28px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
                 </svg>
             </div>
