@@ -61,7 +61,29 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
-        return view('admin.dashboard', compact('participants', 'stats', 'recentCheckins'));
+        $defaultInvitationTemplate = "Yth. Bapak/Ibu *{nama}*,\n\n"
+            . "Kamar Dagang dan Industri (KADIN) Indonesia dengan hormat mengundang Anda untuk hadir pada kegiatan:\n\n"
+            . "📌 *{nama_acara}*\n"
+            . "📅 Tanggal: {tanggal}\n"
+            . "⏰ Waktu: {waktu}\n"
+            . "📍 Tempat: {venue}\n"
+            . "👔 Dresscode: {dresscode}\n\n"
+            . "Mengingat kuota tempat terbatas, mohon kesediaan Bapak/Ibu untuk mengisi formulir kehadiran melalui tautan resmi berikut:\n"
+            . "🔗 {link_form}\n\n"
+            . "Terima kasih atas perhatian dan kerja sama Bapak/Ibu.\n\n"
+            . "Salam hormat,\n*Panitia KADIN Indonesia 2026*";
+
+        $invitationTemplate = \App\Models\Setting::get('wa_invitation_template', $defaultInvitationTemplate);
+        $eventSettings = [
+            'nama_acara' => \App\Models\Setting::get('event_title', 'Musyawarah & Temu Bisnis KADIN Indonesia 2026'),
+            'tanggal' => \App\Models\Setting::get('event_date', '28 Oktober 2026'),
+            'waktu' => \App\Models\Setting::get('event_time', '08:30 - 16:30 WIB'),
+            'venue' => \App\Models\Setting::get('event_venue_name', 'Grand Ballroom Menara Kadin Indonesia'),
+            'dresscode' => \App\Models\Setting::get('event_dresscode', 'Batik Formal / Pakaian Bisnis Rapi'),
+            'link_form' => route('home'),
+        ];
+
+        return view('admin.dashboard', compact('participants', 'stats', 'recentCheckins', 'invitationTemplate', 'eventSettings'));
     }
 
     /**

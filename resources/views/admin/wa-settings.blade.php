@@ -186,6 +186,61 @@
                     </div>
                 </div>
 
+                <!-- Card 2B: Template Undangan Pendaftaran Acara (Kirim Link Form) -->
+                <div class="bg-white border border-slate-200 rounded-sm p-5 shadow-2xs space-y-4">
+                    <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+                        <div>
+                            <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Format Teks Undangan Pendaftaran</h2>
+                            <p class="text-[11px] text-slate-400">Pesan resmi ajakan/undangan untuk tamu VIP mengisi formulir pendaftaran acara.</p>
+                        </div>
+                        <span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 text-[10px] font-bold rounded-sm border border-emerald-200">
+                            Undangan Registrasi
+                        </span>
+                    </div>
+
+                    <!-- Variable Tags Helper for Invitation -->
+                    <div>
+                        <span class="text-[11px] font-semibold text-slate-600 block mb-1.5">Klik untuk sisipkan variabel dinamis undangan:</span>
+                        <div class="flex flex-wrap gap-1.5">
+                            <button type="button" onclick="insertInvitationVar('{nama}')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-[11px] font-mono font-semibold rounded-sm cursor-pointer transition">
+                                {nama}
+                            </button>
+                            <button type="button" onclick="insertInvitationVar('{nama_acara}')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-[11px] font-mono font-semibold rounded-sm cursor-pointer transition">
+                                {nama_acara}
+                            </button>
+                            <button type="button" onclick="insertInvitationVar('{tanggal}')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-[11px] font-mono font-semibold rounded-sm cursor-pointer transition">
+                                {tanggal}
+                            </button>
+                            <button type="button" onclick="insertInvitationVar('{waktu}')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-[11px] font-mono font-semibold rounded-sm cursor-pointer transition">
+                                {waktu}
+                            </button>
+                            <button type="button" onclick="insertInvitationVar('{venue}')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-[11px] font-mono font-semibold rounded-sm cursor-pointer transition">
+                                {venue}
+                            </button>
+                            <button type="button" onclick="insertInvitationVar('{dresscode}')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-[11px] font-mono font-semibold rounded-sm cursor-pointer transition">
+                                {dresscode}
+                            </button>
+                            <button type="button" onclick="insertInvitationVar('{link_form}')" class="px-2 py-1 bg-emerald-100 hover:bg-emerald-200 border border-emerald-300 text-emerald-800 text-[11px] font-mono font-semibold rounded-sm cursor-pointer transition">
+                                {link_form}
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Textarea Invitation Template -->
+                    <div>
+                        <label for="waInvitationInput" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+                            Isi Pesan Undangan WhatsApp <span class="text-rose-500">*</span>
+                        </label>
+                        <textarea 
+                            name="wa_invitation_template" 
+                            id="waInvitationInput" 
+                            rows="8" 
+                            class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-sm text-xs font-mono text-slate-900 leading-relaxed focus:outline-none focus:border-slate-900 focus:bg-white transition-colors"
+                        >{{ old('wa_invitation_template', $invitationTemplate) }}</textarea>
+                        <p class="text-[11px] text-slate-500 mt-1">Pesan ini dapat disalin langsung, dibuka di WhatsApp Web, atau diblast via Twilio dari Dashboard Admin.</p>
+                    </div>
+                </div>
+
                 <!-- Card 3: Kredensial Twilio & Template ID -->
                 <div class="bg-white border border-slate-200 rounded-sm p-5 shadow-2xs space-y-4">
                     <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
@@ -338,9 +393,12 @@
                             <span class="text-[10px] text-emerald-200">Online &bull; Akun Resmi</span>
                         </div>
                     </div>
-                    <span class="text-[10px] font-bold text-white/80 bg-black/20 px-2 py-0.5 rounded-sm">
-                        Live Preview
-                    </span>
+                    
+                    <!-- Preview Tab Switcher -->
+                    <div class="inline-flex rounded-xs bg-black/25 p-0.5 text-[10px] font-semibold">
+                        <button type="button" id="tabPreviewTicket" onclick="setPreviewMode('ticket')" class="px-2 py-0.5 bg-white text-slate-900 rounded-2xs transition">Tiket QR</button>
+                        <button type="button" id="tabPreviewInvite" onclick="setPreviewMode('invitation')" class="px-2 py-0.5 text-white hover:text-emerald-100 rounded-2xs transition">Undangan</button>
+                    </div>
                 </div>
 
                 <!-- Mockup Chat Wallpaper / Background -->
@@ -382,7 +440,7 @@
 
                 <!-- Mockup Chat Input Footer -->
                 <div class="bg-slate-100 border-t border-slate-200 p-2.5 flex items-center justify-between text-[11px] text-slate-400">
-                    <span>Penerima melihat gambar QR langsung di chat</span>
+                    <span id="previewFooterNote">Penerima melihat gambar QR langsung di chat</span>
                     <span class="font-mono">WhatsApp Web / App</span>
                 </div>
 
@@ -401,14 +459,49 @@
         instansi: "{{ $sample->company }}",
         jabatan: "{{ $sample->position }}",
         kode_tiket: "{{ $sample->qr_token }}",
-        link_tiket: "{{ route('participants.card', $sample->qr_token) }}"
+        link_tiket: "{{ route('participants.card', $sample->qr_token) }}",
+        nama_acara: "Musyawarah & Temu Bisnis KADIN Indonesia 2026",
+        tanggal: "28 Oktober 2026",
+        waktu: "08:30 - 16:30 WIB",
+        venue: "Grand Ballroom Menara Kadin Indonesia",
+        dresscode: "Batik Formal / Pakaian Bisnis Rapi",
+        link_form: "{{ route('home') }}"
     };
 
-    const textarea = document.getElementById('waTemplateInput');
+    let currentPreviewMode = 'ticket';
+
+    const textareaTicket = document.getElementById('waTemplateInput');
+    const textareaInvite = document.getElementById('waInvitationInput');
     const previewBody = document.getElementById('previewMessageBody');
     const checkboxAttach = document.getElementById('attachQrCheckbox');
     const previewQr = document.getElementById('previewQrContainer');
     const metaGuide = document.getElementById('metaTemplateGuide');
+    const tabTicket = document.getElementById('tabPreviewTicket');
+    const tabInvite = document.getElementById('tabPreviewInvite');
+    const footerNote = document.getElementById('previewFooterNote');
+
+    function setPreviewMode(mode) {
+        currentPreviewMode = mode;
+        if (mode === 'ticket') {
+            tabTicket.classList.add('bg-white', 'text-slate-900');
+            tabTicket.classList.remove('text-white');
+            tabInvite.classList.remove('bg-white', 'text-slate-900');
+            tabInvite.classList.add('text-white');
+            if (checkboxAttach.checked) {
+                previewQr.classList.remove('hidden');
+            }
+            footerNote.textContent = 'Penerima melihat gambar QR langsung di chat';
+            updatePreviewTicket();
+        } else {
+            tabInvite.classList.add('bg-white', 'text-slate-900');
+            tabInvite.classList.remove('text-white');
+            tabTicket.classList.remove('bg-white', 'text-slate-900');
+            tabTicket.classList.add('text-white');
+            previewQr.classList.add('hidden');
+            footerNote.textContent = 'Undangan dikirim untuk pendaftaran tamu VIP';
+            updatePreviewInvite();
+        }
+    }
 
     // Switch mode
     function switchMode(mode) {
@@ -434,37 +527,72 @@
         }
     });
 
-    // Sisipkan variabel ke posisi kursor textarea
+    // Sisipkan variabel ke posisi kursor textarea Tiket
     function insertVariable(tag) {
-        const start = textarea.selectionStart;
-        const end = textarea.selectionEnd;
-        const text = textarea.value;
-        textarea.value = text.substring(0, start) + tag + text.substring(end);
-        textarea.focus();
-        textarea.selectionStart = textarea.selectionEnd = start + tag.length;
-        updatePreview();
+        const start = textareaTicket.selectionStart;
+        const end = textareaTicket.selectionEnd;
+        const text = textareaTicket.value;
+        textareaTicket.value = text.substring(0, start) + tag + text.substring(end);
+        textareaTicket.focus();
+        textareaTicket.selectionStart = textareaTicket.selectionEnd = start + tag.length;
+        setPreviewMode('ticket');
     }
 
-    // Update Live Preview saat mengetik di textarea
-    textarea.addEventListener('input', updatePreview);
+    // Sisipkan variabel ke posisi kursor textarea Undangan
+    function insertInvitationVar(tag) {
+        const start = textareaInvite.selectionStart;
+        const end = textareaInvite.selectionEnd;
+        const text = textareaInvite.value;
+        textareaInvite.value = text.substring(0, start) + tag + text.substring(end);
+        textareaInvite.focus();
+        textareaInvite.selectionStart = textareaInvite.selectionEnd = start + tag.length;
+        setPreviewMode('invitation');
+    }
 
-    function updatePreview() {
-        let text = textarea.value;
+    function updatePreviewTicket() {
+        let text = textareaTicket.value;
         text = text.replaceAll('{nama}', sampleData.nama)
                    .replaceAll('{instansi}', sampleData.instansi)
                    .replaceAll('{jabatan}', sampleData.jabatan)
                    .replaceAll('{kode_tiket}', sampleData.kode_tiket)
                    .replaceAll('{link_tiket}', sampleData.link_tiket);
-
         previewBody.textContent = text;
     }
 
+    function updatePreviewInvite() {
+        let text = textareaInvite.value;
+        text = text.replaceAll('{nama}', sampleData.nama)
+                   .replaceAll('{nama_acara}', sampleData.nama_acara)
+                   .replaceAll('{tanggal}', sampleData.tanggal)
+                   .replaceAll('{waktu}', sampleData.waktu)
+                   .replaceAll('{venue}', sampleData.venue)
+                   .replaceAll('{dresscode}', sampleData.dresscode)
+                   .replaceAll('{link_form}', sampleData.link_form);
+        previewBody.textContent = text;
+    }
+
+    textareaTicket.addEventListener('input', function() {
+        if (currentPreviewMode === 'ticket') updatePreviewTicket();
+    });
+    textareaTicket.addEventListener('focus', function() {
+        setPreviewMode('ticket');
+    });
+
+    textareaInvite.addEventListener('input', function() {
+        if (currentPreviewMode === 'invitation') updatePreviewInvite();
+    });
+    textareaInvite.addEventListener('focus', function() {
+        setPreviewMode('invitation');
+    });
+
     // Toggle Preview Gambar QR
     checkboxAttach.addEventListener('change', function() {
-        if (this.checked) {
-            previewQr.classList.remove('hidden');
-        } else {
-            previewQr.classList.add('hidden');
+        if (currentPreviewMode === 'ticket') {
+            if (this.checked) {
+                previewQr.classList.remove('hidden');
+            } else {
+                previewQr.classList.add('hidden');
+            }
         }
     });
 </script>

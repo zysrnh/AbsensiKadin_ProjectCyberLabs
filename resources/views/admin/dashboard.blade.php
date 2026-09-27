@@ -26,6 +26,14 @@
                 <span>Export CSV</span>
             </a>
 
+            <!-- Tombol Kirim Undangan Acara -->
+            <button type="button" onclick="openInviteModal()" class="px-3.5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs rounded-sm transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs">
+                <svg class="w-4 h-4 text-emerald-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <span>+ Kirim Undangan Acara</span>
+            </button>
+
             <!-- Buka Scanner QR -->
             <a href="{{ route('admin.scan') }}" class="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs rounded-sm transition-colors flex items-center gap-1.5">
                 <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -306,10 +314,303 @@
     </div>
 
 </div>
+
+<!-- MODAL: Kirim & Salin Undangan Pendaftaran Acara -->
+<div id="inviteModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 flex items-center justify-center p-4">
+    <div class="bg-white border border-slate-300 w-full max-w-2xl rounded-sm shadow-xl overflow-hidden animate-in fade-in duration-150">
+        
+        <!-- Modal Header -->
+        <div class="bg-slate-900 text-white px-5 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-2.5">
+                <div class="w-8 h-8 rounded-xs bg-emerald-600 flex items-center justify-center text-white font-bold">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold tracking-tight">Kirim Undangan Pendaftaran Acara</h3>
+                    <p class="text-[11px] text-slate-300">Bagikan tautan pendaftaran ke tamu VIP via Salin Teks, WhatsApp Web, atau Twilio API.</p>
+                </div>
+            </div>
+            <button type="button" onclick="closeInviteModal()" class="text-slate-400 hover:text-white p-1 text-lg font-bold leading-none cursor-pointer">
+                ✕
+            </button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="p-5 space-y-4">
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <!-- Input Nama Tamu -->
+                <div>
+                    <label for="inviteGuestName" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                        Nama Tamu / Penerima
+                    </label>
+                    <input 
+                        type="text" 
+                        id="inviteGuestName" 
+                        value="Bapak/Ibu Pimpinan" 
+                        placeholder="Contoh: Bpk. Ir. Bambang"
+                        class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-sm text-xs text-slate-900 focus:outline-none focus:border-slate-900 focus:bg-white"
+                        oninput="regenerateInviteText()"
+                    >
+                </div>
+
+                <!-- Input No HP WhatsApp -->
+                <div>
+                    <label for="inviteGuestPhone" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                        Nomor WhatsApp Tujuan
+                    </label>
+                    <input 
+                        type="tel" 
+                        id="inviteGuestPhone" 
+                        placeholder="081234567890 (untuk WA Web / Twilio)"
+                        class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-sm text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-900 focus:bg-white"
+                    >
+                </div>
+            </div>
+
+            <!-- Teks Pesan Undangan (Bisa diedit langsung) -->
+            <div>
+                <div class="flex items-center justify-between mb-1">
+                    <label for="inviteMessageArea" class="text-xs font-semibold text-slate-700 uppercase tracking-wider">
+                        Pratinjau Pesan Undangan (Termasuk Link Form)
+                    </label>
+                    <a href="{{ route('admin.wa-settings') }}" target="_blank" class="text-[11px] text-blue-700 hover:underline">
+                        ⚙ Atur Template Default
+                    </a>
+                </div>
+                <textarea 
+                    id="inviteMessageArea" 
+                    rows="9" 
+                    class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-sm text-xs font-mono text-slate-900 leading-relaxed focus:outline-none focus:border-slate-900 focus:bg-white"
+                ></textarea>
+                <div class="flex items-center justify-between mt-1 text-[11px] text-slate-500">
+                    <span>Tautan form: <strong class="text-slate-800 font-mono">{{ $eventSettings['link_form'] }}</strong></span>
+                    <button type="button" onclick="resetInviteTemplate()" class="text-slate-500 hover:text-slate-800 underline cursor-pointer">
+                        Reset ke template default
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Modal Footer: 3 Opsi Aksi -->
+        <div class="bg-slate-50 border-t border-slate-200 px-5 py-3.5 flex flex-col sm:flex-row items-center justify-between gap-2.5">
+            <button 
+                type="button" 
+                onclick="closeInviteModal()" 
+                class="w-full sm:w-auto px-4 py-2 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 font-semibold text-xs rounded-sm transition cursor-pointer"
+            >
+                Batal / Tutup
+            </button>
+
+            <div class="w-full sm:w-auto flex flex-wrap items-center gap-2">
+                <!-- 1. Salin Teks -->
+                <button 
+                    type="button" 
+                    onclick="copyInviteText()" 
+                    class="flex-1 sm:flex-initial px-3.5 py-2 bg-slate-800 hover:bg-slate-900 text-white font-semibold text-xs rounded-sm transition flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs"
+                >
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                    </svg>
+                    <span>Salin Pesan</span>
+                </button>
+
+                <!-- 2. Buka WA Web -->
+                <button 
+                    type="button" 
+                    onclick="openWaWeb()" 
+                    class="flex-1 sm:flex-initial px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-sm transition flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs"
+                >
+                    <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.299.144.35.49 1.199.533 1.286.044.087.073.189.014.305-.058.115-.087.188-.173.289l-.26.309c-.087.095-.179.199-.077.375.101.173.454.747.973 1.21 0.672.6 1.238.788 1.413.875.174.087.276.073.377-.044.101-.116.433-.506.549-.68.116-.173.232-.144.39-.087s1.011.477 1.184.564.289.13.332.202c.044.072.044.419-.1.824z" />
+                    </svg>
+                    <span>Buka WA Web</span>
+                </button>
+
+                <!-- 3. Kirim via Twilio -->
+                <button 
+                    type="button" 
+                    onclick="sendViaTwilio()" 
+                    class="flex-1 sm:flex-initial px-3.5 py-2 bg-blue-700 hover:bg-blue-800 text-white font-semibold text-xs rounded-sm transition flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs"
+                >
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    <span>Blast Twilio</span>
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+</div>
 @endsection
 
 @push('scripts')
 <script>
+    const eventData = @json($eventSettings);
+    const rawTemplate = @json($invitationTemplate);
+
+    function formatInvitation(guestName) {
+        let text = rawTemplate;
+        text = text.replaceAll('{nama}', guestName || 'Bapak/Ibu Pimpinan')
+                   .replaceAll('{nama_acara}', eventData.nama_acara)
+                   .replaceAll('{tanggal}', eventData.tanggal)
+                   .replaceAll('{waktu}', eventData.waktu)
+                   .replaceAll('{venue}', eventData.venue)
+                   .replaceAll('{dresscode}', eventData.dresscode)
+                   .replaceAll('{link_form}', eventData.link_form);
+        return text;
+    }
+
+    function openInviteModal() {
+        const guestName = document.getElementById('inviteGuestName').value.trim();
+        document.getElementById('inviteMessageArea').value = formatInvitation(guestName);
+        document.getElementById('inviteModal').classList.remove('hidden');
+    }
+
+    function closeInviteModal() {
+        document.getElementById('inviteModal').classList.add('hidden');
+    }
+
+    function regenerateInviteText() {
+        const guestName = document.getElementById('inviteGuestName').value.trim();
+        document.getElementById('inviteMessageArea').value = formatInvitation(guestName);
+    }
+
+    function resetInviteTemplate() {
+        regenerateInviteText();
+    }
+
+    // 1. Salin Teks ke Clipboard
+    function copyInviteText() {
+        const text = document.getElementById('inviteMessageArea').value;
+        if (!text) return;
+
+        navigator.clipboard.writeText(text).then(() => {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: 'Teks undangan berhasil disalin ke clipboard!',
+                showConfirmButton: false,
+                timer: 2500,
+                timerProgressBar: true
+            });
+        }).catch(err => {
+            // Fallback execCommand
+            const area = document.getElementById('inviteMessageArea');
+            area.select();
+            document.execCommand('copy');
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: 'Teks undangan disalin!',
+                showConfirmButton: false,
+                timer: 2000
+            });
+        });
+    }
+
+    // 2. Buka WhatsApp Web
+    function openWaWeb() {
+        const phoneInput = document.getElementById('inviteGuestPhone').value.trim();
+        const text = document.getElementById('inviteMessageArea').value;
+        
+        let cleanPhone = phoneInput.replace(/[^0-9]/g, '');
+        if (cleanPhone.startsWith('0')) {
+            cleanPhone = '62' + cleanPhone.substring(1);
+        }
+
+        const encoded = encodeURIComponent(text);
+        let url = cleanPhone ? `https://wa.me/${cleanPhone}?text=${encoded}` : `https://web.whatsapp.com/send?text=${encoded}`;
+        window.open(url, '_blank');
+    }
+
+    // 3. Kirim via Twilio
+    function sendViaTwilio() {
+        const phone = document.getElementById('inviteGuestPhone').value.trim();
+        const name = document.getElementById('inviteGuestName').value.trim();
+        const message = document.getElementById('inviteMessageArea').value.trim();
+
+        if (!phone) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Nomor WhatsApp Kosong',
+                text: 'Silakan isi nomor WhatsApp tujuan terlebih dahulu untuk kirim via Twilio.',
+                confirmButtonColor: '#0f172a'
+            });
+            document.getElementById('inviteGuestPhone').focus();
+            return;
+        }
+
+        Swal.fire({
+            title: 'Kirim Undangan via Twilio?',
+            text: `Kirim undangan pendaftaran ke nomor "${phone}"?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#1d4ed8',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Ya, Kirim Sekarang',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Mengirim Undangan...',
+                    text: 'Menghubungkan ke Twilio API...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                fetch("{{ route('admin.invitation.send') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: name || 'Bapak/Ibu Pimpinan',
+                        phone: phone,
+                        custom_message: message
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil Terkirim!',
+                            text: data.message || 'Pesan undangan berhasil dikirim via WhatsApp Twilio.',
+                            confirmButtonColor: '#0f172a'
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal Mengirim',
+                            text: data.message || 'Terjadi kesalahan saat mengirim pesan via Twilio.',
+                            confirmButtonColor: '#0f172a'
+                        });
+                    }
+                })
+                .catch(err => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error Koneksi',
+                        text: 'Tidak dapat menghubungi server atau API Twilio.',
+                        confirmButtonColor: '#0f172a'
+                    });
+                });
+            }
+        });
+    }
+
     function confirmDelete(e, name) {
         e.preventDefault();
         const form = e.target;

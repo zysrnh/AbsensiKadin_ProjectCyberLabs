@@ -35,6 +35,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/wa-settings', [WaSettingController::class, 'index'])->name('admin.wa-settings');
     Route::post('/wa-settings', [WaSettingController::class, 'update'])->name('admin.wa-settings.update');
     Route::post('/wa-settings/test', [WaSettingController::class, 'testSend'])->name('admin.wa-settings.test');
+    Route::post('/invitation/send', [WaSettingController::class, 'sendInvitation'])->name('admin.invitation.send');
 
     // Pengaturan Acara (Luma Event Landing)
     Route::get('/event-settings', [EventSettingController::class, 'index'])->name('admin.event-settings');
