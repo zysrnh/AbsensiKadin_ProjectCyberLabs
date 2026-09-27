@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [ParticipantController::class, 'create'])->name('home');
 Route::get('/register', [ParticipantController::class, 'create'])->name('participants.create');
 Route::post('/register', [ParticipantController::class, 'store'])->name('participants.store');
+Route::get('/requested/{token}', [ParticipantController::class, 'requested'])->name('participants.requested');
 
 // Tiket QR Peserta & Endpoint Raw Image untuk Twilio MediaUrl
 Route::get('/ticket/{token}', [ParticipantController::class, 'card'])->name('participants.card');

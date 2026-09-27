@@ -250,21 +250,21 @@
                         >
                     </div>
 
-                    <!-- Info Box Tiket QR -->
+                    <!-- Info Box Permohonan -->
                     <div class="p-2.5 bg-slate-50 border border-slate-200 rounded-sm text-[11px] text-slate-600 flex items-start gap-2">
                         <svg class="w-3.5 h-3.5 text-slate-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <span>Tiket resmi QR Code akan langsung diterbitkan setelah pendaftaran dikirim.</span>
+                        <span>Permohonan kehadiran Anda akan tercatat dalam sistem pendaftaran KADIN.</span>
                     </div>
 
-                    <!-- Tombol Submit Solid Charcoal -->
+                    <!-- Tombol Submit Request to Join -->
                     <div class="pt-1">
                         <button 
                             type="submit" 
                             class="w-full py-2.5 px-4 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs sm:text-sm rounded-sm transition-colors cursor-pointer flex items-center justify-center gap-2 border border-slate-900 shadow-2xs"
                         >
-                            <span>Daftar Acara Sekarang</span>
+                            <span>Request to Join</span>
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
                             </svg>

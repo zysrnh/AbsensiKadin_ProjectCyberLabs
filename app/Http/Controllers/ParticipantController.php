@@ -64,8 +64,19 @@ class ParticipantController extends Controller
             'status' => 'registered',
         ]);
 
-        return redirect()->route('participants.card', $participant->qr_token)
-            ->with('success', 'Pendaftaran berhasil! Tiket QR Code Anda telah diterbitkan.');
+        return redirect()->route('participants.requested', $participant->qr_token)
+            ->with('success', 'Permintaan bergabung berhasil diajukan!');
+    }
+
+    /**
+     * Tampilkan halaman konfirmasi pengajuan / Request to Join
+     */
+    public function requested(string $token)
+    {
+        $participant = Participant::where('qr_token', $token)->firstOrFail();
+        $eventTitle = Setting::get('event_title', 'Musyawarah & Temu Bisnis KADIN Indonesia 2026');
+
+        return view('participants.requested', compact('participant', 'eventTitle'));
     }
 
     /**
