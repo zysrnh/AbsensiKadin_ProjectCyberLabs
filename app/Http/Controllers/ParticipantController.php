@@ -23,17 +23,15 @@ class ParticipantController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'company' => 'required|string|max:255',
             'position' => 'required|string|max:255',
-            'phone' => 'required|string|max:25',
+            'company' => 'required|string|max:255',
+            'phone' => 'nullable|string|max:25',
             'email' => 'nullable|email|max:255',
             'notes' => 'nullable|string|max:500',
         ], [
-            'name.required' => 'Nama lengkap wajib diisi.',
-            'company.required' => 'Instansi / perusahaan wajib diisi.',
-            'position.required' => 'Jabatan / posisi wajib diisi.',
-            'phone.required' => 'Nomor WhatsApp wajib diisi.',
-            'email.email' => 'Format email tidak valid.',
+            'name.required' => 'Nama wajib diisi.',
+            'position.required' => 'Jabatan wajib diisi.',
+            'company.required' => 'Company wajib diisi.',
         ]);
 
         // Generate Token QR unik: KD26-XXXXXXXX
@@ -43,9 +41,9 @@ class ParticipantController extends Controller
 
         $participant = Participant::create([
             'name' => $validated['name'],
-            'company' => $validated['company'],
             'position' => $validated['position'],
-            'phone' => $validated['phone'],
+            'company' => $validated['company'],
+            'phone' => $validated['phone'] ?? '-',
             'email' => $validated['email'] ?? null,
             'notes' => $validated['notes'] ?? null,
             'qr_token' => $token,

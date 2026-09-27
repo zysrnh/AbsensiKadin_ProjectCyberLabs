@@ -33,10 +33,10 @@
         <form action="{{ route('participants.store') }}" method="POST" class="space-y-4">
             @csrf
 
-            <!-- Nama Lengkap -->
+            <!-- Nama -->
             <div>
                 <label for="name" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
-                    Nama Lengkap <span class="text-rose-500">*</span>
+                    Nama <span class="text-rose-500">*</span>
                 </label>
                 <input 
                     type="text" 
@@ -44,15 +44,31 @@
                     id="name" 
                     value="{{ old('name') }}" 
                     required 
-                    placeholder="Contoh: Budi Santoso, S.E."
+                    placeholder="Contoh: Budi Santoso"
                     class="w-full px-3.5 py-2.5 bg-white border {{ $errors->has('name') ? 'border-rose-400 bg-rose-50/30' : 'border-slate-300' }} rounded-sm text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-colors"
                 >
             </div>
 
-            <!-- Instansi / Perusahaan -->
+            <!-- Jabatan -->
+            <div>
+                <label for="position" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+                    Jabatan <span class="text-rose-500">*</span>
+                </label>
+                <input 
+                    type="text" 
+                    name="position" 
+                    id="position" 
+                    value="{{ old('position') }}" 
+                    required 
+                    placeholder="Contoh: Direktur Utama"
+                    class="w-full px-3.5 py-2.5 bg-white border {{ $errors->has('position') ? 'border-rose-400 bg-rose-50/30' : 'border-slate-300' }} rounded-sm text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-colors"
+                >
+            </div>
+
+            <!-- Company -->
             <div>
                 <label for="company" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
-                    Instansi / Perusahaan <span class="text-rose-500">*</span>
+                    Company <span class="text-rose-500">*</span>
                 </label>
                 <input 
                     type="text" 
@@ -65,59 +81,6 @@
                 >
             </div>
 
-            <!-- Jabatan / Posisi -->
-            <div>
-                <label for="position" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
-                    Jabatan / Posisi <span class="text-rose-500">*</span>
-                </label>
-                <input 
-                    type="text" 
-                    name="position" 
-                    id="position" 
-                    value="{{ old('position') }}" 
-                    required 
-                    placeholder="Contoh: Direktur Utama / Manajer Operasional"
-                    class="w-full px-3.5 py-2.5 bg-white border {{ $errors->has('position') ? 'border-rose-400 bg-rose-50/30' : 'border-slate-300' }} rounded-sm text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-colors"
-                >
-            </div>
-
-            <!-- Baris Grid: Nomor WhatsApp & Email -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <!-- Nomor WhatsApp -->
-                <div>
-                    <label for="phone" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
-                        Nomor WhatsApp <span class="text-rose-500">*</span>
-                    </label>
-                    <input 
-                        type="tel" 
-                        name="phone" 
-                        id="phone" 
-                        value="{{ old('phone') }}" 
-                        required 
-                        placeholder="081234567890"
-                        class="w-full px-3.5 py-2.5 bg-white border {{ $errors->has('phone') ? 'border-rose-400 bg-rose-50/30' : 'border-slate-300' }} rounded-sm text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-colors"
-                    >
-                </div>
-
-                <!-- Email -->
-                <div>
-                    <div class="flex items-center justify-between mb-1.5">
-                        <label for="email" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                            Email
-                        </label>
-                        <span class="text-[10px] text-slate-400 font-normal">(opsional)</span>
-                    </div>
-                    <input 
-                        type="email" 
-                        name="email" 
-                        id="email" 
-                        value="{{ old('email') }}" 
-                        placeholder="nama@perusahaan.com"
-                        class="w-full px-3.5 py-2.5 bg-white border {{ $errors->has('email') ? 'border-rose-400 bg-rose-50/30' : 'border-slate-300' }} rounded-sm text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-colors"
-                    >
-                </div>
-            </div>
-
             <!-- Info Box Bersih -->
             <div class="p-3 bg-slate-50 border border-slate-200 rounded-sm text-[11px] text-slate-600 flex items-start gap-2">
                 <svg class="w-4 h-4 text-slate-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -126,7 +89,7 @@
                 <span>Setelah registrasi dikirim, Anda akan langsung menerima <strong>Tiket Presensi QR Code</strong> resmi yang dapat disimpan dan ditunjukkan saat tiba di lokasi.</span>
             </div>
 
-            <!-- Tombol Submit Solid Charcoal/Hitam Formal: Kirim Pendaftaran Aja -->
+            <!-- Tombol Submit Solid Charcoal/Hitam Formal -->
             <div class="pt-2">
                 <button 
                     type="submit" 
