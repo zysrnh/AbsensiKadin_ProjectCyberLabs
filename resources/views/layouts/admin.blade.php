@@ -112,13 +112,23 @@
             </div>
         </div>
 
-        <!-- Sidebar Footer Status -->
-        <div class="p-4 border-t border-slate-800 text-[11px] text-slate-400 flex items-center justify-between">
-            <span class="flex items-center gap-1.5">
-                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                <span>Server Aktif</span>
-            </span>
-            <span class="font-mono text-slate-500">:8001</span>
+        <!-- Sidebar Footer Status & Logout -->
+        <div class="p-4 border-t border-slate-800 space-y-2.5">
+            <div class="flex items-center justify-between text-xs">
+                <div class="truncate">
+                    <p class="font-semibold text-white truncate text-xs">{{ auth()->user()->name ?? 'Administrator' }}</p>
+                    <p class="text-[10px] text-slate-400 truncate">{{ auth()->user()->email ?? 'admin@kadin.id' }}</p>
+                </div>
+            </div>
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="w-full py-1.5 px-2 bg-slate-800 hover:bg-rose-950/60 hover:text-rose-400 text-slate-300 text-[11px] font-semibold rounded-sm border border-slate-700 transition-colors flex items-center justify-center gap-1.5 cursor-pointer">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    <span>Keluar (Logout)</span>
+                </button>
+            </form>
         </div>
 
     </aside>
@@ -158,6 +168,14 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                     </svg>
                 </a>
+                <form action="{{ route('logout') }}" method="POST" class="inline">
+                    @csrf
+                    <button type="submit" title="Keluar / Logout" class="p-1.5 text-slate-500 hover:text-rose-600 hover:bg-slate-100 rounded-sm border border-slate-200 transition-colors cursor-pointer">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                    </button>
+                </form>
             </div>
 
         </header>

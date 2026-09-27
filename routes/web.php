@@ -1,12 +1,13 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventSettingController;
 use App\Http\Controllers\ParticipantController;
 use App\Http\Controllers\WaSettingController;
 use Illuminate\Support\Facades\Route;
 
-// Halaman Publik: Form Registrasi Pendaftaran
+// Halaman Publik: Form Registrasi Pendaftaran Ala Luma
 Route::get('/', [ParticipantController::class, 'create'])->name('home');
 Route::get('/register', [ParticipantController::class, 'create'])->name('participants.create');
 Route::post('/register', [ParticipantController::class, 'store'])->name('participants.store');
@@ -15,8 +16,13 @@ Route::post('/register', [ParticipantController::class, 'store'])->name('partici
 Route::get('/ticket/{token}', [ParticipantController::class, 'card'])->name('participants.card');
 Route::get('/ticket/{token}/qr-image', [ParticipantController::class, 'qrImage'])->name('participants.qr-image');
 
-// Panel Admin: Dashboard Pendaftar & Pengaturan Presensi
-Route::prefix('admin')->group(function () {
+// Autentikasi Administrator
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// Panel Admin: Diproteksi Middleware Auth
+Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/', fn () => redirect()->route('admin.dashboard'));
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
     Route::post('/participants/{participant}/toggle-checkin', [DashboardController::class, 'toggleCheckin'])->name('admin.participants.toggle');
