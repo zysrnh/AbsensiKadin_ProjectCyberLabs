@@ -170,6 +170,128 @@
 
             </div>
 
+            <!-- Card: Kirim ke Tamu Undangan Terdaftar (Checklist & Blast Massal) -->
+            <div class="bg-white border border-slate-200 rounded-sm p-5 shadow-2xs space-y-4">
+                <div class="border-b border-slate-100 pb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Tamu Undangan Terdaftar</h2>
+                            <span class="px-2 py-0.5 bg-slate-100 text-slate-700 text-[10px] font-bold rounded-sm border border-slate-300 font-mono">
+                                {{ $participants->count() }} Tamu
+                            </span>
+                        </div>
+                        <p class="text-[11px] text-slate-400">Pilih tamu dengan checkbox untuk broadcast via Twilio atau klik untuk preview.</p>
+                    </div>
+
+                    <!-- Input Filter Cari Cepat -->
+                    <div class="w-full sm:w-64">
+                        <input 
+                            type="text" 
+                            id="searchGuestInput" 
+                            placeholder="Cari nama / instansi..." 
+                            class="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 text-xs rounded-sm focus:outline-none focus:border-slate-900 focus:bg-white"
+                            oninput="filterGuestTable()"
+                        >
+                    </div>
+                </div>
+
+                <!-- Checkbox Toolbar & Bulk Action -->
+                <div class="p-3 bg-slate-50 border border-slate-200 rounded-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <div class="flex items-center gap-3 w-full sm:w-auto">
+                        <label class="flex items-center gap-2 text-xs font-semibold text-slate-800 cursor-pointer select-none">
+                            <input 
+                                type="checkbox" 
+                                id="selectAllCheckbox" 
+                                onchange="toggleSelectAll(this)" 
+                                class="rounded-sm border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer"
+                            >
+                            <span>Pilih Semua Tamu</span>
+                        </label>
+                        <span class="text-slate-300">|</span>
+                        <span id="selectedCountBadge" class="text-xs font-medium text-slate-500">
+                            0 tamu dipilih
+                        </span>
+                    </div>
+
+                    <!-- Tombol Blast Twilio Massal -->
+                    <button 
+                        type="button" 
+                        id="btnBulkTwilio" 
+                        onclick="sendBulkTwilio()" 
+                        disabled
+                        class="w-full sm:w-auto px-4 py-2 bg-blue-700 hover:bg-blue-800 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-semibold text-xs rounded-sm transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs"
+                    >
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                        <span>Blast Twilio ke (<span id="bulkCountNum">0</span>) Terpilih</span>
+                    </button>
+                </div>
+
+                <!-- Tabel Daftar Tamu Terdaftar -->
+                <div class="overflow-x-auto border border-slate-200 rounded-sm max-h-[360px] overflow-y-auto">
+                    <table class="w-full text-left text-xs text-slate-700 divide-y divide-slate-200">
+                        <thead class="bg-slate-100 text-[11px] font-bold text-slate-700 uppercase tracking-wider sticky top-0 z-10 shadow-2xs">
+                            <tr>
+                                <th scope="col" class="w-10 px-3 py-2.5 text-center">
+                                    &bull;
+                                </th>
+                                <th scope="col" class="px-3.5 py-2.5">Nama & Instansi</th>
+                                <th scope="col" class="px-3 py-2.5">WhatsApp</th>
+                                <th scope="col" class="px-3 py-2.5 text-right">Aksi Cepat</th>
+                            </tr>
+                        </thead>
+                        <tbody id="guestTableBody" class="divide-y divide-slate-100 bg-white">
+                            @forelse($participants as $p)
+                            <tr class="hover:bg-slate-50 transition-colors guest-row" data-name="{{ strtolower($p->name) }}" data-company="{{ strtolower($p->company) }}">
+                                <td class="px-3 py-2.5 text-center">
+                                    <input 
+                                        type="checkbox" 
+                                        value="{{ $p->id }}" 
+                                        class="guest-checkbox rounded-sm border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer"
+                                        onchange="onGuestCheckboxChange()"
+                                    >
+                                </td>
+                                <td class="px-3.5 py-2.5">
+                                    <span class="font-bold text-slate-900 block leading-tight">{{ $p->name }}</span>
+                                    <span class="text-[11px] text-slate-500">{{ $p->company }} &bull; {{ $p->position }}</span>
+                                </td>
+                                <td class="px-3 py-2.5 font-mono text-slate-800 text-[11px]">
+                                    {{ $p->phone }}
+                                </td>
+                                <td class="px-3 py-2.5 text-right whitespace-nowrap space-x-1">
+                                    <!-- Pilih ke Generator Atas -->
+                                    <button 
+                                        type="button" 
+                                        onclick="pickGuestToEditor('{{ addslashes($p->name) }}', '{{ $p->phone }}')" 
+                                        title="Muat data ke form editor atas"
+                                        class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold text-[10px] rounded-xs border border-slate-300 transition cursor-pointer"
+                                    >
+                                        Pilih
+                                    </button>
+                                    <!-- WA Web Langsung -->
+                                    <button 
+                                        type="button" 
+                                        onclick="directWaWeb('{{ addslashes($p->name) }}', '{{ $p->phone }}')" 
+                                        title="Langsung chat WhatsApp Web"
+                                        class="px-2 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-[10px] rounded-xs transition cursor-pointer"
+                                    >
+                                        WA Web
+                                    </button>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="4" class="px-4 py-8 text-center text-slate-400 text-xs">
+                                    Belum ada tamu atau peserta yang terdaftar di database.
+                                </td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             <!-- Petunjuk Penggunaan -->
             <div class="p-4 bg-slate-100 border border-slate-200 rounded-sm text-xs text-slate-600 space-y-2">
                 <div class="font-bold text-slate-800 flex items-center gap-1.5">
@@ -416,6 +538,151 @@
                             icon: 'error',
                             title: 'Gagal Mengirim',
                             text: data.message || 'Gagal mengirim pesan via Twilio.',
+                            confirmButtonColor: '#0f172a'
+                        });
+                    }
+                })
+                .catch(() => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error Koneksi',
+                        text: 'Tidak dapat menghubungi server API Twilio.',
+                        confirmButtonColor: '#0f172a'
+                    });
+                });
+            }
+        });
+    }
+
+    // CHECKBOX & BULK ACTIONS
+    function toggleSelectAll(master) {
+        const checkboxes = document.querySelectorAll('.guest-checkbox');
+        checkboxes.forEach(cb => {
+            const row = cb.closest('tr');
+            if (row && row.style.display !== 'none') {
+                cb.checked = master.checked;
+            }
+        });
+        updateBulkUI();
+    }
+
+    function onGuestCheckboxChange() {
+        updateBulkUI();
+    }
+
+    function updateBulkUI() {
+        const selected = document.querySelectorAll('.guest-checkbox:checked');
+        const count = selected.length;
+        const total = document.querySelectorAll('.guest-checkbox').length;
+        
+        document.getElementById('selectedCountBadge').textContent = `${count} tamu dipilih`;
+        document.getElementById('bulkCountNum').textContent = count;
+        
+        const btnBulk = document.getElementById('btnBulkTwilio');
+        btnBulk.disabled = (count === 0);
+
+        const selectAll = document.getElementById('selectAllCheckbox');
+        if (selectAll) {
+            selectAll.checked = (count > 0 && count === total);
+            selectAll.indeterminate = (count > 0 && count < total);
+        }
+    }
+
+    function filterGuestTable() {
+        const query = document.getElementById('searchGuestInput').value.toLowerCase().trim();
+        const rows = document.querySelectorAll('.guest-row');
+        rows.forEach(row => {
+            const name = row.getAttribute('data-name') || '';
+            const company = row.getAttribute('data-company') || '';
+            if (name.includes(query) || company.includes(query)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+        updateBulkUI();
+    }
+
+    // Pilih tamu ke Form Editor Atas
+    function pickGuestToEditor(name, phone) {
+        nameInput.value = name;
+        phoneInput.value = phone;
+        updateInvitationText();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: 'info',
+            title: `Tamu "${name}" dimuat ke editor!`,
+            showConfirmButton: false,
+            timer: 2000
+        });
+    }
+
+    // Direct WhatsApp Web untuk 1 tamu
+    function directWaWeb(name, phone) {
+        const message = buildTemplate(name);
+        let cleanPhone = phone.replace(/[^0-9]/g, '');
+        if (cleanPhone.startsWith('0')) {
+            cleanPhone = '62' + cleanPhone.substring(1);
+        }
+        const encoded = encodeURIComponent(message);
+        window.open(`https://wa.me/${cleanPhone}?text=${encoded}`, '_blank');
+    }
+
+    // Kirim Bulk Twilio
+    function sendBulkTwilio() {
+        const selected = document.querySelectorAll('.guest-checkbox:checked');
+        const ids = Array.from(selected).map(cb => cb.value);
+
+        if (ids.length === 0) return;
+
+        Swal.fire({
+            title: `Blast Twilio ke ${ids.length} Tamu?`,
+            text: `Sistem akan mengirimkan pesan undangan resmi via WhatsApp Twilio ke ${ids.length} tamu terpilih. Lanjutkan?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#1d4ed8',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: `Ya, Blast Sekarang (${ids.length})`,
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Memproses Blast Twilio...',
+                    text: `Sedang mengirim ke ${ids.length} nomor WhatsApp...`,
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                fetch("{{ route('admin.invitation.send-bulk') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        ids: ids,
+                        custom_message: textArea.value.trim()
+                    })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Blast Selesai!',
+                            text: data.message,
+                            confirmButtonColor: '#0f172a'
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Blast Gagal',
+                            text: data.message || 'Terjadi kendala saat blast Twilio.',
                             confirmButtonColor: '#0f172a'
                         });
                     }

@@ -184,6 +184,93 @@ class WaSettingController extends Controller
             'link_form' => route('home'),
         ];
 
-        return view('admin.invitation', compact('invitationTemplate', 'eventSettings'));
+        $participants = Participant::latest()->get();
+
+        return view('admin.invitation', compact('invitationTemplate', 'eventSettings', 'participants'));
+    }
+
+    /**
+     * Kirim undangan pendaftaran massal (bulk blast) via Twilio ke tamu terpilih
+     */
+    public function sendBulkInvitation(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:participants,id',
+            'custom_message' => 'nullable|string',
+        ]);
+
+        $participants = Participant::whereIn('id', $request->ids)->get();
+
+        if ($participants->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tidak ada tamu yang dipilih.',
+            ], 400);
+        }
+
+        $defaultInvitationTemplate = "Yth. Bapak/Ibu *{nama}*,\n\n"
+            . "Kamar Dagang dan Industri (KADIN) Indonesia dengan hormat mengundang Anda untuk hadir pada kegiatan:\n\n"
+            . "📌 *{nama_acara}*\n"
+            . "📅 Tanggal: {tanggal}\n"
+            . "⏰ Waktu: {waktu}\n"
+            . "📍 Tempat: {venue}\n"
+            . "👔 Dresscode: {dresscode}\n\n"
+            . "Mengingat kuota tempat terbatas, mohon kesediaan Bapak/Ibu untuk mengisi formulir kehadiran melalui tautan resmi berikut:\n"
+            . "🔗 {link_form}\n\n"
+            . "Terima kasih atas perhatian dan kerja sama Bapak/Ibu.\n\n"
+            . "Salam hormat,\n*Panitia KADIN Indonesia 2026*";
+
+        $template = $request->filled('custom_message') 
+            ? $request->custom_message 
+            : Setting::get('wa_invitation_template', $defaultInvitationTemplate);
+
+        $eventTitle = Setting::get('event_title', 'Musyawarah & Temu Bisnis KADIN Indonesia 2026');
+        $eventDate = Setting::get('event_date', '28 Oktober 2026');
+        $eventTime = Setting::get('event_time', '08:30 - 16:30 WIB');
+        $eventVenue = Setting::get('event_venue_name', 'Grand Ballroom Menara Kadin Indonesia');
+        $eventDresscode = Setting::get('event_dresscode', 'Batik Formal / Pakaian Bisnis Rapi');
+        $linkForm = route('home');
+
+        $sentCount = 0;
+        $failCount = 0;
+
+        foreach ($participants as $participant) {
+            $msg = str_replace([
+                '{nama}',
+                '{nama_acara}',
+                '{tanggal}',
+                '{waktu}',
+                '{venue}',
+                '{dresscode}',
+                '{link_form}',
+            ], [
+                $participant->name,
+                $eventTitle,
+                $eventDate,
+                $eventTime,
+                $eventVenue,
+                $eventDresscode,
+                $linkForm,
+            ], $template);
+
+            $result = TwilioService::send(
+                toPhone: $participant->phone,
+                message: $msg
+            );
+
+            if ($result['success']) {
+                $sentCount++;
+            } else {
+                $failCount++;
+            }
+        }
+
+        return response()->json([
+            'success' => $sentCount > 0,
+            'sent_count' => $sentCount,
+            'fail_count' => $failCount,
+            'message' => "Blast selesai: {$sentCount} undangan berhasil dikirim via Twilio." . ($failCount > 0 ? " ({$failCount} gagal)." : ""),
+        ]);
     }
 }

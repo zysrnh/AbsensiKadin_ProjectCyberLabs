@@ -37,6 +37,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     // Kirim & Kelola Undangan Pendaftaran Acara
     Route::get('/invitation', [WaSettingController::class, 'invitationPage'])->name('admin.invitation');
     Route::post('/invitation/send', [WaSettingController::class, 'sendInvitation'])->name('admin.invitation.send');
+    Route::post('/invitation/send-bulk', [WaSettingController::class, 'sendBulkInvitation'])->name('admin.invitation.send-bulk');
 
     // Pengaturan Acara (Luma Event Landing)
     Route::get('/event-settings', [EventSettingController::class, 'index'])->name('admin.event-settings');
