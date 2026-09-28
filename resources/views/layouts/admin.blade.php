@@ -64,77 +64,105 @@
             </div>
 
             <!-- Navigation Links -->
-            <div class="p-4 space-y-1">
-                <span class="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
-                    Menu Utama
-                </span>
+            <div class="p-3.5 space-y-4 overflow-y-auto max-h-[calc(100vh-140px)]">
+                
+                <!-- Section 1: Operasional Presensi -->
+                <div class="space-y-1">
+                    <span class="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">
+                        Operasional Presensi
+                    </span>
 
-                <!-- 1. Dashboard Pendaftar -->
-                <a href="{{ route('admin.dashboard') }}" 
-                   class="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-sm transition-colors {{ request()->routeIs('admin.dashboard') ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
-                    <svg class="w-4 h-4 {{ request()->routeIs('admin.dashboard') ? 'text-white' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                    </svg>
-                    <span>Dashboard Pendaftar</span>
-                </a>
+                    <!-- 1. Dashboard Pendaftar -->
+                    <a href="{{ route('admin.dashboard') }}" 
+                       class="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-sm transition-colors {{ request()->routeIs('admin.dashboard') ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                        <svg class="w-4 h-4 {{ request()->routeIs('admin.dashboard') ? 'text-white' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                        </svg>
+                        <span>Dashboard Pendaftar</span>
+                    </a>
 
-                <!-- 2. Kirim Undangan Acara -->
-                <a href="{{ route('admin.invitation') }}" 
-                   class="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-sm transition-colors {{ request()->routeIs('admin.invitation') ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
-                    <svg class="w-4 h-4 {{ request()->routeIs('admin.invitation') ? 'text-white' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                    <span>Kirim Undangan</span>
-                </a>
+                    <!-- 2. Scanner Presensi QR (Icon Viewfinder Kamera) -->
+                    <a href="{{ route('admin.scan') }}" 
+                       class="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-sm transition-colors {{ request()->routeIs('admin.scan') ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                        <svg class="w-4 h-4 {{ request()->routeIs('admin.scan') ? 'text-white' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7V5a2 2 0 012-2h2m10 0h2a2 2 0 012 2v2m0 10v2a2 2 0 01-2 2h-2m-10 0H5a2 2 0 01-2-2v-2m4-5h6" />
+                        </svg>
+                        <span>Scanner Presensi</span>
+                    </a>
 
-                <!-- 3. Kirim Tiket QR Peserta -->
-                <a href="{{ route('admin.tickets') }}" 
-                   class="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-sm transition-colors {{ request()->routeIs('admin.tickets') ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
-                    <svg class="w-4 h-4 {{ request()->routeIs('admin.tickets') ? 'text-white' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
-                    </svg>
-                    <span>Kirim Tiket QR</span>
-                </a>
+                    <!-- 3. Cetak ID Card Lanyard -->
+                    <a href="{{ route('admin.participants.id-cards.bulk') }}" 
+                       target="_blank"
+                       class="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-sm transition-colors {{ request()->routeIs('admin.participants.id-cards.bulk') ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                        <svg class="w-4 h-4 {{ request()->routeIs('admin.participants.id-cards.bulk') ? 'text-white' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
+                        </svg>
+                        <span>Cetak ID Card Lanyard</span>
+                    </a>
+                </div>
 
-                <!-- 4. Kirim Reminder H-1 / Hari-H (RSVP Yes/No) -->
-                <a href="{{ route('admin.reminder') }}" 
-                   class="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-sm transition-colors {{ request()->routeIs('admin.reminder') ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
-                    <svg class="w-4 h-4 {{ request()->routeIs('admin.reminder') ? 'text-white' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                    </svg>
-                    <span>Kirim Reminder</span>
-                </a>
+                <!-- Section 2: Distribusi WhatsApp -->
+                <div class="space-y-1 pt-2 border-t border-slate-800">
+                    <span class="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">
+                        Distribusi WhatsApp
+                    </span>
 
-                <!-- 4. Template & Pengaturan WA -->
-                <a href="{{ route('admin.wa-settings') }}" 
-                   class="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-sm transition-colors {{ request()->routeIs('admin.wa-settings') ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
-                    <svg class="w-4 h-4 {{ request()->routeIs('admin.wa-settings') ? 'text-white' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                    </svg>
-                    <span>Pengaturan WA & Twilio</span>
-                </a>
+                    <!-- Kirim Undangan Acara -->
+                    <a href="{{ route('admin.invitation') }}" 
+                       class="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-sm transition-colors {{ request()->routeIs('admin.invitation') ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                        <svg class="w-4 h-4 {{ request()->routeIs('admin.invitation') ? 'text-white' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                        <span>Kirim Undangan</span>
+                    </a>
 
-                <!-- 3. Scanner Presensi QR -->
-                <a href="{{ route('admin.scan') }}" 
-                   class="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-sm transition-colors {{ request()->routeIs('admin.scan') ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
-                    <svg class="w-4 h-4 {{ request()->routeIs('admin.scan') ? 'text-white' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
-                    </svg>
-                    <span>Scanner Presensi</span>
-                </a>
+                    <!-- Kirim Tiket QR Peserta -->
+                    <a href="{{ route('admin.tickets') }}" 
+                       class="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-sm transition-colors {{ request()->routeIs('admin.tickets') ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                        <svg class="w-4 h-4 {{ request()->routeIs('admin.tickets') ? 'text-white' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                        </svg>
+                        <span>Kirim Tiket QR</span>
+                    </a>
 
-                <!-- 4. Pengaturan Acara (Luma Event Landing) -->
-                <a href="{{ route('admin.event-settings') }}" 
-                   class="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-sm transition-colors {{ request()->routeIs('admin.event-settings') ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
-                    <svg class="w-4 h-4 {{ request()->routeIs('admin.event-settings') ? 'text-white' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
-                    </svg>
-                    <span>Pengaturan Acara</span>
-                </a>
+                    <!-- Kirim Reminder H-1 / Hari-H (RSVP) -->
+                    <a href="{{ route('admin.reminder') }}" 
+                       class="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-sm transition-colors {{ request()->routeIs('admin.reminder') ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                        <svg class="w-4 h-4 {{ request()->routeIs('admin.reminder') ? 'text-white' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                        </svg>
+                        <span>Kirim Reminder</span>
+                    </a>
+                </div>
 
-                <!-- Separator -->
-                <div class="pt-4 mt-4 border-t border-slate-800">
-                    <span class="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
+                <!-- Section 3: Pengaturan -->
+                <div class="space-y-1 pt-2 border-t border-slate-800">
+                    <span class="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">
+                        Pengaturan
+                    </span>
+
+                    <!-- Pengaturan Acara (Luma Event Landing) -->
+                    <a href="{{ route('admin.event-settings') }}" 
+                       class="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-sm transition-colors {{ request()->routeIs('admin.event-settings') ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                        <svg class="w-4 h-4 {{ request()->routeIs('admin.event-settings') ? 'text-white' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        <span>Pengaturan Acara</span>
+                    </a>
+
+                    <!-- Template & Pengaturan WA & Twilio -->
+                    <a href="{{ route('admin.wa-settings') }}" 
+                       class="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-sm transition-colors {{ request()->routeIs('admin.wa-settings') ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                        <svg class="w-4 h-4 {{ request()->routeIs('admin.wa-settings') ? 'text-white' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                        </svg>
+                        <span>Pengaturan WA & Twilio</span>
+                    </a>
+                </div>
+
+                <!-- Section 4: Tautan Eksternal -->
+                <div class="pt-2 border-t border-slate-800">
+                    <span class="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">
                         Tautan Eksternal
                     </span>
                     <a href="{{ route('participants.create') }}" 
