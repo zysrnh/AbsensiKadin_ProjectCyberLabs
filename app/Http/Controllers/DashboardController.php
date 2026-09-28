@@ -33,6 +33,17 @@ class DashboardController extends Controller
             $query->where('status', $request->status);
         }
 
+        // Filter Status RSVP
+        if ($request->filled('rsvp')) {
+            if ($request->rsvp === 'pending') {
+                $query->where(function ($q) {
+                    $q->whereNull('rsvp_status')->orWhere('rsvp_status', 'pending');
+                });
+            } else {
+                $query->where('rsvp_status', $request->rsvp);
+            }
+        }
+
         // Filter Tanggal
         if ($request->filled('date') && $request->date === 'today') {
             $query->whereDate('created_at', today());
@@ -47,12 +58,21 @@ class DashboardController extends Controller
         $todayRegistered = Participant::whereDate('created_at', today())->count();
         $rate = $total > 0 ? round(($attended / $total) * 100, 1) : 0;
 
+        $rsvpAttending = Participant::where('rsvp_status', 'attending')->count();
+        $rsvpDeclined = Participant::where('rsvp_status', 'declined')->count();
+        $rsvpPending = Participant::where(function ($q) {
+            $q->whereNull('rsvp_status')->orWhere('rsvp_status', 'pending');
+        })->count();
+
         $stats = [
             'total' => $total,
             'attended' => $attended,
             'registered' => $registered,
             'today_registered' => $todayRegistered,
             'attendance_rate' => $rate,
+            'rsvp_attending' => $rsvpAttending,
+            'rsvp_declined' => $rsvpDeclined,
+            'rsvp_pending' => $rsvpPending,
         ];
 
         // 5 Absensi Terkini
@@ -128,11 +148,19 @@ class DashboardController extends Controller
                 'Nomor WhatsApp',
                 'Email',
                 'Status Presensi',
+                'Status RSVP',
                 'Waktu Hadir',
+                'Waktu RSVP',
                 'Waktu Pendaftaran',
             ], ';');
 
             foreach ($participants as $index => $p) {
+                $rsvpLabel = match($p->rsvp_status) {
+                    'attending' => 'KONFIRMASI HADIR',
+                    'declined' => 'BERHALANGAN',
+                    default => 'MENUNGGU KONFIRMASI'
+                };
+
                 fputcsv($handle, [
                     $index + 1,
                     $p->qr_token,
@@ -142,7 +170,9 @@ class DashboardController extends Controller
                     $p->phone,
                     $p->email ?? '-',
                     $p->status === 'attended' ? 'HADIR' : 'BELUM HADIR',
+                    $rsvpLabel,
                     $p->attended_at ? $p->attended_at->format('d/m/Y H:i:s') : '-',
+                    $p->rsvp_at ? $p->rsvp_at->format('d/m/Y H:i:s') : '-',
                     $p->created_at->format('d/m/Y H:i:s'),
                 ], ';');
             }

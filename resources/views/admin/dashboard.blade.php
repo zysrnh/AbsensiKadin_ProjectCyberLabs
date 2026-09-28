@@ -8,18 +8,18 @@
 <div class="space-y-6">
 
     <!-- Top Header & Action Buttons -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-200">
         <div>
-            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-slate-100 border border-slate-200 rounded-sm mb-1 text-[11px] font-bold uppercase tracking-wider text-slate-700">
-                Pusat Kontrol Presensi
+            <div class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-blue-50 border border-blue-200 rounded-sm mb-1 text-[10px] font-bold uppercase tracking-wider text-blue-800">
+                Pusat Kontrol & Presensi
             </div>
             <h1 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Dashboard Pendaftar</h1>
-            <p class="text-xs text-slate-500 mt-0.5">Pantau data peserta, kelola blast tiket WhatsApp, dan verifikasi kehadiran secara real-time.</p>
+            <p class="text-xs text-slate-500 mt-0.5">Pantau data peserta, kelola pengiriman WhatsApp, dan verifikasi kehadiran secara real-time.</p>
         </div>
 
         <div class="flex items-center flex-wrap gap-2">
             <!-- Download CSV -->
-            <a href="{{ route('admin.export.csv') }}" class="px-3 py-2 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs rounded-sm border border-slate-300 transition-colors flex items-center gap-1.5 cursor-pointer">
+            <a href="{{ route('admin.export.csv') }}" class="px-3 py-2 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs rounded-sm border border-slate-300 transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs">
                 <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
@@ -27,7 +27,7 @@
             </a>
 
             <!-- Buka Scanner QR -->
-            <a href="{{ route('admin.scan') }}" class="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs rounded-sm transition-colors flex items-center gap-1.5">
+            <a href="{{ route('admin.scan') }}" class="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs rounded-sm transition-colors flex items-center gap-1.5 shadow-2xs">
                 <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
                 </svg>
@@ -35,7 +35,7 @@
             </a>
 
             <!-- Tambah Peserta Manual -->
-            <a href="{{ route('participants.create') }}" target="_blank" class="px-3.5 py-2 bg-blue-700 hover:bg-blue-800 text-white font-semibold text-xs rounded-sm transition-colors flex items-center gap-1.5">
+            <a href="{{ route('participants.create') }}" target="_blank" class="px-3.5 py-2 bg-blue-700 hover:bg-blue-800 text-white font-semibold text-xs rounded-sm transition-colors flex items-center gap-1.5 shadow-2xs">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
@@ -54,33 +54,38 @@
                 <span class="text-2xl font-bold text-slate-900">{{ number_format($stats['total']) }}</span>
                 <span class="text-[11px] font-medium text-slate-500">{{ $stats['today_registered'] }} hari ini</span>
             </div>
-            <div class="mt-2 w-full bg-slate-100 h-1.5 rounded-none">
+            <div class="mt-2.5 w-full bg-slate-100 h-1.5 rounded-none">
                 <div class="bg-slate-900 h-1.5" style="width: 100%"></div>
             </div>
         </div>
 
-        <!-- Sudah Hadir -->
+        <!-- Presensi di Lokasi (Sudah Hadir) -->
         <div class="p-4 bg-white border border-slate-200 rounded-sm shadow-2xs">
-            <span class="text-xs font-semibold text-emerald-700 uppercase tracking-wider block">Sudah Hadir</span>
+            <span class="text-xs font-semibold text-emerald-700 uppercase tracking-wider block">Hadir di Lokasi</span>
             <div class="flex items-baseline justify-between mt-1">
                 <span class="text-2xl font-bold text-emerald-700">{{ number_format($stats['attended']) }}</span>
-                <span class="text-[11px] font-medium text-emerald-700">Tervalidasi</span>
+                <span class="text-[11px] font-medium text-slate-500">{{ $stats['registered'] }} belum hadir</span>
             </div>
-            <div class="mt-2 w-full bg-slate-100 h-1.5 rounded-none">
+            <div class="mt-2.5 w-full bg-slate-100 h-1.5 rounded-none">
                 <div class="bg-emerald-600 h-1.5" style="width: {{ $stats['attendance_rate'] }}%"></div>
             </div>
         </div>
 
-        <!-- Belum Hadir -->
+        <!-- Status RSVP WhatsApp -->
         <div class="p-4 bg-white border border-slate-200 rounded-sm shadow-2xs">
-            <span class="text-xs font-semibold text-amber-700 uppercase tracking-wider block">Belum Hadir</span>
-            <div class="flex items-baseline justify-between mt-1">
-                <span class="text-2xl font-bold text-amber-700">{{ number_format($stats['registered']) }}</span>
-                <span class="text-[11px] font-medium text-amber-700">Menunggu</span>
+            <span class="text-xs font-semibold text-blue-800 uppercase tracking-wider block">Konfirmasi RSVP (WA)</span>
+            <div class="flex items-center gap-2 mt-1.5">
+                <span class="px-2 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold rounded-xs" title="Konfirmasi Hadir">
+                    {{ $stats['rsvp_attending'] }} Hadir
+                </span>
+                <span class="px-2 py-0.5 bg-rose-50 text-rose-800 border border-rose-200 text-xs font-bold rounded-xs" title="Konfirmasi Berhalangan">
+                    {{ $stats['rsvp_declined'] }} Batal
+                </span>
+                <span class="px-2 py-0.5 bg-slate-100 text-slate-600 border border-slate-200 text-xs font-medium rounded-xs" title="Belum Konfirmasi">
+                    {{ $stats['rsvp_pending'] }} Menunggu
+                </span>
             </div>
-            <div class="mt-2 w-full bg-slate-100 h-1.5 rounded-none">
-                <div class="bg-amber-500 h-1.5" style="width: {{ 100 - $stats['attendance_rate'] }}%"></div>
-            </div>
+            <span class="text-[10px] text-slate-400 mt-2 block">Dihimpun dari tombol RSVP WhatsApp</span>
         </div>
 
         <!-- Persentase Kehadiran -->
@@ -90,7 +95,7 @@
                 <span class="text-2xl font-bold text-slate-900">{{ $stats['attendance_rate'] }}%</span>
                 <span class="text-[11px] font-medium text-slate-500">{{ $stats['attended'] }} / {{ $stats['total'] }}</span>
             </div>
-            <div class="mt-2 w-full bg-slate-100 h-1.5 rounded-none">
+            <div class="mt-2.5 w-full bg-slate-100 h-1.5 rounded-none">
                 <div class="bg-blue-600 h-1.5" style="width: {{ $stats['attendance_rate'] }}%"></div>
             </div>
         </div>
@@ -102,25 +107,38 @@
         <form action="{{ route('admin.dashboard') }}" method="GET" class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
             
             <!-- Input Cari -->
-            <div class="sm:col-span-6">
+            <div class="sm:col-span-4">
                 <input 
                     type="text" 
                     name="search" 
                     value="{{ request('search') }}" 
-                    placeholder="Cari nama, instansi, jabatan, nomor WhatsApp, atau kode tiket..." 
-                    class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 text-xs text-slate-900 rounded-sm focus:outline-none focus:border-slate-900 focus:bg-white"
+                    placeholder="Cari nama, instansi, WhatsApp, token..." 
+                    class="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 text-xs text-slate-900 rounded-sm focus:outline-none focus:border-slate-900 focus:bg-white transition-colors"
                 >
             </div>
 
-            <!-- Filter Status -->
+            <!-- Filter Status Presensi -->
             <div class="sm:col-span-3">
                 <select 
                     name="status" 
-                    class="w-full px-3 py-2 bg-slate-50 border border-slate-200 text-xs text-slate-800 rounded-sm focus:outline-none focus:border-slate-900 focus:bg-white"
+                    class="w-full px-3 py-2 bg-slate-50 border border-slate-200 text-xs text-slate-800 rounded-sm focus:outline-none focus:border-slate-900 focus:bg-white transition-colors"
                 >
-                    <option value="">Semua Status Presensi</option>
+                    <option value="">Semua Presensi di Lokasi</option>
                     <option value="registered" {{ request('status') === 'registered' ? 'selected' : '' }}>Belum Hadir</option>
                     <option value="attended" {{ request('status') === 'attended' ? 'selected' : '' }}>Sudah Hadir</option>
+                </select>
+            </div>
+
+            <!-- Filter Status RSVP -->
+            <div class="sm:col-span-2">
+                <select 
+                    name="rsvp" 
+                    class="w-full px-3 py-2 bg-slate-50 border border-slate-200 text-xs text-slate-800 rounded-sm focus:outline-none focus:border-slate-900 focus:bg-white transition-colors"
+                >
+                    <option value="">Semua Status RSVP</option>
+                    <option value="attending" {{ request('rsvp') === 'attending' ? 'selected' : '' }}>Pasti Hadir</option>
+                    <option value="declined" {{ request('rsvp') === 'declined' ? 'selected' : '' }}>Berhalangan</option>
+                    <option value="pending" {{ request('rsvp') === 'pending' ? 'selected' : '' }}>Belum Respon</option>
                 </select>
             </div>
 
@@ -128,14 +146,14 @@
             <div class="sm:col-span-2">
                 <select 
                     name="date" 
-                    class="w-full px-3 py-2 bg-slate-50 border border-slate-200 text-xs text-slate-800 rounded-sm focus:outline-none focus:border-slate-900 focus:bg-white"
+                    class="w-full px-3 py-2 bg-slate-50 border border-slate-200 text-xs text-slate-800 rounded-sm focus:outline-none focus:border-slate-900 focus:bg-white transition-colors"
                 >
                     <option value="">Semua Tanggal</option>
-                    <option value="today" {{ request('date') === 'today' ? 'selected' : '' }}>Hari Ini</option>
+                    <option value="today" {{ request('date') === 'today' ? 'selected' : '' }}>Daftar Hari Ini</option>
                 </select>
             </div>
 
-            <!-- Submit Button -->
+            <!-- Submit Button & Reset -->
             <div class="sm:col-span-1 flex items-center space-x-1.5">
                 <button 
                     type="submit" 
@@ -143,7 +161,7 @@
                 >
                     Cari
                 </button>
-                @if(request('search') || request('status') || request('date'))
+                @if(request('search') || request('status') || request('rsvp') || request('date'))
                     <a href="{{ route('admin.dashboard') }}" class="px-2.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-sm border border-slate-200" title="Reset filter">
                         ✕
                     </a>
@@ -164,8 +182,8 @@
                         <th class="py-3 px-4">Instansi & Jabatan</th>
                         <th class="py-3 px-4">WhatsApp</th>
                         <th class="py-3 px-4">Kode Tiket</th>
-                        <th class="py-3 px-4">Status Presensi</th>
-                        <th class="py-3 px-4 text-center">Aksi / Blast WA</th>
+                        <th class="py-3 px-4">Presensi & RSVP</th>
+                        <th class="py-3 px-4 text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 text-slate-800">
@@ -189,7 +207,7 @@
                         <!-- Instansi & Jabatan -->
                         <td class="py-3.5 px-4">
                             <span class="font-semibold text-slate-900 block">{{ $item->company }}</span>
-                            <span class="text-[11px] text-slate-500">{{ $item->position }}</span>
+                            <span class="text-[11px] text-slate-500">{{ $item->position ?: '-' }}</span>
                         </td>
 
                         <!-- WhatsApp -->
@@ -199,27 +217,38 @@
 
                         <!-- Kode Tiket QR -->
                         <td class="py-3.5 px-4 font-mono font-bold text-slate-900">
-                            <span class="px-2 py-0.5 bg-slate-100 border border-slate-200 text-slate-800 rounded-sm">
-                                {{ $item->qr_token }}
-                            </span>
+                            <div class="flex items-center gap-1.5">
+                                <span class="px-2 py-0.5 bg-slate-100 border border-slate-200 text-slate-800 rounded-sm">
+                                    {{ $item->qr_token }}
+                                </span>
+                                <a 
+                                    href="{{ route('participants.card', $item->qr_token) }}" 
+                                    target="_blank"
+                                    class="text-slate-400 hover:text-blue-600 transition" 
+                                    title="Pratinjau E-Ticket"
+                                >
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                    </svg>
+                                </a>
+                            </div>
                         </td>
 
-                        <!-- Status Presensi & Quick Toggle -->
-                        <td class="py-3.5 px-4">
-                            @if($item->status === 'attended')
-                                <div class="flex items-center space-x-2">
-                                    <span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold uppercase rounded-sm inline-block">
+                        <!-- Presensi di Lokasi & Status RSVP -->
+                        <td class="py-3.5 px-4 space-y-1">
+                            <!-- Status Kehadiran Scan -->
+                            <div class="flex items-center space-x-2">
+                                @if($item->status === 'attended')
+                                    <span class="px-2 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-bold uppercase rounded-sm inline-block">
                                         Hadir {{ $item->attended_at ? $item->attended_at->format('H:i') : '' }}
                                     </span>
                                     <form action="{{ route('admin.participants.toggle', $item) }}" method="POST" class="inline">
                                         @csrf
-                                        <button type="submit" class="text-[10px] text-slate-400 hover:text-slate-700 underline cursor-pointer" title="Batal Hadir">
+                                        <button type="submit" class="text-[10px] text-slate-400 hover:text-slate-700 underline cursor-pointer" title="Batalkan presensi">
                                             (batal)
                                         </button>
                                     </form>
-                                </div>
-                            @else
-                                <div class="flex items-center space-x-2">
+                                @else
                                     <span class="px-2 py-0.5 bg-slate-100 text-slate-600 border border-slate-200 text-[10px] font-bold uppercase rounded-sm inline-block">
                                         Belum Hadir
                                     </span>
@@ -229,21 +258,55 @@
                                             Hadirkan
                                         </button>
                                     </form>
-                                </div>
-                            @endif
+                                @endif
+                            </div>
+
+                            <!-- Status Konfirmasi RSVP -->
+                            <div>
+                                @if($item->rsvp_status === 'attending')
+                                    <span class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                        RSVP: Pasti Hadir
+                                    </span>
+                                @elseif($item->rsvp_status === 'declined')
+                                    <span class="inline-flex items-center gap-1 text-[10px] font-bold text-rose-700">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                                        RSVP: Berhalangan
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center gap-1 text-[10px] text-slate-400">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
+                                        RSVP: Belum Respon
+                                    </span>
+                                @endif
+                            </div>
                         </td>
 
                         <!-- Aksi Buttons -->
                         <td class="py-3.5 px-4 text-center">
                             <div class="flex items-center justify-center space-x-1.5">
                                 
-                                <!-- Blast WhatsApp Web Button -->
+                                <!-- Buka Tiket QR -->
+                                <a 
+                                    href="{{ route('participants.card', $item->qr_token) }}" 
+                                    target="_blank"
+                                    class="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold text-[11px] rounded-sm border border-slate-300 transition-colors flex items-center gap-1"
+                                    title="Lihat Tiket QR"
+                                >
+                                    <svg class="w-3 h-3 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                    <span>Tiket</span>
+                                </a>
+
+                                <!-- Kirim via WhatsApp Web Button -->
                                 <a 
                                     href="{{ $item->whatsapp_blast_url }}" 
                                     target="_blank" 
                                     rel="noopener noreferrer"
-                                    class="px-2 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-[11px] rounded-sm transition-colors flex items-center space-x-1 shadow-2xs"
-                                    title="Kirim via WhatsApp Web manual"
+                                    class="px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-[11px] rounded-sm transition-colors flex items-center space-x-1 shadow-2xs"
+                                    title="Kirim tiket via WhatsApp Web manual"
                                 >
                                     <span>WA Web</span>
                                 </a>
@@ -253,23 +316,12 @@
                                     @csrf
                                     <button 
                                         type="submit" 
-                                        class="px-2 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-medium text-[11px] rounded-sm transition-colors flex items-center space-x-1 shadow-2xs cursor-pointer"
+                                        class="px-2.5 py-1.5 bg-blue-700 hover:bg-blue-800 text-white font-semibold text-[11px] rounded-sm transition-colors flex items-center space-x-1 shadow-2xs cursor-pointer"
                                         title="Kirim WhatsApp otomatis via API Twilio"
                                     >
                                         <span>Twilio</span>
                                     </button>
                                 </form>
-
-                                <!-- Buka Tiket QR -->
-                                <a 
-                                    href="{{ route('participants.card', $item->qr_token) }}" 
-                                    target="_blank"
-                                    class="px-2 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-medium text-[11px] rounded-sm border border-slate-300 transition-colors"
-                                    title="Lihat Tiket QR"
-                                >
-                                    Tiket QR
-                                </a>
-
 
                                 <!-- Hapus Button -->
                                 <form action="{{ route('admin.participants.destroy', $item) }}" method="POST" onsubmit="return confirmDelete(event, '{{ $item->name }}')">
@@ -289,7 +341,7 @@
                     @empty
                     <tr>
                         <td colspan="7" class="py-12 text-center text-slate-400">
-                            Tidak ada data peserta yang cocok dengan pencarian.
+                            Tidak ada data peserta yang cocok dengan filter pencarian.
                         </td>
                     </tr>
                     @endforelse
@@ -343,7 +395,7 @@
             text: `Kirim pesan WhatsApp presensi ke "${name}" via API Twilio?`,
             icon: 'question',
             showCancelButton: true,
-            confirmButtonColor: '#2563eb',
+            confirmButtonColor: '#1d4ed8',
             cancelButtonColor: '#64748b',
             confirmButtonText: 'Ya, Kirim Twilio',
             cancelButtonText: 'Batal',
