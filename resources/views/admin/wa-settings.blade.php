@@ -7,257 +7,90 @@
 <div class="space-y-6">
 
     <!-- Header Section -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-200">
         <div>
+            <div class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-blue-50 border border-blue-200 rounded-sm mb-1 text-[10px] font-bold uppercase tracking-wider text-blue-800">
+                Gateway & Kredensial API
+            </div>
             <h1 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Pengaturan WhatsApp & Twilio</h1>
-            <p class="text-xs text-slate-500 mt-0.5">Kelola mode pengiriman (Sandbox / Meta Template), template teks presensi, dan gambar tiket QR langsung.</p>
+            <p class="text-xs text-slate-500 mt-0.5">Kelola kredensial akun Twilio, nomor pengirim, dan 3 slot Content SID resmi Meta untuk broadcast otomatis.</p>
         </div>
 
         <div class="flex items-center gap-2">
-            <a href="{{ route('admin.dashboard') }}" class="px-3 py-2 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs rounded-sm border border-slate-300 transition-colors">
+            <a href="{{ route('admin.dashboard') }}" class="px-3 py-2 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs rounded-sm border border-slate-300 transition-colors shadow-2xs">
                 ← Kembali ke Dashboard
             </a>
         </div>
     </div>
 
-    <!-- Main Grid: Settings Form Left (7 cols), Live Preview Right (5 cols) -->
+    <!-- Main Grid: Settings Form Left (7 cols), Test & Shortcuts Right (5 cols) -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
-        <!-- Left Column: Form Pengaturan -->
+        <!-- Kolom Kiri: Form Konfigurasi Twilio & 3 Slot Content SID (7 cols) -->
         <div class="lg:col-span-7 space-y-5">
             
             <form action="{{ route('admin.wa-settings.update') }}" method="POST" class="space-y-5">
                 @csrf
 
-                <!-- Card 1: Pilihan Mode Twilio -->
+                <!-- Card 1: Kredensial Akun Twilio -->
                 <div class="bg-white border border-slate-200 rounded-sm p-5 shadow-2xs space-y-4">
                     <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
                         <div>
-                            <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Mode Pengiriman Twilio</h2>
-                            <p class="text-[11px] text-slate-400">Pilih skema pengiriman pesan WhatsApp sesuai status akun Twilio Anda.</p>
+                            <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Kredensial Akun Twilio</h2>
+                            <p class="text-[11px] text-slate-400">Didapat dari Console Twilio (Dashboard Akun Anda).</p>
                         </div>
                         <span class="px-2 py-0.5 bg-slate-100 text-slate-700 text-[10px] font-bold rounded-sm border border-slate-300 font-mono">
-                            Twilio Mode
-                        </span>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <!-- Mode A: Sandbox / Freeform -->
-                        <label class="border border-slate-200 rounded-sm p-3.5 cursor-pointer hover:border-slate-400 transition-colors flex items-start gap-3 bg-slate-50/50 has-[:checked]:border-slate-900 has-[:checked]:bg-slate-100/50">
-                            <input 
-                                type="radio" 
-                                name="twilio_mode" 
-                                value="freeform" 
-                                id="modeFreeform"
-                                {{ old('twilio_mode', $twilioMode) === 'freeform' ? 'checked' : '' }}
-                                class="mt-0.5 text-slate-900 focus:ring-slate-900 cursor-pointer"
-                                onchange="switchMode('freeform')"
-                            >
-                            <div class="space-y-1">
-                                <span class="text-xs font-bold text-slate-900 block">Mode Sandbox / Bebas</span>
-                                <p class="text-[11px] text-slate-500 leading-normal">
-                                    Cocok untuk uji coba. Mengirim teks kustom dari box template + gambar QR langsung tanpa perlu approval Meta.
-                                </p>
-                            </div>
-                        </label>
-
-                        <!-- Mode B: Meta Content Template SID -->
-                        <label class="border border-slate-200 rounded-sm p-3.5 cursor-pointer hover:border-slate-400 transition-colors flex items-start gap-3 bg-slate-50/50 has-[:checked]:border-slate-900 has-[:checked]:bg-slate-100/50">
-                            <input 
-                                type="radio" 
-                                name="twilio_mode" 
-                                value="template" 
-                                id="modeTemplate"
-                                {{ old('twilio_mode', $twilioMode) === 'template' ? 'checked' : '' }}
-                                class="mt-0.5 text-slate-900 focus:ring-slate-900 cursor-pointer"
-                                onchange="switchMode('template')"
-                            >
-                            <div class="space-y-1">
-                                <span class="text-xs font-bold text-slate-900 block">Mode Meta Template (Resmi)</span>
-                                <p class="text-[11px] text-slate-500 leading-normal">
-                                    Wajib untuk akun WhatsApp Business resmi (Production). Menggunakan Twilio Content SID yang disetujui Meta.
-                                </p>
-                            </div>
-                        </label>
-                    </div>
-
-                    <!-- Meta Content Template Guide Box -->
-                    <div id="metaTemplateGuide" class="p-3.5 bg-blue-50/80 border border-blue-200 rounded-sm text-[11px] text-slate-700 space-y-2 {{ old('twilio_mode', $twilioMode) === 'template' ? '' : 'hidden' }}">
-                        <div class="font-bold text-blue-900 flex items-center gap-1.5">
-                            <svg class="w-4 h-4 text-blue-700 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            <span>Panduan Variabel Meta Approved Template:</span>
-                        </div>
-                        <p class="leading-relaxed text-slate-600">
-                            Di Twilio Content Builder, buat template kategori <strong>UTILITY</strong> dengan header <strong>Media (Image)</strong>. Sistem otomatis mengirim variabel berikut:
-                        </p>
-                        <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-center pt-1 font-mono text-[10px]">
-                            <div class="bg-white p-1.5 rounded-sm border border-blue-200">
-                                <span class="font-bold text-blue-700 block">&#123;&#123;1&#125;&#125;</span>
-                                <span class="text-slate-500 font-sans">Nama</span>
-                            </div>
-                            <div class="bg-white p-1.5 rounded-sm border border-blue-200">
-                                <span class="font-bold text-blue-700 block">&#123;&#123;2&#125;&#125;</span>
-                                <span class="text-slate-500 font-sans">Instansi</span>
-                            </div>
-                            <div class="bg-white p-1.5 rounded-sm border border-blue-200">
-                                <span class="font-bold text-blue-700 block">&#123;&#123;3&#125;&#125;</span>
-                                <span class="text-slate-500 font-sans">Jabatan</span>
-                            </div>
-                            <div class="bg-white p-1.5 rounded-sm border border-blue-200">
-                                <span class="font-bold text-blue-700 block">&#123;&#123;4&#125;&#125;</span>
-                                <span class="text-slate-500 font-sans">Kode Tiket</span>
-                            </div>
-                            <div class="bg-white p-1.5 rounded-sm border border-blue-200">
-                                <span class="font-bold text-blue-700 block">&#123;&#123;5&#125;&#125;</span>
-                                <span class="text-slate-500 font-sans">Link Web</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card 2: Template Pesan (Freeform) -->
-                <div id="freeformTemplateCard" class="bg-white border border-slate-200 rounded-sm p-5 shadow-2xs space-y-4">
-                    <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
-                        <div>
-                            <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Format Teks Pesan</h2>
-                            <p class="text-[11px] text-slate-400">Digunakan untuk Mode Sandbox / Teks Bebas atau fallback.</p>
-                        </div>
-                        <span class="px-2 py-0.5 bg-blue-50 text-blue-700 text-[10px] font-bold rounded-sm border border-blue-200">
-                            Pesan Teks Bebas
-                        </span>
-                    </div>
-
-                    <!-- Variable Tags Helper -->
-                    <div>
-                        <span class="text-[11px] font-semibold text-slate-600 block mb-1.5">Klik untuk sisipkan variabel dinamis:</span>
-                        <div class="flex flex-wrap gap-1.5">
-                            <button type="button" onclick="insertVariable('{nama}')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-[11px] font-mono font-semibold rounded-sm cursor-pointer transition">
-                                {nama}
-                            </button>
-                            <button type="button" onclick="insertVariable('{instansi}')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-[11px] font-mono font-semibold rounded-sm cursor-pointer transition">
-                                {instansi}
-                            </button>
-                            <button type="button" onclick="insertVariable('{jabatan}')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-[11px] font-mono font-semibold rounded-sm cursor-pointer transition">
-                                {jabatan}
-                            </button>
-                            <button type="button" onclick="insertVariable('{kode_tiket}')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-[11px] font-mono font-semibold rounded-sm cursor-pointer transition">
-                                {kode_tiket}
-                            </button>
-                            <button type="button" onclick="insertVariable('{link_tiket}')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-[11px] font-mono font-semibold rounded-sm cursor-pointer transition">
-                                {link_tiket}
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Textarea Template -->
-                    <div>
-                        <label for="waTemplateInput" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
-                            Isi Pesan WhatsApp <span class="text-rose-500">*</span>
-                        </label>
-                        <textarea 
-                            name="wa_template" 
-                            id="waTemplateInput" 
-                            rows="7" 
-                            required
-                            class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-sm text-xs font-mono text-slate-900 leading-relaxed focus:outline-none focus:border-slate-900 focus:bg-white transition-colors"
-                        >{{ old('wa_template', $template) }}</textarea>
-                    </div>
-
-                    <!-- Checkbox: Kirim Gambar QR Langsung -->
-                    <div class="pt-2 border-t border-slate-100">
-                        <label class="flex items-start gap-2.5 cursor-pointer">
-                            <input 
-                                type="checkbox" 
-                                name="wa_attach_qr" 
-                                id="attachQrCheckbox"
-                                value="1" 
-                                {{ $attachQr === '1' ? 'checked' : '' }}
-                                class="mt-0.5 rounded-sm border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer"
-                            >
-                            <div>
-                                <span class="text-xs font-bold text-slate-800 block">Kirim Gambar QR Langsung (Sebagai Foto/Media Asli)</span>
-                                <span class="text-[11px] text-slate-500 leading-normal block">
-                                    WhatsApp peserta akan langsung menampilkan gambar QR Code secara visual (bukan tautan teks) dengan pesan di atas sebagai keterangannya.
-                                </span>
-                            </div>
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Card 2B: Template Undangan Pendaftaran Acara (Kirim Link Form) -->
-                <div class="bg-white border border-slate-200 rounded-sm p-5 shadow-2xs space-y-4">
-                    <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
-                        <div>
-                            <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Format Teks Undangan Pendaftaran</h2>
-                            <p class="text-[11px] text-slate-400">Pesan resmi ajakan/undangan untuk tamu VIP mengisi formulir pendaftaran acara.</p>
-                        </div>
-                        <span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 text-[10px] font-bold rounded-sm border border-emerald-200">
-                            Undangan Registrasi
-                        </span>
-                    </div>
-
-                    <!-- Variable Tags Helper for Invitation -->
-                    <div>
-                        <span class="text-[11px] font-semibold text-slate-600 block mb-1.5">Klik untuk sisipkan variabel dinamis undangan:</span>
-                        <div class="flex flex-wrap gap-1.5">
-                            <button type="button" onclick="insertInvitationVar('{nama}')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-[11px] font-mono font-semibold rounded-sm cursor-pointer transition">
-                                {nama}
-                            </button>
-                            <button type="button" onclick="insertInvitationVar('{nama_acara}')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-[11px] font-mono font-semibold rounded-sm cursor-pointer transition">
-                                {nama_acara}
-                            </button>
-                            <button type="button" onclick="insertInvitationVar('{tanggal}')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-[11px] font-mono font-semibold rounded-sm cursor-pointer transition">
-                                {tanggal}
-                            </button>
-                            <button type="button" onclick="insertInvitationVar('{waktu}')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-[11px] font-mono font-semibold rounded-sm cursor-pointer transition">
-                                {waktu}
-                            </button>
-                            <button type="button" onclick="insertInvitationVar('{venue}')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-[11px] font-mono font-semibold rounded-sm cursor-pointer transition">
-                                {venue}
-                            </button>
-                            <button type="button" onclick="insertInvitationVar('{dresscode}')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-[11px] font-mono font-semibold rounded-sm cursor-pointer transition">
-                                {dresscode}
-                            </button>
-                            <button type="button" onclick="insertInvitationVar('{link_form}')" class="px-2 py-1 bg-emerald-100 hover:bg-emerald-200 border border-emerald-300 text-emerald-800 text-[11px] font-mono font-semibold rounded-sm cursor-pointer transition">
-                                {link_form}
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Textarea Invitation Template -->
-                    <div>
-                        <label for="waInvitationInput" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
-                            Isi Pesan Undangan WhatsApp <span class="text-rose-500">*</span>
-                        </label>
-                        <textarea 
-                            name="wa_invitation_template" 
-                            id="waInvitationInput" 
-                            rows="8" 
-                            class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-sm text-xs font-mono text-slate-900 leading-relaxed focus:outline-none focus:border-slate-900 focus:bg-white transition-colors"
-                        >{{ old('wa_invitation_template', $invitationTemplate) }}</textarea>
-                        <p class="text-[11px] text-slate-500 mt-1">Pesan ini dapat disalin langsung, dibuka di WhatsApp Web, atau diblast via Twilio dari Dashboard Admin.</p>
-                    </div>
-                </div>
-
-                <!-- Card 3: Kredensial Twilio & Template ID -->
-                <div class="bg-white border border-slate-200 rounded-sm p-5 shadow-2xs space-y-4">
-                    <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
-                        <div>
-                            <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Kredensial Twilio API</h2>
-                            <p class="text-[11px] text-slate-400">Konfigurasi Account SID, Auth Token, dan Template SID Twilio.</p>
-                        </div>
-                        <span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 text-[10px] font-bold rounded-sm border border-emerald-200">
                             Twilio REST API
                         </span>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <!-- Account SID -->
+                    <!-- Mode Pengiriman -->
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">
+                            Mode Pengiriman Twilio
+                        </label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <!-- Mode Template Resmi -->
+                            <label class="border border-slate-200 rounded-sm p-3 cursor-pointer hover:border-slate-400 transition-colors flex items-start gap-2.5 bg-slate-50/50 has-[:checked]:border-blue-700 has-[:checked]:bg-blue-50/40">
+                                <input 
+                                    type="radio" 
+                                    name="twilio_mode" 
+                                    value="template" 
+                                    {{ old('twilio_mode', $twilioMode) === 'template' ? 'checked' : '' }}
+                                    class="mt-0.5 text-blue-700 focus:ring-blue-700 cursor-pointer"
+                                >
+                                <div class="space-y-0.5">
+                                    <span class="text-xs font-bold text-slate-900 block">Mode Meta Template (Resmi)</span>
+                                    <p class="text-[11px] text-slate-500 leading-normal">
+                                        Wajib untuk nomor resmi KADIN / akun Production via Content SID.
+                                    </p>
+                                </div>
+                            </label>
+
+                            <!-- Mode Freeform / Sandbox -->
+                            <label class="border border-slate-200 rounded-sm p-3 cursor-pointer hover:border-slate-400 transition-colors flex items-start gap-2.5 bg-slate-50/50 has-[:checked]:border-blue-700 has-[:checked]:bg-blue-50/40">
+                                <input 
+                                    type="radio" 
+                                    name="twilio_mode" 
+                                    value="freeform" 
+                                    {{ old('twilio_mode', $twilioMode) === 'freeform' ? 'checked' : '' }}
+                                    class="mt-0.5 text-blue-700 focus:ring-blue-700 cursor-pointer"
+                                >
+                                <div class="space-y-0.5">
+                                    <span class="text-xs font-bold text-slate-900 block">Mode Sandbox / Bebas</span>
+                                    <p class="text-[11px] text-slate-500 leading-normal">
+                                        Cocok untuk uji coba pengembang dengan pesan teks bebas.
+                                    </p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+                        <!-- Twilio Account SID -->
                         <div>
                             <label for="twilio_sid" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
-                                Twilio Account SID
+                                Twilio Account SID <span class="text-rose-500">*</span>
                             </label>
                             <input 
                                 type="text" 
@@ -265,382 +98,218 @@
                                 id="twilio_sid" 
                                 value="{{ old('twilio_sid', $twilioSid) }}" 
                                 placeholder="ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-                                class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-sm text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-900 focus:bg-white"
+                                class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-sm text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-900 focus:bg-white transition-colors"
                             >
                         </div>
 
-                        <!-- Auth Token -->
+                        <!-- Twilio Auth Token -->
                         <div>
                             <label for="twilio_token" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
-                                Twilio Auth Token
+                                Twilio Auth Token <span class="text-rose-500">*</span>
                             </label>
                             <input 
                                 type="password" 
                                 name="twilio_token" 
                                 id="twilio_token" 
                                 value="{{ old('twilio_token', $twilioToken) }}" 
-                                placeholder="Token rahasia Twilio"
-                                class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-sm text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-900 focus:bg-white"
+                                placeholder="Masukkan Auth Token Twilio"
+                                class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-sm text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-900 focus:bg-white transition-colors"
                             >
                         </div>
                     </div>
 
-                    <!-- Twilio WhatsApp Number -->
+                    <!-- Nomor Pengirim WhatsApp (From) -->
                     <div>
                         <label for="twilio_from" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
-                            Nomor Pengirim Twilio (From)
+                            Nomor Pengirim Twilio (From) <span class="text-rose-500">*</span>
                         </label>
                         <input 
                             type="text" 
                             name="twilio_from" 
                             id="twilio_from" 
                             value="{{ old('twilio_from', $twilioFrom) }}" 
-                            placeholder="+14155238886 (sandbox) atau nomor resmi"
-                            class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-sm text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-900 focus:bg-white"
+                            placeholder="+14155238886 (sandbox) atau +628xxxxxxxx (resmi)"
+                            class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-sm text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-900 focus:bg-white transition-colors"
                         >
-                        <span class="text-[10px] text-slate-400 mt-1 block">Gunakan <code>+14155238886</code> jika memakai Twilio Sandbox.</span>
+                        <span class="text-[11px] text-slate-400 mt-1 block">
+                            Gunakan <code>+14155238886</code> jika masih memakai Twilio Sandbox, atau ganti nomor resmi WhatsApp Business jika sudah live.
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Card 2: 3 Slot Twilio Content SID Resmi Meta -->
+                <div class="bg-white border border-slate-200 rounded-sm p-5 shadow-2xs space-y-4">
+                    <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+                        <div>
+                            <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider">3 Slot Twilio Content SID</h2>
+                            <p class="text-[11px] text-slate-400">Kode template resmi yang disetujui Meta di Twilio Content Template Builder.</p>
+                        </div>
+                        <span class="px-2 py-0.5 bg-blue-50 text-blue-800 text-[10px] font-bold rounded-sm border border-blue-200 font-mono">
+                            Meta Approved
+                        </span>
                     </div>
 
-                    <!-- 3 Slot Twilio Content SID (Meta Approved Templates) -->
-                    <div class="border-t border-slate-100 pt-3 space-y-3">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-bold text-slate-900 uppercase tracking-wider block">
-                                3 Slot Twilio Content SID (Meta Approved Templates)
-                            </span>
-                            <span class="text-[10px] bg-blue-50 text-blue-800 border border-blue-200 px-2 py-0.5 rounded-xs font-mono font-bold">
-                                Production Ready
-                            </span>
+                    <div class="space-y-4">
+                        <!-- Slot 1: Undangan Acara -->
+                        <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-sm space-y-1.5">
+                            <div class="flex items-center justify-between">
+                                <label for="twilio_invitation_template_id" class="block text-xs font-bold text-slate-900 uppercase tracking-wider">
+                                    Slot 1: Undangan Registrasi Acara
+                                </label>
+                                <span class="text-[10px] font-mono text-slate-500 font-semibold">Tipe: Quick Reply (8 Var)</span>
+                            </div>
+                            <input 
+                                type="text" 
+                                name="twilio_invitation_template_id" 
+                                id="twilio_invitation_template_id" 
+                                value="{{ old('twilio_invitation_template_id', $twilioInvitationTemplateId) }}" 
+                                placeholder="HX55189df5f82668658e0c028e8a3892f1"
+                                class="w-full px-3 py-2 bg-white border border-slate-300 rounded-sm text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-900"
+                            >
+                            <span class="text-[10px] text-slate-400 block">Digunakan saat melakukan broadcast undangan di menu <em>Kirim Undangan</em>.</span>
                         </div>
-                        <p class="text-[11px] text-slate-500">
-                            Masukkan kode template resmi yang dibuat di <em>Twilio Content Template Builder</em>. Jika kosong, sistem otomatis memakai format pesan teks bebas.
-                        </p>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                            <!-- Slot 1: Undangan Pendaftaran -->
-                            <div class="p-3 bg-slate-50 border border-slate-200 rounded-sm space-y-1.5">
-                                <label for="twilio_invitation_template_id" class="block text-[11px] font-bold text-slate-800 uppercase tracking-wider">
-                                    1. Undangan Acara
+                        <!-- Slot 2: Tiket QR Media -->
+                        <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-sm space-y-1.5">
+                            <div class="flex items-center justify-between">
+                                <label for="twilio_template_id" class="block text-xs font-bold text-slate-900 uppercase tracking-wider">
+                                    Slot 2: Tiket Presensi QR Code Media
                                 </label>
-                                <input 
-                                    type="text" 
-                                    name="twilio_invitation_template_id" 
-                                    id="twilio_invitation_template_id" 
-                                    value="{{ old('twilio_invitation_template_id', $twilioInvitationTemplateId) }}" 
-                                    placeholder="HX55189df5..."
-                                    class="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded-sm text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-900"
-                                >
-                                <span class="text-[10px] text-slate-400 block">Tipe: Quick Reply / CTA (8 Var)</span>
+                                <span class="text-[10px] font-mono text-slate-500 font-semibold">Tipe: Media Image (5 Var)</span>
                             </div>
+                            <input 
+                                type="text" 
+                                name="twilio_template_id" 
+                                id="twilio_template_id" 
+                                value="{{ old('twilio_template_id', $twilioTemplateId) }}" 
+                                placeholder="HXb5bb1bdad43f0d1d4198c4ae1c8cc5d9"
+                                class="w-full px-3 py-2 bg-white border border-slate-300 rounded-sm text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-900"
+                            >
+                            <span class="text-[10px] text-slate-400 block">Digunakan saat mengirim tiket QR masuk di menu <em>Kirim Tiket QR</em> & Dashboard.</span>
+                        </div>
 
-                            <!-- Slot 2: Tiket QR Presensi Media -->
-                            <div class="p-3 bg-slate-50 border border-slate-200 rounded-sm space-y-1.5">
-                                <label for="twilio_template_id" class="block text-[11px] font-bold text-slate-800 uppercase tracking-wider">
-                                    2. Tiket QR Media
+                        <!-- Slot 3: Reminder & RSVP -->
+                        <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-sm space-y-1.5">
+                            <div class="flex items-center justify-between">
+                                <label for="twilio_reminder_template_id" class="block text-xs font-bold text-slate-900 uppercase tracking-wider">
+                                    Slot 3: Pengingat & RSVP Kehadiran
                                 </label>
-                                <input 
-                                    type="text" 
-                                    name="twilio_template_id" 
-                                    id="twilio_template_id" 
-                                    value="{{ old('twilio_template_id', $twilioTemplateId) }}" 
-                                    placeholder="HXb5bb1bda..."
-                                    class="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded-sm text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-900"
-                                >
-                                <span class="text-[10px] text-slate-400 block">Tipe: Media Image (5 Var)</span>
+                                <span class="text-[10px] font-mono text-slate-500 font-semibold">Tipe: Quick Reply (7 Var)</span>
                             </div>
-
-                            <!-- Slot 3: Pengingat (Reminder RSVP) -->
-                            <div class="p-3 bg-slate-50 border border-slate-200 rounded-sm space-y-1.5">
-                                <label for="twilio_reminder_template_id" class="block text-[11px] font-bold text-slate-800 uppercase tracking-wider">
-                                    3. Reminder & RSVP
-                                </label>
-                                <input 
-                                    type="text" 
-                                    name="twilio_reminder_template_id" 
-                                    id="twilio_reminder_template_id" 
-                                    value="{{ old('twilio_reminder_template_id', $twilioReminderTemplateId) }}" 
-                                    placeholder="HXd5eba0c8..."
-                                    class="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded-sm text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-900"
-                                >
-                                <span class="text-[10px] text-slate-400 block">Tipe: Quick Reply (7 Var)</span>
-                            </div>
+                            <input 
+                                type="text" 
+                                name="twilio_reminder_template_id" 
+                                id="twilio_reminder_template_id" 
+                                value="{{ old('twilio_reminder_template_id', $twilioReminderTemplateId) }}" 
+                                placeholder="HXd5eba0c89c4950f3c1edec3740e25f19"
+                                class="w-full px-3 py-2 bg-white border border-slate-300 rounded-sm text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-900"
+                            >
+                            <span class="text-[10px] text-slate-400 block">Digunakan saat blast pengingat H-1 / Hari-H di menu <em>Kirim Reminder</em>.</span>
                         </div>
                     </div>
-
-                    <!-- Info Box Twilio -->
-                    <div class="p-3 bg-slate-50 border border-slate-200 rounded-sm text-[11px] text-slate-600 space-y-1">
-                        <div class="font-bold text-slate-800 flex items-center gap-1.5">
-                            <svg class="w-3.5 h-3.5 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            <span>Catatan Gambar QR Langsung:</span>
-                        </div>
-                        <p class="leading-relaxed">
-                            Twilio memerlukan endpoint gambar yang dapat diakses publik. Pada pengujian lokal, gunakan tunnel seperti <strong>Ngrok</strong> agar Twilio dapat mengunduh gambar QR peserta secara otomatis dan mengirimkannya ke WhatsApp.
-                        </p>
-                    </div>
-
                 </div>
 
                 <!-- Tombol Simpan -->
                 <div class="flex items-center justify-end">
                     <button 
                         type="submit" 
-                        class="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs rounded-sm transition-colors cursor-pointer shadow-2xs border border-slate-900 flex items-center gap-2"
+                        class="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs rounded-sm transition-colors shadow-2xs cursor-pointer"
                     >
-                        <span>Simpan Pengaturan</span>
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                        </svg>
+                        Simpan Pengaturan Twilio
                     </button>
                 </div>
+
             </form>
 
-            <!-- Card 4: Uji Coba Kirim Pesan Tes -->
-            <div class="bg-white border border-slate-200 rounded-sm p-5 shadow-2xs space-y-3">
-                <div class="border-b border-slate-100 pb-2">
-                    <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Tes Kirim WhatsApp Twilio</h3>
-                    <p class="text-[11px] text-slate-500">Kirim 1 pesan uji coba ke nomor Anda untuk memastikan template dan gambar QR masuk ke WhatsApp.</p>
+        </div>
+
+        <!-- Kolom Kanan: Panel Test Pengiriman & Shortcut Editor (5 cols) -->
+        <div class="lg:col-span-5 space-y-5">
+            
+            <!-- Card 1: Uji Coba Pengiriman Twilio (Test Send) -->
+            <div class="bg-white border border-slate-200 rounded-sm p-5 shadow-2xs space-y-4">
+                <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+                    <div>
+                        <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Uji Coba Pengiriman</h2>
+                        <p class="text-[11px] text-slate-400">Pastikan kredensial & saldo Twilio aktif dengan mengirim pesan tes.</p>
+                    </div>
+                    <span class="px-2 py-0.5 bg-emerald-50 text-emerald-800 text-[10px] font-bold rounded-sm border border-emerald-200">
+                        Live Test
+                    </span>
                 </div>
 
-                <form action="{{ route('admin.wa-settings.test') }}" method="POST" class="flex gap-2">
+                <form action="{{ route('admin.wa-settings.test') }}" method="POST" class="space-y-3">
                     @csrf
-                    <input 
-                        type="tel" 
-                        name="test_phone" 
-                        required 
-                        placeholder="Contoh: 081234567890" 
-                        class="flex-grow px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-sm text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-900 focus:bg-white"
-                    >
+                    <div>
+                        <label for="test_phone" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+                            Nomor WhatsApp Tujuan Tester
+                        </label>
+                        <input 
+                            type="tel" 
+                            name="test_phone" 
+                            id="test_phone" 
+                            value="{{ old('test_phone', '083861669565') }}"
+                            placeholder="081234567890" 
+                            required
+                            class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-sm text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-900 focus:bg-white"
+                        >
+                        <span class="text-[10px] text-slate-400 mt-1 block">Pastikan nomor tester sudah join sandbox jika memakai mode sandbox.</span>
+                    </div>
+
                     <button 
                         type="submit" 
-                        class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-sm transition-colors cursor-pointer flex items-center gap-1.5 shrink-0"
+                        class="w-full py-2 bg-blue-700 hover:bg-blue-800 text-white font-semibold text-xs rounded-sm transition-colors flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
                     >
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                         </svg>
-                        <span>Kirim Tes</span>
+                        <span>Kirim Pesan Uji Coba</span>
                     </button>
                 </form>
             </div>
 
-        </div>
+            <!-- Card 2: Kelola Pesan & Format Teks (Navigasi Cepat) -->
+            <div class="bg-white border border-slate-200 rounded-sm p-5 shadow-2xs space-y-3">
+                <div class="border-b border-slate-100 pb-2.5">
+                    <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Editor Format Pesan</h2>
+                    <p class="text-[11px] text-slate-500 mt-0.5">
+                        Format kata-kata teks & template pesan dikelola langsung pada halaman kerja masing-masing:
+                    </p>
+                </div>
 
-        <!-- Right Column: Live Mockup Chat WhatsApp -->
-        <div class="lg:col-span-5 sticky top-20">
-            <div class="bg-white border border-slate-300 rounded-sm overflow-hidden shadow-sm">
-                
-                <!-- Mockup Phone Header WA -->
-                <div class="bg-[#075e54] text-white px-4 py-3 flex items-center justify-between">
-                    <div class="flex items-center space-x-2.5">
-                        <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center font-bold text-xs uppercase">
-                            KD
-                        </div>
+                <div class="space-y-2">
+                    <!-- Shortcut 1: Undangan -->
+                    <a href="{{ route('admin.invitation') }}" class="p-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-sm flex items-center justify-between group transition">
                         <div>
-                            <span class="text-xs font-bold block leading-tight">KADIN INDONESIA 2026</span>
-                            <span class="text-[10px] text-emerald-200">Online &bull; Akun Resmi</span>
+                            <span class="text-xs font-bold text-slate-900 block group-hover:text-blue-700">1. Editor Undangan Acara</span>
+                            <span class="text-[11px] text-slate-500">Sesuaikan kalimat undangan & batas waktu pendaftaran.</span>
                         </div>
-                    </div>
-                    
-                    <!-- Preview Tab Switcher -->
-                    <div class="inline-flex rounded-xs bg-black/25 p-0.5 text-[10px] font-semibold">
-                        <button type="button" id="tabPreviewTicket" onclick="setPreviewMode('ticket')" class="px-2 py-0.5 bg-white text-slate-900 rounded-2xs transition">Tiket QR</button>
-                        <button type="button" id="tabPreviewInvite" onclick="setPreviewMode('invitation')" class="px-2 py-0.5 text-white hover:text-emerald-100 rounded-2xs transition">Undangan</button>
-                    </div>
+                        <span class="text-xs font-bold text-slate-400 group-hover:text-slate-700">→</span>
+                    </a>
+
+                    <!-- Shortcut 2: Tiket QR -->
+                    <a href="{{ route('admin.tickets') }}" class="p-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-sm flex items-center justify-between group transition">
+                        <div>
+                            <span class="text-xs font-bold text-slate-900 block group-hover:text-blue-700">2. Editor Tiket Presensi QR</span>
+                            <span class="text-[11px] text-slate-500">Sesuaikan kalimat tiket & lampiran QR Code peserta.</span>
+                        </div>
+                        <span class="text-xs font-bold text-slate-400 group-hover:text-slate-700">→</span>
+                    </a>
+
+                    <!-- Shortcut 3: Reminder RSVP -->
+                    <a href="{{ route('admin.reminder') }}" class="p-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-sm flex items-center justify-between group transition">
+                        <div>
+                            <span class="text-xs font-bold text-slate-900 block group-hover:text-blue-700">3. Editor Reminder & RSVP</span>
+                            <span class="text-[11px] text-slate-500">Sesuaikan pesan pengingat H-1 dan tombol konfirmasi kehadiran.</span>
+                        </div>
+                        <span class="text-xs font-bold text-slate-400 group-hover:text-slate-700">→</span>
+                    </a>
                 </div>
-
-                <!-- Mockup Chat Wallpaper / Background -->
-                <div class="bg-[#efeae2] p-4 min-h-[420px] max-h-[550px] overflow-y-auto space-y-3 font-sans text-xs">
-                    
-                    <div class="text-center">
-                        <span class="px-2 py-0.5 bg-white/80 text-slate-500 text-[10px] font-medium rounded-sm shadow-2xs inline-block">
-                            HARI INI
-                        </span>
-                    </div>
-
-                    <!-- Chat Bubble Masuk -->
-                    <div class="max-w-[90%] bg-white rounded-sm shadow-xs p-3 space-y-2.5 border border-slate-200/50">
-                        
-                        <!-- QR Image Attachment Mockup -->
-                        <div id="previewQrContainer" class="bg-slate-50 border border-slate-200 rounded-sm p-3 text-center {{ $attachQr === '1' ? '' : 'hidden' }}">
-                            <div class="flex justify-center">
-                                <div id="previewQrcode" class="p-1.5 bg-white border border-slate-300 inline-block shadow-2xs"></div>
-                            </div>
-                            <span class="font-mono font-bold text-[11px] text-slate-800 mt-2 block">{{ $sample->qr_token }}</span>
-                            <span class="text-[9px] text-slate-400 block">Lampiran Gambar Tiket QR (Media Asli)</span>
-                        </div>
-
-                        <!-- Text Body Message Live -->
-                        <div id="previewMessageBody" class="text-xs text-slate-800 whitespace-pre-line leading-relaxed font-sans">
-                            {!! nl2br(e($previewText)) !!}
-                        </div>
-
-                        <!-- Chat Timestamp & Double Checkmarks -->
-                        <div class="flex items-center justify-end space-x-1 text-[10px] text-slate-400 pt-1">
-                            <span>{{ date('H:i') }}</span>
-                            <svg class="w-3.5 h-3.5 text-blue-500 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7m-14 4l4 4L19 7" />
-                            </svg>
-                        </div>
-                    </div>
-
-                </div>
-
-                <!-- Mockup Chat Input Footer -->
-                <div class="bg-slate-100 border-t border-slate-200 p-2.5 flex items-center justify-between text-[11px] text-slate-400">
-                    <span id="previewFooterNote">Penerima melihat gambar QR langsung di chat</span>
-                    <span class="font-mono">WhatsApp Web / App</span>
-                </div>
-
             </div>
+
         </div>
 
     </div>
 
 </div>
 @endsection
-
-@push('scripts')
-<script>
-    const sampleData = {
-        nama: "{{ $sample->name }}",
-        instansi: "{{ $sample->company }}",
-        jabatan: "{{ $sample->position }}",
-        kode_tiket: "{{ $sample->qr_token }}",
-        link_tiket: "{{ route('participants.card', $sample->qr_token) }}",
-        nama_acara: "Musyawarah & Temu Bisnis KADIN Indonesia 2026",
-        tanggal: "28 Oktober 2026",
-        waktu: "08:30 - 16:30 WIB",
-        venue: "Grand Ballroom Menara Kadin Indonesia",
-        dresscode: "Batik Formal / Pakaian Bisnis Rapi",
-        link_form: "{{ route('home') }}"
-    };
-
-    let currentPreviewMode = 'ticket';
-
-    const textareaTicket = document.getElementById('waTemplateInput');
-    const textareaInvite = document.getElementById('waInvitationInput');
-    const previewBody = document.getElementById('previewMessageBody');
-    const checkboxAttach = document.getElementById('attachQrCheckbox');
-    const previewQr = document.getElementById('previewQrContainer');
-    const metaGuide = document.getElementById('metaTemplateGuide');
-    const tabTicket = document.getElementById('tabPreviewTicket');
-    const tabInvite = document.getElementById('tabPreviewInvite');
-    const footerNote = document.getElementById('previewFooterNote');
-
-    function setPreviewMode(mode) {
-        currentPreviewMode = mode;
-        if (mode === 'ticket') {
-            tabTicket.classList.add('bg-white', 'text-slate-900');
-            tabTicket.classList.remove('text-white');
-            tabInvite.classList.remove('bg-white', 'text-slate-900');
-            tabInvite.classList.add('text-white');
-            if (checkboxAttach.checked) {
-                previewQr.classList.remove('hidden');
-            }
-            footerNote.textContent = 'Penerima melihat gambar QR langsung di chat';
-            updatePreviewTicket();
-        } else {
-            tabInvite.classList.add('bg-white', 'text-slate-900');
-            tabInvite.classList.remove('text-white');
-            tabTicket.classList.remove('bg-white', 'text-slate-900');
-            tabTicket.classList.add('text-white');
-            previewQr.classList.add('hidden');
-            footerNote.textContent = 'Undangan dikirim untuk pendaftaran tamu VIP';
-            updatePreviewInvite();
-        }
-    }
-
-    // Switch mode
-    function switchMode(mode) {
-        if (mode === 'template') {
-            metaGuide.classList.remove('hidden');
-        } else {
-            metaGuide.classList.add('hidden');
-        }
-    }
-
-    // Render Preview QR Code
-    document.addEventListener('DOMContentLoaded', function() {
-        const qrEl = document.getElementById("previewQrcode");
-        if (qrEl) {
-            new QRCode(qrEl, {
-                text: sampleData.kode_tiket,
-                width: 130,
-                height: 130,
-                colorDark : "#0f172a",
-                colorLight : "#ffffff",
-                correctLevel : QRCode.CorrectLevel.M
-            });
-        }
-    });
-
-    // Sisipkan variabel ke posisi kursor textarea Tiket
-    function insertVariable(tag) {
-        const start = textareaTicket.selectionStart;
-        const end = textareaTicket.selectionEnd;
-        const text = textareaTicket.value;
-        textareaTicket.value = text.substring(0, start) + tag + text.substring(end);
-        textareaTicket.focus();
-        textareaTicket.selectionStart = textareaTicket.selectionEnd = start + tag.length;
-        setPreviewMode('ticket');
-    }
-
-    // Sisipkan variabel ke posisi kursor textarea Undangan
-    function insertInvitationVar(tag) {
-        const start = textareaInvite.selectionStart;
-        const end = textareaInvite.selectionEnd;
-        const text = textareaInvite.value;
-        textareaInvite.value = text.substring(0, start) + tag + text.substring(end);
-        textareaInvite.focus();
-        textareaInvite.selectionStart = textareaInvite.selectionEnd = start + tag.length;
-        setPreviewMode('invitation');
-    }
-
-    function updatePreviewTicket() {
-        let text = textareaTicket.value;
-        text = text.replaceAll('{nama}', sampleData.nama)
-                   .replaceAll('{instansi}', sampleData.instansi)
-                   .replaceAll('{jabatan}', sampleData.jabatan)
-                   .replaceAll('{kode_tiket}', sampleData.kode_tiket)
-                   .replaceAll('{link_tiket}', sampleData.link_tiket);
-        previewBody.textContent = text;
-    }
-
-    function updatePreviewInvite() {
-        let text = textareaInvite.value;
-        text = text.replaceAll('{nama}', sampleData.nama)
-                   .replaceAll('{nama_acara}', sampleData.nama_acara)
-                   .replaceAll('{tanggal}', sampleData.tanggal)
-                   .replaceAll('{waktu}', sampleData.waktu)
-                   .replaceAll('{venue}', sampleData.venue)
-                   .replaceAll('{dresscode}', sampleData.dresscode)
-                   .replaceAll('{link_form}', sampleData.link_form);
-        previewBody.textContent = text;
-    }
-
-    textareaTicket.addEventListener('input', function() {
-        if (currentPreviewMode === 'ticket') updatePreviewTicket();
-    });
-    textareaTicket.addEventListener('focus', function() {
-        setPreviewMode('ticket');
-    });
-
-    textareaInvite.addEventListener('input', function() {
-        if (currentPreviewMode === 'invitation') updatePreviewInvite();
-    });
-    textareaInvite.addEventListener('focus', function() {
-        setPreviewMode('invitation');
-    });
-
-    // Toggle Preview Gambar QR
-    checkboxAttach.addEventListener('change', function() {
-        if (currentPreviewMode === 'ticket') {
-            if (this.checked) {
-                previewQr.classList.remove('hidden');
-            } else {
-                previewQr.classList.add('hidden');
-            }
-        }
-    });
-</script>
-@endpush

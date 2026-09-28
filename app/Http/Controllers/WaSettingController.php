@@ -14,74 +14,31 @@ class WaSettingController extends Controller
      */
     public function index()
     {
-        $defaultTemplate = "Halo Bapak/Ibu *{nama}*,\n\n"
-            . "Terima kasih telah melakukan registrasi kegiatan KADIN 2026.\n\n"
-            . "Berikut adalah tiket presensi QR Code Anda:\n"
-            . "🔗 {link_tiket}\n\n"
-            . "Kode Tiket: *{kode_tiket}*\n"
-            . "Instansi: {instansi}\n"
-            . "Jabatan: {jabatan}\n\n"
-            . "Silakan tunjukkan QR Code pada gambar/tautan terlampir kepada petugas saat tiba di lokasi acara.\n\n"
-            . "Salam hangat,\n*Panitia KADIN 2026*";
-
-        $defaultInvitationTemplate = "Yth. Bapak/Ibu *{nama}*,\n\n"
-            . "Kamar Dagang dan Industri (KADIN) Indonesia dengan hormat mengundang Anda untuk hadir pada kegiatan:\n\n"
-            . "📌 *{nama_acara}*\n"
-            . "📅 Tanggal: {tanggal}\n"
-            . "⏰ Waktu: {waktu}\n"
-            . "📍 Tempat: {venue}\n"
-            . "👔 Dresscode: {dresscode}\n\n"
-            . "Mengingat kuota tempat terbatas, mohon kesediaan Bapak/Ibu untuk mengisi formulir kehadiran melalui tautan resmi berikut:\n"
-            . "🔗 {link_form}\n\n"
-            . "Terima kasih atas perhatian dan kerja sama Bapak/Ibu.\n\n"
-            . "Salam hormat,\n*Panitia KADIN Indonesia 2026*";
-
-        $template = Setting::get('wa_template', $defaultTemplate);
-        $invitationTemplate = Setting::get('wa_invitation_template', $defaultInvitationTemplate);
-        $attachQr = Setting::get('wa_attach_qr', '1');
-        $twilioMode = Setting::get('twilio_mode', 'freeform');
+        $twilioMode = Setting::get('twilio_mode', 'template');
         $twilioSid = Setting::get('twilio_sid', env('TWILIO_SID', ''));
         $twilioToken = Setting::get('twilio_token', env('TWILIO_AUTH_TOKEN', ''));
         $twilioFrom = Setting::get('twilio_from', env('TWILIO_WHATSAPP_FROM', '+14155238886'));
-        $twilioTemplateId = Setting::get('twilio_template_id', '');
-        $twilioInvitationTemplateId = Setting::get('twilio_invitation_template_id', '');
-        $twilioReminderTemplateId = Setting::get('twilio_reminder_template_id', '');
-
-        // Sample peserta untuk live preview
-        $sample = Participant::first() ?? new Participant([
-            'name' => 'Budi Santoso, S.E.',
-            'company' => 'PT Sumber Pangan Indonesia',
-            'position' => 'Direktur Operasional',
-            'phone' => '081234567890',
-            'qr_token' => 'KD26-EXMPL01',
-        ]);
-
-        $previewText = TwilioService::parseTemplate($template, $sample);
+        $twilioTemplateId = Setting::get('twilio_template_id', 'HXb5bb1bdad43f0d1d4198c4ae1c8cc5d9');
+        $twilioInvitationTemplateId = Setting::get('twilio_invitation_template_id', 'HX55189df5f82668658e0c028e8a3892f1');
+        $twilioReminderTemplateId = Setting::get('twilio_reminder_template_id', 'HXd5eba0c89c4950f3c1edec3740e25f19');
 
         return view('admin.wa-settings', compact(
-            'template',
-            'invitationTemplate',
-            'attachQr',
             'twilioMode',
             'twilioSid',
             'twilioToken',
             'twilioFrom',
             'twilioTemplateId',
             'twilioInvitationTemplateId',
-            'twilioReminderTemplateId',
-            'sample',
-            'previewText'
+            'twilioReminderTemplateId'
         ));
     }
 
     /**
-     * Simpan pembaruan pengaturan
+     * Simpan pembaruan pengaturan Twilio & Content SID
      */
     public function update(Request $request)
     {
         $request->validate([
-            'wa_template' => 'required|string',
-            'wa_invitation_template' => 'nullable|string',
             'twilio_mode' => 'required|in:freeform,template',
             'twilio_sid' => 'nullable|string',
             'twilio_token' => 'nullable|string',
@@ -91,11 +48,6 @@ class WaSettingController extends Controller
             'twilio_reminder_template_id' => 'nullable|string',
         ]);
 
-        Setting::set('wa_template', $request->wa_template);
-        if ($request->filled('wa_invitation_template')) {
-            Setting::set('wa_invitation_template', $request->wa_invitation_template);
-        }
-        Setting::set('wa_attach_qr', $request->has('wa_attach_qr') ? '1' : '0');
         Setting::set('twilio_mode', $request->twilio_mode);
         Setting::set('twilio_sid', $request->twilio_sid);
         Setting::set('twilio_token', $request->twilio_token);
@@ -104,7 +56,7 @@ class WaSettingController extends Controller
         Setting::set('twilio_invitation_template_id', $request->twilio_invitation_template_id);
         Setting::set('twilio_reminder_template_id', $request->twilio_reminder_template_id);
 
-        return redirect()->back()->with('success', 'Pengaturan template WhatsApp & Twilio berhasil disimpan!');
+        return redirect()->back()->with('success', 'Konfigurasi kredensial Twilio & Content SID resmi berhasil disimpan!');
     }
 
     /**
