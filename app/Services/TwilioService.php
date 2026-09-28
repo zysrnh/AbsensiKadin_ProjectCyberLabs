@@ -34,16 +34,24 @@ class TwilioService
         $mode = Setting::get('twilio_mode', 'freeform');
         $contentSid = Setting::get('twilio_template_id', '');
         $attachQr = Setting::get('wa_attach_qr', '1') === '1';
-        $mediaUrl = $attachQr ? route('participants.qr-image', $participant->qr_token) : null;
+        $mediaUrl = null;
+        if ($attachQr) {
+            $localQr = route('participants.qr-image', $participant->qr_token);
+            if (str_contains($localQr, 'localhost') || str_contains($localQr, '127.0.0.1')) {
+                $mediaUrl = "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=" . urlencode($participant->qr_token);
+            } else {
+                $mediaUrl = $localQr;
+            }
+        }
         $targetPhone = $toPhoneOverride ?: $participant->phone;
 
-        if ($mode === 'template' && !empty($contentSid)) {
-            // Mode Production Meta Template via Twilio Content API
+        if (!empty($contentSid)) {
+            // Mode Production Meta Template via Twilio Content API (Template Media Image)
             $variables = [
                 '1' => (string) $participant->name,
-                '2' => (string) ($participant->company ?: '-'),
-                '3' => (string) ($participant->position ?: '-'),
-                '4' => (string) $participant->qr_token,
+                '2' => (string) $participant->qr_token,
+                '3' => (string) ($participant->company ?: '-'),
+                '4' => (string) ($participant->position ?: '-'),
                 '5' => (string) route('participants.card', $participant->qr_token),
             ];
 
@@ -64,6 +72,48 @@ class TwilioService
             toPhone: $targetPhone,
             message: $message,
             mediaUrl: $mediaUrl
+        );
+    }
+
+    /**
+     * Kirim undangan pendaftaran via Twilio (Mendukung Content SID Meta Template 8 Variabel)
+     */
+    public static function sendInvitation(
+        string $toPhone, 
+        ?string $name = null, 
+        ?string $customMessage = null, 
+        ?string $contentSidOverride = null
+    ): array {
+        $contentSid = $contentSidOverride ?: Setting::get('twilio_invitation_template_id', '');
+        $guestName = $name ?: 'Bapak/Ibu Pimpinan';
+
+        if (!empty($contentSid)) {
+            $deadlineEnabled = Setting::get('registration_deadline_enabled', '0') === '1';
+            $deadlineText = Setting::get('registration_deadline_text', '27 Oktober 2026, 23:59 WIB');
+            $deadlineStr = $deadlineEnabled ? $deadlineText : 'Sesuai kuota tersedia';
+
+            $variables = [
+                '1' => (string) $guestName,
+                '2' => (string) Setting::get('event_title', 'Musyawarah & Temu Bisnis KADIN Indonesia 2026'),
+                '3' => (string) Setting::get('event_date', '28 Oktober 2026'),
+                '4' => (string) Setting::get('event_time', '08:30 - 16:30 WIB'),
+                '5' => (string) Setting::get('event_venue_name', 'Grand Ballroom Menara Kadin Indonesia'),
+                '6' => (string) Setting::get('event_dresscode', 'Batik Formal / Pakaian Bisnis Rapi'),
+                '7' => (string) $deadlineStr,
+                '8' => (string) route('home'),
+            ];
+
+            return self::send(
+                toPhone: $toPhone,
+                message: null,
+                contentSid: $contentSid,
+                contentVariables: $variables
+            );
+        }
+
+        return self::send(
+            toPhone: $toPhone,
+            message: $customMessage ?: "Yth. Bapak/Ibu {$guestName},\nSilakan mendaftar di " . route('home')
         );
     }
 

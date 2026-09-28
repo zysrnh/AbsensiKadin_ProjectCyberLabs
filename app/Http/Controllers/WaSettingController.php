@@ -44,6 +44,8 @@ class WaSettingController extends Controller
         $twilioToken = Setting::get('twilio_token', env('TWILIO_AUTH_TOKEN', ''));
         $twilioFrom = Setting::get('twilio_from', env('TWILIO_WHATSAPP_FROM', '+14155238886'));
         $twilioTemplateId = Setting::get('twilio_template_id', '');
+        $twilioInvitationTemplateId = Setting::get('twilio_invitation_template_id', '');
+        $twilioReminderTemplateId = Setting::get('twilio_reminder_template_id', '');
 
         // Sample peserta untuk live preview
         $sample = Participant::first() ?? new Participant([
@@ -65,6 +67,8 @@ class WaSettingController extends Controller
             'twilioToken',
             'twilioFrom',
             'twilioTemplateId',
+            'twilioInvitationTemplateId',
+            'twilioReminderTemplateId',
             'sample',
             'previewText'
         ));
@@ -83,6 +87,8 @@ class WaSettingController extends Controller
             'twilio_token' => 'nullable|string',
             'twilio_from' => 'nullable|string',
             'twilio_template_id' => 'nullable|string',
+            'twilio_invitation_template_id' => 'nullable|string',
+            'twilio_reminder_template_id' => 'nullable|string',
         ]);
 
         Setting::set('wa_template', $request->wa_template);
@@ -95,6 +101,8 @@ class WaSettingController extends Controller
         Setting::set('twilio_token', $request->twilio_token);
         Setting::set('twilio_from', $request->twilio_from);
         Setting::set('twilio_template_id', $request->twilio_template_id);
+        Setting::set('twilio_invitation_template_id', $request->twilio_invitation_template_id);
+        Setting::set('twilio_reminder_template_id', $request->twilio_reminder_template_id);
 
         return redirect()->back()->with('success', 'Pengaturan template WhatsApp & Twilio berhasil disimpan!');
     }
@@ -106,18 +114,19 @@ class WaSettingController extends Controller
     {
         $request->validate([
             'phone' => 'required|string',
+            'name' => 'nullable|string',
             'message' => 'nullable|string',
             'custom_message' => 'nullable|string',
+            'content_sid' => 'nullable|string',
         ]);
 
         $message = $request->message ?? $request->custom_message;
-        if (empty($message)) {
-            return response()->json(['success' => false, 'message' => 'Pesan tidak boleh kosong.'], 400);
-        }
 
-        $result = TwilioService::send(
+        $result = TwilioService::sendInvitation(
             toPhone: $request->phone,
-            message: $message
+            name: $request->name,
+            customMessage: $message,
+            contentSidOverride: $request->content_sid
         );
 
         return response()->json($result, $result['success'] ? 200 : 400);
@@ -242,8 +251,9 @@ class WaSettingController extends Controller
         ];
 
         $participants = Participant::latest()->get();
+        $contentSidInvitation = Setting::get('twilio_invitation_template_id', '');
 
-        return view('admin.invitation', compact('invitationTemplate', 'eventSettings', 'participants', 'deadlineSettings'));
+        return view('admin.invitation', compact('invitationTemplate', 'eventSettings', 'participants', 'deadlineSettings', 'contentSidInvitation'));
     }
 
     /**
@@ -255,6 +265,7 @@ class WaSettingController extends Controller
             'ids' => 'required|array',
             'ids.*' => 'exists:participants,id',
             'custom_message' => 'nullable|string',
+            'content_sid' => 'nullable|string',
         ]);
 
         $participants = Participant::whereIn('id', $request->ids)->get();
@@ -320,9 +331,11 @@ class WaSettingController extends Controller
                 $batasWaktu,
             ], $template);
 
-            $result = TwilioService::send(
+            $result = TwilioService::sendInvitation(
                 toPhone: $participant->phone,
-                message: $msg
+                name: $participant->name,
+                customMessage: $msg,
+                contentSidOverride: $request->content_sid
             );
 
             if ($result['success']) {

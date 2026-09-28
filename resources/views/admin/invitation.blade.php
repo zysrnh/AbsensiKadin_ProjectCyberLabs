@@ -214,6 +214,26 @@
                     </div>
                 </div>
 
+                <!-- Input Opsional Twilio Content SID (Quick Reply / CTA) -->
+                <div class="p-3 bg-slate-50 border border-slate-200 rounded-sm space-y-2">
+                    <div class="flex items-center justify-between">
+                        <label for="contentSidInput" class="text-[11px] font-bold text-slate-700 uppercase tracking-wider">
+                            Twilio Content SID (Undangan Acara)
+                        </label>
+                        <span class="text-[10px] text-slate-400">Opsional untuk Meta Approved Template</span>
+                    </div>
+                    <input 
+                        type="text" 
+                        id="contentSidInput" 
+                        value="{{ $contentSidInvitation ?? '' }}" 
+                        placeholder="Contoh: HX55189df5..." 
+                        class="w-full px-3 py-1.5 bg-white border border-slate-300 rounded-sm text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-900"
+                    >
+                    <p class="text-[10px] text-slate-500 leading-normal">
+                        Jika diisi, pengiriman via Twilio akan menggunakan template resmi interaktif Meta. Jika kosong, sistem otomatis mengirim pesan teks lengkap di atas.
+                    </p>
+                </div>
+
                 <!-- Action Buttons: 3 Opsi Pengiriman -->
                 <div class="pt-3 border-t border-slate-100 flex flex-wrap items-center gap-2.5">
                     
@@ -720,7 +740,8 @@
                     body: JSON.stringify({
                         name: name || 'Bapak/Ibu Pimpinan',
                         phone: phone,
-                        custom_message: message
+                        custom_message: message,
+                        content_sid: document.getElementById('contentSidInput') ? document.getElementById('contentSidInput').value.trim() : ''
                     })
                 })
                 .then(res => res.json())
@@ -865,7 +886,8 @@
                     },
                     body: JSON.stringify({
                         ids: ids,
-                        custom_message: textArea.value.trim()
+                        custom_message: textArea.value.trim(),
+                        content_sid: document.getElementById('contentSidInput') ? document.getElementById('contentSidInput').value.trim() : ''
                     })
                 })
                 .then(res => res.json())

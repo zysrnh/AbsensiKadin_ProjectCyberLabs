@@ -285,37 +285,84 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <!-- Twilio WhatsApp Number -->
-                        <div>
-                            <label for="twilio_from" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
-                                Nomor Pengirim Twilio (From)
-                            </label>
-                            <input 
-                                type="text" 
-                                name="twilio_from" 
-                                id="twilio_from" 
-                                value="{{ old('twilio_from', $twilioFrom) }}" 
-                                placeholder="+14155238886 (sandbox) atau nomor resmi"
-                                class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-sm text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-900 focus:bg-white"
-                            >
-                            <span class="text-[10px] text-slate-400 mt-1 block">Gunakan <code>+14155238886</code> jika memakai Twilio Sandbox.</span>
-                        </div>
+                    <!-- Twilio WhatsApp Number -->
+                    <div>
+                        <label for="twilio_from" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+                            Nomor Pengirim Twilio (From)
+                        </label>
+                        <input 
+                            type="text" 
+                            name="twilio_from" 
+                            id="twilio_from" 
+                            value="{{ old('twilio_from', $twilioFrom) }}" 
+                            placeholder="+14155238886 (sandbox) atau nomor resmi"
+                            class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-sm text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-900 focus:bg-white"
+                        >
+                        <span class="text-[10px] text-slate-400 mt-1 block">Gunakan <code>+14155238886</code> jika memakai Twilio Sandbox.</span>
+                    </div>
 
-                        <!-- Template Content SID -->
-                        <div>
-                            <label for="twilio_template_id" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
-                                Twilio Content SID <span class="text-slate-400 font-normal">(Template ID)</span>
-                            </label>
-                            <input 
-                                type="text" 
-                                name="twilio_template_id" 
-                                id="twilio_template_id" 
-                                value="{{ old('twilio_template_id', $twilioTemplateId) }}" 
-                                placeholder="HXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-                                class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-sm text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-900 focus:bg-white"
-                            >
-                            <span class="text-[10px] text-slate-400 mt-1 block">Didapat dari Twilio Console &gt; Content Template Builder.</span>
+                    <!-- 3 Slot Twilio Content SID (Meta Approved Templates) -->
+                    <div class="border-t border-slate-100 pt-3 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-900 uppercase tracking-wider block">
+                                3 Slot Twilio Content SID (Meta Approved Templates)
+                            </span>
+                            <span class="text-[10px] bg-blue-50 text-blue-800 border border-blue-200 px-2 py-0.5 rounded-xs font-mono font-bold">
+                                Production Ready
+                            </span>
+                        </div>
+                        <p class="text-[11px] text-slate-500">
+                            Masukkan kode template resmi yang dibuat di <em>Twilio Content Template Builder</em>. Jika kosong, sistem otomatis memakai format pesan teks bebas.
+                        </p>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <!-- Slot 1: Undangan Pendaftaran -->
+                            <div class="p-3 bg-slate-50 border border-slate-200 rounded-sm space-y-1.5">
+                                <label for="twilio_invitation_template_id" class="block text-[11px] font-bold text-slate-800 uppercase tracking-wider">
+                                    1. Undangan Acara
+                                </label>
+                                <input 
+                                    type="text" 
+                                    name="twilio_invitation_template_id" 
+                                    id="twilio_invitation_template_id" 
+                                    value="{{ old('twilio_invitation_template_id', $twilioInvitationTemplateId) }}" 
+                                    placeholder="HX55189df5..."
+                                    class="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded-sm text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-900"
+                                >
+                                <span class="text-[10px] text-slate-400 block">Tipe: Quick Reply / CTA (8 Var)</span>
+                            </div>
+
+                            <!-- Slot 2: Tiket QR Presensi Media -->
+                            <div class="p-3 bg-slate-50 border border-slate-200 rounded-sm space-y-1.5">
+                                <label for="twilio_template_id" class="block text-[11px] font-bold text-slate-800 uppercase tracking-wider">
+                                    2. Tiket QR Media
+                                </label>
+                                <input 
+                                    type="text" 
+                                    name="twilio_template_id" 
+                                    id="twilio_template_id" 
+                                    value="{{ old('twilio_template_id', $twilioTemplateId) }}" 
+                                    placeholder="HXb5bb1bda..."
+                                    class="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded-sm text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-900"
+                                >
+                                <span class="text-[10px] text-slate-400 block">Tipe: Media Image (5 Var)</span>
+                            </div>
+
+                            <!-- Slot 3: Pengingat (Reminder RSVP) -->
+                            <div class="p-3 bg-slate-50 border border-slate-200 rounded-sm space-y-1.5">
+                                <label for="twilio_reminder_template_id" class="block text-[11px] font-bold text-slate-800 uppercase tracking-wider">
+                                    3. Reminder & RSVP
+                                </label>
+                                <input 
+                                    type="text" 
+                                    name="twilio_reminder_template_id" 
+                                    id="twilio_reminder_template_id" 
+                                    value="{{ old('twilio_reminder_template_id', $twilioReminderTemplateId) }}" 
+                                    placeholder="HXd5eba0c8..."
+                                    class="w-full px-2.5 py-1.5 bg-white border border-slate-300 rounded-sm text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-900"
+                                >
+                                <span class="text-[10px] text-slate-400 block">Tipe: Quick Reply (7 Var)</span>
+                            </div>
                         </div>
                     </div>
 
