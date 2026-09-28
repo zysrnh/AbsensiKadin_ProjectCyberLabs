@@ -445,4 +445,209 @@ class WaSettingController extends Controller
             'message' => "Blast tiket selesai: {$sentCount} tiket QR berhasil dikirim via Twilio." . ($failCount > 0 ? " ({$failCount} gagal)." : ""),
         ]);
     }
+
+    /**
+     * Tampilkan halaman khusus pembuatan & pengiriman Pengingat (Reminder H-1 / Hari-H)
+     */
+    public function reminderPage()
+    {
+        $defaultReminderTemplate = "Halo Bapak/Ibu *{nama}*,\n\n"
+            . "Mengingatkan kembali bahwa agenda *{nama_acara}* akan berlangsung pada:\n"
+            . "📅 Hari/Tgl: {tanggal}\n"
+            . "⏰ Waktu: {waktu}\n"
+            . "📍 Tempat: {venue}\n"
+            . "👔 Dresscode: {dresscode}\n\n"
+            . "Tiket QR Presensi Anda:\n🔗 {link_tiket}\n\n"
+            . "Mohon konfirmasi kesediaan kehadiran Bapak/Ibu melalui tautan berikut:\n"
+            . "✅ *Pasti Hadir:* {link_konfirmasi_hadir}\n"
+            . "❌ *Berhalangan:* {link_konfirmasi_batal}\n\n"
+            . "Terima kasih atas kerja samanya.\n*Panitia KADIN Indonesia 2026*";
+
+        $reminderTemplate = Setting::get('wa_reminder_template', $defaultReminderTemplate);
+        $contentSidReminder = Setting::get('twilio_reminder_template_id', '');
+        $participants = Participant::latest()->get();
+
+        $eventSettings = [
+            'nama_acara' => Setting::get('event_title', 'Musyawarah & Temu Bisnis KADIN Indonesia 2026'),
+            'tanggal' => Setting::get('event_date', '28 Oktober 2026'),
+            'waktu' => Setting::get('event_time', '08:30 - 16:30 WIB'),
+            'venue' => Setting::get('event_venue_name', 'Grand Ballroom Menara Kadin Indonesia'),
+            'dresscode' => Setting::get('event_dresscode', 'Batik Formal / Pakaian Bisnis Rapi'),
+        ];
+
+        $sample = $participants->first() ?? new Participant([
+            'name' => 'Bpk. Ir. Hendro Wibowo',
+            'company' => 'Kadin Jawa Barat',
+            'position' => 'Wakil Ketua Bidang Perdagangan',
+            'phone' => '081234567890',
+            'qr_token' => 'KD26-EXMPL01',
+        ]);
+
+        return view('admin.reminder', compact(
+            'reminderTemplate',
+            'contentSidReminder',
+            'participants',
+            'eventSettings',
+            'sample'
+        ));
+    }
+
+    /**
+     * Simpan template & Content SID khusus reminder
+     */
+    public function saveReminderSettings(Request $request)
+    {
+        $request->validate([
+            'wa_reminder_template' => 'required|string',
+            'twilio_reminder_template_id' => 'nullable|string',
+        ]);
+
+        Setting::set('wa_reminder_template', $request->wa_reminder_template);
+        Setting::set('twilio_reminder_template_id', $request->twilio_reminder_template_id ?? '');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Pengaturan template reminder berhasil disimpan!',
+        ]);
+    }
+
+    /**
+     * Kirim reminder ke 1 peserta / nomor tujuan
+     */
+    public function sendSingleReminder(Request $request)
+    {
+        $request->validate([
+            'phone' => 'required|string',
+            'participant_id' => 'nullable|exists:participants,id',
+            'custom_message' => 'nullable|string',
+            'content_sid' => 'nullable|string',
+        ]);
+
+        if ($request->filled('participant_id')) {
+            $participant = Participant::findOrFail($request->participant_id);
+        } else {
+            $participant = Participant::first() ?? new Participant([
+                'name' => 'Tamu Kehormatan',
+                'company' => 'KADIN Indonesia',
+                'position' => 'Peserta',
+                'phone' => $request->phone,
+                'qr_token' => 'KD26-TEST001',
+            ]);
+        }
+
+        $result = TwilioService::sendReminder(
+            participant: $participant,
+            toPhoneOverride: $request->phone,
+            customTemplate: $request->custom_message,
+            contentSidOverride: $request->content_sid
+        );
+
+        return response()->json($result, $result['success'] ? 200 : 400);
+    }
+
+    /**
+     * Kirim reminder massal (bulk blast) via Twilio ke peserta terpilih
+     */
+    public function sendBulkReminder(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:participants,id',
+            'custom_message' => 'nullable|string',
+            'content_sid' => 'nullable|string',
+        ]);
+
+        $participants = Participant::whereIn('id', $request->ids)->get();
+
+        if ($participants->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tidak ada peserta yang dipilih.',
+            ], 400);
+        }
+
+        $sentCount = 0;
+        $failCount = 0;
+
+        foreach ($participants as $participant) {
+            $result = TwilioService::sendReminder(
+                participant: $participant,
+                customTemplate: $request->custom_message,
+                contentSidOverride: $request->content_sid
+            );
+
+            if ($result['success']) {
+                $sentCount++;
+            } else {
+                $failCount++;
+            }
+        }
+
+        return response()->json([
+            'success' => $sentCount > 0,
+            'sent_count' => $sentCount,
+            'fail_count' => $failCount,
+            'message' => "Blast reminder selesai: {$sentCount} pesan berhasil dikirim via Twilio." . ($failCount > 0 ? " ({$failCount} gagal)." : ""),
+        ]);
+    }
+
+    /**
+     * Webhook Handler untuk Pesan Balasan Masuk dari Twilio WhatsApp (Quick Reply / Text RSVP)
+     */
+    public function handleTwilioWebhook(Request $request)
+    {
+        $from = $request->input('From', ''); // whatsapp:+628xxx
+        $body = trim(strtolower($request->input('Body', '')));
+        $buttonPayload = trim(strtolower($request->input('ButtonPayload', '')));
+        $buttonText = trim(strtolower($request->input('ButtonText', '')));
+
+        // Bersihkan nomor pengirim
+        $cleanPhone = preg_replace('/[^0-9]/', '', $from);
+        if (str_starts_with($cleanPhone, '62')) {
+            $shortPhone = '0' . substr($cleanPhone, 2);
+        } else {
+            $shortPhone = $cleanPhone;
+        }
+
+        // Cari peserta berdasarkan nomor telepon
+        $participant = Participant::where('phone', $cleanPhone)
+            ->orWhere('phone', $shortPhone)
+            ->orWhere('phone', '+' . $cleanPhone)
+            ->orWhere('phone', 'like', "%{$shortPhone}%")
+            ->latest()
+            ->first();
+
+        $replyMessage = "";
+
+        if ($participant) {
+            $isYes = str_contains($body, 'hadir') || str_contains($body, 'ya') || str_contains($body, 'yes')
+                || str_contains($buttonPayload, 'yes') || str_contains($buttonText, 'hadir') || str_contains($buttonText, 'ya');
+
+            $isNo = str_contains($body, 'batal') || str_contains($body, 'tidak') || str_contains($body, 'no')
+                || str_contains($body, 'berhalangan') || str_contains($buttonPayload, 'no') || str_contains($buttonText, 'berhalangan');
+
+            if ($isYes) {
+                $participant->update([
+                    'rsvp_status' => 'confirmed_yes',
+                    'rsvp_at' => now(),
+                ]);
+                $replyMessage = "Terima kasih Bapak/Ibu {$participant->name}, konfirmasi kehadiran Anda telah kami catat. Tiket presensi dapat diakses di: " . route('participants.card', $participant->qr_token);
+            } elseif ($isNo) {
+                $participant->update([
+                    'rsvp_status' => 'confirmed_no',
+                    'rsvp_at' => now(),
+                ]);
+                $replyMessage = "Terima kasih informasinya Bapak/Ibu {$participant->name}, kami telah mencatat bahwa Anda berhalangan hadir.";
+            }
+        }
+
+        // Format TwiML XML Response
+        $twiml = '<?xml version="1.0" encoding="UTF-8"?><Response>';
+        if (!empty($replyMessage)) {
+            $twiml .= '<Message>' . htmlspecialchars($replyMessage) . '</Message>';
+        }
+        $twiml .= '</Response>';
+
+        return response($twiml, 200, ['Content-Type' => 'text/xml']);
+    }
 }

@@ -239,6 +239,33 @@ class ParticipantController extends Controller
             return redirect($qrUrl);
         }
     }
+
+    /**
+     * Konfirmasi respon RSVP kehadiran via link 1-klik
+     */
+    public function rsvp(string $token, string $status)
+    {
+        $participant = Participant::where('qr_token', $token)->firstOrFail();
+
+        $isAttending = in_array(strtolower($status), ['yes', 'hadir', 'y', '1', 'confirm']);
+        $newRsvpStatus = $isAttending ? 'confirmed_yes' : 'confirmed_no';
+
+        $participant->update([
+            'rsvp_status' => $newRsvpStatus,
+            'rsvp_at' => now(),
+        ]);
+
+        $settings = [
+            'event_title' => Setting::get('event_title', 'Musyawarah & Temu Bisnis KADIN Indonesia 2026'),
+            'event_organizer' => Setting::get('event_organizer', 'KADIN Indonesia'),
+            'event_date' => Setting::get('event_date', '28 Oktober 2026'),
+            'event_time' => Setting::get('event_time', '08:30 - 16:30 WIB'),
+            'event_venue_name' => Setting::get('event_venue_name', 'Grand Ballroom Menara Kadin Indonesia'),
+            'event_dresscode' => Setting::get('event_dresscode', 'Batik Formal / Pakaian Bisnis Rapi'),
+        ];
+
+        return view('participants.rsvp', compact('participant', 'isAttending', 'settings'));
+    }
 }
 
 

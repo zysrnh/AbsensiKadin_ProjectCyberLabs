@@ -18,12 +18,27 @@ class Participant extends Model
         'qr_token',
         'status',
         'attended_at',
+        'rsvp_status',
+        'rsvp_at',
         'notes',
     ];
 
     protected $casts = [
         'attended_at' => 'datetime',
+        'rsvp_at' => 'datetime',
     ];
+
+    /**
+     * Label teks respons RSVP
+     */
+    public function getRsvpLabelAttribute(): string
+    {
+        return match ($this->rsvp_status) {
+            'confirmed_yes' => 'Pasti Hadir',
+            'confirmed_no' => 'Berhalangan',
+            default => 'Belum Respon',
+        };
+    }
 
     /**
      * Konversi nomor HP/WA ke format internasional (628xxx)

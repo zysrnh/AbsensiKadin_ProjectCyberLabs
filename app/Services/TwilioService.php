@@ -68,6 +68,67 @@ class TwilioService
     }
 
     /**
+     * Kirim pesan reminder via Twilio dengan dukungan link RSVP Yes/No atau Content SID Quick Reply
+     */
+    public static function sendReminder(Participant $participant, ?string $toPhoneOverride = null, ?string $customTemplate = null, ?string $contentSidOverride = null): array
+    {
+        $mode = Setting::get('twilio_mode', 'freeform');
+        $contentSid = $contentSidOverride ?: Setting::get('twilio_reminder_template_id', '');
+        $targetPhone = $toPhoneOverride ?: $participant->phone;
+
+        if ($mode === 'template' && !empty($contentSid)) {
+            $variables = [
+                '1' => (string) $participant->name,
+                '2' => (string) Setting::get('event_title', 'Musyawarah & Temu Bisnis KADIN Indonesia 2026'),
+                '3' => (string) Setting::get('event_date', '28 Oktober 2026'),
+                '4' => (string) Setting::get('event_time', '08:30 WIB'),
+                '5' => (string) route('participants.card', $participant->qr_token),
+            ];
+
+            return self::send(
+                toPhone: $targetPhone,
+                message: null,
+                contentSid: $contentSid,
+                contentVariables: $variables
+            );
+        }
+
+        $defaultReminder = "Halo Bapak/Ibu *{nama}*,\n\n"
+            . "Mengingatkan kembali bahwa agenda *{nama_acara}* akan berlangsung pada:\n"
+            . "📅 Hari/Tgl: {tanggal}\n"
+            . "⏰ Waktu: {waktu}\n"
+            . "📍 Tempat: {venue}\n"
+            . "👔 Dresscode: {dresscode}\n\n"
+            . "Tiket QR Presensi Anda:\n🔗 {link_tiket}\n\n"
+            . "Mohon konfirmasi kesediaan kehadiran Bapak/Ibu melalui tautan berikut:\n"
+            . "✅ *Pasti Hadir:* {link_konfirmasi_hadir}\n"
+            . "❌ *Berhalangan:* {link_konfirmasi_batal}\n\n"
+            . "Terima kasih atas kerja samanya.\n*Panitia KADIN Indonesia 2026*";
+
+        $template = $customTemplate ?: Setting::get('wa_reminder_template', $defaultReminder);
+
+        $replacements = [
+            '{nama}' => $participant->name,
+            '{nama_acara}' => Setting::get('event_title', 'Musyawarah & Temu Bisnis KADIN Indonesia 2026'),
+            '{tanggal}' => Setting::get('event_date', '28 Oktober 2026'),
+            '{waktu}' => Setting::get('event_time', '08:30 - 16:30 WIB'),
+            '{venue}' => Setting::get('event_venue_name', 'Grand Ballroom Menara Kadin Indonesia'),
+            '{dresscode}' => Setting::get('event_dresscode', 'Batik Formal / Pakaian Bisnis Rapi'),
+            '{kode_tiket}' => $participant->qr_token,
+            '{link_tiket}' => route('participants.card', $participant->qr_token),
+            '{link_konfirmasi_hadir}' => route('participants.rsvp', ['token' => $participant->qr_token, 'status' => 'yes']),
+            '{link_konfirmasi_batal}' => route('participants.rsvp', ['token' => $participant->qr_token, 'status' => 'no']),
+        ];
+
+        $message = str_replace(array_keys($replacements), array_values($replacements), $template);
+
+        return self::send(
+            toPhone: $targetPhone,
+            message: $message
+        );
+    }
+
+    /**
      * Kirim pesan WhatsApp via Twilio REST API
      */
     public static function send(

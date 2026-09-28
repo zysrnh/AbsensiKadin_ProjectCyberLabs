@@ -17,6 +17,13 @@ Route::get('/requested/{token}', [ParticipantController::class, 'requested'])->n
 Route::get('/ticket/{token}', [ParticipantController::class, 'card'])->name('participants.card');
 Route::get('/ticket/{token}/qr-image', [ParticipantController::class, 'qrImage'])->name('participants.qr-image');
 
+// Konfirmasi Kehadiran / RSVP Cepat 1-Klik
+Route::get('/rsvp/{token}/{status}', [ParticipantController::class, 'rsvp'])->name('participants.rsvp');
+
+// Webhook Masuk Twilio WhatsApp (Quick Reply / Interactive Messages)
+Route::post('/twilio/webhook', [WaSettingController::class, 'handleTwilioWebhook'])->name('twilio.webhook');
+Route::post('/api/twilio/webhook', [WaSettingController::class, 'handleTwilioWebhook'])->name('api.twilio.webhook');
+
 // Autentikasi Administrator
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
@@ -44,6 +51,12 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/send-tickets', [WaSettingController::class, 'ticketPage'])->name('admin.tickets');
     Route::post('/send-tickets/send-single', [WaSettingController::class, 'sendSingleTicket'])->name('admin.tickets.send-single');
     Route::post('/send-tickets/send-bulk', [WaSettingController::class, 'sendBulkTicket'])->name('admin.tickets.send-bulk');
+
+    // Kirim & Kelola Pengingat (Reminder H-1 / Hari-H dengan RSVP Yes/No)
+    Route::get('/reminder', [WaSettingController::class, 'reminderPage'])->name('admin.reminder');
+    Route::post('/reminder/settings', [WaSettingController::class, 'saveReminderSettings'])->name('admin.reminder.settings');
+    Route::post('/reminder/send-single', [WaSettingController::class, 'sendSingleReminder'])->name('admin.reminder.send-single');
+    Route::post('/reminder/send-bulk', [WaSettingController::class, 'sendBulkReminder'])->name('admin.reminder.send-bulk');
 
     // Pengaturan Acara (Luma Event Landing)
     Route::get('/event-settings', [EventSettingController::class, 'index'])->name('admin.event-settings');
