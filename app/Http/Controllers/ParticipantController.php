@@ -184,10 +184,13 @@ class ParticipantController extends Controller
         }
 
         if ($participant->status === 'attended') {
+            $waktuFormatted = $participant->attended_at 
+                ? $participant->attended_at->timezone('Asia/Jakarta')->translatedFormat('H:i:s, d M Y') . ' WIB'
+                : '-';
             return response()->json([
                 'success' => false,
                 'already_attended' => true,
-                'message' => "Peserta atas nama <b>{$participant->name}</b> sudah melakukan absensi pada " . $participant->attended_at->format('H:i:s, d M Y'),
+                'message' => "Peserta atas nama <b>{$participant->name}</b> sudah melakukan absensi pada {$waktuFormatted}",
                 'participant' => $participant,
             ], 409);
         }
@@ -198,6 +201,10 @@ class ParticipantController extends Controller
             'attended_at' => now(),
         ]);
 
+        $waktuSekarang = $participant->attended_at 
+            ? $participant->attended_at->timezone('Asia/Jakarta')->format('H:i:s') . ' WIB'
+            : now()->timezone('Asia/Jakarta')->format('H:i:s') . ' WIB';
+
         return response()->json([
             'success' => true,
             'message' => "Absensi berhasil dicatat! Selamat datang, <b>{$participant->name}</b>.",
@@ -205,7 +212,7 @@ class ParticipantController extends Controller
                 'name' => $participant->name,
                 'company' => $participant->company ?? '-',
                 'position' => $participant->position ?? '-',
-                'time' => $participant->attended_at->format('H:i:s'),
+                'time' => $waktuSekarang,
                 'qr_token' => $participant->qr_token,
             ],
         ]);

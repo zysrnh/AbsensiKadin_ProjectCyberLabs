@@ -102,11 +102,11 @@
                             <span class="font-bold text-slate-900 block">{{ $attendee->name }}</span>
                             <span class="text-[11px] text-slate-500">{{ $attendee->company ?? 'Kadin' }}</span>
                         </div>
-                        <div class="text-right">
-                            <span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold text-[10px] uppercase rounded-sm block">
-                                {{ $attendee->attended_at ? $attendee->attended_at->format('H:i:s') : 'Hadir' }}
+                        <div class="text-right whitespace-nowrap">
+                            <span class="px-2 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold text-[10px] uppercase rounded-sm block">
+                                {{ $attendee->attended_at ? $attendee->attended_at->timezone('Asia/Jakarta')->format('H:i:s') . ' WIB' : 'Hadir' }}
                             </span>
-                            <span class="text-[10px] font-mono text-slate-400">{{ $attendee->qr_token }}</span>
+                            <span class="text-[10px] font-mono text-slate-400 block mt-0.5">{{ $attendee->qr_token }}</span>
                         </div>
                     </div>
                     @empty
@@ -213,7 +213,7 @@
                     icon: 'success',
                     title: 'Absensi Berhasil',
                     html: data.message,
-                    timer: 2500,
+                    timer: 1500,
                     showConfirmButton: false,
                     customClass: {
                         popup: 'rounded-sm border border-slate-200'
@@ -259,7 +259,7 @@
         .finally(() => {
             setTimeout(() => {
                 isProcessing = false;
-            }, 2000);
+            }, 1200);
         });
     }
 
