@@ -76,13 +76,15 @@ class TwilioService
         $contentSid = $contentSidOverride ?: Setting::get('twilio_reminder_template_id', '');
         $targetPhone = $toPhoneOverride ?: $participant->phone;
 
-        if ($mode === 'template' && !empty($contentSid)) {
+        if (!empty($contentSid)) {
             $variables = [
                 '1' => (string) $participant->name,
                 '2' => (string) Setting::get('event_title', 'Musyawarah & Temu Bisnis KADIN Indonesia 2026'),
                 '3' => (string) Setting::get('event_date', '28 Oktober 2026'),
-                '4' => (string) Setting::get('event_time', '08:30 WIB'),
-                '5' => (string) route('participants.card', $participant->qr_token),
+                '4' => (string) Setting::get('event_time', '08:30 - 16:30 WIB'),
+                '5' => (string) Setting::get('event_venue_name', 'Grand Ballroom Menara Kadin Indonesia'),
+                '6' => (string) Setting::get('event_dresscode', 'Batik Formal / Pakaian Bisnis Rapi'),
+                '7' => (string) route('participants.card', $participant->qr_token),
             ];
 
             return self::send(
