@@ -72,7 +72,16 @@
                     <span>Dashboard Pendaftar</span>
                 </a>
 
-                <!-- 2. Template & Pengaturan WA -->
+                <!-- 2. Kirim Undangan Acara -->
+                <a href="{{ route('admin.invitation') }}" 
+                   class="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-sm transition-colors {{ request()->routeIs('admin.invitation') ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
+                    <svg class="w-4 h-4 {{ request()->routeIs('admin.invitation') ? 'text-white' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                    <span>Kirim Undangan</span>
+                </a>
+
+                <!-- 3. Template & Pengaturan WA -->
                 <a href="{{ route('admin.wa-settings') }}" 
                    class="flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-sm transition-colors {{ request()->routeIs('admin.wa-settings') ? 'bg-blue-600 text-white shadow-2xs' : 'text-slate-300 hover:bg-slate-800 hover:text-white' }}">
                     <svg class="w-4 h-4 {{ request()->routeIs('admin.wa-settings') ? 'text-white' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">

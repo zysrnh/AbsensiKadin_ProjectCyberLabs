@@ -34,7 +34,8 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     // Pengaturan Template WA & Twilio
     Route::get('/wa-settings', [WaSettingController::class, 'index'])->name('admin.wa-settings');
     Route::post('/wa-settings', [WaSettingController::class, 'update'])->name('admin.wa-settings.update');
-    Route::post('/wa-settings/test', [WaSettingController::class, 'testSend'])->name('admin.wa-settings.test');
+    // Kirim & Kelola Undangan Pendaftaran Acara
+    Route::get('/invitation', [WaSettingController::class, 'invitationPage'])->name('admin.invitation');
     Route::post('/invitation/send', [WaSettingController::class, 'sendInvitation'])->name('admin.invitation.send');
 
     // Pengaturan Acara (Luma Event Landing)
