@@ -29,7 +29,7 @@ class TwilioService
      * Kirim pesan tiket WhatsApp via Twilio untuk satu peserta secara dinamis
      * Mendukung Mode Freeform / Sandbox maupun Mode Content Template (Meta Approved)
      */
-    public static function sendTicket(Participant $participant, ?string $toPhoneOverride = null): array
+    public static function sendTicket(Participant $participant, ?string $toPhoneOverride = null, ?string $customTemplate = null): array
     {
         $mode = Setting::get('twilio_mode', 'freeform');
         $contentSid = Setting::get('twilio_template_id', '');
@@ -57,7 +57,7 @@ class TwilioService
         }
 
         // Mode Freeform / Sandbox (default)
-        $template = Setting::get('wa_template', '');
+        $template = $customTemplate ?: Setting::get('wa_template', '');
         $message = self::parseTemplate($template, $participant);
 
         return self::send(

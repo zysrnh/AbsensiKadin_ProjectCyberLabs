@@ -273,4 +273,110 @@ class WaSettingController extends Controller
             'message' => "Blast selesai: {$sentCount} undangan berhasil dikirim via Twilio." . ($failCount > 0 ? " ({$failCount} gagal)." : ""),
         ]);
     }
+
+    /**
+     * Tampilkan halaman khusus pembuatan & pengiriman Tiket QR Presensi
+     */
+    public function ticketPage()
+    {
+        $defaultTemplate = "Halo Bapak/Ibu *{nama}*,\n\n"
+            . "Terima kasih telah melakukan registrasi kegiatan KADIN 2026.\n\n"
+            . "Berikut adalah tiket presensi QR Code Anda:\n"
+            . "🔗 {link_tiket}\n\n"
+            . "Kode Tiket: *{kode_tiket}*\n"
+            . "Instansi: {instansi}\n"
+            . "Jabatan: {jabatan}\n\n"
+            . "Silakan tunjukkan QR Code pada gambar/tautan terlampir kepada petugas saat tiba di lokasi acara.\n\n"
+            . "Salam hangat,\n*Panitia KADIN 2026*";
+
+        $template = Setting::get('wa_template', $defaultTemplate);
+        $participants = Participant::latest()->get();
+
+        // Sample peserta untuk live preview di samping kanan
+        $sample = $participants->first() ?? new Participant([
+            'name' => 'Bpk. Ir. Hendro Wibowo',
+            'company' => 'Kadin Jawa Barat',
+            'position' => 'Wakil Ketua Bidang Perdagangan',
+            'phone' => '081234567890',
+            'qr_token' => 'KD26-EXMPL01',
+        ]);
+
+        return view('admin.tickets', compact('template', 'participants', 'sample'));
+    }
+
+    /**
+     * Kirim tiket presensi QR ke 1 peserta / nomor tujuan
+     */
+    public function sendSingleTicket(Request $request)
+    {
+        $request->validate([
+            'phone' => 'required|string',
+            'participant_id' => 'nullable|exists:participants,id',
+            'custom_message' => 'nullable|string',
+        ]);
+
+        if ($request->filled('participant_id')) {
+            $participant = Participant::findOrFail($request->participant_id);
+        } else {
+            $participant = Participant::first() ?? new Participant([
+                'name' => 'Tamu Kehormatan',
+                'company' => 'KADIN Indonesia',
+                'position' => 'Peserta',
+                'phone' => $request->phone,
+                'qr_token' => 'KD26-' . strtoupper(Str::random(8)),
+            ]);
+        }
+
+        $result = TwilioService::sendTicket(
+            participant: $participant,
+            toPhoneOverride: $request->phone,
+            customTemplate: $request->custom_message
+        );
+
+        return response()->json($result, $result['success'] ? 200 : 400);
+    }
+
+    /**
+     * Kirim tiket presensi QR massal (bulk blast) via Twilio ke peserta terpilih
+     */
+    public function sendBulkTicket(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:participants,id',
+            'custom_message' => 'nullable|string',
+        ]);
+
+        $participants = Participant::whereIn('id', $request->ids)->get();
+
+        if ($participants->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tidak ada peserta yang dipilih.',
+            ], 400);
+        }
+
+        $sentCount = 0;
+        $failCount = 0;
+
+        foreach ($participants as $participant) {
+            $result = TwilioService::sendTicket(
+                participant: $participant,
+                customTemplate: $request->custom_message
+            );
+
+            if ($result['success']) {
+                $sentCount++;
+            } else {
+                $failCount++;
+            }
+        }
+
+        return response()->json([
+            'success' => $sentCount > 0,
+            'sent_count' => $sentCount,
+            'fail_count' => $failCount,
+            'message' => "Blast tiket selesai: {$sentCount} tiket QR berhasil dikirim via Twilio." . ($failCount > 0 ? " ({$failCount} gagal)." : ""),
+        ]);
+    }
 }

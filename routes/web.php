@@ -39,6 +39,11 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::post('/invitation/send', [WaSettingController::class, 'sendInvitation'])->name('admin.invitation.send');
     Route::post('/invitation/send-bulk', [WaSettingController::class, 'sendBulkInvitation'])->name('admin.invitation.send-bulk');
 
+    // Kirim & Kelola Tiket Presensi QR Peserta
+    Route::get('/send-tickets', [WaSettingController::class, 'ticketPage'])->name('admin.tickets');
+    Route::post('/send-tickets/send-single', [WaSettingController::class, 'sendSingleTicket'])->name('admin.tickets.send-single');
+    Route::post('/send-tickets/send-bulk', [WaSettingController::class, 'sendBulkTicket'])->name('admin.tickets.send-bulk');
+
     // Pengaturan Acara (Luma Event Landing)
     Route::get('/event-settings', [EventSettingController::class, 'index'])->name('admin.event-settings');
     Route::post('/event-settings', [EventSettingController::class, 'update'])->name('admin.event-settings.update');
