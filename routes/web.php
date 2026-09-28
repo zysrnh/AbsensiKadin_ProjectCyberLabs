@@ -84,6 +84,12 @@ Route::get('/dashboard', fn () => redirect()->route('admin.dashboard'))->name('d
 Route::get('/scan', [ParticipantController::class, 'scan'])->name('participants.scan');
 Route::post('/scan/verify', [ParticipantController::class, 'verifyScan'])->name('participants.scan.verify');
 
+// ─── API Mobile Flutter Scanner ───
+Route::prefix('api')->group(function () {
+    Route::post('/login', [AuthController::class, 'apiLogin'])->name('api.login');
+    Route::post('/scan/verify', [ParticipantController::class, 'verifyScan'])->name('api.scan.verify');
+});
+
 // Legacy routes alias
 Route::get('/participants', fn () => redirect()->route('admin.dashboard'))->name('participants.index');
 Route::delete('/participants/{participant}', [ParticipantController::class, 'destroy'])->name('participants.destroy');

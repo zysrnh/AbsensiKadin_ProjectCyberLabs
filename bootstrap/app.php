@@ -14,6 +14,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->validateCsrfTokens(except: [
             'scan/verify',
+            'api/login',
+            'api/scan/verify',
             'twilio/webhook',
             'api/twilio/webhook',
         ]);

@@ -59,4 +59,36 @@ class AuthController extends Controller
 
         return redirect()->route('login')->with('success', 'Anda telah berhasil keluar.');
     }
+
+    /**
+     * API Login untuk Flutter Mobile Scanner App
+     * Validasi kredensial tanpa session — return JSON berisi data user
+     */
+    public function apiLogin(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ]);
+
+        if (!Auth::attempt($request->only('email', 'password'))) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Email atau password salah.',
+            ], 401);
+        }
+
+        $user = Auth::user();
+        Auth::logout(); // Tidak perlu session di API
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Login berhasil.',
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+            ],
+        ]);
+    }
 }

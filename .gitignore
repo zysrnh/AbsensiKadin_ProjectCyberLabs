@@ -25,3 +25,17 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Flutter Scanner App
+/kadin_scanner/.dart_tool/
+/kadin_scanner/.packages
+/kadin_scanner/build/
+/kadin_scanner/.flutter-plugins
+/kadin_scanner/.flutter-plugins-dependencies
+/kadin_scanner/android/.gradle/
+/kadin_scanner/android/local.properties
+/kadin_scanner/android/app/build/
+/kadin_scanner/ios/Pods/
+/kadin_scanner/ios/.symlinks/
+/kadin_scanner/.pub/
+/kadin_scanner/pubspec.lock
