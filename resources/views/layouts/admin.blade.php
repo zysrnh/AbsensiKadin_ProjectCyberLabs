@@ -37,16 +37,19 @@
             background-color: #f8fafc;
             color: #0f172a;
         }
+        #sidebar {
+            transition: margin-left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        body.sidebar-closed #sidebar {
+            margin-left: -16rem !important;
+        }
     </style>
     @stack('styles')
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex">
 
-    <!-- Backdrop Mobile untuk Sidebar -->
-    <div id="sidebarBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/60 z-30 hidden md:hidden transition-opacity"></div>
-
     <!-- Sidebar Kiri Solid Charcoal/Slate-900 (Flat Formal) -->
-    <aside id="sidebar" class="fixed md:sticky top-0 left-0 h-screen w-64 bg-slate-900 text-white shrink-0 flex flex-col justify-between border-r border-slate-800 z-40 transition-all duration-300 ease-in-out -translate-x-full md:translate-x-0">
+    <aside id="sidebar" class="w-64 bg-slate-900 text-white shrink-0 flex flex-col justify-between border-r border-slate-800 min-h-screen sticky top-0 h-screen z-40">
         
         <div>
             <!-- Sidebar Header Brand -->
@@ -242,35 +245,18 @@
 
     </div>
 
-    <!-- Script Global Sidebar Toggle (Responsive Desktop & Mobile) -->
+    <!-- Script Global Sidebar Toggle -->
     <script>
         function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const backdrop = document.getElementById('sidebarBackdrop');
-            if (!sidebar) return;
-
-            if (window.innerWidth >= 768) {
-                // Mode Desktop: geser keluar layar (collapse)
-                const isCollapsed = sidebar.classList.toggle('md:-ml-64');
-                localStorage.setItem('admin_sidebar_collapsed', isCollapsed ? 'true' : 'false');
-            } else {
-                // Mode Mobile: slide drawer dan backdrop overlay
-                const isOpen = sidebar.classList.toggle('translate-x-0');
-                if (backdrop) {
-                    backdrop.classList.toggle('hidden', !isOpen);
-                }
-            }
+            document.body.classList.toggle('sidebar-closed');
+            const isClosed = document.body.classList.contains('sidebar-closed');
+            localStorage.setItem('admin_sidebar_closed', isClosed ? 'true' : 'false');
         }
 
-        // Restore preferensi desktop
-        document.addEventListener('DOMContentLoaded', function() {
-            const sidebar = document.getElementById('sidebar');
-            if (sidebar && window.innerWidth >= 768) {
-                if (localStorage.getItem('admin_sidebar_collapsed') === 'true') {
-                    sidebar.classList.add('md:-ml-64');
-                }
-            }
-        });
+        // Restore state saat halaman dimuat
+        if (localStorage.getItem('admin_sidebar_closed') === 'true') {
+            document.body.classList.add('sidebar-closed');
+        }
     </script>
 
     @stack('scripts')
