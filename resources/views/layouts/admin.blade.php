@@ -42,26 +42,22 @@
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex">
 
+    <!-- Backdrop Mobile untuk Sidebar -->
+    <div id="sidebarBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/60 z-30 hidden md:hidden transition-opacity"></div>
+
     <!-- Sidebar Kiri Solid Charcoal/Slate-900 (Flat Formal) -->
-    <aside id="sidebar" class="w-64 bg-slate-900 text-white shrink-0 flex flex-col justify-between border-r border-slate-800 min-h-screen sticky top-0 h-screen z-40 transition-all duration-150">
+    <aside id="sidebar" class="fixed md:sticky top-0 left-0 h-screen w-64 bg-slate-900 text-white shrink-0 flex flex-col justify-between border-r border-slate-800 z-40 transition-all duration-300 ease-in-out -translate-x-full md:translate-x-0">
         
         <div>
-            <!-- Sidebar Header Brand & Close Button -->
-            <div class="h-16 flex items-center justify-between px-5 border-b border-slate-800">
-                <div class="flex items-center gap-2.5">
-                    <span class="px-2 py-0.5 bg-blue-600 text-white font-black text-xs tracking-wider rounded-sm">
-                        KADIN
-                    </span>
-                    <div>
-                        <h1 class="text-sm font-bold tracking-tight text-white leading-none">Presensi 2026</h1>
-                        <span class="text-[10px] text-slate-400 font-medium">Panel Administrator</span>
-                    </div>
+            <!-- Sidebar Header Brand -->
+            <div class="h-16 flex items-center px-6 border-b border-slate-800 gap-2.5">
+                <span class="px-2 py-0.5 bg-blue-600 text-white font-black text-xs tracking-wider rounded-sm">
+                    KADIN
+                </span>
+                <div>
+                    <h1 class="text-sm font-bold tracking-tight text-white leading-none">Presensi 2026</h1>
+                    <span class="text-[10px] text-slate-400 font-medium">Panel Administrator</span>
                 </div>
-                <button type="button" onclick="toggleSidebar()" title="Sembunyikan Sidebar" class="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-sm transition-colors cursor-pointer">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
-                    </svg>
-                </button>
             </div>
 
             <!-- Navigation Links -->
@@ -246,26 +242,32 @@
 
     </div>
 
-    <!-- Script Global Sidebar Toggle -->
+    <!-- Script Global Sidebar Toggle (Responsive Desktop & Mobile) -->
     <script>
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebarBackdrop');
             if (!sidebar) return;
-            const isHidden = sidebar.classList.toggle('hidden');
-            localStorage.setItem('admin_sidebar_closed', isHidden ? 'true' : 'false');
+
+            if (window.innerWidth >= 768) {
+                // Mode Desktop: geser keluar layar (collapse)
+                const isCollapsed = sidebar.classList.toggle('md:-ml-64');
+                localStorage.setItem('admin_sidebar_collapsed', isCollapsed ? 'true' : 'false');
+            } else {
+                // Mode Mobile: slide drawer dan backdrop overlay
+                const isOpen = sidebar.classList.toggle('translate-x-0');
+                if (backdrop) {
+                    backdrop.classList.toggle('hidden', !isOpen);
+                }
+            }
         }
 
-        // Restore status buka/tutup sidebar
+        // Restore preferensi desktop
         document.addEventListener('DOMContentLoaded', function() {
-            const isClosed = localStorage.getItem('admin_sidebar_closed');
             const sidebar = document.getElementById('sidebar');
-            if (sidebar) {
-                if (isClosed === 'true') {
-                    sidebar.classList.add('hidden');
-                } else if (isClosed === 'false') {
-                    sidebar.classList.remove('hidden');
-                } else if (window.innerWidth < 768) {
-                    sidebar.classList.add('hidden');
+            if (sidebar && window.innerWidth >= 768) {
+                if (localStorage.getItem('admin_sidebar_collapsed') === 'true') {
+                    sidebar.classList.add('md:-ml-64');
                 }
             }
         });
