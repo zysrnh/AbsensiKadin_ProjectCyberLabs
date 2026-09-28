@@ -43,18 +43,25 @@
 <body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex">
 
     <!-- Sidebar Kiri Solid Charcoal/Slate-900 (Flat Formal) -->
-    <aside id="sidebar" class="w-64 bg-slate-900 text-white shrink-0 hidden md:flex flex-col justify-between border-r border-slate-800 min-h-screen sticky top-0 h-screen z-40">
+    <aside id="sidebar" class="w-64 bg-slate-900 text-white shrink-0 flex flex-col justify-between border-r border-slate-800 min-h-screen sticky top-0 h-screen z-40 transition-all duration-150">
         
         <div>
-            <!-- Sidebar Header Brand -->
-            <div class="h-16 flex items-center px-6 border-b border-slate-800 gap-2.5">
-                <span class="px-2 py-0.5 bg-blue-600 text-white font-black text-xs tracking-wider rounded-sm">
-                    KADIN
-                </span>
-                <div>
-                    <h1 class="text-sm font-bold tracking-tight text-white leading-none">Presensi 2026</h1>
-                    <span class="text-[10px] text-slate-400 font-medium">Panel Administrator</span>
+            <!-- Sidebar Header Brand & Close Button -->
+            <div class="h-16 flex items-center justify-between px-5 border-b border-slate-800">
+                <div class="flex items-center gap-2.5">
+                    <span class="px-2 py-0.5 bg-blue-600 text-white font-black text-xs tracking-wider rounded-sm">
+                        KADIN
+                    </span>
+                    <div>
+                        <h1 class="text-sm font-bold tracking-tight text-white leading-none">Presensi 2026</h1>
+                        <span class="text-[10px] text-slate-400 font-medium">Panel Administrator</span>
+                    </div>
                 </div>
+                <button type="button" onclick="toggleSidebar()" title="Sembunyikan Sidebar" class="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-sm transition-colors cursor-pointer">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+                    </svg>
+                </button>
             </div>
 
             <!-- Navigation Links -->
@@ -159,14 +166,15 @@
         <!-- Topbar Mobile/Desktop -->
         <header class="bg-white border-b border-slate-200 h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8 sticky top-0 z-30 shadow-2xs">
             
-            <!-- Mobile Toggle & Title -->
+            <!-- Toggle Sidebar & Title -->
             <div class="flex items-center gap-3">
                 <button 
                     type="button" 
-                    onclick="document.getElementById('sidebar').classList.toggle('hidden')" 
-                    class="md:hidden p-2 text-slate-600 hover:text-slate-900 border border-slate-200 rounded-sm"
+                    onclick="toggleSidebar()" 
+                    title="Buka / Tutup Sidebar"
+                    class="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200 rounded-sm transition-colors cursor-pointer flex items-center justify-center shadow-2xs"
                 >
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
                 </button>
@@ -237,6 +245,31 @@
         </footer>
 
     </div>
+
+    <!-- Script Global Sidebar Toggle -->
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            if (!sidebar) return;
+            const isHidden = sidebar.classList.toggle('hidden');
+            localStorage.setItem('admin_sidebar_closed', isHidden ? 'true' : 'false');
+        }
+
+        // Restore status buka/tutup sidebar
+        document.addEventListener('DOMContentLoaded', function() {
+            const isClosed = localStorage.getItem('admin_sidebar_closed');
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) {
+                if (isClosed === 'true') {
+                    sidebar.classList.add('hidden');
+                } else if (isClosed === 'false') {
+                    sidebar.classList.remove('hidden');
+                } else if (window.innerWidth < 768) {
+                    sidebar.classList.add('hidden');
+                }
+            }
+        });
+    </script>
 
     @stack('scripts')
 </body>
