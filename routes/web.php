@@ -38,6 +38,10 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::delete('/participants/{participant}', [DashboardController::class, 'destroy'])->name('admin.participants.destroy');
     Route::get('/export/csv', [DashboardController::class, 'exportCsv'])->name('admin.export.csv');
     
+    // Cetak ID Card Lanyard / Name Tag Peserta
+    Route::get('/participants/id-cards/bulk', [DashboardController::class, 'printBulkIdCards'])->name('admin.participants.id-cards.bulk');
+    Route::get('/participants/{participant}/id-card', [DashboardController::class, 'printIdCard'])->name('admin.participants.id-card');
+    
     // Pengaturan Template WA & Twilio
     Route::get('/wa-settings', [WaSettingController::class, 'index'])->name('admin.wa-settings');
     Route::post('/wa-settings', [WaSettingController::class, 'update'])->name('admin.wa-settings.update');

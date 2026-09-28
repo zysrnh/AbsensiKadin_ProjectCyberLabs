@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Participant;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -115,6 +116,69 @@ class DashboardController extends Controller
         $participant->delete();
 
         return redirect()->back()->with('success', "Data peserta \"{$name}\" berhasil dihapus.");
+    }
+
+    /**
+     * Cetak ID Card Lanyard / Name Tag satuan untuk 1 peserta
+     */
+    public function printIdCard(Participant $participant)
+    {
+        $participants = collect([$participant]);
+        $eventSettings = [
+            'nama_acara' => Setting::get('event_title', 'Musyawarah & Temu Bisnis KADIN Indonesia 2026'),
+            'tanggal' => Setting::get('event_date', '28 Oktober 2026'),
+            'venue' => Setting::get('event_venue_name', 'Grand Ballroom Menara Kadin Indonesia'),
+        ];
+
+        return view('admin.id-card', compact('participants', 'eventSettings'));
+    }
+
+    /**
+     * Cetak ID Card Lanyard / Name Tag massal untuk semua / hasil filter peserta
+     */
+    public function printBulkIdCards(Request $request)
+    {
+        $query = Participant::query();
+
+        if ($request->filled('ids')) {
+            $ids = is_array($request->ids) ? $request->ids : explode(',', $request->ids);
+            $query->whereIn('id', $ids);
+        } else {
+            if ($request->filled('search')) {
+                $search = trim($request->search);
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                      ->orWhere('company', 'like', "%{$search}%")
+                      ->orWhere('position', 'like', "%{$search}%")
+                      ->orWhere('phone', 'like', "%{$search}%")
+                      ->orWhere('qr_token', 'like', "%{$search}%");
+                });
+            }
+
+            if ($request->filled('status')) {
+                $query->where('status', $request->status);
+            }
+
+            if ($request->filled('rsvp')) {
+                if ($request->rsvp === 'pending') {
+                    $query->where(function ($q) {
+                        $q->whereNull('rsvp_status')->orWhere('rsvp_status', 'pending');
+                    });
+                } else {
+                    $query->where('rsvp_status', $request->rsvp);
+                }
+            }
+        }
+
+        $participants = $query->latest()->get();
+
+        $eventSettings = [
+            'nama_acara' => Setting::get('event_title', 'Musyawarah & Temu Bisnis KADIN Indonesia 2026'),
+            'tanggal' => Setting::get('event_date', '28 Oktober 2026'),
+            'venue' => Setting::get('event_venue_name', 'Grand Ballroom Menara Kadin Indonesia'),
+        ];
+
+        return view('admin.id-card', compact('participants', 'eventSettings'));
     }
 
     /**
