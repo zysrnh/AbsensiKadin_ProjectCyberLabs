@@ -26,9 +26,22 @@ class ParticipantController extends Controller
             'event_dresscode' => Setting::get('event_dresscode', 'Batik Formal / Pakaian Bisnis Rapi'),
             'event_description' => Setting::get('event_description', 'Pertemuan strategis para pelaku usaha, pimpinan asosiasi, dan pemangku kepentingan industri nasional dalam rangka akselerasi ekonomi dan kolaborasi bisnis berkelanjutan.'),
             'event_flyer' => Setting::get('event_flyer', ''),
+            'registration_deadline_enabled' => Setting::get('registration_deadline_enabled', '0') === '1',
+            'registration_deadline' => Setting::get('registration_deadline', '2026-10-27T23:59'),
+            'registration_deadline_text' => Setting::get('registration_deadline_text', '27 Oktober 2026, 23:59 WIB'),
         ];
 
-        return view('participants.create', compact('settings'));
+        // Cek status kadaluarsa
+        $isExpired = false;
+        if ($settings['registration_deadline_enabled'] && !empty($settings['registration_deadline'])) {
+            try {
+                $isExpired = now()->greaterThan(\Carbon\Carbon::parse($settings['registration_deadline']));
+            } catch (\Throwable $e) {
+                $isExpired = false;
+            }
+        }
+
+        return view('participants.create', compact('settings', 'isExpired'));
     }
 
     /**
@@ -36,6 +49,21 @@ class ParticipantController extends Controller
      */
     public function store(Request $request)
     {
+        // Proteksi jika pendaftaran sudah kadaluarsa
+        $deadlineEnabled = Setting::get('registration_deadline_enabled', '0') === '1';
+        $deadline = Setting::get('registration_deadline', '');
+        if ($deadlineEnabled && !empty($deadline)) {
+            try {
+                if (now()->greaterThan(\Carbon\Carbon::parse($deadline))) {
+                    return redirect()->back()
+                        ->withInput()
+                        ->with('error', 'Mohon maaf, periode pendaftaran untuk acara ini telah ditutup karena telah melewati batas waktu pendaftaran.');
+                }
+            } catch (\Throwable $e) {
+                // Abaikan error parse
+            }
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:25',

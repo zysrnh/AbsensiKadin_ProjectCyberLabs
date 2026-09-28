@@ -106,15 +106,59 @@ class WaSettingController extends Controller
     {
         $request->validate([
             'phone' => 'required|string',
-            'message' => 'required|string',
+            'message' => 'nullable|string',
+            'custom_message' => 'nullable|string',
         ]);
+
+        $message = $request->message ?? $request->custom_message;
+        if (empty($message)) {
+            return response()->json(['success' => false, 'message' => 'Pesan tidak boleh kosong.'], 400);
+        }
 
         $result = TwilioService::send(
             toPhone: $request->phone,
-            message: $request->message
+            message: $message
         );
 
         return response()->json($result, $result['success'] ? 200 : 400);
+    }
+
+    /**
+     * Simpan batas waktu kadaluarsa undangan & pendaftaran
+     */
+    public function updateInvitationDeadline(Request $request)
+    {
+        $request->validate([
+            'enabled' => 'nullable',
+            'registration_deadline' => 'nullable|string',
+            'registration_deadline_text' => 'nullable|string',
+        ]);
+
+        $enabled = ($request->boolean('enabled') || $request->enabled === '1' || $request->enabled === 1 || $request->enabled === 'true') ? '1' : '0';
+        $deadline = $request->registration_deadline ?? '';
+        $deadlineText = $request->registration_deadline_text ?? '';
+
+        if (!empty($deadline) && empty($deadlineText)) {
+            try {
+                $deadlineText = \Carbon\Carbon::parse($deadline)->translatedFormat('d F Y, H:i') . ' WIB';
+            } catch (\Throwable $e) {
+                $deadlineText = $deadline;
+            }
+        }
+
+        Setting::set('registration_deadline_enabled', $enabled);
+        Setting::set('registration_deadline', $deadline);
+        Setting::set('registration_deadline_text', $deadlineText);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Pengaturan batas kadaluarsa undangan berhasil disimpan!',
+            'data' => [
+                'enabled' => $enabled === '1',
+                'deadline' => $deadline,
+                'deadline_text' => $deadlineText,
+            ]
+        ]);
     }
 
     /**
@@ -171,10 +215,22 @@ class WaSettingController extends Controller
             . "👔 Dresscode: {dresscode}\n\n"
             . "Mengingat kuota tempat terbatas, mohon kesediaan Bapak/Ibu untuk mengisi formulir kehadiran melalui tautan resmi berikut:\n"
             . "🔗 {link_form}\n\n"
+            . "⏳ Batas Akhir Konfirmasi: {batas_waktu}\n\n"
             . "Terima kasih atas perhatian dan kerja sama Bapak/Ibu.\n\n"
             . "Salam hormat,\n*Panitia KADIN Indonesia 2026*";
 
         $invitationTemplate = Setting::get('wa_invitation_template', $defaultInvitationTemplate);
+        
+        $deadlineEnabled = Setting::get('registration_deadline_enabled', '0') === '1';
+        $deadlineDatetime = Setting::get('registration_deadline', '2026-10-27T23:59');
+        $deadlineText = Setting::get('registration_deadline_text', '27 Oktober 2026, 23:59 WIB');
+
+        $deadlineSettings = [
+            'enabled' => $deadlineEnabled,
+            'deadline' => $deadlineDatetime,
+            'deadline_text' => $deadlineText,
+        ];
+
         $eventSettings = [
             'nama_acara' => Setting::get('event_title', 'Musyawarah & Temu Bisnis KADIN Indonesia 2026'),
             'tanggal' => Setting::get('event_date', '28 Oktober 2026'),
@@ -182,11 +238,12 @@ class WaSettingController extends Controller
             'venue' => Setting::get('event_venue_name', 'Grand Ballroom Menara Kadin Indonesia'),
             'dresscode' => Setting::get('event_dresscode', 'Batik Formal / Pakaian Bisnis Rapi'),
             'link_form' => route('home'),
+            'batas_waktu' => $deadlineEnabled ? $deadlineText : 'Sesuai kuota tersedia',
         ];
 
         $participants = Participant::latest()->get();
 
-        return view('admin.invitation', compact('invitationTemplate', 'eventSettings', 'participants'));
+        return view('admin.invitation', compact('invitationTemplate', 'eventSettings', 'participants', 'deadlineSettings'));
     }
 
     /**
@@ -218,6 +275,7 @@ class WaSettingController extends Controller
             . "👔 Dresscode: {dresscode}\n\n"
             . "Mengingat kuota tempat terbatas, mohon kesediaan Bapak/Ibu untuk mengisi formulir kehadiran melalui tautan resmi berikut:\n"
             . "🔗 {link_form}\n\n"
+            . "⏳ Batas Akhir Konfirmasi: {batas_waktu}\n\n"
             . "Terima kasih atas perhatian dan kerja sama Bapak/Ibu.\n\n"
             . "Salam hormat,\n*Panitia KADIN Indonesia 2026*";
 
@@ -231,6 +289,10 @@ class WaSettingController extends Controller
         $eventVenue = Setting::get('event_venue_name', 'Grand Ballroom Menara Kadin Indonesia');
         $eventDresscode = Setting::get('event_dresscode', 'Batik Formal / Pakaian Bisnis Rapi');
         $linkForm = route('home');
+        
+        $deadlineEnabled = Setting::get('registration_deadline_enabled', '0') === '1';
+        $deadlineText = Setting::get('registration_deadline_text', '27 Oktober 2026, 23:59 WIB');
+        $batasWaktu = $deadlineEnabled ? $deadlineText : 'Sesuai kuota tersedia';
 
         $sentCount = 0;
         $failCount = 0;
@@ -244,6 +306,8 @@ class WaSettingController extends Controller
                 '{venue}',
                 '{dresscode}',
                 '{link_form}',
+                '{batas_waktu}',
+                '{kadaluarsa}',
             ], [
                 $participant->name,
                 $eventTitle,
@@ -252,6 +316,8 @@ class WaSettingController extends Controller
                 $eventVenue,
                 $eventDresscode,
                 $linkForm,
+                $batasWaktu,
+                $batasWaktu,
             ], $template);
 
             $result = TwilioService::send(

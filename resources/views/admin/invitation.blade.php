@@ -36,6 +36,90 @@
         <!-- Kolom Kiri: Form Generator & Aksi -->
         <div class="lg:col-span-7 space-y-5">
             
+            <!-- Card Pengaturan Batas Waktu Kadaluarsa Undangan / Pendaftaran -->
+            <div class="bg-white border border-slate-200 rounded-sm p-5 shadow-2xs space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-sm bg-amber-50 text-amber-700 border border-amber-200 flex items-center justify-center">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Batas Waktu Kadaluarsa Undangan</h2>
+                            <p class="text-[11px] text-slate-400">Atur batas waktu pendaftaran sebelum link form ditutup otomatis.</p>
+                        </div>
+                    </div>
+
+                    <!-- Status Pill -->
+                    <span id="deadlineStatusBadge" class="px-2 py-0.5 text-[10px] font-bold rounded-sm border uppercase font-mono {{ ($deadlineSettings['enabled'] ?? false) ? 'bg-amber-50 text-amber-800 border-amber-200' : 'bg-slate-100 text-slate-500 border-slate-200' }}">
+                        {{ ($deadlineSettings['enabled'] ?? false) ? 'Batas Aktif' : 'Tanpa Batas' }}
+                    </span>
+                </div>
+
+                <div class="space-y-3.5">
+                    <!-- Toggle Switch -->
+                    <label class="inline-flex items-center gap-2.5 cursor-pointer">
+                        <input 
+                            type="checkbox" 
+                            id="enableDeadlineToggle" 
+                            class="rounded-xs border-slate-300 text-slate-900 focus:ring-0 focus:ring-offset-0 cursor-pointer w-4 h-4"
+                            {{ ($deadlineSettings['enabled'] ?? false) ? 'checked' : '' }}
+                            onchange="toggleDeadlineInputs()"
+                        >
+                        <span class="text-xs font-semibold text-slate-700">Aktifkan batas waktu kadaluarsa (Tutup pendaftaran otomatis setelah waktu ini)</span>
+                    </label>
+
+                    <div id="deadlineContainer" class="grid grid-cols-1 sm:grid-cols-12 gap-3 pt-1 {{ ($deadlineSettings['enabled'] ?? false) ? '' : 'opacity-40 pointer-events-none' }}">
+                        <!-- Input Datetime -->
+                        <div class="sm:col-span-5">
+                            <label for="deadlineDatetimeInput" class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1">
+                                Waktu Deadline
+                            </label>
+                            <input 
+                                type="datetime-local" 
+                                id="deadlineDatetimeInput" 
+                                value="{{ $deadlineSettings['deadline'] ?? '' }}"
+                                class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-sm text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-900 focus:bg-white transition-colors"
+                                onchange="onDeadlineDatetimeChanged()"
+                            >
+                        </div>
+
+                        <!-- Input Teks Tampilan -->
+                        <div class="sm:col-span-7">
+                            <label for="deadlineTextInput" class="block text-[11px] font-semibold text-slate-600 uppercase tracking-wider mb-1">
+                                Teks Pada Pesan & Form
+                            </label>
+                            <input 
+                                type="text" 
+                                id="deadlineTextInput" 
+                                value="{{ $deadlineSettings['deadline_text'] ?? '' }}"
+                                placeholder="Contoh: 27 Oktober 2026, 23:59 WIB"
+                                class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-sm text-xs text-slate-900 focus:outline-none focus:border-slate-900 focus:bg-white transition-colors"
+                                oninput="onDeadlineTextChanged()"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 border-t border-slate-100">
+                        <p class="text-[11px] text-slate-400">
+                            Sisipkan tag <code class="font-mono text-slate-700 bg-slate-100 px-1 py-0.5 rounded-xs">{batas_waktu}</code> ke dalam isi pesan.
+                        </p>
+                        <button 
+                            type="button" 
+                            onclick="saveDeadlineSetting()" 
+                            id="btnSaveDeadline"
+                            class="px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs rounded-sm transition-colors cursor-pointer flex items-center justify-center gap-1.5 shadow-2xs"
+                        >
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span>Simpan Batas Waktu</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <div class="bg-white border border-slate-200 rounded-sm p-5 shadow-2xs space-y-4">
                 <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
                     <div>
@@ -101,6 +185,9 @@
                         </button>
                         <button type="button" onclick="insertVar('{link_form}')" class="px-2 py-1 bg-emerald-100 hover:bg-emerald-200 border border-emerald-300 text-emerald-800 text-[11px] font-mono font-semibold rounded-sm cursor-pointer transition">
                             {link_form}
+                        </button>
+                        <button type="button" onclick="insertVar('{batas_waktu}')" class="px-2 py-1 bg-amber-100 hover:bg-amber-200 border border-amber-300 text-amber-800 text-[11px] font-mono font-semibold rounded-sm cursor-pointer transition">
+                            {batas_waktu}
                         </button>
                     </div>
                 </div>
@@ -375,6 +462,7 @@
 <script>
     const eventData = @json($eventSettings);
     const rawDefaultTemplate = @json($invitationTemplate);
+    let deadlineData = @json($deadlineSettings);
 
     const nameInput = document.getElementById('guestNameInput');
     const phoneInput = document.getElementById('guestPhoneInput');
@@ -384,14 +472,125 @@
 
     function buildTemplate(name) {
         let text = rawDefaultTemplate;
+        const deadlineStr = deadlineData.enabled ? (deadlineData.deadline_text || 'Sesuai kuota') : 'Sesuai kuota tersedia';
         text = text.replaceAll('{nama}', name || 'Bapak/Ibu Pimpinan')
                    .replaceAll('{nama_acara}', eventData.nama_acara)
                    .replaceAll('{tanggal}', eventData.tanggal)
                    .replaceAll('{waktu}', eventData.waktu)
                    .replaceAll('{venue}', eventData.venue)
                    .replaceAll('{dresscode}', eventData.dresscode)
-                   .replaceAll('{link_form}', eventData.link_form);
+                   .replaceAll('{link_form}', eventData.link_form)
+                   .replaceAll('{batas_waktu}', deadlineStr)
+                   .replaceAll('{kadaluarsa}', deadlineStr);
         return text;
+    }
+
+    // HANDLER PENGATURAN BATAS KADALUARSA UNDANGAN
+    function toggleDeadlineInputs() {
+        const enabled = document.getElementById('enableDeadlineToggle').checked;
+        const container = document.getElementById('deadlineContainer');
+        const badge = document.getElementById('deadlineStatusBadge');
+        
+        if (enabled) {
+            container.classList.remove('opacity-40', 'pointer-events-none');
+            badge.className = "px-2 py-0.5 text-[10px] font-bold rounded-sm border uppercase font-mono bg-amber-50 text-amber-800 border-amber-200";
+            badge.textContent = "Batas Aktif";
+        } else {
+            container.classList.add('opacity-40', 'pointer-events-none');
+            badge.className = "px-2 py-0.5 text-[10px] font-bold rounded-sm border uppercase font-mono bg-slate-100 text-slate-500 border-slate-200";
+            badge.textContent = "Tanpa Batas";
+        }
+        deadlineData.enabled = enabled;
+        updateInvitationText();
+    }
+
+    function onDeadlineDatetimeChanged() {
+        const val = document.getElementById('deadlineDatetimeInput').value;
+        if (val) {
+            const date = new Date(val);
+            if (!isNaN(date.getTime())) {
+                const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+                const day = date.getDate();
+                const month = months[date.getMonth()];
+                const year = date.getFullYear();
+                const hours = String(date.getHours()).padStart(2, '0');
+                const minutes = String(date.getMinutes()).padStart(2, '0');
+                
+                const formatted = `${day} ${month} ${year}, ${hours}:${minutes} WIB`;
+                document.getElementById('deadlineTextInput').value = formatted;
+                deadlineData.deadline_text = formatted;
+                deadlineData.deadline = val;
+                updateInvitationText();
+            }
+        }
+    }
+
+    function onDeadlineTextChanged() {
+        deadlineData.deadline_text = document.getElementById('deadlineTextInput').value;
+        updateInvitationText();
+    }
+
+    function saveDeadlineSetting() {
+        const enabled = document.getElementById('enableDeadlineToggle').checked;
+        const deadline = document.getElementById('deadlineDatetimeInput').value;
+        const text = document.getElementById('deadlineTextInput').value.trim();
+        const btn = document.getElementById('btnSaveDeadline');
+
+        btn.disabled = true;
+        btn.innerHTML = `<svg class="animate-spin w-3.5 h-3.5 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg> <span>Menyimpan...</span>`;
+
+        fetch("{{ route('admin.invitation.deadline') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                enabled: enabled ? 1 : 0,
+                registration_deadline: deadline,
+                registration_deadline_text: text
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            btn.disabled = false;
+            btn.innerHTML = `<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg> <span>Simpan Batas Waktu</span>`;
+            
+            if (data.success) {
+                deadlineData.enabled = data.data.enabled;
+                deadlineData.deadline = data.data.deadline;
+                deadlineData.deadline_text = data.data.deadline_text;
+                updateInvitationText();
+                
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'success',
+                    title: data.message || 'Batas kadaluarsa berhasil disimpan!',
+                    showConfirmButton: false,
+                    timer: 2500,
+                    timerProgressBar: true
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal Menyimpan',
+                    text: data.message || 'Terjadi kesalahan.',
+                    confirmButtonColor: '#0f172a'
+                });
+            }
+        })
+        .catch(() => {
+            btn.disabled = false;
+            btn.innerHTML = `<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg> <span>Simpan Batas Waktu</span>`;
+            Swal.fire({
+                icon: 'error',
+                title: 'Error Koneksi',
+                text: 'Tidak dapat menyimpan pengaturan ke server.',
+                confirmButtonColor: '#0f172a'
+            });
+        });
     }
 
     function initPage() {

@@ -160,15 +160,39 @@
             <!-- 3. Form Registrasi Peserta -->
             <div class="bg-white border border-slate-200 rounded-sm shadow-xs p-5 sm:p-6 space-y-4">
                 
-                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
                     <div>
                         <h2 class="text-sm sm:text-base font-bold text-slate-900 tracking-tight">Formulir Pendaftaran</h2>
                         <p class="text-[11px] text-slate-500 mt-0.5">Lengkapi data untuk mendapatkan tiket QR Code resmi.</p>
                     </div>
-                    <span class="text-[10px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-sm uppercase tracking-wider">
-                        GRATIS
-                    </span>
+                    <div class="flex items-center gap-1.5">
+                        @if($settings['registration_deadline_enabled'])
+                            <span class="text-[10px] font-bold {{ $isExpired ? 'text-rose-800 bg-rose-50 border-rose-200' : 'text-amber-800 bg-amber-50 border-amber-200' }} border px-2 py-0.5 rounded-sm uppercase tracking-wider">
+                                {{ $isExpired ? 'Pendaftaran Ditutup' : 'Batas: ' . $settings['registration_deadline_text'] }}
+                            </span>
+                        @endif
+                        <span class="text-[10px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-sm uppercase tracking-wider">
+                            GRATIS
+                        </span>
+                    </div>
                 </div>
+
+                <!-- Banner Peringatan Jika Pendaftaran Ditutup / Kadaluarsa -->
+                @if($isExpired)
+                    <div class="p-4 bg-rose-50 border border-rose-300 rounded-sm text-xs text-rose-900 flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-sm bg-rose-200/80 text-rose-800 flex items-center justify-center shrink-0">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                            </svg>
+                        </div>
+                        <div class="space-y-0.5">
+                            <h4 class="font-bold text-rose-900 uppercase tracking-wider text-[11px]">Pendaftaran Telah Ditutup</h4>
+                            <p class="text-rose-800 leading-relaxed text-[11px]">
+                                Mohon maaf, batas waktu pendaftaran untuk kegiatan ini telah berakhir pada <strong>{{ $settings['registration_deadline_text'] }}</strong>. Formulir saat ini tidak menerima pengajuan kehadiran baru.
+                            </p>
+                        </div>
+                    </div>
+                @endif
 
                 <!-- Alert Error Validasi -->
                 @if($errors->any())
@@ -196,9 +220,9 @@
                             name="name" 
                             id="name" 
                             value="{{ old('name') }}" 
-                            required 
+                            {{ $isExpired ? 'disabled' : 'required' }}
                             placeholder="Contoh: Budi Santoso, S.E."
-                            class="w-full px-3 py-2 bg-slate-50 border {{ $errors->has('name') ? 'border-rose-400 bg-rose-50/40' : 'border-slate-200' }} rounded-sm text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-colors"
+                            class="w-full px-3 py-2 {{ $isExpired ? 'bg-slate-100 text-slate-400 cursor-not-allowed border-slate-200 opacity-70' : 'bg-slate-50 border-slate-200 text-slate-900 focus:bg-white focus:border-slate-900' }} border {{ $errors->has('name') ? 'border-rose-400 bg-rose-50/40' : '' }} rounded-sm text-xs placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-900 transition-colors"
                         >
                     </div>
 
@@ -212,9 +236,9 @@
                             name="phone" 
                             id="phone" 
                             value="{{ old('phone') }}" 
-                            required 
+                            {{ $isExpired ? 'disabled' : 'required' }}
                             placeholder="Contoh: 081234567890"
-                            class="w-full px-3 py-2 bg-slate-50 border {{ $errors->has('phone') ? 'border-rose-400 bg-rose-50/40' : 'border-slate-200' }} rounded-sm text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-colors"
+                            class="w-full px-3 py-2 {{ $isExpired ? 'bg-slate-100 text-slate-400 cursor-not-allowed border-slate-200 opacity-70' : 'bg-slate-50 border-slate-200 text-slate-900 focus:bg-white focus:border-slate-900' }} border {{ $errors->has('phone') ? 'border-rose-400 bg-rose-50/40' : '' }} rounded-sm text-xs placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-900 transition-colors"
                         >
                     </div>
 
@@ -228,9 +252,9 @@
                             name="position" 
                             id="position" 
                             value="{{ old('position') }}" 
-                            required 
+                            {{ $isExpired ? 'disabled' : 'required' }}
                             placeholder="Contoh: Direktur Utama / Manajer"
-                            class="w-full px-3 py-2 bg-slate-50 border {{ $errors->has('position') ? 'border-rose-400 bg-rose-50/40' : 'border-slate-200' }} rounded-sm text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-colors"
+                            class="w-full px-3 py-2 {{ $isExpired ? 'bg-slate-100 text-slate-400 cursor-not-allowed border-slate-200 opacity-70' : 'bg-slate-50 border-slate-200 text-slate-900 focus:bg-white focus:border-slate-900' }} border {{ $errors->has('position') ? 'border-rose-400 bg-rose-50/40' : '' }} rounded-sm text-xs placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-900 transition-colors"
                         >
                     </div>
 
@@ -244,9 +268,9 @@
                             name="company" 
                             id="company" 
                             value="{{ old('company') }}" 
-                            required 
+                            {{ $isExpired ? 'disabled' : 'required' }}
                             placeholder="Contoh: PT Sumber Pangan Nusantara"
-                            class="w-full px-3 py-2 bg-slate-50 border {{ $errors->has('company') ? 'border-rose-400 bg-rose-50/40' : 'border-slate-200' }} rounded-sm text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:bg-white focus:border-slate-900 focus:ring-1 focus:ring-slate-900 transition-colors"
+                            class="w-full px-3 py-2 {{ $isExpired ? 'bg-slate-100 text-slate-400 cursor-not-allowed border-slate-200 opacity-70' : 'bg-slate-50 border-slate-200 text-slate-900 focus:bg-white focus:border-slate-900' }} border {{ $errors->has('company') ? 'border-rose-400 bg-rose-50/40' : '' }} rounded-sm text-xs placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-900 transition-colors"
                         >
                     </div>
 
@@ -255,20 +279,35 @@
                         <svg class="w-3.5 h-3.5 text-slate-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <span>Permohonan kehadiran Anda akan tercatat dalam sistem pendaftaran KADIN.</span>
+                        <span>
+                            {{ $isExpired ? 'Pendaftaran ditutup karena telah melewati batas kadaluarsa.' : 'Permohonan kehadiran Anda akan tercatat dalam sistem pendaftaran KADIN.' }}
+                        </span>
                     </div>
 
-                    <!-- Tombol Submit Request to Join -->
+                    <!-- Tombol Submit Request to Join / Pendaftaran Ditutup -->
                     <div class="pt-1">
-                        <button 
-                            type="submit" 
-                            class="w-full py-2.5 px-4 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs sm:text-sm rounded-sm transition-colors cursor-pointer flex items-center justify-center gap-2 border border-slate-900 shadow-2xs"
-                        >
-                            <span>Request to Join</span>
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                            </svg>
-                        </button>
+                        @if($isExpired)
+                            <button 
+                                type="button" 
+                                disabled
+                                class="w-full py-2.5 px-4 bg-slate-200 text-slate-500 font-semibold text-xs sm:text-sm rounded-sm cursor-not-allowed flex items-center justify-center gap-2 border border-slate-300 shadow-none"
+                            >
+                                <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                </svg>
+                                <span>Pendaftaran Telah Ditutup</span>
+                            </button>
+                        @else
+                            <button 
+                                type="submit" 
+                                class="w-full py-2.5 px-4 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs sm:text-sm rounded-sm transition-colors cursor-pointer flex items-center justify-center gap-2 border border-slate-900 shadow-2xs"
+                            >
+                                <span>Request to Join</span>
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                                </svg>
+                            </button>
+                        @endif
                     </div>
                 </form>
 
