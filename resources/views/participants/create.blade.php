@@ -107,6 +107,94 @@
         transform: translateY(-4px);
     }
 
+    /* ==========================================================================
+       3D DEPTH, TACTILE ELEVATION & MULTI-LAYER SHADOW SYSTEM
+       ========================================================================== */
+    .card-3d-main {
+        background: #ffffff;
+        border: 1px solid rgba(226, 232, 240, 0.95);
+        box-shadow: 
+            0 2px 4px rgba(15, 23, 42, 0.03),
+            0 12px 24px -4px rgba(15, 23, 42, 0.08),
+            0 28px 60px -12px rgba(15, 23, 42, 0.16),
+            0 45px 85px -20px rgba(15, 23, 42, 0.10);
+        position: relative;
+        transition: transform 0.35s var(--ease-expo), box-shadow 0.35s var(--ease-expo);
+    }
+    .card-3d-main:hover {
+        transform: translateY(-4px);
+        box-shadow: 
+            0 4px 6px rgba(15, 23, 42, 0.04),
+            0 16px 32px -4px rgba(15, 23, 42, 0.10),
+            0 36px 70px -12px rgba(15, 23, 42, 0.20),
+            0 55px 95px -20px rgba(15, 23, 42, 0.14);
+    }
+
+    .info-bar-3d {
+        box-shadow: 
+            0 8px 0 #1e3a8a,
+            0 20px 40px -8px rgba(30, 58, 138, 0.45),
+            0 30px 60px -15px rgba(15, 23, 42, 0.3);
+        border: 1px solid #1d4ed8;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .info-bar-3d:hover {
+        transform: translateY(-3px);
+        box-shadow: 
+            0 11px 0 #1e3a8a,
+            0 26px 48px -8px rgba(30, 58, 138, 0.5),
+            0 38px 70px -15px rgba(15, 23, 42, 0.35);
+    }
+
+    .hero-card-3d {
+        box-shadow: 
+            0 8px 0 #0f172a,
+            0 20px 40px -8px rgba(15, 23, 42, 0.4),
+            0 35px 70px -15px rgba(15, 23, 42, 0.25);
+    }
+
+    .flyer-3d-box {
+        box-shadow: 
+            inset 0 1px 1px rgba(255, 255, 255, 0.15),
+            0 12px 28px -4px rgba(15, 23, 42, 0.25),
+            0 25px 45px -10px rgba(15, 23, 42, 0.2);
+    }
+
+    /* 3D Tactile Buttons (Efek Tombol Fisik Timbul & Push-down) */
+    .btn-3d-dark {
+        box-shadow: 0 4px 0 #020617, 0 10px 20px -3px rgba(15, 23, 42, 0.35);
+        transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-3d-dark:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 0 #020617, 0 14px 26px -4px rgba(15, 23, 42, 0.4);
+    }
+    .btn-3d-dark:active {
+        transform: translateY(3px);
+        box-shadow: 0 1px 0 #020617, 0 4px 10px -2px rgba(15, 23, 42, 0.25);
+    }
+
+    .btn-3d-white {
+        box-shadow: 0 3px 0 #cbd5e1, 0 8px 16px -3px rgba(15, 23, 42, 0.1);
+        transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-3d-white:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 0 #cbd5e1, 0 12px 22px -3px rgba(15, 23, 42, 0.14);
+    }
+    .btn-3d-white:active {
+        transform: translateY(2px);
+        box-shadow: 0 1px 0 #cbd5e1, 0 3px 6px -1px rgba(15, 23, 42, 0.08);
+    }
+
+    .input-3d {
+        box-shadow: inset 0 2px 4px rgba(15, 23, 42, 0.04);
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .input-3d:focus {
+        box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.03), 0 0 0 4px rgba(15, 23, 42, 0.10);
+    }
+
     html {
         scroll-behavior: smooth;
     }
@@ -150,10 +238,10 @@
                 </p>
             </div>
 
-            <!-- Tombol Aksi Cepat -->
+            <!-- Tombol Aksi Cepat 3D -->
             <div class="flex flex-wrap items-center gap-3 pt-1">
                 <a href="#registration-section" 
-                   class="px-6 py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm tracking-wide rounded-xl transition-all duration-200 flex items-center gap-2.5 border border-slate-900 shadow-md cursor-pointer active:translate-y-0.5 hover:shadow-lg">
+                   class="btn-3d-dark px-6 py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm tracking-wide rounded-xl flex items-center gap-2.5 border border-slate-900 cursor-pointer">
                     <span>Isi Formulir Pendaftaran</span>
                     <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
@@ -164,7 +252,7 @@
                     <a href="{{ $settings['event_maps_url'] }}" 
                        target="_blank" 
                        rel="noopener noreferrer"
-                       class="px-5 py-3.5 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 font-semibold text-xs sm:text-sm rounded-xl transition-colors border border-slate-300 flex items-center gap-2 shadow-xs">
+                       class="btn-3d-white px-5 py-3.5 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 font-semibold text-xs sm:text-sm rounded-xl border border-slate-300 flex items-center gap-2">
                         <svg class="w-4 h-4 text-rose-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -183,7 +271,7 @@
         <div class="lg:col-span-5 flex justify-center lg:justify-end anim-flyer-card tilt-card-container">
             <div class="w-full max-w-[360px] anim-floating">
                 
-                <div id="heroFlyerCard" class="tilt-card border-2 border-slate-900 bg-white rounded-2xl shadow-xl overflow-hidden cursor-pointer">
+                <div id="heroFlyerCard" class="tilt-card hero-card-3d border-2 border-slate-900 bg-white rounded-2xl overflow-hidden cursor-pointer">
                     
                     @if(!empty($settings['event_flyer']))
                         <img 
@@ -236,8 +324,8 @@
          ========================================================================== -->
     <section class="scroll-reveal">
         
-        <!-- Bar Card Solid Royal Blue (Khas Campty Stats Bar) -->
-        <div class="bg-blue-700 text-white rounded-2xl shadow-xl border border-blue-800 p-5 sm:p-7">
+        <!-- Bar Card Solid Royal Blue 3D -->
+        <div class="bg-blue-700 text-white rounded-2xl info-bar-3d p-6 sm:p-8">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 divide-y sm:divide-y-0 lg:divide-x divide-blue-600/70">
                 
                 <!-- 1. LOKASI / GEDUNG -->
@@ -337,14 +425,14 @@
             </p>
         </div>
 
-        <!-- Wadah Card Terpadu (Smooth & Soft Shadow Mengikuti Referensi Gambar ke-2) -->
-        <div class="max-w-5xl mx-auto bg-white rounded-3xl p-6 sm:p-8 lg:p-10 border border-slate-200/80 shadow-xl shadow-slate-200/50">
+        <!-- Wadah Card Terpadu (Smooth & 3D Multi-Layer Shadow) -->
+        <div class="max-w-5xl mx-auto rounded-3xl p-6 sm:p-8 lg:p-10 card-3d-main">
             
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
                 
-                <!-- SISI KIRI: FLYER ACARA / POSTER (SMOOTH ROUNDED) -->
+                <!-- SISI KIRI: FLYER ACARA / POSTER (SMOOTH ROUNDED 3D) -->
                 <div class="lg:col-span-5 flex flex-col">
-                    <div class="w-full h-full min-h-[380px] lg:min-h-[500px] rounded-2xl overflow-hidden border border-slate-200 shadow-md relative flex flex-col">
+                    <div class="w-full h-full min-h-[380px] lg:min-h-[500px] rounded-2xl overflow-hidden border border-slate-200 flyer-3d-box relative flex flex-col">
                         @if(!empty($settings['event_flyer']))
                             <img 
                                 src="{{ asset($settings['event_flyer']) }}" 
@@ -411,10 +499,10 @@
                     <!-- Header Form -->
                     <div class="space-y-1.5 border-b border-slate-100 pb-4">
                         <div class="flex items-center justify-between">
-                            <span class="px-2.5 py-1 bg-slate-900 text-white text-[10px] font-bold rounded-lg tracking-wider uppercase">
+                            <span class="px-2.5 py-1 bg-slate-900 text-white text-[10px] font-bold rounded-lg tracking-wider uppercase shadow-2xs">
                                 C LEVEL
                             </span>
-                            <span class="text-[10px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg uppercase tracking-wider">
+                            <span class="text-[10px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg uppercase tracking-wider shadow-2xs">
                                 BEBAS BIAYA
                             </span>
                         </div>
@@ -471,7 +559,7 @@
                                 value="{{ old('name') }}" 
                                 {{ $isExpired ? 'disabled' : 'required' }}
                                 placeholder="Nama Lengkap"
-                                class="w-full px-4 py-2.5 {{ $isExpired ? 'bg-slate-100 text-slate-400 cursor-not-allowed border-slate-200 opacity-70' : 'bg-slate-50/80 border-slate-200 text-slate-900 focus:bg-white focus:border-slate-900' }} border {{ $errors->has('name') ? 'border-rose-400 bg-rose-50/40' : '' }} rounded-xl text-xs sm:text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900/10 shadow-2xs transition-all"
+                                class="input-3d w-full px-4 py-2.5 {{ $isExpired ? 'bg-slate-100 text-slate-400 cursor-not-allowed border-slate-200 opacity-70' : 'bg-slate-50/90 border-slate-200 text-slate-900 focus:bg-white focus:border-slate-900' }} border {{ $errors->has('name') ? 'border-rose-400 bg-rose-50/40' : '' }} rounded-xl text-xs sm:text-sm placeholder-slate-400 focus:outline-none"
                             >
                         </div>
 
@@ -487,7 +575,7 @@
                                 value="{{ old('phone') }}" 
                                 {{ $isExpired ? 'disabled' : 'required' }}
                                 placeholder="08xxxxxxxxxx"
-                                class="w-full px-4 py-2.5 {{ $isExpired ? 'bg-slate-100 text-slate-400 cursor-not-allowed border-slate-200 opacity-70' : 'bg-slate-50/80 border-slate-200 text-slate-900 focus:bg-white focus:border-slate-900' }} border {{ $errors->has('phone') ? 'border-rose-400 bg-rose-50/40' : '' }} rounded-xl text-xs sm:text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900/10 shadow-2xs transition-all"
+                                class="input-3d w-full px-4 py-2.5 {{ $isExpired ? 'bg-slate-100 text-slate-400 cursor-not-allowed border-slate-200 opacity-70' : 'bg-slate-50/90 border-slate-200 text-slate-900 focus:bg-white focus:border-slate-900' }} border {{ $errors->has('phone') ? 'border-rose-400 bg-rose-50/40' : '' }} rounded-xl text-xs sm:text-sm placeholder-slate-400 focus:outline-none"
                             >
                         </div>
 
@@ -505,7 +593,7 @@
                                     value="{{ old('company') }}" 
                                     {{ $isExpired ? 'disabled' : 'required' }}
                                     placeholder="Nama Perusahaan / Instansi"
-                                    class="w-full px-4 py-2.5 {{ $isExpired ? 'bg-slate-100 text-slate-400 cursor-not-allowed border-slate-200 opacity-70' : 'bg-slate-50/80 border-slate-200 text-slate-900 focus:bg-white focus:border-slate-900' }} border {{ $errors->has('company') ? 'border-rose-400 bg-rose-50/40' : '' }} rounded-xl text-xs sm:text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900/10 shadow-2xs transition-all"
+                                    class="input-3d w-full px-4 py-2.5 {{ $isExpired ? 'bg-slate-100 text-slate-400 cursor-not-allowed border-slate-200 opacity-70' : 'bg-slate-50/90 border-slate-200 text-slate-900 focus:bg-white focus:border-slate-900' }} border {{ $errors->has('company') ? 'border-rose-400 bg-rose-50/40' : '' }} rounded-xl text-xs sm:text-sm placeholder-slate-400 focus:outline-none"
                                 >
                             </div>
 
@@ -521,7 +609,7 @@
                                     value="{{ old('position') }}" 
                                     {{ $isExpired ? 'disabled' : 'required' }}
                                     placeholder="Jabatan / Posisi"
-                                    class="w-full px-4 py-2.5 {{ $isExpired ? 'bg-slate-100 text-slate-400 cursor-not-allowed border-slate-200 opacity-70' : 'bg-slate-50/80 border-slate-200 text-slate-900 focus:bg-white focus:border-slate-900' }} border {{ $errors->has('position') ? 'border-rose-400 bg-rose-50/40' : '' }} rounded-xl text-xs sm:text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900/10 shadow-2xs transition-all"
+                                    class="input-3d w-full px-4 py-2.5 {{ $isExpired ? 'bg-slate-100 text-slate-400 cursor-not-allowed border-slate-200 opacity-70' : 'bg-slate-50/90 border-slate-200 text-slate-900 focus:bg-white focus:border-slate-900' }} border {{ $errors->has('position') ? 'border-rose-400 bg-rose-50/40' : '' }} rounded-xl text-xs sm:text-sm placeholder-slate-400 focus:outline-none"
                                 >
                             </div>
                         </div>
@@ -538,7 +626,7 @@
                                 value="{{ old('email') }}" 
                                 {{ $isExpired ? 'disabled' : '' }}
                                 placeholder="email@perusahaan.com"
-                                class="w-full px-4 py-2.5 {{ $isExpired ? 'bg-slate-100 text-slate-400 cursor-not-allowed border-slate-200 opacity-70' : 'bg-slate-50/80 border-slate-200 text-slate-900 focus:bg-white focus:border-slate-900' }} border {{ $errors->has('email') ? 'border-rose-400 bg-rose-50/40' : '' }} rounded-xl text-xs sm:text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900/10 shadow-2xs transition-all"
+                                class="input-3d w-full px-4 py-2.5 {{ $isExpired ? 'bg-slate-100 text-slate-400 cursor-not-allowed border-slate-200 opacity-70' : 'bg-slate-50/90 border-slate-200 text-slate-900 focus:bg-white focus:border-slate-900' }} border {{ $errors->has('email') ? 'border-rose-400 bg-rose-50/40' : '' }} rounded-xl text-xs sm:text-sm placeholder-slate-400 focus:outline-none"
                             >
                         </div>
 
@@ -558,7 +646,7 @@
                             @else
                                 <button 
                                     type="submit" 
-                                    class="w-full py-3.5 px-6 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm tracking-wide rounded-xl transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 border border-slate-900 shadow-md hover:shadow-lg active:translate-y-0.5"
+                                    class="btn-3d-dark w-full py-3.5 px-6 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm tracking-wide rounded-xl cursor-pointer flex items-center justify-center gap-2 border border-slate-900"
                                 >
                                     <span>Request to Join (Kirim Permohonan)</span>
                                     <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

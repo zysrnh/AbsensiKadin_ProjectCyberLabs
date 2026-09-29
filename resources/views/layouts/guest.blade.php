@@ -37,10 +37,10 @@
     </style>
     @stack('styles')
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col justify-between">
+<body class="bg-slate-100/80 text-slate-800 antialiased min-h-screen flex flex-col justify-between">
 
     <!-- Clean Minimal Header: Logo Only -->
-    <header class="bg-white border-b border-slate-200/80 py-4 px-4 sm:px-6 sticky top-0 z-30">
+    <header class="bg-white/95 backdrop-blur-md border-b border-slate-200/80 py-4 px-4 sm:px-6 sticky top-0 z-30 shadow-xs">
         <div class="max-w-6xl mx-auto flex items-center justify-between">
             <a href="{{ route('home') }}" class="flex items-center space-x-2">
                 <span class="px-3 py-1 bg-slate-900 text-white font-black text-sm tracking-widest rounded-sm">
