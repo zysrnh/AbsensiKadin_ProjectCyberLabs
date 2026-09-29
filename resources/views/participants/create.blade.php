@@ -340,43 +340,17 @@
         <!-- Wadah Terpusat Atas-Bawah: Flyer di Atas, Form di Bawahnya -->
         <div class="max-w-3xl mx-auto space-y-8">
             
-            <!-- 1. FLYER ACARA DI ATAS FORMULIR -->
-            <div class="border border-slate-200 rounded-sm bg-white overflow-hidden shadow-xs">
-                @if(!empty($settings['event_flyer']))
+            @if(!empty($settings['event_flyer']))
+                <!-- FLYER ACARA (Hanya tampil jika file gambar diunggah) -->
+                <div class="border border-slate-200 rounded-sm bg-white overflow-hidden shadow-xs">
                     <img 
                         src="{{ asset($settings['event_flyer']) }}" 
                         alt="{{ $settings['event_title'] }}" 
                         class="w-full h-auto object-cover max-h-[460px]"
                         style="width: 100%; object-fit: cover;"
                     >
-                @else
-                    <div class="bg-slate-900 text-white p-6 sm:p-8 flex flex-col justify-between border-b-4 border-blue-600 min-h-[260px]">
-                        <div class="flex items-center justify-between">
-                            <span class="px-2.5 py-1 bg-blue-600 text-white font-black text-xs tracking-widest uppercase rounded-xs">
-                                C LEVEL
-                            </span>
-                            <span class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">
-                                TAHUN 2026
-                            </span>
-                        </div>
-
-                        <div class="my-auto py-4 space-y-2">
-                            <span class="text-[10px] uppercase tracking-widest text-blue-400 font-bold block">
-                                Official Invitation Poster
-                            </span>
-                            <h3 class="text-xl sm:text-2xl font-black text-white leading-tight tracking-tight">
-                                {{ $settings['event_title'] }}
-                            </h3>
-                            <p class="text-xs text-slate-400 font-medium">C LEVEL Indonesia</p>
-                        </div>
-
-                        <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
-                            <span>{{ $settings['event_date'] }}</span>
-                            <span>{{ $settings['event_venue_name'] }}</span>
-                        </div>
-                    </div>
-                @endif
-            </div>
+                </div>
+            @endif
 
             <!-- 2. FORMULIR PENDAFTARAN DI BAWAH FLYER (SUPER CLEAN) -->
             <div class="bg-white border border-slate-200 rounded-sm shadow-xs p-6 sm:p-8 space-y-6">

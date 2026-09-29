@@ -15,11 +15,11 @@ class ParticipantController extends Controller
     public function create()
     {
         $settings = [
-            'event_title' => Setting::get('event_title', 'Musyawarah & Temu Bisnis KADIN Indonesia 2026'),
-            'event_organizer' => Setting::get('event_organizer', 'KADIN Indonesia'),
+            'event_title' => Setting::get('event_title', 'Musyawarah & Temu Bisnis C LEVEL Indonesia 2026'),
+            'event_organizer' => Setting::get('event_organizer', 'C LEVEL Indonesia'),
             'event_date' => Setting::get('event_date', '28 Oktober 2026'),
             'event_time' => Setting::get('event_time', '08:30 - 16:30 WIB'),
-            'event_venue_name' => Setting::get('event_venue_name', 'Grand Ballroom Menara Kadin Indonesia'),
+            'event_venue_name' => Setting::get('event_venue_name', 'Grand Ballroom Menara C LEVEL Indonesia'),
             'event_venue_address' => Setting::get('event_venue_address', 'Jl. H. R. Rasuna Said Blok X-5 Kav. 2-3, Setiabudi, Jakarta Selatan'),
             'event_maps_url' => Setting::get('event_maps_url', 'https://maps.google.com/?q=Menara+Kadin+Indonesia'),
             'event_maps_iframe' => Setting::get('event_maps_iframe', ''),
@@ -102,7 +102,7 @@ class ParticipantController extends Controller
     public function requested(string $token)
     {
         $participant = Participant::where('qr_token', $token)->firstOrFail();
-        $eventTitle = Setting::get('event_title', 'Musyawarah & Temu Bisnis KADIN Indonesia 2026');
+        $eventTitle = Setting::get('event_title', 'Musyawarah & Temu Bisnis C LEVEL Indonesia 2026');
 
         return view('participants.requested', compact('participant', 'eventTitle'));
     }
@@ -263,11 +263,11 @@ class ParticipantController extends Controller
         ]);
 
         $settings = [
-            'event_title' => Setting::get('event_title', 'Musyawarah & Temu Bisnis KADIN Indonesia 2026'),
-            'event_organizer' => Setting::get('event_organizer', 'KADIN Indonesia'),
+            'event_title' => Setting::get('event_title', 'Musyawarah & Temu Bisnis C LEVEL Indonesia 2026'),
+            'event_organizer' => Setting::get('event_organizer', 'C LEVEL Indonesia'),
             'event_date' => Setting::get('event_date', '28 Oktober 2026'),
             'event_time' => Setting::get('event_time', '08:30 - 16:30 WIB'),
-            'event_venue_name' => Setting::get('event_venue_name', 'Grand Ballroom Menara Kadin Indonesia'),
+            'event_venue_name' => Setting::get('event_venue_name', 'Grand Ballroom Menara C LEVEL Indonesia'),
             'event_dresscode' => Setting::get('event_dresscode', 'Batik Formal / Pakaian Bisnis Rapi'),
         ];
 
