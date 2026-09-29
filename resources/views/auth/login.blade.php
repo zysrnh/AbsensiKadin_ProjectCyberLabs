@@ -1,6 +1,6 @@
 @extends('layouts.guest')
 
-@section('title', 'Login Administrator - KADIN 2026')
+@section('title', 'Login Administrator - C LEVEL 2026')
 
 @section('content')
 <div class="w-full max-w-sm mx-auto px-4">
@@ -11,7 +11,7 @@
         <!-- Header Brand -->
         <div class="text-center pb-5 mb-5 border-b border-slate-100">
             <span class="px-3 py-1 bg-slate-900 text-white font-black text-xs tracking-widest uppercase rounded-sm inline-block mb-3">
-                KADIN ADMIN
+                C LEVEL ADMIN
             </span>
             <h1 class="text-xl font-bold text-slate-900 tracking-tight">Portal Masuk Administrator</h1>
             <p class="text-xs text-slate-500 mt-1">Silakan masuk untuk mengelola data kehadiran & sistem acara.</p>

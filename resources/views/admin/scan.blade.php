@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Scanner Presensi QR - Admin Kadin 2026')
+@section('title', 'Scanner Presensi QR - Admin C Level 2026')
 
 @push('styles')
 <style>
@@ -100,7 +100,7 @@
                     <div class="py-2.5 flex items-center justify-between text-xs">
                         <div>
                             <span class="font-bold text-slate-900 block">{{ $attendee->name }}</span>
-                            <span class="text-[11px] text-slate-500">{{ $attendee->company ?? 'Kadin' }}</span>
+                            <span class="text-[11px] text-slate-500">{{ $attendee->company ?? 'C Level' }}</span>
                         </div>
                         <div class="text-right whitespace-nowrap">
                             <span class="px-2 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold text-[10px] uppercase rounded-sm block">
@@ -272,7 +272,7 @@
         row.innerHTML = `
             <div>
                 <span class="font-bold text-slate-900 block">${p.name}</span>
-                <span class="text-[11px] text-slate-500">${p.company || 'Kadin'}</span>
+                <span class="text-[11px] text-slate-500">${p.company || 'C Level'}</span>
             </div>
             <div class="text-right">
                 <span class="px-2 py-0.5 bg-emerald-600 text-white font-bold text-[10px] uppercase rounded-sm block">

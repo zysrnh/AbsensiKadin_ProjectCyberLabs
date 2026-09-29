@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Kirim Undangan Pendaftaran - Kadin 2026')
+@section('title', 'Kirim Undangan Pendaftaran - C Level 2026')
 @section('page_title', 'Kirim Undangan Acara')
 
 @section('content')
@@ -424,10 +424,10 @@
                 <div class="bg-[#075e54] text-white px-4 py-3 flex items-center justify-between">
                     <div class="flex items-center space-x-2.5">
                         <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center font-bold text-xs uppercase">
-                            KD
+                            CL
                         </div>
                         <div>
-                            <span class="text-xs font-bold block leading-tight">KADIN INDONESIA 2026</span>
+                            <span class="text-xs font-bold block leading-tight">C LEVEL INDONESIA 2026</span>
                             <span class="text-[10px] text-emerald-200">Online &bull; Undangan Resmi</span>
                         </div>
                     </div>

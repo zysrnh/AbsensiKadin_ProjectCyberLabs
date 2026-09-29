@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Admin Panel - Absensi Kadin 2026')</title>
+    <title>@yield('title', 'Admin Panel - Absensi C Level 2026')</title>
 
     <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -55,7 +55,7 @@
             <!-- Sidebar Header Brand -->
             <div class="h-16 flex items-center px-6 border-b border-slate-800 gap-2.5">
                 <span class="px-2 py-0.5 bg-blue-600 text-white font-black text-xs tracking-wider rounded-sm">
-                    KADIN
+                    C LEVEL
                 </span>
                 <div>
                     <h1 class="text-sm font-bold tracking-tight text-white leading-none">Presensi 2026</h1>
@@ -224,7 +224,7 @@
                     </svg>
                 </button>
                 <div class="flex items-center gap-2">
-                    <span class="text-xs font-semibold text-slate-500">KADIN Presensi</span>
+                    <span class="text-xs font-semibold text-slate-500">C Level Presensi</span>
                     <span class="text-slate-300">/</span>
                     <span class="text-xs font-bold text-slate-800">@yield('page_title', 'Admin Dashboard')</span>
                 </div>
@@ -285,7 +285,7 @@
 
         <!-- Footer -->
         <footer class="bg-white border-t border-slate-200 py-3 px-6 text-xs text-slate-400 flex items-center justify-between">
-            <span>&copy; {{ date('Y') }} Kamar Dagang dan Industri (KADIN) Indonesia</span>
+            <span>&copy; {{ date('Y') }} C LEVEL Indonesia</span>
             <span>Versi Presensi 1.0</span>
         </footer>
 

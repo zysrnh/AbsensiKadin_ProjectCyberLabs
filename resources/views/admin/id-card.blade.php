@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cetak ID Card Lanyard - KADIN 2026</title>
+    <title>Cetak ID Card Lanyard - C LEVEL 2026</title>
     
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -101,8 +101,8 @@
 
             <!-- Header Organisasi -->
             <div class="px-4 pt-3 pb-2 text-center border-b border-slate-100">
-                <p class="text-[9px] font-extrabold uppercase tracking-widest text-slate-600">KAMAR DAGANG DAN INDUSTRI INDONESIA</p>
-                <h2 class="text-sm font-black tracking-tight text-slate-950 uppercase mt-0.5">KADIN INDONESIA 2026</h2>
+                <p class="text-[9px] font-extrabold uppercase tracking-widest text-slate-600">C LEVEL EXECUTIVE INDONESIA</p>
+                <h2 class="text-sm font-black tracking-tight text-slate-950 uppercase mt-0.5">C LEVEL INDONESIA 2026</h2>
             </div>
 
             <!-- Pita Kategori Peserta (Warna Solid Flat) -->
@@ -125,7 +125,7 @@
 
                 <!-- Instansi / Perusahaan -->
                 <p class="text-sm font-bold text-slate-900 uppercase tracking-wide">
-                    {{ $p->company ?: 'KADIN Indonesia' }}
+                    {{ $p->company ?: 'C LEVEL Indonesia' }}
                 </p>
 
                 <!-- Jabatan -->
@@ -140,10 +140,10 @@
             <!-- Footer ID Card Formal (Tanpa Icon) -->
             <div class="bg-slate-900 text-white px-4 py-2.5 text-center">
                 <p class="text-[9px] font-bold text-slate-200 uppercase tracking-wider">
-                    {{ $eventSettings['nama_acara'] ?? 'Musyawarah & Temu Bisnis KADIN Indonesia 2026' }}
+                    {{ $eventSettings['nama_acara'] ?? 'Gathering & Summit C LEVEL Indonesia 2026' }}
                 </p>
                 <p class="text-[8px] text-slate-400 mt-0.5">
-                    {{ $eventSettings['tanggal'] ?? '28 Oktober 2026' }} &bull; {{ $eventSettings['venue'] ?? 'Menara Kadin Indonesia' }}
+                    {{ $eventSettings['tanggal'] ?? '28 Oktober 2026' }} &bull; {{ $eventSettings['venue'] ?? 'C LEVEL Summit Hall' }}
                 </p>
             </div>
 

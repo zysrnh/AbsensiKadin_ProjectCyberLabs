@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Pengaturan Informasi Acara - Admin Kadin 2026')
+@section('title', 'Pengaturan Informasi Acara - Admin C Level 2026')
 
 @section('content')
 <div class="space-y-6 max-w-5xl">
@@ -144,7 +144,7 @@
                     <label for="event_venue_name" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
                         Nama Gedung / Ballroom <span class="text-rose-500">*</span>
                     </label>
-                    <input type="text" name="event_venue_name" id="event_venue_name" value="{{ old('event_venue_name', $settings['event_venue_name']) }}" required placeholder="Contoh: Grand Ballroom Menara Kadin" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-sm text-sm text-slate-900 focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900">
+                    <input type="text" name="event_venue_name" id="event_venue_name" value="{{ old('event_venue_name', $settings['event_venue_name']) }}" required placeholder="Contoh: Grand Ballroom C Level Hall" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-sm text-sm text-slate-900 focus:outline-none focus:border-slate-900 focus:ring-1 focus:ring-slate-900">
                 </div>
 
                 <div>

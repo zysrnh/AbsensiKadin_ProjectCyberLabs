@@ -14,7 +14,7 @@
                 <span class="text-[10px] font-bold tracking-wider uppercase bg-slate-800 text-slate-200 px-2 py-0.5 rounded-sm inline-block mb-1">
                     E-Tiket Presensi
                 </span>
-                <h2 class="text-sm font-bold tracking-tight text-white uppercase">KADIN INDONESIA 2026</h2>
+                <h2 class="text-sm font-bold tracking-tight text-white uppercase">C LEVEL INDONESIA 2026</h2>
             </div>
             <div class="text-right">
                 <span class="text-[10px] text-slate-400 font-mono block">KODE TIKET</span>

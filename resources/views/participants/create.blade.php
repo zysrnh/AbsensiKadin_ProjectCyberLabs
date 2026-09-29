@@ -1,6 +1,6 @@
 @extends('layouts.guest')
 
-@section('title', $settings['event_title'] . ' - KADIN Indonesia')
+@section('title', $settings['event_title'] . ' - C LEVEL Indonesia')
 
 @section('content')
 <div class="max-w-5xl mx-auto px-4 sm:px-6">
@@ -21,11 +21,11 @@
                         style="aspect-ratio: 1/1; width: 100%; object-fit: cover;"
                     >
                 @else
-                    <!-- Poster Grafis Default KADIN yang Proporsional -->
+                    <!-- Poster Grafis Default C LEVEL yang Proporsional -->
                     <div class="bg-slate-900 text-white p-6 sm:p-7 flex flex-col justify-between border-b-4 border-blue-600" style="aspect-ratio: 1/1; min-height: 320px;">
                         <div class="flex items-center justify-between">
                             <span class="px-2 py-0.5 bg-blue-600 text-white font-black text-xs tracking-widest uppercase rounded-xs">
-                                KADIN
+                                C LEVEL
                             </span>
                             <span class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">
                                 TAHUN 2026
@@ -39,7 +39,7 @@
                             <h3 class="text-xl sm:text-2xl font-black text-white leading-tight tracking-tight">
                                 {{ $settings['event_title'] }}
                             </h3>
-                            <p class="text-xs text-slate-400 mt-2 font-medium">Kamar Dagang dan Industri Indonesia</p>
+                            <p class="text-xs text-slate-400 mt-2 font-medium">C LEVEL Indonesia</p>
                         </div>
 
                         <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
@@ -280,7 +280,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         <span>
-                            {{ $isExpired ? 'Pendaftaran ditutup karena telah melewati batas kadaluarsa.' : 'Permohonan kehadiran Anda akan tercatat dalam sistem pendaftaran KADIN.' }}
+                            {{ $isExpired ? 'Pendaftaran ditutup karena telah melewati batas kadaluarsa.' : 'Permohonan kehadiran Anda akan tercatat dalam sistem pendaftaran C LEVEL.' }}
                         </span>
                     </div>
 

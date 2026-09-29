@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Pengaturan WhatsApp & Twilio - Kadin 2026')
+@section('title', 'Pengaturan WhatsApp & Twilio - C Level 2026')
 @section('page_title', 'Pengaturan WhatsApp')
 
 @section('content')
@@ -62,7 +62,7 @@
                                 <div class="space-y-0.5">
                                     <span class="text-xs font-bold text-slate-900 block">Mode Meta Template (Resmi)</span>
                                     <p class="text-[11px] text-slate-500 leading-normal">
-                                        Wajib untuk nomor resmi KADIN / akun Production via Content SID.
+                                        Wajib untuk nomor resmi C LEVEL / akun Production via Content SID.
                                     </p>
                                 </div>
                             </label>

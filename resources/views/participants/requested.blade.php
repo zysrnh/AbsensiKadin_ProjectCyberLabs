@@ -1,6 +1,6 @@
 @extends('layouts.guest')
 
-@section('title', 'Permintaan Bergabung Berhasil Diajukan - KADIN')
+@section('title', 'Permintaan Bergabung Berhasil Diajukan - C LEVEL')
 
 @section('content')
 <div class="w-full max-w-lg mx-auto px-4 sm:px-6">
@@ -24,7 +24,7 @@
                 Permintaan Bergabung Berhasil Diajukan
             </h1>
             <p class="text-xs text-slate-500 mt-2 max-w-md mx-auto leading-relaxed">
-                Pengajuan kehadiran Anda untuk kegiatan <strong>{{ $eventTitle }}</strong> telah berhasil kami terima dalam sistem KADIN.
+                Pengajuan kehadiran Anda untuk kegiatan <strong>{{ $eventTitle }}</strong> telah berhasil kami terima dalam sistem C LEVEL.
             </p>
         </div>
 
