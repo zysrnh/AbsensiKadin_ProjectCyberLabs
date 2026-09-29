@@ -289,7 +289,7 @@
                             </a>
                         </td>
 
-                        <!-- Presensi di Lokasi & Status RSVP (Rapi & Minimalis) -->
+                        <!-- Presensi di Lokasi & Status RSVP (Dot Minimalis & Bersih) -->
                         <td class="py-3.5 px-5 whitespace-nowrap">
                             <div class="flex items-center gap-3">
                                 <!-- Status Kehadiran Fisik -->
@@ -297,44 +297,28 @@
                                     @if($item->status === 'attended')
                                         <div class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200/80 rounded-full text-[11px] font-bold shadow-2xs">
                                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                                            <span>Hadir ({{ $item->attended_at ? $item->attended_at->format('H:i') : '' }})</span>
-                                            <form action="{{ route('admin.participants.toggle', $item) }}" method="POST" class="inline">
-                                                @csrf
-                                                <button type="submit" class="text-[10px] text-slate-400 hover:text-rose-600 underline cursor-pointer ml-0.5" title="Batalkan status hadir">
-                                                    Batal
-                                                </button>
-                                            </form>
+                                            <span>Hadir ({{ $item->attended_at ? $item->attended_at->format('d M, H:i') : '' }})</span>
                                         </div>
                                     @else
                                         <form action="{{ route('admin.participants.toggle', $item) }}" method="POST" class="inline">
                                             @csrf
-                                            <button type="submit" class="btn-3d-blue px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white border border-blue-600 text-[11px] font-bold rounded-lg cursor-pointer transition flex items-center gap-1 shadow-2xs" title="Tandai Hadir di Lokasi">
-                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
-                                                </svg>
-                                                <span>+ Hadirkan</span>
-                                            </button>
+                                            <button 
+                                                type="submit" 
+                                                class="w-3.5 h-3.5 rounded-full bg-blue-500 hover:bg-blue-600 hover:scale-125 transition-transform cursor-pointer inline-flex items-center justify-center ring-4 ring-blue-100" 
+                                                title="Belum Hadir • Klik untuk Tandai Hadir"
+                                            ></button>
                                         </form>
                                     @endif
                                 </div>
 
-                                <!-- Status RSVP Minimalis -->
+                                <!-- Status RSVP Minimalis (Dot Tanpa Teks) -->
                                 <div>
                                     @if($item->rsvp_status === 'attending')
-                                        <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-50 text-[10px] font-bold text-emerald-800 border border-emerald-200/80 rounded-full">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                            <span>Pasti Hadir</span>
-                                        </span>
+                                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block ring-2 ring-emerald-100" title="RSVP: Pasti Hadir"></span>
                                     @elseif($item->rsvp_status === 'declined')
-                                        <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-rose-50 text-[10px] font-bold text-rose-800 border border-rose-200/80 rounded-full">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
-                                            <span>Batal</span>
-                                        </span>
+                                        <span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block ring-2 ring-rose-100" title="RSVP: Batal Hadir"></span>
                                     @else
-                                        <span class="inline-flex items-center gap-1 text-[11px] font-medium text-slate-400">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
-                                            <span>Menunggu</span>
-                                        </span>
+                                        <span class="w-2.5 h-2.5 rounded-full bg-slate-300 inline-block ring-2 ring-slate-100" title="RSVP: Menunggu Respon"></span>
                                     @endif
                                 </div>
                             </div>
@@ -360,6 +344,31 @@
                                     id="action-dropdown-{{ $item->id }}" 
                                     class="row-dropdown-menu hidden absolute right-0 top-full mt-1.5 w-52 bg-white border border-slate-200 rounded-xl shadow-xl z-50 py-1 text-xs text-slate-700 divide-y divide-slate-100 text-left"
                                 >
+                                    <!-- Aksi Presensi Langsung di Dropdown -->
+                                    <div class="py-1">
+                                        @if($item->status === 'attended')
+                                            <form action="{{ route('admin.participants.toggle', $item) }}" method="POST">
+                                                @csrf
+                                                <button type="submit" class="w-full text-left flex items-center gap-2 px-3 py-1.5 hover:bg-rose-50 hover:text-rose-900 text-rose-600 transition-colors font-medium cursor-pointer">
+                                                    <svg class="w-3.5 h-3.5 text-rose-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                                    </svg>
+                                                    <span>Batalkan Hadir</span>
+                                                </button>
+                                            </form>
+                                        @else
+                                            <form action="{{ route('admin.participants.toggle', $item) }}" method="POST">
+                                                @csrf
+                                                <button type="submit" class="w-full text-left flex items-center gap-2 px-3 py-1.5 hover:bg-blue-50 hover:text-blue-900 text-blue-600 transition-colors font-medium cursor-pointer">
+                                                    <svg class="w-3.5 h-3.5 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                                                    </svg>
+                                                    <span>Tandai Hadir</span>
+                                                </button>
+                                            </form>
+                                        @endif
+                                    </div>
+
                                     <!-- ID Card & Tiket -->
                                     <div class="py-1">
                                         <a href="{{ route('admin.participants.id-card', $item) }}" target="_blank" class="flex items-center gap-2 px-3 py-1.5 hover:bg-indigo-50 hover:text-indigo-900 transition-colors font-medium">
