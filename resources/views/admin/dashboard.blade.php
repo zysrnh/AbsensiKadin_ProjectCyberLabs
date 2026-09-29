@@ -544,25 +544,25 @@
         document.getElementById('filter-search-form').submit();
     };
 
-    // Modal Detail Waktu Kehadiran (Flat, Tegas & Profesional)
+    // Modal Detail Waktu Kehadiran (Sleek Rounded & Plus Jakarta Sans)
     window.showAttendanceDetail = function(name, time) {
         Swal.fire({
             title: '',
             html: `
-                <div class="text-left text-xs p-1">
-                    <div class="flex items-center justify-between pb-3 border-b-2 border-slate-900">
-                        <span class="text-[11px] font-black uppercase tracking-wider text-slate-900 bg-emerald-100 px-2 py-0.5 border border-emerald-400">
+                <div class="text-left text-xs p-1 font-sans">
+                    <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+                        <span class="text-[11px] font-extrabold uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200">
                             TERVERIFIKASI HADIR
                         </span>
-                        <span class="text-[10px] text-slate-500 font-mono font-bold">PRESENSI FISIK</span>
+                        <span class="text-[10px] text-slate-400 font-mono font-bold">PRESENSI FISIK</span>
                     </div>
                     <div class="py-3">
                         <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Nama Peserta</p>
                         <p class="text-sm font-black text-slate-900 mt-0.5">${name}</p>
                     </div>
-                    <div class="p-2.5 bg-slate-50 border border-slate-300 text-slate-800 font-mono text-[11px] flex items-center gap-2">
-                        <svg class="w-3.5 h-3.5 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 font-sans text-xs flex items-center gap-2.5">
+                        <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         <span>${time}</span>
                     </div>
@@ -570,10 +570,10 @@
             `,
             showConfirmButton: true,
             confirmButtonColor: '#0f172a',
-            confirmButtonText: 'TUTUP',
+            confirmButtonText: 'Tutup',
             customClass: {
-                popup: 'rounded-none border-2 border-slate-900 shadow-2xl p-4 bg-white',
-                confirmButton: 'rounded-none font-bold text-xs px-6 py-2 bg-slate-900 text-white cursor-pointer hover:bg-slate-800 tracking-wider uppercase'
+                popup: 'rounded-2xl border border-slate-200 shadow-2xl p-4 bg-white font-sans',
+                confirmButton: 'rounded-xl font-bold text-xs px-6 py-2.5 bg-slate-900 text-white cursor-pointer hover:bg-slate-800 font-sans'
             }
         });
     };
@@ -635,7 +635,7 @@
                         `;
                     }
 
-                    // Toast Tegas di Pojok Kanan Atas (Auto close 3s, no extra click)
+                    // Toast Rounded & Plus Jakarta Sans di Pojok Kanan Atas
                     Swal.fire({
                         toast: true,
                         position: 'top-end',
@@ -643,19 +643,20 @@
                         timer: 3000,
                         timerProgressBar: true,
                         html: `
-                            <div class="text-left text-xs py-0.5">
-                                <div class="flex items-center gap-1.5 mb-1 text-emerald-700 font-black text-[11px] uppercase tracking-wider">
-                                    <span class="w-2.5 h-2.5 bg-emerald-600 inline-block shrink-0"></span>
+                            <div class="text-left text-xs py-1 px-0.5 font-sans">
+                                <div class="flex items-center gap-2 mb-1.5 text-emerald-700 font-extrabold text-[11px] uppercase tracking-wider">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block shrink-0 shadow-2xs"></span>
                                     <span>PRESENSI TERVERIFIKASI</span>
                                 </div>
-                                <p class="font-black text-slate-900 text-xs truncate max-w-[280px]">${escapeHtml(data.participant_name)}</p>
-                                <p class="text-[10px] text-slate-500 mt-1.5 font-mono pt-1 border-t border-slate-200">
-                                    Diupdate: <b>${data.updated_at_formatted}</b>
+                                <p class="font-extrabold text-slate-900 text-xs truncate max-w-[280px]">${escapeHtml(data.participant_name)}</p>
+                                <p class="text-[11px] text-slate-500 mt-2 pt-1.5 border-t border-slate-100 flex items-center gap-1.5">
+                                    <span>Diupdate:</span>
+                                    <b class="text-slate-700 font-bold">${data.updated_at_formatted}</b>
                                 </p>
                             </div>
                         `,
                         customClass: {
-                            popup: 'rounded-none border-2 border-slate-900 bg-white p-3 shadow-2xl text-left'
+                            popup: 'rounded-xl border border-slate-200 bg-white p-3.5 shadow-xl text-left font-sans'
                         }
                     });
 
@@ -686,7 +687,7 @@
                         `;
                     }
 
-                    // Toast Batal Hadir Tegas
+                    // Toast Batal Hadir Rounded
                     Swal.fire({
                         toast: true,
                         position: 'top-end',
@@ -694,19 +695,20 @@
                         timer: 3000,
                         timerProgressBar: true,
                         html: `
-                            <div class="text-left text-xs py-0.5">
-                                <div class="flex items-center gap-1.5 mb-1 text-slate-600 font-black text-[11px] uppercase tracking-wider">
-                                    <span class="w-2.5 h-2.5 bg-slate-500 inline-block shrink-0"></span>
+                            <div class="text-left text-xs py-1 px-0.5 font-sans">
+                                <div class="flex items-center gap-2 mb-1.5 text-slate-600 font-extrabold text-[11px] uppercase tracking-wider">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-slate-400 inline-block shrink-0"></span>
                                     <span>KEHADIRAN DIBATALKAN</span>
                                 </div>
-                                <p class="font-black text-slate-900 text-xs truncate max-w-[280px]">${escapeHtml(data.participant_name)}</p>
-                                <p class="text-[10px] text-slate-500 mt-1.5 font-mono pt-1 border-t border-slate-200">
-                                    Diupdate: <b>${data.updated_at_formatted}</b>
+                                <p class="font-extrabold text-slate-900 text-xs truncate max-w-[280px]">${escapeHtml(data.participant_name)}</p>
+                                <p class="text-[11px] text-slate-500 mt-2 pt-1.5 border-t border-slate-100 flex items-center gap-1.5">
+                                    <span>Diupdate:</span>
+                                    <b class="text-slate-700 font-bold">${data.updated_at_formatted}</b>
                                 </p>
                             </div>
                         `,
                         customClass: {
-                            popup: 'rounded-none border-2 border-slate-900 bg-white p-3 shadow-2xl text-left'
+                            popup: 'rounded-xl border border-slate-200 bg-white p-3.5 shadow-xl text-left font-sans'
                         }
                     });
                 }
