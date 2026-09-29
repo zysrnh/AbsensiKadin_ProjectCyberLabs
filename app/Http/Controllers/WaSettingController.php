@@ -198,7 +198,7 @@ class WaSettingController extends Controller
             'waktu' => Setting::get('event_time', '08:30 - 16:30 WIB'),
             'venue' => Setting::get('event_venue_name', 'Grand Ballroom Menara Kadin Indonesia'),
             'dresscode' => Setting::get('event_dresscode', 'Batik Formal / Pakaian Bisnis Rapi'),
-            'link_form' => route('home'),
+            'link_form' => route('participants.invitation'),
             'batas_waktu' => $deadlineEnabled ? $deadlineText : 'Sesuai kuota tersedia',
         ];
 

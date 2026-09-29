@@ -202,6 +202,100 @@
         display: block;
     }
 
+    /* ==========================================================================
+       EXCLUSIVE INVITATION ENVELOPE 3D ANIMATION
+       ========================================================================== */
+    .envelope-wrapper {
+        perspective: 1200px;
+    }
+    .envelope-box {
+        position: relative;
+        width: 100%;
+        max-width: 360px;
+        height: 220px;
+        background: #0f172a;
+        border-radius: 1rem;
+        box-shadow: 
+            0 10px 0 #020617,
+            0 25px 50px -12px rgba(15, 23, 42, 0.6);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+    }
+    .envelope-box:hover {
+        transform: translateY(-3px);
+        box-shadow: 
+            0 14px 0 #020617,
+            0 32px 60px -12px rgba(15, 23, 42, 0.7);
+    }
+    .envelope-lining {
+        position: absolute;
+        inset: 0;
+        background: #1e3a8a;
+        border-radius: 1rem;
+        z-index: 1;
+    }
+    .envelope-card {
+        position: absolute;
+        bottom: 12px;
+        left: 14px;
+        right: 14px;
+        height: 185px;
+        background: #ffffff;
+        border-radius: 0.75rem;
+        padding: 1rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 5;
+    }
+    .envelope-box.is-opened .envelope-card {
+        transform: translateY(-85px) scale(1.02);
+        box-shadow: 0 20px 35px -8px rgba(0, 0, 0, 0.35);
+    }
+    .envelope-pocket {
+        position: absolute;
+        inset: 0;
+        clip-path: polygon(0 40%, 50% 75%, 100% 40%, 100% 100%, 0 100%);
+        background: #0b192c;
+        border-radius: 0 0 1rem 1rem;
+        z-index: 15;
+        border-top: 1px solid rgba(59, 130, 246, 0.25);
+    }
+    .envelope-flap {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 110px;
+        background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%);
+        clip-path: polygon(0 0, 100% 0, 50% 100%);
+        transform-origin: top center;
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 20;
+        backface-visibility: hidden;
+    }
+    .envelope-box.is-opened .envelope-flap {
+        transform: rotateX(180deg);
+        z-index: 2;
+    }
+    .envelope-seal {
+        position: absolute;
+        top: 95px;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 25;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .envelope-box.is-opened .envelope-seal {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.6);
+        pointer-events: none;
+    }
+    .invitation-overlay-leave {
+        opacity: 0 !important;
+        transform: scale(1.05) !important;
+        pointer-events: none !important;
+    }
+
     html {
         scroll-behavior: smooth;
     }
@@ -209,6 +303,110 @@
 @endpush
 
 @section('content')
+@if(!empty($showEnvelope))
+    <!-- ==========================================================================
+         OVERLAY PEMBUKA UNDANGAN INTERAKTIF ("YOU ARE INVITED" + 3D ENVELOPE)
+         ========================================================================== -->
+    <div id="invitationOverlay" class="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-slate-900/95 backdrop-blur-xl transition-all duration-700 ease-out overflow-y-auto">
+        <div class="w-full max-w-lg my-auto text-center space-y-6 py-6 anim-hero-text">
+            
+            <!-- Header You Are Invited -->
+            <div class="space-y-2 relative">
+                <!-- Sparkle Accent -->
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-400/30 text-blue-400 text-[11px] font-bold tracking-widest uppercase mb-1">
+                    <svg class="w-3.5 h-3.5 text-blue-400 anim-spin" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/>
+                    </svg>
+                    <span>Official Invitation</span>
+                </div>
+
+                <h1 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
+                    You Are Invited
+                </h1>
+
+                <!-- Self-Drawing SVG Curved Line (Ala Hero Line) -->
+                <div class="w-44 sm:w-56 mx-auto pt-1">
+                    <svg viewBox="0 0 260 20" fill="none" class="w-full h-auto" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 12C60 4 140 18 256 6" stroke="#3B82F6" stroke-width="4.5" stroke-linecap="round" class="svg-draw-line" />
+                    </svg>
+                </div>
+
+                <p class="text-xs sm:text-sm text-slate-300 max-w-md mx-auto font-medium pt-1">
+                    {{ $settings['event_title'] }}
+                </p>
+            </div>
+
+            <!-- Interactive 3D Envelope Object -->
+            <div class="envelope-wrapper py-3">
+                <div id="envelopeBox" class="envelope-box mx-auto cursor-pointer" onclick="openInvitationEnvelope()">
+                    
+                    <!-- Inside Lining -->
+                    <div class="envelope-lining"></div>
+
+                    <!-- Letter Card Inside -->
+                    <div class="envelope-card">
+                        <div class="h-full flex flex-col justify-between text-left">
+                            <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                                <span class="px-2 py-0.5 bg-blue-600 text-white font-black text-[9px] tracking-widest uppercase rounded">
+                                    C LEVEL
+                                </span>
+                                <span class="text-[10px] text-slate-400 font-medium">{{ $settings['event_date'] }}</span>
+                            </div>
+                            <div class="py-2">
+                                <h4 class="text-xs sm:text-sm font-black text-slate-900 leading-tight">
+                                    {{ $settings['event_title'] }}
+                                </h4>
+                                <p class="text-[11px] text-slate-500 truncate mt-1">
+                                    {{ $settings['event_venue_name'] }}
+                                </p>
+                            </div>
+                            <div class="text-[10px] text-blue-600 font-bold flex items-center gap-1 border-t border-slate-100 pt-1.5">
+                                <span>Ketuk untuk masuk ke pendaftaran</span>
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Envelope Pocket (Front) -->
+                    <div class="envelope-pocket"></div>
+
+                    <!-- Flap (Top Folding Triangle) -->
+                    <div class="envelope-flap"></div>
+
+                    <!-- Wax Seal Badge / Button -->
+                    <div class="envelope-seal">
+                        <button type="button" class="w-14 h-14 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 border-2 border-amber-200 text-amber-950 font-black flex flex-col items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-transform cursor-pointer">
+                            <svg class="w-5 h-5 text-amber-950" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 19v-8.93a2 2 0 01.89-1.664l7-4.666a2 2 0 012.22 0l7 4.666A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M3 10l6.75 4.5M21 10l-6.75 4.5"/>
+                            </svg>
+                            <span class="text-[8px] uppercase tracking-tighter font-extrabold mt-0.5">BUKA</span>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Tombol Aksi Utama -->
+            <div class="space-y-3 pt-2">
+                <button type="button" onclick="openInvitationEnvelope()" class="btn-3d-dark inline-flex items-center justify-center gap-2.5 px-8 py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm tracking-wide rounded-xl border border-blue-500 cursor-pointer shadow-xl transition-all">
+                    <span>Buka Undangan Resmi</span>
+                    <svg class="w-4 h-4 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                    </svg>
+                </button>
+                <div>
+                    <button type="button" onclick="openInvitationEnvelope(true)" class="text-[11px] text-slate-400 hover:text-white transition-colors cursor-pointer underline underline-offset-4">
+                        Langsung ke Formulir Pendaftaran &rarr;
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+@endif
+
 <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-14 py-4">
 
     <!-- ==========================================================================
@@ -710,6 +908,32 @@
                 tiltCard.style.boxShadow = ``;
             });
         }
+
+        // 3. Interactive Envelope Opening Animation
+        window.openInvitationEnvelope = function(instant = false) {
+            const overlay = document.getElementById('invitationOverlay');
+            const box = document.getElementById('envelopeBox');
+            if (!overlay) return;
+
+            if (instant) {
+                overlay.classList.add('invitation-overlay-leave');
+                setTimeout(() => {
+                    overlay.remove();
+                }, 500);
+                return;
+            }
+
+            if (box) {
+                box.classList.add('is-opened');
+            }
+
+            setTimeout(() => {
+                overlay.classList.add('invitation-overlay-leave');
+                setTimeout(() => {
+                    overlay.remove();
+                }, 600);
+            }, 650);
+        };
     });
 </script>
 @endpush

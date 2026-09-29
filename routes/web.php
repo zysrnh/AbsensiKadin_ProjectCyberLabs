@@ -7,8 +7,9 @@ use App\Http\Controllers\ParticipantController;
 use App\Http\Controllers\WaSettingController;
 use Illuminate\Support\Facades\Route;
 
-// Halaman Publik: Form Registrasi Pendaftaran Ala Luma
+// Halaman Publik: Undangan Digital & Form Registrasi Pendaftaran Ala Luma
 Route::get('/', [ParticipantController::class, 'create'])->name('home');
+Route::get('/invitation', [ParticipantController::class, 'create'])->name('participants.invitation');
 Route::get('/register', [ParticipantController::class, 'create'])->name('participants.create');
 Route::post('/register', [ParticipantController::class, 'store'])->name('participants.store');
 Route::get('/requested/{token}', [ParticipantController::class, 'requested'])->name('participants.requested');

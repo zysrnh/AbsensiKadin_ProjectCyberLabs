@@ -12,8 +12,10 @@ class ParticipantController extends Controller
     /**
      * Tampilkan form registrasi / pendaftaran
      */
-    public function create()
+    public function create(Request $request)
     {
+        $showEnvelope = !$request->is('register') && !$request->has('direct');
+
         $settings = [
             'event_title' => Setting::get('event_title', 'Musyawarah & Temu Bisnis C LEVEL Indonesia 2026'),
             'event_organizer' => Setting::get('event_organizer', 'C LEVEL Indonesia'),
@@ -41,7 +43,7 @@ class ParticipantController extends Controller
             }
         }
 
-        return view('participants.create', compact('settings', 'isExpired'));
+        return view('participants.create', compact('settings', 'isExpired', 'showEnvelope'));
     }
 
     /**
