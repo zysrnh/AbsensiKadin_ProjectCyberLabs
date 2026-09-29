@@ -166,8 +166,8 @@
     </div>
 
     <!-- Filter & Search Toolbar Modern 3D -->
-    <div class="card-3d p-4">
-        <form action="{{ route('admin.dashboard') }}" method="GET" class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
+    <div class="card-3d p-4 overflow-visible relative z-30">
+        <form id="filter-search-form" action="{{ route('admin.dashboard') }}" method="GET" class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
             
             <!-- Input Cari -->
             <div class="sm:col-span-4 relative">
@@ -180,52 +180,118 @@
                     type="text" 
                     name="search" 
                     value="{{ request('search') }}" 
-                    placeholder="Cari nama, instansi, WhatsApp, token..." 
+                    placeholder="Cari nama, instansi, WhatsApp..." 
                     class="input-3d w-full pl-10 pr-3.5 py-2.5 bg-slate-50/60 hover:bg-white focus:bg-white border border-slate-300 focus:border-slate-900 text-xs text-slate-900 rounded-xl focus:outline-none transition-all"
                 >
             </div>
 
-            <!-- Filter Status Presensi -->
-            <div class="sm:col-span-3">
-                <select 
-                    name="status" 
-                    class="input-3d w-full px-3 py-2.5 bg-slate-50/60 hover:bg-white focus:bg-white border border-slate-300 focus:border-slate-900 text-xs text-slate-800 rounded-xl focus:outline-none transition-all cursor-pointer"
+            <!-- Custom Dropdown: Status Presensi -->
+            <div class="sm:col-span-3 relative filter-dropdown-container">
+                <input type="hidden" name="status" id="filter-status-input" value="{{ request('status') }}">
+                <button 
+                    type="button" 
+                    onclick="toggleFilterMenu(event, 'filter-status-menu')" 
+                    class="input-3d w-full px-3.5 py-2.5 bg-slate-50/60 hover:bg-white focus:bg-white border border-slate-300 focus:border-slate-900 text-xs text-slate-800 rounded-xl flex items-center justify-between transition-all cursor-pointer shadow-2xs"
                 >
-                    <option value="">Semua Presensi di Lokasi</option>
-                    <option value="registered" {{ request('status') === 'registered' ? 'selected' : '' }}>Belum Hadir</option>
-                    <option value="attended" {{ request('status') === 'attended' ? 'selected' : '' }}>Sudah Hadir</option>
-                </select>
+                    <span id="filter-status-label" class="truncate font-medium">
+                        @if(request('status') === 'registered')
+                            Belum Hadir
+                        @elseif(request('status') === 'attended')
+                            Sudah Hadir
+                        @else
+                            Semua Presensi di Lokasi
+                        @endif
+                    </span>
+                    <svg class="w-3.5 h-3.5 text-slate-400 shrink-0 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+                <div id="filter-status-menu" class="filter-custom-menu hidden absolute left-0 right-0 top-full mt-1.5 bg-white border border-slate-200 rounded-xl shadow-xl z-50 p-1 text-xs space-y-0.5 text-slate-700 text-left">
+                    <div onclick="selectFilterOption('status', '', 'Semua Presensi di Lokasi')" class="px-3 py-2 rounded-lg hover:bg-slate-100 cursor-pointer font-medium {{ !request('status') ? 'bg-slate-100 text-slate-900 font-bold' : '' }}">
+                        Semua Presensi di Lokasi
+                    </div>
+                    <div onclick="selectFilterOption('status', 'registered', 'Belum Hadir')" class="px-3 py-2 rounded-lg hover:bg-slate-100 cursor-pointer font-medium {{ request('status') === 'registered' ? 'bg-slate-100 text-slate-900 font-bold' : '' }}">
+                        Belum Hadir
+                    </div>
+                    <div onclick="selectFilterOption('status', 'attended', 'Sudah Hadir')" class="px-3 py-2 rounded-lg hover:bg-slate-100 cursor-pointer font-medium {{ request('status') === 'attended' ? 'bg-slate-100 text-slate-900 font-bold' : '' }}">
+                        Sudah Hadir
+                    </div>
+                </div>
             </div>
 
-            <!-- Filter Status RSVP -->
-            <div class="sm:col-span-2">
-                <select 
-                    name="rsvp" 
-                    class="input-3d w-full px-3 py-2.5 bg-slate-50/60 hover:bg-white focus:bg-white border border-slate-300 focus:border-slate-900 text-xs text-slate-800 rounded-xl focus:outline-none transition-all cursor-pointer"
+            <!-- Custom Dropdown: Status RSVP -->
+            <div class="sm:col-span-2 relative filter-dropdown-container">
+                <input type="hidden" name="rsvp" id="filter-rsvp-input" value="{{ request('rsvp') }}">
+                <button 
+                    type="button" 
+                    onclick="toggleFilterMenu(event, 'filter-rsvp-menu')" 
+                    class="input-3d w-full px-3.5 py-2.5 bg-slate-50/60 hover:bg-white focus:bg-white border border-slate-300 focus:border-slate-900 text-xs text-slate-800 rounded-xl flex items-center justify-between transition-all cursor-pointer shadow-2xs"
                 >
-                    <option value="">Semua Status RSVP</option>
-                    <option value="attending" {{ request('rsvp') === 'attending' ? 'selected' : '' }}>Pasti Hadir</option>
-                    <option value="declined" {{ request('rsvp') === 'declined' ? 'selected' : '' }}>Berhalangan</option>
-                    <option value="pending" {{ request('rsvp') === 'pending' ? 'selected' : '' }}>Belum Respon</option>
-                </select>
+                    <span id="filter-rsvp-label" class="truncate font-medium">
+                        @if(request('rsvp') === 'attending')
+                            Pasti Hadir
+                        @elseif(request('rsvp') === 'declined')
+                            Berhalangan
+                        @elseif(request('rsvp') === 'pending')
+                            Belum Respon
+                        @else
+                            Semua Status RSVP
+                        @endif
+                    </span>
+                    <svg class="w-3.5 h-3.5 text-slate-400 shrink-0 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+                <div id="filter-rsvp-menu" class="filter-custom-menu hidden absolute left-0 right-0 top-full mt-1.5 bg-white border border-slate-200 rounded-xl shadow-xl z-50 p-1 text-xs space-y-0.5 text-slate-700 text-left">
+                    <div onclick="selectFilterOption('rsvp', '', 'Semua Status RSVP')" class="px-3 py-2 rounded-lg hover:bg-slate-100 cursor-pointer font-medium {{ !request('rsvp') ? 'bg-slate-100 text-slate-900 font-bold' : '' }}">
+                        Semua Status RSVP
+                    </div>
+                    <div onclick="selectFilterOption('rsvp', 'attending', 'Pasti Hadir')" class="px-3 py-2 rounded-lg hover:bg-slate-100 cursor-pointer font-medium {{ request('rsvp') === 'attending' ? 'bg-slate-100 text-slate-900 font-bold' : '' }}">
+                        Pasti Hadir
+                    </div>
+                    <div onclick="selectFilterOption('rsvp', 'declined', 'Berhalangan')" class="px-3 py-2 rounded-lg hover:bg-slate-100 cursor-pointer font-medium {{ request('rsvp') === 'declined' ? 'bg-slate-100 text-slate-900 font-bold' : '' }}">
+                        Berhalangan
+                    </div>
+                    <div onclick="selectFilterOption('rsvp', 'pending', 'Belum Respon')" class="px-3 py-2 rounded-lg hover:bg-slate-100 cursor-pointer font-medium {{ request('rsvp') === 'pending' ? 'bg-slate-100 text-slate-900 font-bold' : '' }}">
+                        Belum Respon
+                    </div>
+                </div>
             </div>
 
-            <!-- Filter Tanggal -->
-            <div class="sm:col-span-2">
-                <select 
-                    name="date" 
-                    class="input-3d w-full px-3 py-2.5 bg-slate-50/60 hover:bg-white focus:bg-white border border-slate-300 focus:border-slate-900 text-xs text-slate-800 rounded-xl focus:outline-none transition-all cursor-pointer"
+            <!-- Custom Dropdown: Tanggal -->
+            <div class="sm:col-span-2 relative filter-dropdown-container">
+                <input type="hidden" name="date" id="filter-date-input" value="{{ request('date') }}">
+                <button 
+                    type="button" 
+                    onclick="toggleFilterMenu(event, 'filter-date-menu')" 
+                    class="input-3d w-full px-3.5 py-2.5 bg-slate-50/60 hover:bg-white focus:bg-white border border-slate-300 focus:border-slate-900 text-xs text-slate-800 rounded-xl flex items-center justify-between transition-all cursor-pointer shadow-2xs"
                 >
-                    <option value="">Semua Tanggal</option>
-                    <option value="today" {{ request('date') === 'today' ? 'selected' : '' }}>Daftar Hari Ini</option>
-                </select>
+                    <span id="filter-date-label" class="truncate font-medium">
+                        @if(request('date') === 'today')
+                            Daftar Hari Ini
+                        @else
+                            Semua Tanggal
+                        @endif
+                    </span>
+                    <svg class="w-3.5 h-3.5 text-slate-400 shrink-0 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+                <div id="filter-date-menu" class="filter-custom-menu hidden absolute left-0 right-0 top-full mt-1.5 bg-white border border-slate-200 rounded-xl shadow-xl z-50 p-1 text-xs space-y-0.5 text-slate-700 text-left">
+                    <div onclick="selectFilterOption('date', '', 'Semua Tanggal')" class="px-3 py-2 rounded-lg hover:bg-slate-100 cursor-pointer font-medium {{ !request('date') ? 'bg-slate-100 text-slate-900 font-bold' : '' }}">
+                        Semua Tanggal
+                    </div>
+                    <div onclick="selectFilterOption('date', 'today', 'Daftar Hari Ini')" class="px-3 py-2 rounded-lg hover:bg-slate-100 cursor-pointer font-medium {{ request('date') === 'today' ? 'bg-slate-100 text-slate-900 font-bold' : '' }}">
+                        Daftar Hari Ini
+                    </div>
+                </div>
             </div>
 
             <!-- Submit Button & Reset -->
             <div class="sm:col-span-1 flex items-center space-x-1.5">
                 <button 
                     type="submit" 
-                    class="btn-3d-dark w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition-all cursor-pointer text-center border border-slate-900"
+                    class="btn-3d-dark w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition-all cursor-pointer text-center border border-slate-900 shadow-2xs"
                 >
                     Cari
                 </button>
@@ -295,10 +361,12 @@
                                 <!-- Status Kehadiran Fisik -->
                                 <div>
                                     @if($item->status === 'attended')
-                                        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200/80 rounded-full text-[11px] font-bold shadow-2xs">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                                            <span>Hadir ({{ $item->attended_at ? $item->attended_at->format('d M, H:i') : '' }})</span>
-                                        </div>
+                                        <button 
+                                            type="button" 
+                                            onclick="showAttendanceDetail('{{ addslashes($item->name) }}', '{{ $item->attended_at ? $item->attended_at->isoFormat('dddd, D MMMM Y • HH:mm') . ' WIB' : 'Waktu tidak tercatat' }}')"
+                                            class="w-3.5 h-3.5 rounded-full bg-emerald-500 hover:bg-emerald-600 hover:scale-125 transition-transform cursor-pointer inline-flex items-center justify-center ring-4 ring-emerald-100 shadow-2xs" 
+                                            title="Sudah Hadir • Klik untuk lihat detail waktu presensi"
+                                        ></button>
                                     @else
                                         <form action="{{ route('admin.participants.toggle', $item) }}" method="POST" class="inline">
                                             @csrf
@@ -451,7 +519,63 @@
 
 @push('scripts')
 <script>
-    // Handler Dropdown Menu Baris Aksi (Tepat di bawah tombol tombol)
+    // Handler Custom Dropdown Filter Bar
+    window.toggleFilterMenu = function(e, id) {
+        e.stopPropagation();
+        const menu = document.getElementById(id);
+        const allFilterMenus = document.querySelectorAll('.filter-custom-menu');
+        
+        allFilterMenus.forEach(m => {
+            if (m.id !== id) m.classList.add('hidden');
+        });
+
+        if (menu) {
+            menu.classList.toggle('hidden');
+        }
+    };
+
+    window.selectFilterOption = function(name, val, label) {
+        const input = document.getElementById('filter-' + name + '-input');
+        const labelEl = document.getElementById('filter-' + name + '-label');
+        if (input) input.value = val;
+        if (labelEl) labelEl.innerText = label;
+        
+        document.querySelectorAll('.filter-custom-menu').forEach(m => m.classList.add('hidden'));
+        document.getElementById('filter-search-form').submit();
+    };
+
+    // Modal / Popover Detail Waktu Kehadiran
+    window.showAttendanceDetail = function(name, time) {
+        Swal.fire({
+            title: 'Detail Presensi',
+            html: `
+                <div class="text-left text-xs space-y-3 mt-3">
+                    <div class="p-3.5 bg-emerald-50/80 border border-emerald-200/90 rounded-xl">
+                        <div class="flex items-center gap-1.5 text-emerald-700 font-bold text-[11px] uppercase tracking-wider mb-1">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span>Status: Sudah Hadir di Lokasi</span>
+                        </div>
+                        <p class="text-sm font-extrabold text-slate-900">${name}</p>
+                    </div>
+                    <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-2.5 text-slate-700 font-semibold">
+                        <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>${time}</span>
+                    </div>
+                </div>
+            `,
+            icon: 'success',
+            confirmButtonColor: '#0f172a',
+            confirmButtonText: 'Tutup',
+            customClass: {
+                popup: 'rounded-2xl border border-slate-200 shadow-xl',
+                confirmButton: 'rounded-xl font-bold text-xs px-5 py-2.5 cursor-pointer'
+            }
+        });
+    };
+
+    // Handler Dropdown Menu Baris Aksi (Tepat di bawah tombol aksi)
     window.toggleRowDropdown = function(e, id) {
         e.stopPropagation();
         const menu = document.getElementById(id);
@@ -466,10 +590,13 @@
         }
     };
 
-    // Tutup dropdown jika klik di luar
+    // Tutup semua dropdown jika klik di luar
     document.addEventListener('click', function(e) {
         if (!e.target.closest('.row-dropdown-menu') && !e.target.closest('button')) {
             document.querySelectorAll('.row-dropdown-menu').forEach(m => m.classList.add('hidden'));
+        }
+        if (!e.target.closest('.filter-custom-menu') && !e.target.closest('button')) {
+            document.querySelectorAll('.filter-custom-menu').forEach(m => m.classList.add('hidden'));
         }
     });
 
