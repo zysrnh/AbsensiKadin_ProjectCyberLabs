@@ -245,15 +245,18 @@
         border-radius: 0.5rem;
         padding: 1.1rem;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-        transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.35s, opacity 0.35s ease 0.25s, box-shadow 0.7s ease 0.35s;
+        /* delay 0.45s — tunggu flap hampir selesai melipat dulu */
+        transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.45s, opacity 0.3s ease 0.38s, z-index 0s linear 0.44s, box-shadow 0.7s ease 0.45s;
         z-index: 5;
         opacity: 0;
         transform: translateY(15px);
     }
     .envelope-box.is-opened .envelope-card {
-        transform: translateY(-135px);
+        transform: translateY(-140px);
         opacity: 1;
-        box-shadow: 0 25px 45px -8px rgba(0, 0, 0, 0.4);
+        /* Naik ke atas flap dan pocket agar tidak tertimpa */
+        z-index: 30;
+        box-shadow: 0 28px 50px -10px rgba(0, 0, 0, 0.45);
     }
     .envelope-pocket {
         position: absolute;
@@ -273,13 +276,15 @@
         background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%);
         clip-path: polygon(0 0, 100% 0, 50% 100%);
         transform-origin: top center;
-        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), z-index 0s linear 0.28s;
+        /* z-index segera jatuh ke 1 tepat setengah jalan rotasi (0.3s), sehingga tidak menindih kartu */
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), z-index 0s linear 0.3s;
         z-index: 20;
-        backface-visibility: visible;
+        /* hidden: bagian belakang flap tidak terlihat sama sekali saat sudah berputar */
+        backface-visibility: hidden;
     }
     .envelope-box.is-opened .envelope-flap {
         transform: rotateX(180deg);
-        z-index: 2;
+        z-index: 1;
     }
     .envelope-seal {
         position: absolute;
