@@ -211,10 +211,10 @@
     .envelope-box {
         position: relative;
         width: 100%;
-        max-width: 360px;
-        height: 220px;
+        max-width: 390px;
+        height: 235px;
         background: #0f172a;
-        border-radius: 0.75rem;
+        border-radius: 0.85rem;
         box-shadow: 
             0 10px 0 #020617,
             0 25px 50px -12px rgba(15, 23, 42, 0.6);
@@ -232,18 +232,18 @@
         position: absolute;
         inset: 0;
         background: #1e3a8a;
-        border-radius: 0.75rem;
+        border-radius: 0.85rem;
         z-index: 1;
     }
     .envelope-card {
         position: absolute;
         bottom: 12px;
-        left: 14px;
-        right: 14px;
-        height: 185px;
+        left: 16px;
+        right: 16px;
+        height: 220px;
         background: #ffffff;
-        border-radius: 0.5rem;
-        padding: 1.1rem;
+        border-radius: 0.75rem;
+        padding: 1.35rem 1.4rem;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
         /* delay 0.45s — tunggu flap hampir selesai melipat dulu */
         transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.45s, opacity 0.3s ease 0.38s, z-index 0s linear 0.44s, box-shadow 0.7s ease 0.45s;
@@ -252,11 +252,11 @@
         transform: translateY(15px);
     }
     .envelope-box.is-opened .envelope-card {
-        transform: translateY(-140px);
+        transform: translateY(-165px);
         opacity: 1;
         /* Naik ke atas flap dan pocket agar tidak tertimpa */
         z-index: 30;
-        box-shadow: 0 28px 50px -10px rgba(0, 0, 0, 0.45);
+        box-shadow: 0 30px 60px -10px rgba(0, 0, 0, 0.45);
     }
     .envelope-pocket {
         position: absolute;
@@ -272,7 +272,7 @@
         top: 0;
         left: 0;
         right: 0;
-        height: 110px;
+        height: 118px;
         background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%);
         clip-path: polygon(0 0, 100% 0, 50% 100%);
         transform-origin: top center;
@@ -288,7 +288,7 @@
     }
     .envelope-seal {
         position: absolute;
-        top: 95px;
+        top: 103px;
         left: 50%;
         transform: translate(-50%, -50%);
         z-index: 25;
@@ -342,8 +342,8 @@
                 </p>
             </div>
 
-            <!-- Interactive 3D Envelope Object -->
-            <div class="envelope-wrapper py-2">
+            <!-- Interactive 3D Envelope Object (Ruang Napas Luas) -->
+            <div class="envelope-wrapper pt-12 pb-6">
                 <div id="envelopeBox" class="envelope-box mx-auto cursor-pointer" onclick="openInvitationEnvelope()">
                     
                     <!-- Inside Lining -->
@@ -352,23 +352,27 @@
                     <!-- Letter Card Inside -->
                     <div class="envelope-card">
                         <div class="h-full flex flex-col justify-between text-left">
-                            <div class="flex items-center justify-between border-b border-slate-100 pb-2">
-                                <span class="px-2 py-0.5 bg-blue-600 text-white font-black text-[9px] tracking-widest uppercase rounded">
+                            <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                                <span class="px-2.5 py-0.5 bg-blue-600 text-white font-extrabold text-[10px] tracking-wider uppercase rounded-md shadow-xs">
                                     C LEVEL
                                 </span>
-                                <span class="text-[10px] text-slate-400 font-medium">{{ $settings['event_date'] }}</span>
+                                <span class="text-xs text-slate-500 font-semibold">{{ $settings['event_date'] }}</span>
                             </div>
-                            <div class="py-2">
-                                <h4 class="text-xs sm:text-sm font-black text-slate-900 leading-tight">
+                            <div class="py-2 space-y-1.5">
+                                <h4 class="text-sm sm:text-base font-black text-slate-900 leading-snug line-clamp-2">
                                     {{ $settings['event_title'] }}
                                 </h4>
-                                <p class="text-[11px] text-slate-500 truncate mt-1">
-                                    {{ $settings['event_venue_name'] }}
+                                <p class="text-xs text-slate-500 flex items-center gap-1.5 truncate">
+                                    <svg class="w-3.5 h-3.5 text-rose-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                    <span>{{ $settings['event_venue_name'] }}</span>
                                 </p>
                             </div>
-                            <div class="text-[10px] text-blue-600 font-bold flex items-center gap-1 border-t border-slate-100 pt-1.5">
-                                <span>Ketuk untuk masuk ke pendaftaran</span>
-                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="text-xs text-blue-600 font-bold flex items-center justify-between border-t border-slate-100 pt-2">
+                                <span>Buka Formulir Pendaftaran</span>
+                                <svg class="w-3.5 h-3.5 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
                                 </svg>
                             </div>
