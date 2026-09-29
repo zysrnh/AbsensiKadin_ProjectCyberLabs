@@ -162,12 +162,11 @@
             </div>
         </div>
 
-        <div class="pt-2">
-            <button type="button" onclick="closeWaModal()" class="btn-3d-dark w-full py-3 px-5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-2 cursor-pointer border border-slate-900">
-                <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="pt-2 flex justify-center">
+            <button type="button" onclick="closeWaModal()" class="btn-3d-dark w-12 h-12 rounded-full bg-slate-900 hover:bg-slate-800 text-white flex items-center justify-center cursor-pointer border border-slate-900 shadow-md hover:scale-105 active:scale-95 transition-transform" title="Tutup">
+                <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
                 </svg>
-                <span>Mengerti, Siap Pantau WA</span>
             </button>
         </div>
 
@@ -201,9 +200,14 @@
                 card.style.boxShadow = ``;
             });
         }
+
+        // 2. Auto-close Pop-Up Notifikasi secara Halus setelah 3 Detik
+        setTimeout(function() {
+            closeWaModal();
+        }, 3000);
     });
 
-    // 2. Fungsi Tutup Modal WhatsApp
+    // 3. Fungsi Tutup Modal WhatsApp
     function closeWaModal() {
         const modal = document.getElementById('waQrModal');
         if (modal) {

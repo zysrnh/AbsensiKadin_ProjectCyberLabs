@@ -372,11 +372,10 @@
 
                     <!-- Wax Seal Badge / Button -->
                     <div class="envelope-seal">
-                        <button type="button" class="w-14 h-14 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 border-2 border-amber-200 text-amber-950 font-black flex flex-col items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-transform cursor-pointer">
-                            <svg class="w-5 h-5 text-amber-950" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <button type="button" class="rounded-full bg-gradient-to-br from-amber-400 to-amber-600 border-2 border-amber-200 text-amber-950 flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-transform cursor-pointer" style="width: 52px; height: 52px;" title="Buka Undangan">
+                            <svg class="w-6 h-6 text-amber-950" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 19v-8.93a2 2 0 01.89-1.664l7-4.666a2 2 0 012.22 0l7 4.666A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M3 10l6.75 4.5M21 10l-6.75 4.5"/>
                             </svg>
-                            <span class="text-[8px] uppercase tracking-tighter font-extrabold mt-0.5">BUKA</span>
                         </button>
                     </div>
 
