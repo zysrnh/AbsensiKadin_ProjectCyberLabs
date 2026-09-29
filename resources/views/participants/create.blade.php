@@ -200,6 +200,13 @@
         box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.03), 0 0 0 4px rgba(15, 23, 42, 0.10);
     }
 
+    .maps-iframe-container iframe {
+        width: 100% !important;
+        height: 100% !important;
+        border: 0 !important;
+        display: block;
+    }
+
     html {
         scroll-behavior: smooth;
     }
@@ -320,7 +327,7 @@
     <!-- ==========================================================================
          2. BLOK INFORMASI ACARA (LOKASI -> TANGGAL -> WAKTU -> DRESSCODE)
          ========================================================================== -->
-    <section class="scroll-reveal">
+    <section class="scroll-reveal space-y-6">
         
         <!-- Bar Card Solid Royal Blue 3D -->
         <div class="bg-blue-700 text-white rounded-2xl info-bar-3d p-6 sm:p-8">
@@ -402,6 +409,23 @@
                     </p>
                 </div>
 
+            </div>
+        </div>
+
+        <!-- Wadah Iframe Google Maps 3D Terpadu -->
+        <div class="rounded-2xl overflow-hidden card-3d-main border border-slate-200/90 relative">
+            <div class="h-[280px] sm:h-[360px] w-full maps-iframe-container bg-slate-100">
+                @if(!empty($settings['event_maps_iframe']))
+                    {!! $settings['event_maps_iframe'] !!}
+                @else
+                    <iframe 
+                        src="https://maps.google.com/maps?q={{ urlencode(($settings['event_venue_name'] ?? '') . ' ' . ($settings['event_venue_address'] ?? 'Menara Kadin Indonesia')) }}&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                        class="w-full h-full border-0"
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                @endif
             </div>
         </div>
 
