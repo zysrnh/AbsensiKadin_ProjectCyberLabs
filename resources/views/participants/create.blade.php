@@ -99,12 +99,16 @@
         transform: translateY(0) scale(1);
     }
 
-    /* Info Card Hover Lift */
+    /* Info Card Hover Lift & Highlight */
     .info-card {
-        transition: transform 0.3s var(--ease-expo), background-color 0.2s ease;
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.875rem;
+        transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease, box-shadow 0.2s ease;
     }
     .info-card:hover {
         transform: translateY(-4px);
+        background-color: rgba(255, 255, 255, 0.12);
+        box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2);
     }
 
     /* ==========================================================================
@@ -136,14 +140,15 @@
             0 20px 40px -8px rgba(30, 58, 138, 0.45),
             0 30px 60px -15px rgba(15, 23, 42, 0.3);
         border: 1px solid #1d4ed8;
-        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
     }
     .info-bar-3d:hover {
-        transform: translateY(-3px);
+        transform: translateY(-5px);
         box-shadow: 
-            0 11px 0 #1e3a8a,
-            0 26px 48px -8px rgba(30, 58, 138, 0.5),
-            0 38px 70px -15px rgba(15, 23, 42, 0.35);
+            0 13px 0 #1e3a8a,
+            0 28px 52px -8px rgba(30, 58, 138, 0.55),
+            0 42px 75px -15px rgba(15, 23, 42, 0.35);
+        border-color: #60a5fa;
     }
 
     .hero-card-3d {
@@ -464,12 +469,7 @@
                     
                     <!-- Header Form -->
                     <div class="space-y-1.5 border-b border-slate-100 pb-4">
-                        <div class="flex items-center justify-between">
-                            <span class="px-2.5 py-1 bg-slate-900 text-white text-[10px] font-bold rounded-lg tracking-wider uppercase shadow-2xs">
-                                C LEVEL
-                            </span>
-                        </div>
-                        <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight pt-1">
+                        <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
                             Data Calon Peserta
                         </h2>
                         <p class="text-xs text-slate-500 font-normal">
@@ -611,7 +611,7 @@
                                     type="submit" 
                                     class="btn-3d-dark w-full py-3.5 px-6 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm tracking-wide rounded-xl cursor-pointer flex items-center justify-center gap-2 border border-slate-900"
                                 >
-                                    <span>Request to Join (Kirim Permohonan)</span>
+                                    <span>Request to Join</span>
                                     <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
                                     </svg>
