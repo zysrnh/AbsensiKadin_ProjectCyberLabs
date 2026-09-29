@@ -31,37 +31,57 @@
         transform: translateY(2px);
         box-shadow: 0 1px 0 #cbd5e1;
     }
-    .btn-3d-dark {
-        box-shadow: 0 4px 0 #020617, 0 10px 20px -3px rgba(15, 23, 42, 0.35);
-        transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .btn-3d-dark:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 0 #020617, 0 14px 26px -4px rgba(15, 23, 42, 0.4);
-    }
-    .btn-3d-dark:active {
-        transform: translateY(2px);
-        box-shadow: 0 1px 0 #020617;
-    }
-    .modal-backdrop-anim {
-        transition: opacity 0.3s ease, visibility 0.3s ease;
-    }
-    .modal-box-anim {
-        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
-    }
-    .modal-hidden {
+    
+    /* Animasi Toast Melayang (Entrance & Exit Super Smooth) */
+    .toast-card-anim {
+        box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.12);
+        transform: translateY(-50px) scale(0.95);
         opacity: 0;
-        visibility: hidden;
-        pointer-events: none;
+        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
     }
-    .modal-hidden .modal-box-anim {
-        transform: scale(0.92) translateY(15px);
+    .toast-card-anim.toast-show {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+    .toast-card-anim.toast-hide {
+        transform: translateY(-50px) scale(0.95);
         opacity: 0;
     }
 </style>
 @endpush
 
 @section('content')
+<!-- Floating Toast Notification (Melayang di Atas, Selewat Saja & Animasi Halus) -->
+<div id="waToast" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 w-full max-w-md px-4 pointer-events-none">
+    <div class="toast-card-anim pointer-events-auto bg-slate-900 text-white border border-slate-700/80 rounded-2xl p-3.5 sm:p-4 shadow-2xl flex items-center gap-3.5 backdrop-blur-md">
+        
+        <!-- Icon WhatsApp Centang -->
+        <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+            </svg>
+        </div>
+
+        <!-- Teks Informasi Ringkas -->
+        <div class="space-y-0.5 min-w-0 flex-1">
+            <h4 class="text-xs font-bold text-white tracking-tight">
+                Permohonan Berhasil Dikirim
+            </h4>
+            <p class="text-[11px] text-slate-300 leading-snug">
+                E-Ticket QR akan dikirim ke WhatsApp <span class="font-mono text-emerald-400 font-semibold">{{ $participant->phone }}</span> setelah di-ACC panitia.
+            </p>
+        </div>
+
+        <!-- Tombol Silang Ringkas -->
+        <button type="button" onclick="closeWaToast()" class="w-7 h-7 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center shrink-0 transition-colors cursor-pointer" title="Tutup">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+
+    </div>
+</div>
+
 <div class="w-full max-w-lg mx-auto px-4 -my-1 sm:-my-3 tilt-card-container">
 
     <!-- Card Konfirmasi Permintaan Bergabung 3D (Interactive Parallax Tilt) -->
@@ -136,42 +156,6 @@
     </div>
 
 </div>
-
-<!-- Pop-up Modal Informasi ACC & E-Ticket WhatsApp -->
-<div id="waQrModal" class="modal-backdrop-anim fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-    <div class="modal-box-anim card-3d-main w-full max-w-sm rounded-2xl p-6 text-center space-y-4 bg-white relative">
-        
-        <!-- Icon WhatsApp / Notifikasi -->
-        <div class="w-14 h-14 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center mx-auto shadow-xs">
-            <svg class="w-7 h-7 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-            </svg>
-        </div>
-
-        <div class="space-y-1.5">
-            <h3 class="text-base font-black text-slate-900 tracking-tight">
-                Menunggu Persetujuan Panitia
-            </h3>
-            <p class="text-xs text-slate-500 leading-relaxed">
-                Permohonan Anda berhasil dicatat. Silakan tunggu konfirmasi panitia. E-Ticket QR Code resmi akan langsung dikirimkan ke nomor WhatsApp:
-            </p>
-            <div class="pt-1">
-                <span class="inline-block px-3 py-1 bg-slate-100 border border-slate-200 text-slate-900 font-mono font-bold text-xs rounded-lg">
-                    {{ $participant->phone }}
-                </span>
-            </div>
-        </div>
-
-        <div class="pt-2 flex justify-center">
-            <button type="button" onclick="closeWaModal()" class="btn-3d-dark w-12 h-12 rounded-full bg-slate-900 hover:bg-slate-800 text-white flex items-center justify-center cursor-pointer border border-slate-900 shadow-md hover:scale-105 active:scale-95 transition-transform" title="Tutup">
-                <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-                </svg>
-            </button>
-        </div>
-
-    </div>
-</div>
 @endsection
 
 @push('scripts')
@@ -201,20 +185,30 @@
             });
         }
 
-        // 2. Auto-close Pop-Up Notifikasi secara Halus setelah 3 Detik
-        setTimeout(function() {
-            closeWaModal();
-        }, 3000);
+        // 2. Animasi Toast Melayang Masuk Halus (Slide-Down)
+        const toast = document.querySelector('.toast-card-anim');
+        if (toast) {
+            setTimeout(function() {
+                toast.classList.add('toast-show');
+            }, 100);
+
+            // Otomatis meluncur keluar secara halus setelah 4 detik
+            setTimeout(function() {
+                closeWaToast();
+            }, 4000);
+        }
     });
 
-    // 3. Fungsi Tutup Modal WhatsApp
-    function closeWaModal() {
-        const modal = document.getElementById('waQrModal');
-        if (modal) {
-            modal.classList.add('modal-hidden');
-            setTimeout(() => {
-                modal.remove();
-            }, 350);
+    // 3. Fungsi Tutup Toast Melayang
+    function closeWaToast() {
+        const toast = document.querySelector('.toast-card-anim');
+        const container = document.getElementById('waToast');
+        if (toast) {
+            toast.classList.remove('toast-show');
+            toast.classList.add('toast-hide');
+            setTimeout(function() {
+                if (container) container.remove();
+            }, 500);
         }
     }
 </script>
