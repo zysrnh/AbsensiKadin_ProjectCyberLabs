@@ -359,7 +359,7 @@
                         <td class="py-3.5 px-5 whitespace-nowrap">
                             <div class="flex items-center gap-3">
                                 <!-- Status Kehadiran Fisik -->
-                                <div>
+                                <div id="attendance-dot-container-{{ $item->id }}">
                                     @if($item->status === 'attended')
                                         <button 
                                             type="button" 
@@ -368,14 +368,12 @@
                                             title="Sudah Hadir • Klik untuk lihat detail waktu presensi"
                                         ></button>
                                     @else
-                                        <form action="{{ route('admin.participants.toggle', $item) }}" method="POST" class="inline">
-                                            @csrf
-                                            <button 
-                                                type="submit" 
-                                                class="w-3.5 h-3.5 rounded-full bg-blue-500 hover:bg-blue-600 hover:scale-125 transition-transform cursor-pointer inline-flex items-center justify-center ring-4 ring-blue-100" 
-                                                title="Belum Hadir • Klik untuk Tandai Hadir"
-                                            ></button>
-                                        </form>
+                                        <button 
+                                            type="button" 
+                                            onclick="toggleAttendanceAjax(event, {{ $item->id }}, '{{ route('admin.participants.toggle', $item) }}', '{{ addslashes($item->name) }}')"
+                                            class="w-3.5 h-3.5 rounded-full bg-blue-500 hover:bg-blue-600 hover:scale-125 transition-transform cursor-pointer inline-flex items-center justify-center ring-4 ring-blue-100 shadow-2xs" 
+                                            title="Belum Hadir • Klik untuk Tandai Hadir"
+                                        ></button>
                                     @endif
                                 </div>
 
@@ -413,27 +411,29 @@
                                     class="row-dropdown-menu hidden absolute right-0 top-full mt-1.5 w-52 bg-white border border-slate-200 rounded-xl shadow-xl z-50 py-1 text-xs text-slate-700 divide-y divide-slate-100 text-left"
                                 >
                                     <!-- Aksi Presensi Langsung di Dropdown -->
-                                    <div class="py-1">
+                                    <div id="attendance-action-container-{{ $item->id }}" class="py-1">
                                         @if($item->status === 'attended')
-                                            <form action="{{ route('admin.participants.toggle', $item) }}" method="POST">
-                                                @csrf
-                                                <button type="submit" class="w-full text-left flex items-center gap-2 px-3 py-1.5 hover:bg-rose-50 hover:text-rose-900 text-rose-600 transition-colors font-medium cursor-pointer">
-                                                    <svg class="w-3.5 h-3.5 text-rose-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                                                    </svg>
-                                                    <span>Batalkan Hadir</span>
-                                                </button>
-                                            </form>
+                                            <button 
+                                                type="button" 
+                                                onclick="toggleAttendanceAjax(event, {{ $item->id }}, '{{ route('admin.participants.toggle', $item) }}', '{{ addslashes($item->name) }}')"
+                                                class="w-full text-left flex items-center gap-2 px-3 py-1.5 hover:bg-rose-50 hover:text-rose-900 text-rose-600 transition-colors font-medium cursor-pointer"
+                                            >
+                                                <svg class="w-3.5 h-3.5 text-rose-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                                </svg>
+                                                <span>Batalkan Hadir</span>
+                                            </button>
                                         @else
-                                            <form action="{{ route('admin.participants.toggle', $item) }}" method="POST">
-                                                @csrf
-                                                <button type="submit" class="w-full text-left flex items-center gap-2 px-3 py-1.5 hover:bg-blue-50 hover:text-blue-900 text-blue-600 transition-colors font-medium cursor-pointer">
-                                                    <svg class="w-3.5 h-3.5 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
-                                                    </svg>
-                                                    <span>Tandai Hadir</span>
-                                                </button>
-                                            </form>
+                                            <button 
+                                                type="button" 
+                                                onclick="toggleAttendanceAjax(event, {{ $item->id }}, '{{ route('admin.participants.toggle', $item) }}', '{{ addslashes($item->name) }}')"
+                                                class="w-full text-left flex items-center gap-2 px-3 py-1.5 hover:bg-blue-50 hover:text-blue-900 text-blue-600 transition-colors font-medium cursor-pointer"
+                                            >
+                                                <svg class="w-3.5 h-3.5 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                                                </svg>
+                                                <span>Tandai Hadir</span>
+                                            </button>
                                         @endif
                                     </div>
 
@@ -572,6 +572,167 @@
                 popup: 'rounded-2xl border border-slate-200 shadow-xl',
                 confirmButton: 'rounded-xl font-bold text-xs px-5 py-2.5 cursor-pointer'
             }
+        });
+    };
+
+    function escapeHtml(text) {
+        if (!text) return '';
+        return text.replace(/[&<>"']/g, function(m) {
+            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
+        });
+    }
+
+    // AJAX Toggle Checkin (Tanpa Refresh + Popup Diupdate Pada)
+    window.toggleAttendanceAjax = function(e, id, url, name) {
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '{{ csrf_token() }}';
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                const dotContainer = document.getElementById('attendance-dot-container-' + id);
+                const actionContainer = document.getElementById('attendance-action-container-' + id);
+
+                if (data.status === 'attended') {
+                    // Update dot ke hijau interaktif
+                    if (dotContainer) {
+                        dotContainer.innerHTML = `
+                            <button 
+                                type="button" 
+                                onclick="showAttendanceDetail('${escapeHtml(data.participant_name)}', '${data.attended_at || ''}')"
+                                class="w-3.5 h-3.5 rounded-full bg-emerald-500 hover:bg-emerald-600 hover:scale-125 transition-transform cursor-pointer inline-flex items-center justify-center ring-4 ring-emerald-100 shadow-2xs" 
+                                title="Sudah Hadir • Klik untuk lihat detail waktu presensi"
+                            ></button>
+                        `;
+                    }
+
+                    // Update tombol dropdown ke Batalkan Hadir
+                    if (actionContainer) {
+                        actionContainer.innerHTML = `
+                            <button 
+                                type="button" 
+                                onclick="toggleAttendanceAjax(event, ${id}, '${url}', '${escapeHtml(data.participant_name)}')"
+                                class="w-full text-left flex items-center gap-2 px-3 py-1.5 hover:bg-rose-50 hover:text-rose-900 text-rose-600 transition-colors font-medium cursor-pointer"
+                            >
+                                <svg class="w-3.5 h-3.5 text-rose-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                </svg>
+                                <span>Batalkan Hadir</span>
+                            </button>
+                        `;
+                    }
+
+                    // Popup Diupdate Pada
+                    Swal.fire({
+                        title: 'Presensi Terverifikasi!',
+                        html: `
+                            <div class="text-left text-xs space-y-2 mt-3">
+                                <div class="p-3.5 bg-emerald-50/90 border border-emerald-200/90 rounded-xl">
+                                    <div class="flex items-center gap-1.5 text-emerald-700 font-bold text-[11px] uppercase tracking-wider mb-1">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                        <span>Status: Sudah Hadir di Lokasi</span>
+                                    </div>
+                                    <p class="text-sm font-extrabold text-slate-900">${escapeHtml(data.participant_name)}</p>
+                                    <p class="text-[11px] text-slate-500 mt-2.5 pt-2 border-t border-emerald-200/70 flex items-center gap-1.5">
+                                        <svg class="w-3.5 h-3.5 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        <span>Diupdate pada: <b class="text-slate-800">${data.updated_at_formatted}</b></span>
+                                    </p>
+                                </div>
+                            </div>
+                        `,
+                        icon: 'success',
+                        confirmButtonColor: '#0f172a',
+                        confirmButtonText: 'Oke',
+                        customClass: {
+                            popup: 'rounded-2xl border border-slate-200 shadow-xl',
+                            confirmButton: 'rounded-xl font-bold text-xs px-5 py-2.5 cursor-pointer'
+                        }
+                    });
+
+                } else {
+                    // Update dot ke biru
+                    if (dotContainer) {
+                        dotContainer.innerHTML = `
+                            <button 
+                                type="button" 
+                                onclick="toggleAttendanceAjax(event, ${id}, '${url}', '${escapeHtml(data.participant_name)}')"
+                                class="w-3.5 h-3.5 rounded-full bg-blue-500 hover:bg-blue-600 hover:scale-125 transition-transform cursor-pointer inline-flex items-center justify-center ring-4 ring-blue-100 shadow-2xs" 
+                                title="Belum Hadir • Klik untuk Tandai Hadir"
+                            ></button>
+                        `;
+                    }
+
+                    // Update tombol dropdown ke Tandai Hadir
+                    if (actionContainer) {
+                        actionContainer.innerHTML = `
+                            <button 
+                                type="button" 
+                                onclick="toggleAttendanceAjax(event, ${id}, '${url}', '${escapeHtml(data.participant_name)}')"
+                                class="w-full text-left flex items-center gap-2 px-3 py-1.5 hover:bg-blue-50 hover:text-blue-900 text-blue-600 transition-colors font-medium cursor-pointer"
+                            >
+                                <svg class="w-3.5 h-3.5 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                                </svg>
+                                <span>Tandai Hadir</span>
+                            </button>
+                        `;
+                    }
+
+                    // Popup Batal Hadir
+                    Swal.fire({
+                        title: 'Kehadiran Dibatalkan',
+                        html: `
+                            <div class="text-left text-xs space-y-2 mt-3">
+                                <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl">
+                                    <div class="flex items-center gap-1.5 text-slate-600 font-bold text-[11px] uppercase tracking-wider mb-1">
+                                        <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+                                        <span>Status: Belum Hadir</span>
+                                    </div>
+                                    <p class="text-sm font-extrabold text-slate-900">${escapeHtml(data.participant_name)}</p>
+                                    <p class="text-[11px] text-slate-500 mt-2.5 pt-2 border-t border-slate-200 flex items-center gap-1.5">
+                                        <svg class="w-3.5 h-3.5 text-slate-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        <span>Diupdate pada: <b class="text-slate-800">${data.updated_at_formatted}</b></span>
+                                    </p>
+                                </div>
+                            </div>
+                        `,
+                        icon: 'info',
+                        confirmButtonColor: '#0f172a',
+                        confirmButtonText: 'Tutup',
+                        customClass: {
+                            popup: 'rounded-2xl border border-slate-200 shadow-xl',
+                            confirmButton: 'rounded-xl font-bold text-xs px-5 py-2.5 cursor-pointer'
+                        }
+                    });
+                }
+
+                // Tutup dropdown menu
+                document.querySelectorAll('.row-dropdown-menu').forEach(m => m.classList.add('hidden'));
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal Memproses',
+                text: 'Terjadi kesalahan sistem saat menghubungi server.'
+            });
         });
     };
 

@@ -104,6 +104,17 @@ class DashboardController extends Controller
             $msg = "Presensi {$participant->name} berhasil diverifikasi manual!";
         }
 
+        if (request()->wantsJson() || request()->ajax()) {
+            return response()->json([
+                'success' => true,
+                'status' => $participant->status,
+                'attended_at' => $participant->attended_at ? $participant->attended_at->isoFormat('dddd, D MMMM Y • HH:mm') . ' WIB' : null,
+                'updated_at_formatted' => now()->isoFormat('dddd, D MMMM Y • HH:mm') . ' WIB',
+                'message' => $msg,
+                'participant_name' => $participant->name,
+            ]);
+        }
+
         return redirect()->back()->with('success', $msg);
     }
 
