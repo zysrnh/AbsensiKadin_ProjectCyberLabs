@@ -99,16 +99,12 @@
         transform: translateY(0) scale(1);
     }
 
-    /* Info Card Hover Lift & Highlight */
+    /* Info Card Full Segment Navy Hover */
     .info-card {
-        padding: 0.5rem 0.75rem;
-        border-radius: 0.875rem;
-        transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease, box-shadow 0.2s ease;
+        transition: background-color 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .info-card:hover {
-        transform: translateY(-4px);
-        background-color: rgba(255, 255, 255, 0.12);
-        box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2);
+        background-color: #0b192c;
     }
 
     /* ==========================================================================
@@ -329,82 +325,92 @@
          ========================================================================== -->
     <section class="scroll-reveal space-y-6">
         
-        <!-- Bar Card Solid Royal Blue 3D -->
-        <div class="bg-blue-700 text-white rounded-2xl info-bar-3d p-6 sm:p-8">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 divide-y sm:divide-y-0 lg:divide-x divide-blue-600/70">
+        <!-- Bar Card Solid Royal Blue 3D (Full-Bleed Segments) -->
+        <div class="bg-blue-700 text-white rounded-2xl info-bar-3d overflow-hidden">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 lg:divide-x divide-blue-600/70 items-stretch">
                 
                 <!-- 1. LOKASI / GEDUNG -->
-                <div class="info-card space-y-2 lg:pr-5 pt-3 sm:pt-0">
-                    <div class="flex items-center gap-2 text-blue-200">
-                        <svg class="w-4 h-4 text-blue-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        <span class="text-[11px] font-bold uppercase tracking-wider">Lokasi / Venue</span>
-                    </div>
-                    <h3 class="text-base sm:text-lg font-black text-white leading-snug tracking-tight">
-                        {{ $settings['event_venue_name'] }}
-                    </h3>
-                    <p class="text-xs text-blue-100/90 leading-relaxed font-normal">
-                        {{ $settings['event_venue_address'] }}
-                    </p>
-                    @if(!empty($settings['event_maps_url']))
-                        <a href="{{ $settings['event_maps_url'] }}" 
-                           target="_blank" 
-                           rel="noopener noreferrer"
-                           class="inline-flex items-center gap-1 text-[11px] font-bold text-white bg-blue-800 hover:bg-blue-900 px-2.5 py-1 rounded-xs mt-1 transition-colors">
-                            <span>Buka Google Maps</span>
-                            <svg class="w-3 h-3 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                <div class="info-card p-6 sm:p-7 flex flex-col justify-between">
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-2 text-blue-200">
+                            <svg class="w-4 h-4 text-blue-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                             </svg>
-                        </a>
+                            <span class="text-[11px] font-bold uppercase tracking-wider">Lokasi / Venue</span>
+                        </div>
+                        <h3 class="text-base sm:text-lg font-black text-white leading-snug tracking-tight">
+                            {{ $settings['event_venue_name'] }}
+                        </h3>
+                        <p class="text-xs text-blue-100/90 leading-relaxed font-normal">
+                            {{ $settings['event_venue_address'] }}
+                        </p>
+                    </div>
+                    @if(!empty($settings['event_maps_url']))
+                        <div class="pt-3">
+                            <a href="{{ $settings['event_maps_url'] }}" 
+                               target="_blank" 
+                               rel="noopener noreferrer"
+                               class="inline-flex items-center gap-1 text-[11px] font-bold text-white bg-blue-800 hover:bg-blue-900 px-2.5 py-1 rounded-xs transition-colors">
+                                <span>Buka Google Maps</span>
+                                <svg class="w-3 h-3 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                </svg>
+                            </a>
+                        </div>
                     @endif
                 </div>
 
                 <!-- 2. TANGGAL -->
-                <div class="info-card space-y-2 sm:pl-0 lg:px-5 pt-4 sm:pt-0">
-                    <div class="flex items-center gap-2 text-blue-200">
-                        <svg class="w-4 h-4 text-blue-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        <span class="text-[11px] font-bold uppercase tracking-wider">Tanggal Pelaksanaan</span>
+                <div class="info-card p-6 sm:p-7 flex flex-col justify-between">
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-2 text-blue-200">
+                            <svg class="w-4 h-4 text-blue-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <span class="text-[11px] font-bold uppercase tracking-wider">Tanggal Pelaksanaan</span>
+                        </div>
+                        <h3 class="text-xl sm:text-2xl font-black text-white leading-tight tracking-tight">
+                            {{ $settings['event_date'] }}
+                        </h3>
                     </div>
-                    <h3 class="text-xl sm:text-2xl font-black text-white leading-tight tracking-tight">
-                        {{ $settings['event_date'] }}
-                    </h3>
-                    <p class="text-xs text-blue-100 font-medium">
+                    <p class="text-xs text-blue-100 font-medium pt-3">
                         Agenda Resmi C LEVEL 2026
                     </p>
                 </div>
 
                 <!-- 3. WAKTU -->
-                <div class="info-card space-y-2 sm:pl-0 lg:px-5 pt-4 sm:pt-0">
-                    <div class="flex items-center gap-2 text-blue-200">
-                        <svg class="w-4 h-4 text-blue-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <span class="text-[11px] font-bold uppercase tracking-wider">Waktu / Jam</span>
+                <div class="info-card p-6 sm:p-7 flex flex-col justify-between">
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-2 text-blue-200">
+                            <svg class="w-4 h-4 text-blue-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span class="text-[11px] font-bold uppercase tracking-wider">Waktu / Jam</span>
+                        </div>
+                        <h3 class="text-xl sm:text-2xl font-black text-white leading-tight tracking-tight">
+                            {{ $settings['event_time'] }}
+                        </h3>
                     </div>
-                    <h3 class="text-xl sm:text-2xl font-black text-white leading-tight tracking-tight">
-                        {{ $settings['event_time'] }}
-                    </h3>
-                    <p class="text-xs text-blue-100 font-medium">
+                    <p class="text-xs text-blue-100 font-medium pt-3">
                         Registrasi & Sesi Konferensi
                     </p>
                 </div>
 
                 <!-- 4. DRESSCODE -->
-                <div class="info-card space-y-2 sm:pl-0 lg:pl-5 pt-4 sm:pt-0">
-                    <div class="flex items-center gap-2 text-blue-200">
-                        <svg class="w-4 h-4 text-blue-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                        <span class="text-[11px] font-bold uppercase tracking-wider">Ketentuan Busana</span>
+                <div class="info-card p-6 sm:p-7 flex flex-col justify-between">
+                    <div class="space-y-2">
+                        <div class="flex items-center gap-2 text-blue-200">
+                            <svg class="w-4 h-4 text-blue-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            <span class="text-[11px] font-bold uppercase tracking-wider">Ketentuan Busana</span>
+                        </div>
+                        <h3 class="text-base sm:text-lg font-black text-white leading-snug tracking-tight">
+                            {{ $settings['event_dresscode'] }}
+                        </h3>
                     </div>
-                    <h3 class="text-base sm:text-lg font-black text-white leading-snug tracking-tight">
-                        {{ $settings['event_dresscode'] }}
-                    </h3>
-                    <p class="text-xs text-blue-100 font-medium">
+                    <p class="text-xs text-blue-100 font-medium pt-3">
                         Standar Kehadiran Eksekutif
                     </p>
                 </div>
