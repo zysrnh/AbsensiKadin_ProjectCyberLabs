@@ -99,12 +99,20 @@
         transform: translateY(0) scale(1);
     }
 
-    /* Info Card Full Segment Navy Hover */
+    /* Info Card Full Segment Navy Hover with Lift Up */
     .info-card {
-        transition: background-color 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        position: relative;
+        transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease, box-shadow 0.25s ease, border-radius 0.2s ease;
+        z-index: 1;
     }
     .info-card:hover {
         background-color: #0b192c;
+        transform: translateY(-8px);
+        border-radius: 1rem;
+        box-shadow: 
+            0 8px 0 #020617,
+            0 22px 35px -5px rgba(2, 6, 23, 0.5);
+        z-index: 20;
     }
 
     /* ==========================================================================
@@ -136,15 +144,6 @@
             0 20px 40px -8px rgba(30, 58, 138, 0.45),
             0 30px 60px -15px rgba(15, 23, 42, 0.3);
         border: 1px solid #1d4ed8;
-        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
-    }
-    .info-bar-3d:hover {
-        transform: translateY(-5px);
-        box-shadow: 
-            0 13px 0 #1e3a8a,
-            0 28px 52px -8px rgba(30, 58, 138, 0.55),
-            0 42px 75px -15px rgba(15, 23, 42, 0.35);
-        border-color: #60a5fa;
     }
 
     .hero-card-3d {
@@ -326,11 +325,12 @@
     <section class="scroll-reveal space-y-6">
         
         <!-- Bar Card Solid Royal Blue 3D (Full-Bleed Segments) -->
-        <div class="bg-blue-700 text-white rounded-2xl info-bar-3d overflow-hidden">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 lg:divide-x divide-blue-600/70 items-stretch">
-                
-                <!-- 1. LOKASI / GEDUNG -->
-                <div class="info-card p-6 sm:p-7 flex flex-col justify-between">
+        <div class="pt-2">
+            <div class="bg-blue-700 text-white rounded-2xl info-bar-3d relative">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 lg:divide-x divide-blue-600/70 items-stretch">
+                    
+                    <!-- 1. LOKASI / GEDUNG -->
+                    <div class="info-card lg:rounded-l-2xl rounded-t-2xl sm:rounded-tl-2xl p-6 sm:p-7 flex flex-col justify-between cursor-default">
                     <div class="space-y-2">
                         <div class="flex items-center gap-2 text-blue-200">
                             <svg class="w-4 h-4 text-blue-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -398,7 +398,7 @@
                 </div>
 
                 <!-- 4. DRESSCODE -->
-                <div class="info-card p-6 sm:p-7 flex flex-col justify-between">
+                <div class="info-card lg:rounded-r-2xl rounded-b-2xl sm:rounded-br-2xl p-6 sm:p-7 flex flex-col justify-between cursor-default">
                     <div class="space-y-2">
                         <div class="flex items-center gap-2 text-blue-200">
                             <svg class="w-4 h-4 text-blue-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -417,6 +417,7 @@
 
             </div>
         </div>
+    </div>
 
         <!-- Wadah Iframe Google Maps 3D Terpadu -->
         <div class="rounded-2xl overflow-hidden card-3d-main border border-slate-200/90 relative">
