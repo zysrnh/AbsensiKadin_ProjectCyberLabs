@@ -240,8 +240,8 @@
     </div>
 
     <!-- Data Table Pendaftar Smooth & Polished -->
-    <div class="card-3d overflow-hidden">
-        <div class="overflow-x-auto">
+    <div class="card-3d">
+        <div class="overflow-x-auto min-h-[360px]">
             <table class="w-full text-left text-xs border-collapse">
                 <thead class="bg-slate-50/90 text-slate-600 uppercase text-[11px] font-extrabold tracking-wider border-b border-slate-200/80">
                     <tr>
@@ -249,9 +249,8 @@
                         <th class="py-3.5 px-5">Nama Lengkap</th>
                         <th class="py-3.5 px-5">Instansi & Jabatan</th>
                         <th class="py-3.5 px-5 whitespace-nowrap">WhatsApp</th>
-                        <th class="py-3.5 px-5 whitespace-nowrap">Kode Tiket</th>
                         <th class="py-3.5 px-5 whitespace-nowrap">Presensi & RSVP</th>
-                        <th class="py-3.5 px-5 text-center whitespace-nowrap">Aksi</th>
+                        <th class="py-3.5 px-5 text-center whitespace-nowrap w-28">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 text-slate-800">
@@ -262,21 +261,27 @@
                             {{ $participants->firstItem() + $index }}
                         </td>
 
-                        <!-- Nama & Email -->
+                        <!-- Nama & Email + Kode Tiket Chip -->
                         <td class="py-4 px-5">
                             <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-slate-900 text-white font-black text-xs flex items-center justify-center shrink-0 shadow-2xs">
+                                <div class="w-9 h-9 rounded-full bg-slate-900 text-white font-black text-xs flex items-center justify-center shrink-0 shadow-2xs">
                                     {{ strtoupper(substr($item->name, 0, 1)) }}
                                 </div>
                                 <div class="min-w-0">
                                     <span class="font-bold text-slate-900 block leading-tight text-xs hover:text-blue-600 transition-colors">
                                         {{ $item->name }}
                                     </span>
-                                    @if($item->email)
-                                        <span class="text-[11px] text-slate-400 font-mono block mt-0.5 truncate">{{ $item->email }}</span>
-                                    @else
-                                        <span class="text-[10px] text-slate-300 italic block mt-0.5">tanpa email</span>
-                                    @endif
+                                    <div class="flex items-center gap-2 mt-0.5 flex-wrap">
+                                        @if($item->email)
+                                            <span class="text-[11px] text-slate-400 font-mono truncate">{{ $item->email }}</span>
+                                        @else
+                                            <span class="text-[10px] text-slate-300 italic">tanpa email</span>
+                                        @endif
+                                        <span class="text-slate-300">•</span>
+                                        <span class="px-1.5 py-0.2 bg-slate-100 border border-slate-200 text-slate-600 font-mono text-[10px] font-semibold rounded" title="Kode Tiket">
+                                            {{ $item->qr_token }}
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </td>
@@ -295,50 +300,30 @@
                             </a>
                         </td>
 
-                        <!-- Kode Tiket QR -->
-                        <td class="py-4 px-5 whitespace-nowrap">
-                            <div class="inline-flex items-center gap-2">
-                                <span class="px-2.5 py-1 bg-slate-100 border border-slate-300/80 text-slate-900 font-mono font-extrabold text-xs rounded-lg tracking-wider shadow-2xs">
-                                    {{ $item->qr_token }}
-                                </span>
-                                <a 
-                                    href="{{ route('participants.card', $item->qr_token) }}" 
-                                    target="_blank"
-                                    class="p-1 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-md transition" 
-                                    title="Pratinjau E-Ticket"
-                                >
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                    </svg>
-                                </a>
-                            </div>
-                        </td>
-
                         <!-- Presensi di Lokasi & Status RSVP -->
                         <td class="py-4 px-5 whitespace-nowrap">
                             <div class="space-y-1.5">
                                 <!-- Status Kehadiran Fisik -->
                                 <div class="flex items-center gap-2">
                                     @if($item->status === 'attended')
-                                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-full text-[10px] font-extrabold uppercase shadow-2xs">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
-                                            Hadir {{ $item->attended_at ? $item->attended_at->format('H:i') : '' }}
+                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200/80 rounded-full text-[11px] font-bold shadow-2xs">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                                            <span>Hadir ({{ $item->attended_at ? $item->attended_at->format('H:i') : '' }})</span>
                                         </span>
                                         <form action="{{ route('admin.participants.toggle', $item) }}" method="POST" class="inline">
                                             @csrf
-                                            <button type="submit" class="text-[10px] text-slate-400 hover:text-rose-600 underline cursor-pointer" title="Batalkan presensi">
-                                                (batal)
+                                            <button type="submit" class="text-[10px] text-slate-400 hover:text-rose-600 underline cursor-pointer ml-0.5" title="Batalkan kehadiran">
+                                                Batal
                                             </button>
                                         </form>
                                     @else
-                                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 bg-slate-100 text-slate-600 border border-slate-200 rounded-full text-[10px] font-bold uppercase">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
-                                            Belum Hadir
-                                        </span>
                                         <form action="{{ route('admin.participants.toggle', $item) }}" method="POST" class="inline">
                                             @csrf
-                                            <button type="submit" class="px-2 py-0.5 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 text-[10px] font-bold rounded-lg cursor-pointer transition shadow-2xs" title="Tandai Hadir Manual">
-                                                + Hadirkan
+                                            <button type="submit" class="btn-3d-blue px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white border border-blue-600 text-[11px] font-bold rounded-lg cursor-pointer transition flex items-center gap-1 shadow-2xs" title="Tandai Hadir di Lokasi">
+                                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+                                                </svg>
+                                                <span>+ Hadirkan</span>
                                             </button>
                                         </form>
                                     @endif
@@ -349,94 +334,99 @@
                                     @if($item->rsvp_status === 'attending')
                                         <span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-emerald-50/80 text-[10px] font-bold text-emerald-800 border border-emerald-200/80 rounded-full">
                                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                            RSVP: Pasti Hadir
+                                            <span>RSVP: Pasti Hadir</span>
                                         </span>
                                     @elseif($item->rsvp_status === 'declined')
                                         <span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-rose-50/80 text-[10px] font-bold text-rose-800 border border-rose-200/80 rounded-full">
                                             <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
-                                            RSVP: Berhalangan
+                                            <span>RSVP: Berhalangan</span>
                                         </span>
                                     @else
-                                        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-slate-50 text-[10px] font-medium text-slate-500 border border-slate-200/80 rounded-full">
+                                        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-slate-100 text-[10px] font-medium text-slate-600 border border-slate-200 rounded-full">
                                             <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
-                                            RSVP: Belum Respon
+                                            <span>RSVP: Menunggu Respon</span>
                                         </span>
                                     @endif
                                 </div>
                             </div>
                         </td>
 
-                        <!-- Aksi Buttons (Tactile & Rapi) -->
+                        <!-- Aksi Dropdown Menu -->
                         <td class="py-4 px-5 text-center whitespace-nowrap">
-                            <div class="flex items-center justify-center gap-1.5">
-                                
-                                <!-- Cetak ID Card Lanyard -->
-                                <a 
-                                    href="{{ route('admin.participants.id-card', $item) }}" 
-                                    target="_blank"
-                                    class="btn-3d-white px-2.5 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-900 font-bold text-[11px] rounded-lg border border-indigo-200/80 transition-all flex items-center gap-1.5"
-                                    title="Cetak ID Card Lanyard"
+                            <div class="relative inline-block text-left">
+                                <button 
+                                    type="button" 
+                                    onclick="toggleRowDropdown(event, 'action-dropdown-{{ $item->id }}')" 
+                                    class="btn-3d-white px-3 py-1.5 bg-white hover:bg-slate-50 text-slate-800 font-bold text-xs rounded-xl border border-slate-200 flex items-center gap-1.5 cursor-pointer shadow-xs"
+                                    title="Pilihan Aksi"
                                 >
-                                    <svg class="w-3.5 h-3.5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
+                                    <span>Aksi</span>
+                                    <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                                     </svg>
-                                    <span>ID Card</span>
-                                </a>
+                                </button>
 
-                                <!-- Buka Tiket QR -->
-                                <a 
-                                    href="{{ route('participants.card', $item->qr_token) }}" 
-                                    target="_blank"
-                                    class="btn-3d-white px-2.5 py-1.5 bg-white hover:bg-slate-50 text-slate-700 font-bold text-[11px] rounded-lg border border-slate-200 transition-all flex items-center gap-1"
-                                    title="Lihat Tiket QR"
+                                <!-- Dropdown Card -->
+                                <div 
+                                    id="action-dropdown-{{ $item->id }}" 
+                                    class="row-dropdown-menu hidden absolute right-0 w-60 bg-white border border-slate-200 rounded-2xl shadow-xl z-50 py-1.5 text-xs text-slate-700 divide-y divide-slate-100 text-left"
                                 >
-                                    <span>Tiket</span>
-                                </a>
+                                    <!-- ID Card & Tiket -->
+                                    <div class="py-1">
+                                        <a href="{{ route('admin.participants.id-card', $item) }}" target="_blank" class="flex items-center gap-2.5 px-3.5 py-2 hover:bg-indigo-50 hover:text-indigo-900 transition-colors font-medium">
+                                            <svg class="w-4 h-4 text-indigo-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
+                                            </svg>
+                                            <span>Cetak ID Card Lanyard</span>
+                                        </a>
+                                        <a href="{{ route('participants.card', $item->qr_token) }}" target="_blank" class="flex items-center gap-2.5 px-3.5 py-2 hover:bg-slate-50 hover:text-slate-900 transition-colors font-medium">
+                                            <svg class="w-4 h-4 text-slate-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                            </svg>
+                                            <span>Lihat Tiket QR</span>
+                                        </a>
+                                    </div>
 
-                                <!-- Kirim via WhatsApp Web Button -->
-                                <a 
-                                    href="{{ $item->whatsapp_blast_url }}" 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    class="btn-3d-white px-2.5 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-[11px] rounded-lg border border-emerald-200 transition-all flex items-center gap-1"
-                                    title="Kirim tiket via WhatsApp Web"
-                                >
-                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                    <span>WA Web</span>
-                                </a>
+                                    <!-- WhatsApp Blast & Manual Web -->
+                                    <div class="py-1">
+                                        <form action="{{ route('admin.participants.twilio', $item) }}" method="POST" onsubmit="return confirmTwilio(event, '{{ $item->name }}')">
+                                            @csrf
+                                            <button type="submit" class="w-full text-left flex items-center gap-2.5 px-3.5 py-2 hover:bg-blue-50 hover:text-blue-900 transition-colors font-medium cursor-pointer">
+                                                <svg class="w-4 h-4 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                                </svg>
+                                                <span>Kirim WA Blast (Otomatis)</span>
+                                            </button>
+                                        </form>
+                                        <a href="{{ $item->whatsapp_blast_url }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2.5 px-3.5 py-2 hover:bg-emerald-50 hover:text-emerald-900 transition-colors font-medium">
+                                            <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                            </svg>
+                                            <span>Kirim via WA Web (Manual)</span>
+                                        </a>
+                                    </div>
 
-                                <!-- Kirim via Twilio API -->
-                                <form action="{{ route('admin.participants.twilio', $item) }}" method="POST" class="inline" onsubmit="return confirmTwilio(event, '{{ $item->name }}')">
-                                    @csrf
-                                    <button 
-                                        type="submit" 
-                                        class="btn-3d-blue px-2.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-[11px] rounded-lg transition-all flex items-center gap-1 cursor-pointer border border-blue-600"
-                                        title="Kirim WhatsApp otomatis via API Twilio"
-                                    >
-                                        <span>Twilio</span>
-                                    </button>
-                                </form>
-
-                                <!-- Hapus Button -->
-                                <form action="{{ route('admin.participants.destroy', $item) }}" method="POST" onsubmit="return confirmDelete(event, '{{ $item->name }}')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button 
-                                        type="submit" 
-                                        class="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
-                                        title="Hapus peserta"
-                                    >
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                        </svg>
-                                    </button>
-                                </form>
+                                    <!-- Hapus Peserta -->
+                                    <div class="py-1">
+                                        <form action="{{ route('admin.participants.destroy', $item) }}" method="POST" onsubmit="return confirmDelete(event, '{{ $item->name }}')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="w-full text-left flex items-center gap-2.5 px-3.5 py-2 text-rose-600 hover:bg-rose-50 transition-colors font-medium cursor-pointer">
+                                                <svg class="w-4 h-4 text-rose-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                                </svg>
+                                                <span>Hapus Data Peserta</span>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" class="py-16 text-center text-slate-400">
+                        <td colspan="6" class="py-16 text-center text-slate-400">
                             <div class="flex flex-col items-center justify-center space-y-2">
                                 <svg class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
@@ -463,6 +453,43 @@
 
 @push('scripts')
 <script>
+    // Handler Dropdown Menu Baris Aksi
+    window.toggleRowDropdown = function(e, id) {
+        e.stopPropagation();
+        const menu = document.getElementById(id);
+        const allMenus = document.querySelectorAll('.row-dropdown-menu');
+        
+        allMenus.forEach(m => {
+            if (m.id !== id) m.classList.add('hidden');
+        });
+
+        if (menu) {
+            const isHidden = menu.classList.contains('hidden');
+            if (isHidden) {
+                // Posisi pintar: jika dekat bawah jendela, buka ke atas
+                const btnRect = e.currentTarget.getBoundingClientRect();
+                const spaceBelow = window.innerHeight - btnRect.bottom;
+                if (spaceBelow < 240) {
+                    menu.classList.add('bottom-full', 'mb-2');
+                    menu.classList.remove('top-full', 'mt-1.5');
+                } else {
+                    menu.classList.remove('bottom-full', 'mb-2');
+                    menu.classList.add('top-full', 'mt-1.5');
+                }
+                menu.classList.remove('hidden');
+            } else {
+                menu.classList.add('hidden');
+            }
+        }
+    };
+
+    // Tutup dropdown jika klik di luar
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.row-dropdown-menu') && !e.target.closest('button')) {
+            document.querySelectorAll('.row-dropdown-menu').forEach(m => m.classList.add('hidden'));
+        }
+    });
+
     function confirmDelete(e, name) {
         e.preventDefault();
         const form = e.target;
@@ -492,13 +519,13 @@
         e.preventDefault();
         const form = e.target;
         Swal.fire({
-            title: 'Kirim via Twilio?',
-            text: `Kirim pesan WhatsApp presensi ke "${name}" via API Twilio?`,
+            title: 'Kirim WA Blast?',
+            text: `Kirim pesan WhatsApp presensi otomatis via WA Blast ke "${name}"?`,
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#2563eb',
             cancelButtonColor: '#64748b',
-            confirmButtonText: 'Ya, Kirim Twilio',
+            confirmButtonText: 'Ya, Kirim WA Blast',
             cancelButtonText: 'Batal',
             customClass: {
                 popup: 'rounded-2xl border border-slate-200 shadow-xl',
