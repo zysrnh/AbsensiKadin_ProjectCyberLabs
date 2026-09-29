@@ -8,49 +8,42 @@
 <div class="space-y-6">
 
     <!-- Top Header & Action Buttons -->
-    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-2 border-b border-slate-200/80">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-slate-200">
         <div>
-            <div class="inline-flex items-center gap-1.5 px-3 py-0.5 bg-blue-50 border border-blue-200/60 rounded-full mb-1.5 text-[10px] font-extrabold uppercase tracking-wider text-blue-700 shadow-2xs">
-                <span class="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse"></span>
-                <span>Pusat Kontrol & Presensi</span>
-            </div>
-            <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Dashboard Pendaftar</h1>
-            <p class="text-xs text-slate-500 mt-1 leading-relaxed">
-                Pantau data peserta, kelola pengiriman WhatsApp, cetak ID card lanyard, dan verifikasi kehadiran secara real-time.
-            </p>
+            <h1 class="text-2xl font-black text-slate-900 tracking-tight">Dashboard Pendaftar</h1>
         </div>
 
-        <div class="flex items-center flex-wrap gap-2.5">
+        <div class="flex items-center flex-wrap gap-2">
             <!-- Cetak ID Card Massal -->
-            <a href="{{ route('admin.participants.id-cards.bulk', request()->query()) }}" target="_blank" class="btn-3d-white px-3.5 py-2.5 bg-white hover:bg-slate-50 text-indigo-900 font-bold text-xs rounded-xl border border-indigo-200/80 flex items-center gap-2 cursor-pointer">
-                <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <a href="{{ route('admin.participants.id-cards.bulk', request()->query()) }}" target="_blank" class="btn-3d-white px-3 py-2 bg-white hover:bg-slate-50 text-indigo-900 font-bold text-xs rounded-xl border border-indigo-200/90 flex items-center gap-1.5 cursor-pointer shadow-2xs">
+                <svg class="w-3.5 h-3.5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
                 </svg>
-                <span>Cetak ID Card Massal</span>
+                <span>Cetak ID Card</span>
             </a>
 
             <!-- Download CSV -->
-            <a href="{{ route('admin.export.csv') }}" class="btn-3d-white px-3.5 py-2.5 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl border border-slate-200 flex items-center gap-2 cursor-pointer">
-                <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <a href="{{ route('admin.export.csv') }}" class="btn-3d-white px-3 py-2 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl border border-slate-200 flex items-center gap-1.5 cursor-pointer shadow-2xs">
+                <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
                 <span>Export CSV</span>
             </a>
 
             <!-- Buka Scanner QR -->
-            <a href="{{ route('admin.scan') }}" class="btn-3d-dark px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl flex items-center gap-2 border border-slate-900 cursor-pointer">
-                <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <a href="{{ route('admin.scan') }}" class="btn-3d-dark px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 border border-slate-900 cursor-pointer shadow-2xs">
+                <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
                 </svg>
-                <span>Buka Scanner QR</span>
+                <span>Scanner QR</span>
             </a>
 
             <!-- Tambah Peserta Manual -->
-            <a href="{{ route('participants.create') }}" target="_blank" class="btn-3d-blue px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl flex items-center gap-2 border border-blue-600 cursor-pointer">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <a href="{{ route('participants.create') }}" target="_blank" class="btn-3d-blue px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 border border-blue-600 cursor-pointer shadow-2xs">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
                 </svg>
-                <span>+ Pendaftar Baru</span>
+                <span>Pendaftar Baru</span>
             </a>
         </div>
     </div>
