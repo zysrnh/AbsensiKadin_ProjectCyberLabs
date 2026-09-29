@@ -544,33 +544,36 @@
         document.getElementById('filter-search-form').submit();
     };
 
-    // Modal / Popover Detail Waktu Kehadiran
+    // Modal Detail Waktu Kehadiran (Flat, Tegas & Profesional)
     window.showAttendanceDetail = function(name, time) {
         Swal.fire({
-            title: 'Detail Presensi',
+            title: '',
             html: `
-                <div class="text-left text-xs space-y-3 mt-3">
-                    <div class="p-3.5 bg-emerald-50/80 border border-emerald-200/90 rounded-xl">
-                        <div class="flex items-center gap-1.5 text-emerald-700 font-bold text-[11px] uppercase tracking-wider mb-1">
-                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                            <span>Status: Sudah Hadir di Lokasi</span>
-                        </div>
-                        <p class="text-sm font-extrabold text-slate-900">${name}</p>
+                <div class="text-left text-xs p-1">
+                    <div class="flex items-center justify-between pb-3 border-b-2 border-slate-900">
+                        <span class="text-[11px] font-black uppercase tracking-wider text-slate-900 bg-emerald-100 px-2 py-0.5 border border-emerald-400">
+                            TERVERIFIKASI HADIR
+                        </span>
+                        <span class="text-[10px] text-slate-500 font-mono font-bold">PRESENSI FISIK</span>
                     </div>
-                    <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-2.5 text-slate-700 font-semibold">
-                        <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <div class="py-3">
+                        <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Nama Peserta</p>
+                        <p class="text-sm font-black text-slate-900 mt-0.5">${name}</p>
+                    </div>
+                    <div class="p-2.5 bg-slate-50 border border-slate-300 text-slate-800 font-mono text-[11px] flex items-center gap-2">
+                        <svg class="w-3.5 h-3.5 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         <span>${time}</span>
                     </div>
                 </div>
             `,
-            icon: 'success',
+            showConfirmButton: true,
             confirmButtonColor: '#0f172a',
-            confirmButtonText: 'Tutup',
+            confirmButtonText: 'TUTUP',
             customClass: {
-                popup: 'rounded-2xl border border-slate-200 shadow-xl',
-                confirmButton: 'rounded-xl font-bold text-xs px-5 py-2.5 cursor-pointer'
+                popup: 'rounded-none border-2 border-slate-900 shadow-2xl p-4 bg-white',
+                confirmButton: 'rounded-none font-bold text-xs px-6 py-2 bg-slate-900 text-white cursor-pointer hover:bg-slate-800 tracking-wider uppercase'
             }
         });
     };
@@ -582,7 +585,7 @@
         });
     }
 
-    // AJAX Toggle Checkin (Tanpa Refresh + Popup Diupdate Pada)
+    // AJAX Toggle Checkin (Flat Toast Pojok Kanan Atas, Tanpa Refresh)
     window.toggleAttendanceAjax = function(e, id, url, name) {
         if (e) {
             e.preventDefault();
@@ -606,19 +609,17 @@
                 const actionContainer = document.getElementById('attendance-action-container-' + id);
 
                 if (data.status === 'attended') {
-                    // Update dot ke hijau interaktif
                     if (dotContainer) {
                         dotContainer.innerHTML = `
                             <button 
                                 type="button" 
                                 onclick="showAttendanceDetail('${escapeHtml(data.participant_name)}', '${data.attended_at || ''}')"
                                 class="w-3.5 h-3.5 rounded-full bg-emerald-500 hover:bg-emerald-600 hover:scale-125 transition-transform cursor-pointer inline-flex items-center justify-center ring-4 ring-emerald-100 shadow-2xs" 
-                                title="Sudah Hadir • Klik untuk lihat detail waktu presensi"
+                                title="Sudah Hadir • Klik untuk detail"
                             ></button>
                         `;
                     }
 
-                    // Update tombol dropdown ke Batalkan Hadir
                     if (actionContainer) {
                         actionContainer.innerHTML = `
                             <button 
@@ -634,37 +635,31 @@
                         `;
                     }
 
-                    // Popup Diupdate Pada
+                    // Toast Tegas di Pojok Kanan Atas (Auto close 3s, no extra click)
                     Swal.fire({
-                        title: 'Presensi Terverifikasi!',
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
                         html: `
-                            <div class="text-left text-xs space-y-2 mt-3">
-                                <div class="p-3.5 bg-emerald-50/90 border border-emerald-200/90 rounded-xl">
-                                    <div class="flex items-center gap-1.5 text-emerald-700 font-bold text-[11px] uppercase tracking-wider mb-1">
-                                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                                        <span>Status: Sudah Hadir di Lokasi</span>
-                                    </div>
-                                    <p class="text-sm font-extrabold text-slate-900">${escapeHtml(data.participant_name)}</p>
-                                    <p class="text-[11px] text-slate-500 mt-2.5 pt-2 border-t border-emerald-200/70 flex items-center gap-1.5">
-                                        <svg class="w-3.5 h-3.5 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        <span>Diupdate pada: <b class="text-slate-800">${data.updated_at_formatted}</b></span>
-                                    </p>
+                            <div class="text-left text-xs py-0.5">
+                                <div class="flex items-center gap-1.5 mb-1 text-emerald-700 font-black text-[11px] uppercase tracking-wider">
+                                    <span class="w-2.5 h-2.5 bg-emerald-600 inline-block shrink-0"></span>
+                                    <span>PRESENSI TERVERIFIKASI</span>
                                 </div>
+                                <p class="font-black text-slate-900 text-xs truncate max-w-[280px]">${escapeHtml(data.participant_name)}</p>
+                                <p class="text-[10px] text-slate-500 mt-1.5 font-mono pt-1 border-t border-slate-200">
+                                    Diupdate: <b>${data.updated_at_formatted}</b>
+                                </p>
                             </div>
                         `,
-                        icon: 'success',
-                        confirmButtonColor: '#0f172a',
-                        confirmButtonText: 'Oke',
                         customClass: {
-                            popup: 'rounded-2xl border border-slate-200 shadow-xl',
-                            confirmButton: 'rounded-xl font-bold text-xs px-5 py-2.5 cursor-pointer'
+                            popup: 'rounded-none border-2 border-slate-900 bg-white p-3 shadow-2xl text-left'
                         }
                     });
 
                 } else {
-                    // Update dot ke biru
                     if (dotContainer) {
                         dotContainer.innerHTML = `
                             <button 
@@ -676,7 +671,6 @@
                         `;
                     }
 
-                    // Update tombol dropdown ke Tandai Hadir
                     if (actionContainer) {
                         actionContainer.innerHTML = `
                             <button 
@@ -692,32 +686,27 @@
                         `;
                     }
 
-                    // Popup Batal Hadir
+                    // Toast Batal Hadir Tegas
                     Swal.fire({
-                        title: 'Kehadiran Dibatalkan',
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
                         html: `
-                            <div class="text-left text-xs space-y-2 mt-3">
-                                <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl">
-                                    <div class="flex items-center gap-1.5 text-slate-600 font-bold text-[11px] uppercase tracking-wider mb-1">
-                                        <span class="w-2 h-2 rounded-full bg-slate-400"></span>
-                                        <span>Status: Belum Hadir</span>
-                                    </div>
-                                    <p class="text-sm font-extrabold text-slate-900">${escapeHtml(data.participant_name)}</p>
-                                    <p class="text-[11px] text-slate-500 mt-2.5 pt-2 border-t border-slate-200 flex items-center gap-1.5">
-                                        <svg class="w-3.5 h-3.5 text-slate-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        <span>Diupdate pada: <b class="text-slate-800">${data.updated_at_formatted}</b></span>
-                                    </p>
+                            <div class="text-left text-xs py-0.5">
+                                <div class="flex items-center gap-1.5 mb-1 text-slate-600 font-black text-[11px] uppercase tracking-wider">
+                                    <span class="w-2.5 h-2.5 bg-slate-500 inline-block shrink-0"></span>
+                                    <span>KEHADIRAN DIBATALKAN</span>
                                 </div>
+                                <p class="font-black text-slate-900 text-xs truncate max-w-[280px]">${escapeHtml(data.participant_name)}</p>
+                                <p class="text-[10px] text-slate-500 mt-1.5 font-mono pt-1 border-t border-slate-200">
+                                    Diupdate: <b>${data.updated_at_formatted}</b>
+                                </p>
                             </div>
                         `,
-                        icon: 'info',
-                        confirmButtonColor: '#0f172a',
-                        confirmButtonText: 'Tutup',
                         customClass: {
-                            popup: 'rounded-2xl border border-slate-200 shadow-xl',
-                            confirmButton: 'rounded-xl font-bold text-xs px-5 py-2.5 cursor-pointer'
+                            popup: 'rounded-none border-2 border-slate-900 bg-white p-3 shadow-2xl text-left'
                         }
                     });
                 }
@@ -729,9 +718,13 @@
         .catch(err => {
             console.error(err);
             Swal.fire({
+                toast: true,
+                position: 'top-end',
                 icon: 'error',
                 title: 'Gagal Memproses',
-                text: 'Terjadi kesalahan sistem saat menghubungi server.'
+                text: 'Terjadi kesalahan sistem saat menghubungi server.',
+                timer: 3000,
+                showConfirmButton: false
             });
         });
     };
