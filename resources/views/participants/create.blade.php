@@ -5,13 +5,19 @@
 @push('styles')
 <style>
     /* ==========================================================================
-       ANIMASI ENTRANCE & MICRO-INTERACTIONS (TERINSPIRASI VIDEO SHOWCASE)
-       Easing: Apple / Ease-out-expo cubic-bezier(0.16, 1, 0.3, 1)
+       PREMIUM ANIMATION SYSTEM (INSPIRED BY CAMPTY SHOWCASE VIDEO)
+       Curve: Spring / Ease-Out-Expo (Apple & Vercel design standard)
        ========================================================================== */
-    @keyframes fadeUpEntrance {
+    :root {
+        --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+        --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* Keyframe: Reveal Upward with scale */
+    @keyframes heroReveal {
         0% {
             opacity: 0;
-            transform: translateY(28px);
+            transform: translateY(32px);
         }
         100% {
             opacity: 1;
@@ -19,45 +25,112 @@
         }
     }
 
-    @keyframes floatPhoneMockup {
-        0%, 100% {
-            transform: translateY(0px) rotate(0deg);
+    /* Keyframe: 3D Phone Mockup Entrance */
+    @keyframes phoneEntrance {
+        0% {
+            opacity: 0;
+            transform: translateY(50px) scale(0.92) rotateY(-12deg);
         }
-        50% {
-            transform: translateY(-8px) rotate(-0.5deg);
-        }
-    }
-
-    @keyframes floatPill {
-        0%, 100% {
-            transform: translateY(0px);
-        }
-        50% {
-            transform: translateY(-5px);
+        100% {
+            opacity: 1;
+            transform: translateY(0) scale(1) rotateY(-5deg);
         }
     }
 
-    /* Staggered Delay Classes */
-    .anim-hero-text {
-        animation: fadeUpEntrance 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.05s backwards;
+    /* Keyframe: Continuous Subtle Floating with 3D depth */
+    @keyframes float3D {
+        0%, 100% {
+            transform: translateY(0px) rotateY(-5deg) rotateX(2deg);
+        }
+        50% {
+            transform: translateY(-12px) rotateY(-2deg) rotateX(-1deg);
+        }
     }
-    .anim-hero-phone {
-        animation: fadeUpEntrance 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.2s backwards;
+
+    /* Keyframe: Scanner Laser Beam Sweep (Inside Phone) */
+    @keyframes laserSweep {
+        0% {
+            top: 8%;
+            opacity: 0;
+        }
+        15% {
+            opacity: 1;
+        }
+        85% {
+            opacity: 1;
+        }
+        100% {
+            top: 88%;
+            opacity: 0;
+        }
     }
-    .anim-phone-floating {
-        animation: floatPhoneMockup 5.5s ease-in-out infinite;
+
+    /* Keyframe: QR subtle breathing pulse */
+    @keyframes qrBreath {
+        0%, 100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.03);
+        }
     }
-    .anim-pill-floating {
-        animation: floatPill 4s ease-in-out infinite;
+
+    /* Keyframe: Spinning Doodle Star Accent (Campty feature) */
+    @keyframes spinSlow {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
     }
-    .anim-pill-floating-delay {
-        animation: floatPill 4.5s ease-in-out 1.5s infinite;
+
+    /* Staggered entrance classes */
+    .anim-title {
+        animation: heroReveal 0.9s var(--ease-out-expo) 0.1s backwards;
     }
-    .anim-info-bar {
-        animation: fadeUpEntrance 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.35s backwards;
+    .anim-desc {
+        animation: heroReveal 0.9s var(--ease-out-expo) 0.22s backwards;
     }
-    .anim-bottom-section {
-        animation: fadeUpEntrance 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.5s backwards;
+    .anim-actions {
+        animation: heroReveal 0.9s var(--ease-out-expo) 0.34s backwards;
+    }
+    .anim-phone-wrap {
+        animation: phoneEntrance 1.1s var(--ease-out-expo) 0.25s backwards;
+    }
+    .anim-phone-float {
+        animation: float3D 6s ease-in-out infinite;
+        transform-style: preserve-3d;
+        perspective: 1000px;
+    }
+    .anim-laser {
+        animation: laserSweep 2.8s ease-in-out infinite;
+    }
+    .anim-qr {
+        animation: qrBreath 4s ease-in-out infinite;
+    }
+    .anim-star {
+        animation: spinSlow 16s linear infinite;
+    }
+
+    /* Scroll reveal classes */
+    .scroll-reveal {
+        opacity: 0;
+        transform: translateY(28px);
+        transition: opacity 0.85s var(--ease-out-expo), transform 0.85s var(--ease-out-expo);
+        will-change: opacity, transform;
+    }
+    .scroll-reveal.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Info Bar Hover Card Interaction */
+    .info-card {
+        transition: transform 0.3s var(--ease-out-expo), background-color 0.25s ease;
+    }
+    .info-card:hover {
+        transform: translateY(-4px);
     }
 
     html {
@@ -67,36 +140,39 @@
 @endpush
 
 @section('content')
-<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 py-2">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-14 py-4">
 
     <!-- ==========================================================================
-         1. HERO SECTION ATAS (HEADLINE + PHONE MOCKUP SLIDE-IN)
+         1. HERO SECTION ATAS (HEADLINE + PHONE MOCKUP DENGAN SCAN LASER)
          ========================================================================== -->
-    <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center pt-2 sm:pt-6">
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center pt-2 sm:pt-4">
         
         <!-- Sisi Kiri Hero: Teks & Action -->
-        <div class="lg:col-span-7 space-y-6 anim-hero-text">
+        <div class="lg:col-span-7 space-y-6">
             
-            <!-- Badge Undangan Resmi -->
-            <div class="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 border border-blue-200 rounded-sm text-blue-900 text-xs font-bold tracking-wider uppercase">
-                <span class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
-                <span>Exclusive Invitation &bull; C LEVEL Indonesia</span>
-            </div>
-
             <!-- Headline Utama (Plus Jakarta Sans Bold) -->
-            <div class="space-y-3">
-                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-[1.15] tracking-tight">
+            <div class="space-y-3 relative">
+                
+                <!-- Doodle Star Accent (Khas Desain Campty) -->
+                <div class="absolute -top-6 -left-6 text-blue-600/80 anim-star pointer-events-none hidden sm:block">
+                    <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/>
+                    </svg>
+                </div>
+
+                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 leading-[1.12] tracking-tight anim-title">
                     {{ $settings['event_title'] }}
                 </h1>
-                <p class="text-sm sm:text-base text-slate-600 leading-relaxed max-w-2xl font-normal">
+                
+                <p class="text-sm sm:text-base text-slate-600 leading-relaxed max-w-2xl font-normal anim-desc">
                     {{ $settings['event_description'] }}
                 </p>
             </div>
 
             <!-- Tombol Aksi Cepat -->
-            <div class="flex flex-wrap items-center gap-3 pt-2">
+            <div class="flex flex-wrap items-center gap-3 pt-1 anim-actions">
                 <a href="#registration-section" 
-                   class="px-6 py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm tracking-wide rounded-sm transition-all duration-200 flex items-center gap-2 border border-slate-900 shadow-2xs cursor-pointer active:translate-y-0.5">
+                   class="px-6 py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm tracking-wide rounded-sm transition-all duration-200 flex items-center gap-2.5 border border-slate-900 shadow-xs cursor-pointer active:translate-y-0.5 hover:shadow-md">
                     <span>Ajukan Kehadiran Sekarang</span>
                     <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
@@ -107,7 +183,7 @@
                     <a href="{{ $settings['event_maps_url'] }}" 
                        target="_blank" 
                        rel="noopener noreferrer"
-                       class="px-5 py-3 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 font-semibold text-xs sm:text-sm rounded-sm transition-colors border border-slate-300 flex items-center gap-2 shadow-2xs">
+                       class="px-5 py-3.5 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 font-semibold text-xs sm:text-sm rounded-sm transition-colors border border-slate-300 flex items-center gap-2 shadow-2xs">
                         <svg class="w-4 h-4 text-rose-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -121,7 +197,7 @@
             </div>
 
             <!-- Jaminan Kemudahan -->
-            <div class="flex items-center gap-5 pt-3 text-xs text-slate-500 border-t border-slate-200">
+            <div class="flex items-center gap-5 pt-4 text-xs text-slate-500 border-t border-slate-200/80 anim-actions">
                 <div class="flex items-center gap-1.5">
                     <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
@@ -144,29 +220,18 @@
 
         </div>
 
-        <!-- Sisi Kanan Hero: Visual Mockup Smartphone Floating (Mirip Video) -->
-        <div class="lg:col-span-5 flex justify-center lg:justify-end anim-hero-phone">
-            <div class="relative w-full max-w-[310px] anim-phone-floating">
+        <!-- Sisi Kanan Hero: Visual Mockup Smartphone Floating 3D (Animasi Campty) -->
+        <div class="lg:col-span-5 flex justify-center lg:justify-end anim-phone-wrap">
+            <div class="relative w-full max-w-[310px] anim-phone-float">
                 
-                <!-- Floating Badge Pill Atas (Khas Video) -->
-                <div class="absolute -top-3 -left-4 z-20 bg-white border border-slate-200 shadow-sm rounded-sm px-3 py-1.5 flex items-center gap-2 anim-pill-floating">
-                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                <!-- Floating Pill Badge Atas -->
+                <div class="absolute -top-3 -left-3 z-20 bg-white border border-slate-200 shadow-md rounded-sm px-3 py-1.5 flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
                     <span class="text-[11px] font-bold text-slate-800 tracking-tight">E-Ticket QR Ready</span>
                 </div>
 
-                <!-- Floating Badge Pill Bawah (Khas Video) -->
-                <div class="absolute -bottom-4 -right-4 z-20 bg-slate-900 border border-slate-800 text-white shadow-sm rounded-sm px-3 py-2 flex items-center gap-2 anim-pill-floating-delay">
-                    <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
-                    </svg>
-                    <div class="text-left">
-                        <p class="text-[10px] text-slate-400 font-medium leading-none">Status Akses</p>
-                        <p class="text-xs font-bold text-white mt-0.5 leading-none">Tamu VIP & Executive</p>
-                    </div>
-                </div>
-
                 <!-- Kerangka Smartphone Flat Minimalis -->
-                <div class="bg-slate-950 p-3 rounded-2xl border-4 border-slate-800 shadow-xl overflow-hidden">
+                <div class="bg-slate-950 p-3 rounded-2xl border-4 border-slate-800 shadow-2xl overflow-hidden relative">
                     
                     <!-- Dynamic Island / Speaker Kamera -->
                     <div class="w-24 h-4 bg-slate-900 rounded-full mx-auto mb-2 flex items-center justify-center">
@@ -174,7 +239,7 @@
                     </div>
 
                     <!-- Layar Smartphone -->
-                    <div class="bg-slate-900 rounded-xl p-4 text-white space-y-4">
+                    <div class="bg-slate-900 rounded-xl p-4 text-white space-y-4 relative overflow-hidden">
                         
                         <!-- Header Mockup App -->
                         <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
@@ -187,14 +252,18 @@
                             <span class="text-[10px] text-slate-400 font-mono">09:41 WIB</span>
                         </div>
 
-                        <!-- Card QR Code di dalam Mockup -->
-                        <div class="bg-white rounded-lg p-4 text-center text-slate-900 space-y-2.5">
+                        <!-- Card QR Code di dalam Mockup dengan Animasi Garis Laser Scan -->
+                        <div class="bg-white rounded-lg p-4 text-center text-slate-900 space-y-2.5 relative overflow-hidden">
+                            
+                            <!-- Laser Garis Hijau yang Menyapu (Interactive Laser Sweep) -->
+                            <div class="absolute left-0 right-0 h-0.5 bg-emerald-500 shadow-[0_0_8px_#10b981] anim-laser pointer-events-none z-10"></div>
+
                             <span class="text-[9px] font-extrabold uppercase tracking-wider text-blue-700 bg-blue-50 px-2 py-0.5 rounded-xs inline-block">
                                 Kartu Presensi Digital
                             </span>
                             
-                            <!-- Visual QR Dummy Rapi -->
-                            <div class="w-32 h-32 mx-auto bg-slate-50 border border-slate-200 p-2 flex flex-col items-center justify-center rounded-sm">
+                            <!-- Visual QR Dummy Rapi dengan Breathing Animation -->
+                            <div class="w-32 h-32 mx-auto bg-slate-50 border border-slate-200 p-2 flex flex-col items-center justify-center rounded-sm anim-qr">
                                 <svg class="w-24 h-24 text-slate-900" viewBox="0 0 24 24" fill="currentColor">
                                     <path d="M2 2h8v8H2V2zm2 2v4h4V4H4zm10-2h8v8h-8V2zm2 2v4h4V4h-4zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm14-2h4v2h-4v-2zm-4 0h2v4h-2v-4zm2 4h2v4h-2v-4zm2 2h4v2h-4v-2zm-6-2h2v2h-2v-2zm4-4h2v2h-2v-2zm-2-2h2v2h-2v-2z"/>
                                 </svg>
@@ -228,23 +297,14 @@
     <!-- ==========================================================================
          2. BLOK INFORMASI ACARA (URUTAN: LOKASI -> TANGGAL -> WAKTU -> DRESSCODE)
          ========================================================================== -->
-    <section class="anim-info-bar">
+    <section class="scroll-reveal">
         
-        <!-- Header Kecil Section Info -->
-        <div class="flex items-center justify-between pb-3 border-b border-slate-200 mb-4">
-            <span class="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
-                <span class="w-1.5 h-3 bg-blue-600 rounded-none inline-block"></span>
-                Rincian Jadwal & Tempat Acara
-            </span>
-            <span class="text-[11px] text-slate-500">Konfirmasi Kehadiran Wajib Terdaftar</span>
-        </div>
-
         <!-- Bar Card Solid Royal Blue (Khas Campty Stats Bar) -->
-        <div class="bg-blue-700 text-white rounded-sm shadow-xs border border-blue-800 p-5 sm:p-7">
+        <div class="bg-blue-700 text-white rounded-sm shadow-md border border-blue-800 p-5 sm:p-7">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 divide-y sm:divide-y-0 lg:divide-x divide-blue-600/70">
                 
                 <!-- 1. LOKASI / GEDUNG -->
-                <div class="space-y-2 lg:pr-5 pt-3 sm:pt-0">
+                <div class="info-card space-y-2 lg:pr-5 pt-3 sm:pt-0">
                     <div class="flex items-center gap-2 text-blue-200">
                         <svg class="w-4 h-4 text-blue-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -262,7 +322,7 @@
                         <a href="{{ $settings['event_maps_url'] }}" 
                            target="_blank" 
                            rel="noopener noreferrer"
-                           class="inline-flex items-center gap-1 text-[11px] font-bold text-white bg-blue-800/80 hover:bg-blue-900 px-2.5 py-1 rounded-xs mt-1 transition-colors">
+                           class="inline-flex items-center gap-1 text-[11px] font-bold text-white bg-blue-800 hover:bg-blue-900 px-2.5 py-1 rounded-xs mt-1 transition-colors">
                             <span>Buka Google Maps</span>
                             <svg class="w-3 h-3 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -272,7 +332,7 @@
                 </div>
 
                 <!-- 2. TANGGAL -->
-                <div class="space-y-2 sm:pl-0 lg:px-5 pt-4 sm:pt-0">
+                <div class="info-card space-y-2 sm:pl-0 lg:px-5 pt-4 sm:pt-0">
                     <div class="flex items-center gap-2 text-blue-200">
                         <svg class="w-4 h-4 text-blue-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -288,7 +348,7 @@
                 </div>
 
                 <!-- 3. WAKTU -->
-                <div class="space-y-2 sm:pl-0 lg:px-5 pt-4 sm:pt-0">
+                <div class="info-card space-y-2 sm:pl-0 lg:px-5 pt-4 sm:pt-0">
                     <div class="flex items-center gap-2 text-blue-200">
                         <svg class="w-4 h-4 text-blue-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -304,7 +364,7 @@
                 </div>
 
                 <!-- 4. DRESSCODE -->
-                <div class="space-y-2 sm:pl-0 lg:pl-5 pt-4 sm:pt-0">
+                <div class="info-card space-y-2 sm:pl-0 lg:pl-5 pt-4 sm:pt-0">
                     <div class="flex items-center gap-2 text-blue-200">
                         <svg class="w-4 h-4 text-blue-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -326,19 +386,16 @@
 
 
     <!-- ==========================================================================
-         3. SECTION PALING BAWAH: FLYER ACARA & FORMULIR REGISTRASI
+         3. SECTION PALING BAWAH: FLYER ACARA & FORMULIR REGISTRASI (CLEAN)
          ========================================================================== -->
-    <section id="registration-section" class="pt-4 anim-bottom-section">
+    <section id="registration-section" class="pt-2 scroll-reveal">
         
-        <!-- Header Section Registrasi -->
+        <!-- Header Section Registrasi Minimalis -->
         <div class="text-center max-w-xl mx-auto mb-8 space-y-2">
-            <span class="px-2.5 py-0.5 bg-slate-900 text-white font-extrabold text-[10px] tracking-widest uppercase rounded-xs">
-                Registrasi Peserta
-            </span>
             <h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
                 Formulir Pendaftaran & E-Ticket
             </h2>
-            <p class="text-xs text-slate-500 leading-relaxed font-normal">
+            <p class="text-xs sm:text-sm text-slate-500 leading-relaxed font-normal">
                 Silakan lengkapi formulir di bawah ini. E-Ticket QR Code presensi resmi akan langsung dikirimkan ke kontak WhatsApp Anda.
             </p>
         </div>
@@ -349,7 +406,7 @@
             <!-- ================= SISI KIRI: FLYER / POSTER ACARA ================= -->
             <div class="lg:col-span-5 space-y-5">
                 
-                <!-- Card Poster Acara -->
+                <!-- Card Poster Acara Bersih (Tanpa Box Penyelenggara Bawah) -->
                 <div class="border border-slate-200 rounded-sm bg-white overflow-hidden shadow-xs">
                     
                     @if(!empty($settings['event_flyer']))
@@ -361,10 +418,10 @@
                         >
                     @else
                         <!-- Poster Grafis Default C LEVEL yang Proporsional -->
-                        <div class="bg-slate-900 text-white p-6 sm:p-7 flex flex-col justify-between border-b-4 border-blue-600" style="aspect-ratio: 1/1; min-height: 320px;">
+                        <div class="bg-slate-900 text-white p-6 sm:p-8 flex flex-col justify-between border-b-4 border-blue-600" style="aspect-ratio: 1/1; min-height: 320px;">
                             
                             <div class="flex items-center justify-between">
-                                <span class="px-2 py-0.5 bg-blue-600 text-white font-black text-xs tracking-widest uppercase rounded-xs">
+                                <span class="px-2.5 py-1 bg-blue-600 text-white font-black text-xs tracking-widest uppercase rounded-xs">
                                     C LEVEL
                                 </span>
                                 <span class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">
@@ -390,44 +447,21 @@
                         </div>
                     @endif
 
-                    <!-- Detail Tambahan di Bawah Poster -->
-                    <div class="p-4 bg-slate-50 border-t border-slate-100 text-xs space-y-2.5">
-                        <div class="flex items-start gap-2 text-slate-700">
-                            <svg class="w-4 h-4 text-blue-700 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                            </svg>
-                            <div>
-                                <strong class="text-slate-900 block font-bold">Penyelenggara Resmi:</strong>
-                                <span class="text-slate-600">{{ $settings['event_organizer'] }}</span>
-                            </div>
-                        </div>
-
-                        <div class="flex items-start gap-2 text-slate-700">
-                            <svg class="w-4 h-4 text-blue-700 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                            </svg>
-                            <div>
-                                <strong class="text-slate-900 block font-bold">Sistem Verifikasi:</strong>
-                                <span class="text-slate-600">Presensi Berbasis QR Code Unik Terenkripsi</span>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
 
             </div>
 
 
-            <!-- ================= SISI KANAN: FORMULIR PENDAFTARAN PESERTA ================= -->
+            <!-- ================= SISI KANAN: FORMULIR PENDAFTARAN PESERTA (SUPER CLEAN) ================= -->
             <div class="lg:col-span-7 space-y-4">
                 
                 <div class="bg-white border border-slate-200 rounded-sm shadow-xs p-5 sm:p-7 space-y-5">
                     
-                    <!-- Header Form -->
+                    <!-- Header Form Clean -->
                     <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-4">
                         <div>
                             <h3 class="text-base sm:text-lg font-bold text-slate-900 tracking-tight">Data Calon Peserta</h3>
-                            <p class="text-xs text-slate-500 mt-0.5">Isi seluruh informasi dengan akurat untuk pencetakan ID Card & Tiket.</p>
+                            <p class="text-xs text-slate-500 mt-0.5">Isi seluruh informasi dengan akurat untuk penerbitan tiket QR.</p>
                         </div>
                         <div class="flex items-center gap-1.5">
                             @if($settings['registration_deadline_enabled'])
@@ -470,7 +504,7 @@
                         </div>
                     @endif
 
-                    <!-- Formulir Form Action POST -->
+                    <!-- Formulir Form Action POST (Clean Placeholders) -->
                     <form action="{{ route('participants.store') }}" method="POST" class="space-y-4">
                         @csrf
 
@@ -485,7 +519,7 @@
                                 id="name" 
                                 value="{{ old('name') }}" 
                                 {{ $isExpired ? 'disabled' : 'required' }}
-                                placeholder="Contoh: Budi Santoso, S.E., M.M."
+                                placeholder="Nama Lengkap"
                                 class="w-full px-3.5 py-2.5 {{ $isExpired ? 'bg-slate-100 text-slate-400 cursor-not-allowed border-slate-200 opacity-70' : 'bg-slate-50 border-slate-200 text-slate-900 focus:bg-white focus:border-slate-900' }} border {{ $errors->has('name') ? 'border-rose-400 bg-rose-50/40' : '' }} rounded-sm text-xs sm:text-sm placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-900 transition-colors"
                             >
                         </div>
@@ -501,13 +535,12 @@
                                 id="phone" 
                                 value="{{ old('phone') }}" 
                                 {{ $isExpired ? 'disabled' : 'required' }}
-                                placeholder="Contoh: 081234567890"
+                                placeholder="08xxxxxxxxxx"
                                 class="w-full px-3.5 py-2.5 {{ $isExpired ? 'bg-slate-100 text-slate-400 cursor-not-allowed border-slate-200 opacity-70' : 'bg-slate-50 border-slate-200 text-slate-900 focus:bg-white focus:border-slate-900' }} border {{ $errors->has('phone') ? 'border-rose-400 bg-rose-50/40' : '' }} rounded-sm text-xs sm:text-sm placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-900 transition-colors"
                             >
-                            <span class="text-[11px] text-slate-400 mt-1 block">Tiket QR dan pengingat jadwal akan dikirimkan otomatis ke nomor ini.</span>
                         </div>
 
-                        <!-- 3. Perusahaan / Instansi & 4. Jabatan (Grid 2 Kolom) -->
+                        <!-- 3. Perusahaan & 4. Jabatan (Grid 2 Kolom) -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <!-- Company -->
                             <div>
@@ -520,7 +553,7 @@
                                     id="company" 
                                     value="{{ old('company') }}" 
                                     {{ $isExpired ? 'disabled' : 'required' }}
-                                    placeholder="Contoh: PT Sumber Pangan"
+                                    placeholder="Nama Perusahaan / Instansi"
                                     class="w-full px-3.5 py-2.5 {{ $isExpired ? 'bg-slate-100 text-slate-400 cursor-not-allowed border-slate-200 opacity-70' : 'bg-slate-50 border-slate-200 text-slate-900 focus:bg-white focus:border-slate-900' }} border {{ $errors->has('company') ? 'border-rose-400 bg-rose-50/40' : '' }} rounded-sm text-xs sm:text-sm placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-900 transition-colors"
                                 >
                             </div>
@@ -536,7 +569,7 @@
                                     id="position" 
                                     value="{{ old('position') }}" 
                                     {{ $isExpired ? 'disabled' : 'required' }}
-                                    placeholder="Contoh: Chief Executive Officer"
+                                    placeholder="Jabatan / Posisi"
                                     class="w-full px-3.5 py-2.5 {{ $isExpired ? 'bg-slate-100 text-slate-400 cursor-not-allowed border-slate-200 opacity-70' : 'bg-slate-50 border-slate-200 text-slate-900 focus:bg-white focus:border-slate-900' }} border {{ $errors->has('position') ? 'border-rose-400 bg-rose-50/40' : '' }} rounded-sm text-xs sm:text-sm placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-900 transition-colors"
                                 >
                             </div>
@@ -553,23 +586,13 @@
                                 id="email" 
                                 value="{{ old('email') }}" 
                                 {{ $isExpired ? 'disabled' : '' }}
-                                placeholder="budi@perusahaan.co.id"
+                                placeholder="email@perusahaan.com"
                                 class="w-full px-3.5 py-2.5 {{ $isExpired ? 'bg-slate-100 text-slate-400 cursor-not-allowed border-slate-200 opacity-70' : 'bg-slate-50 border-slate-200 text-slate-900 focus:bg-white focus:border-slate-900' }} border {{ $errors->has('email') ? 'border-rose-400 bg-rose-50/40' : '' }} rounded-sm text-xs sm:text-sm placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-900 transition-colors"
                             >
                         </div>
 
-                        <!-- Info Box Permohonan -->
-                        <div class="p-3 bg-slate-50 border border-slate-200 rounded-sm text-xs text-slate-600 flex items-start gap-2.5">
-                            <svg class="w-4 h-4 text-blue-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            <span class="leading-relaxed">
-                                {{ $isExpired ? 'Pendaftaran ditutup karena telah melewati batas kadaluarsa.' : 'Permohonan kehadiran Anda akan tercatat dalam sistem pendaftaran C LEVEL dan diverifikasi oleh panitia.' }}
-                            </span>
-                        </div>
-
                         <!-- Tombol Submit Request to Join / Pendaftaran Ditutup -->
-                        <div class="pt-2">
+                        <div class="pt-3">
                             @if($isExpired)
                                 <button 
                                     type="button" 
@@ -584,7 +607,7 @@
                             @else
                                 <button 
                                     type="submit" 
-                                    class="w-full py-3.5 px-6 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm tracking-wide rounded-sm transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 border border-slate-900 shadow-xs active:translate-y-0.5"
+                                    class="w-full py-3.5 px-6 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm tracking-wide rounded-sm transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 border border-slate-900 shadow-xs active:translate-y-0.5 hover:shadow-md"
                                 >
                                     <span>Request to Join (Kirim Permohonan)</span>
                                     <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -606,3 +629,30 @@
 
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    // Intersection Observer untuk scroll reveal yang halus ala Campty
+    document.addEventListener('DOMContentLoaded', function() {
+        const reveals = document.querySelectorAll('.scroll-reveal');
+        
+        if ('IntersectionObserver' in window) {
+            const observer = new IntersectionObserver((entries, obs) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        obs.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.12,
+                rootMargin: '0px 0px -40px 0px'
+            });
+
+            reveals.forEach(el => observer.observe(el));
+        } else {
+            reveals.forEach(el => el.classList.add('is-visible'));
+        }
+    });
+</script>
+@endpush

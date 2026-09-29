@@ -9,9 +9,9 @@
     <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    <!-- Tailwind CSS Play CDN (Bebas NPM / Vite Build) -->
+    <!-- Tailwind CSS Play CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -39,17 +39,13 @@
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col justify-between">
 
-    <!-- Clean Public Header: C LEVEL Saja -->
-    <header class="bg-white border-b border-slate-200 py-3.5 px-4 sm:px-6">
+    <!-- Clean Minimal Header: Logo Only -->
+    <header class="bg-white border-b border-slate-200/80 py-4 px-4 sm:px-6 sticky top-0 z-30">
         <div class="max-w-6xl mx-auto flex items-center justify-between">
-            <div class="flex items-center space-x-2">
+            <a href="{{ route('home') }}" class="flex items-center space-x-2">
                 <span class="px-3 py-1 bg-slate-900 text-white font-black text-sm tracking-widest rounded-sm">
                     C LEVEL
                 </span>
-                <span class="text-xs font-bold text-slate-700 tracking-tight">C LEVEL INDONESIA 2026</span>
-            </div>
-            <a href="{{ route('admin.dashboard') }}" class="text-[11px] font-semibold text-slate-500 hover:text-slate-900 transition-colors">
-                Portal Admin →
             </a>
         </div>
     </header>
@@ -60,8 +56,8 @@
     </main>
 
     <!-- Footer Simple -->
-    <footer class="bg-white border-t border-slate-200 py-4">
-        <div class="max-w-6xl mx-auto px-4 text-center text-xs text-slate-400">
+    <footer class="bg-white border-t border-slate-200 py-5">
+        <div class="max-w-6xl mx-auto px-4 text-center text-xs text-slate-400 font-medium">
             &copy; {{ date('Y') }} C LEVEL Indonesia. Sistem Presensi & Pendaftaran Resmi.
         </div>
     </footer>
