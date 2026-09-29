@@ -366,10 +366,10 @@
                                     </svg>
                                 </button>
 
-                                <!-- Dropdown Card -->
+                                <!-- Dropdown Card (Floating Fixed) -->
                                 <div 
                                     id="action-dropdown-{{ $item->id }}" 
-                                    class="row-dropdown-menu hidden absolute right-0 w-60 bg-white border border-slate-200 rounded-2xl shadow-xl z-50 py-1.5 text-xs text-slate-700 divide-y divide-slate-100 text-left"
+                                    class="row-dropdown-menu hidden fixed w-60 bg-white border border-slate-200 rounded-2xl shadow-2xl z-[9999] py-1.5 text-xs text-slate-700 divide-y divide-slate-100 text-left"
                                 >
                                     <!-- ID Card & Tiket -->
                                     <div class="py-1">
@@ -453,9 +453,10 @@
 
 @push('scripts')
 <script>
-    // Handler Dropdown Menu Baris Aksi
+    // Handler Dropdown Menu Baris Aksi (Fixed Floating Positioning - Bebas dari clipping overflow)
     window.toggleRowDropdown = function(e, id) {
         e.stopPropagation();
+        const btn = e.currentTarget;
         const menu = document.getElementById(id);
         const allMenus = document.querySelectorAll('.row-dropdown-menu');
         
@@ -466,22 +467,31 @@
         if (menu) {
             const isHidden = menu.classList.contains('hidden');
             if (isHidden) {
-                // Posisi pintar: jika dekat bawah jendela, buka ke atas
-                const btnRect = e.currentTarget.getBoundingClientRect();
-                const spaceBelow = window.innerHeight - btnRect.bottom;
-                if (spaceBelow < 240) {
-                    menu.classList.add('bottom-full', 'mb-2');
-                    menu.classList.remove('top-full', 'mt-1.5');
+                const rect = btn.getBoundingClientRect();
+                const menuHeight = 215;
+                const spaceBelow = window.innerHeight - rect.bottom;
+
+                menu.style.position = 'fixed';
+                menu.style.right = (window.innerWidth - rect.right) + 'px';
+
+                // Buka ke atas HANYA jika ruang di bawah kurang dari 215px DAN ruang di atas cukup
+                if (spaceBelow < menuHeight && rect.top > menuHeight) {
+                    menu.style.top = (rect.top - menuHeight - 4) + 'px';
                 } else {
-                    menu.classList.remove('bottom-full', 'mb-2');
-                    menu.classList.add('top-full', 'mt-1.5');
+                    menu.style.top = (rect.bottom + 6) + 'px';
                 }
+
                 menu.classList.remove('hidden');
             } else {
                 menu.classList.add('hidden');
             }
         }
     };
+
+    // Tutup dropdown jika scroll
+    window.addEventListener('scroll', function() {
+        document.querySelectorAll('.row-dropdown-menu').forEach(m => m.classList.add('hidden'));
+    }, true);
 
     // Tutup dropdown jika klik di luar
     document.addEventListener('click', function(e) {
