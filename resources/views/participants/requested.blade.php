@@ -32,52 +32,40 @@
         box-shadow: 0 1px 0 #cbd5e1;
     }
     
-    /* Animasi Toast Melayang (Entrance & Exit Super Smooth) */
+    /* Animasi Toast Melayang (Flat, Bersih & Cepat) */
     .toast-card-anim {
-        box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.12);
-        transform: translateY(-50px) scale(0.95);
+        box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.08);
+        transform: translateY(-20px);
         opacity: 0;
-        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+        transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
     }
     .toast-card-anim.toast-show {
-        transform: translateY(0) scale(1);
+        transform: translateY(0);
         opacity: 1;
     }
     .toast-card-anim.toast-hide {
-        transform: translateY(-50px) scale(0.95);
+        transform: translateY(-20px);
         opacity: 0;
     }
 </style>
 @endpush
 
 @section('content')
-<!-- Floating Toast Notification (Melayang di Atas, Selewat Saja & Animasi Halus) -->
-<div id="waToast" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 w-full max-w-md px-4 pointer-events-none">
-    <div class="toast-card-anim pointer-events-auto bg-slate-900 text-white border border-slate-700/80 rounded-2xl p-3.5 sm:p-4 shadow-2xl flex items-center gap-3.5 backdrop-blur-md">
+<!-- Toast Notifikasi 1 Baris (Super Minimalis, Flat, Bersih & Tanpa Dekorasi Berlebih) -->
+<div id="waToast" class="fixed top-4 left-1/2 -translate-x-1/2 z-50 pointer-events-none w-auto max-w-[92vw]">
+    <div class="toast-card-anim pointer-events-auto bg-white border border-slate-200/90 text-slate-800 rounded-lg px-3.5 py-2 flex items-center gap-2.5 shadow-sm">
         
-        <!-- Icon WhatsApp Centang -->
-        <div class="w-10 h-10 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 flex items-center justify-center shrink-0">
-            <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <!-- Icon Centang Hijau Solid Minimalis -->
+        <span class="inline-flex items-center justify-center w-5 h-5 rounded bg-emerald-100 text-emerald-700 shrink-0">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
             </svg>
-        </div>
+        </span>
 
-        <!-- Teks Informasi Ringkas -->
-        <div class="space-y-0.5 min-w-0 flex-1">
-            <h4 class="text-xs font-bold text-white tracking-tight">
-                Permohonan Berhasil Dikirim
-            </h4>
-            <p class="text-[11px] text-slate-300 leading-snug">
-                E-Ticket QR akan dikirim ke WhatsApp <span class="font-mono text-emerald-400 font-semibold">{{ $participant->phone }}</span> setelah di-ACC panitia.
-            </p>
-        </div>
-
-        <!-- Tombol Silang Ringkas -->
-        <button type="button" onclick="closeWaToast()" class="w-7 h-7 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center shrink-0 transition-colors cursor-pointer" title="Tutup">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-        </button>
+        <!-- Teks 1 Baris Ringkas -->
+        <span class="text-xs font-medium text-slate-800 tracking-tight whitespace-nowrap">
+            Permohonan Terkirim <span class="text-slate-300 mx-1">•</span> <span class="text-slate-500">Menunggu ACC Panitia</span>
+        </span>
 
     </div>
 </div>
@@ -185,21 +173,21 @@
             });
         }
 
-        // 2. Animasi Toast Melayang Masuk Halus (Slide-Down)
+        // 2. Animasi Toast Masuk & Keluar Selewat (3 Detik)
         const toast = document.querySelector('.toast-card-anim');
         if (toast) {
             setTimeout(function() {
                 toast.classList.add('toast-show');
-            }, 100);
+            }, 60);
 
-            // Otomatis meluncur keluar secara halus setelah 4 detik
+            // Otomatis meluncur keluar selewat setelah 3 detik
             setTimeout(function() {
                 closeWaToast();
-            }, 4000);
+            }, 3000);
         }
     });
 
-    // 3. Fungsi Tutup Toast Melayang
+    // 3. Fungsi Tutup Toast
     function closeWaToast() {
         const toast = document.querySelector('.toast-card-anim');
         const container = document.getElementById('waToast');
@@ -208,7 +196,7 @@
             toast.classList.add('toast-hide');
             setTimeout(function() {
                 if (container) container.remove();
-            }, 500);
+            }, 260);
         }
     }
 </script>
