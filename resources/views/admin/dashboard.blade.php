@@ -271,17 +271,6 @@
                                     <span class="font-bold text-slate-900 block leading-tight text-xs hover:text-blue-600 transition-colors">
                                         {{ $item->name }}
                                     </span>
-                                    <div class="flex items-center gap-2 mt-0.5 flex-wrap">
-                                        @if($item->email)
-                                            <span class="text-[11px] text-slate-400 font-mono truncate">{{ $item->email }}</span>
-                                        @else
-                                            <span class="text-[10px] text-slate-300 italic">tanpa email</span>
-                                        @endif
-                                        <span class="text-slate-300">•</span>
-                                        <span class="px-1.5 py-0.2 bg-slate-100 border border-slate-200 text-slate-600 font-mono text-[10px] font-semibold rounded" title="Kode Tiket">
-                                            {{ $item->qr_token }}
-                                        </span>
-                                    </div>
                                 </div>
                             </div>
                         </td>
