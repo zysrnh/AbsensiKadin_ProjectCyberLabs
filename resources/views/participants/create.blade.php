@@ -214,12 +214,13 @@
         max-width: 360px;
         height: 220px;
         background: #0f172a;
-        border-radius: 1rem;
+        border-radius: 0.75rem;
         box-shadow: 
             0 10px 0 #020617,
             0 25px 50px -12px rgba(15, 23, 42, 0.6);
         border: 1px solid rgba(59, 130, 246, 0.3);
-        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+        transform-style: preserve-3d;
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
     }
     .envelope-box:hover {
         transform: translateY(-3px);
@@ -231,7 +232,7 @@
         position: absolute;
         inset: 0;
         background: #1e3a8a;
-        border-radius: 1rem;
+        border-radius: 0.75rem;
         z-index: 1;
     }
     .envelope-card {
@@ -239,18 +240,18 @@
         bottom: 12px;
         left: 14px;
         right: 14px;
-        height: 180px;
+        height: 185px;
         background: #ffffff;
-        border-radius: 0.75rem;
+        border-radius: 0.5rem;
         padding: 1.1rem;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-        transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+        transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.35s, opacity 0.35s ease 0.25s, box-shadow 0.7s ease 0.35s;
         z-index: 5;
         opacity: 0;
         transform: translateY(15px);
     }
     .envelope-box.is-opened .envelope-card {
-        transform: translateY(-95px) scale(1.02);
+        transform: translateY(-135px);
         opacity: 1;
         box-shadow: 0 25px 45px -8px rgba(0, 0, 0, 0.4);
     }
@@ -259,7 +260,7 @@
         inset: 0;
         clip-path: polygon(0 40%, 50% 75%, 100% 40%, 100% 100%, 0 100%);
         background: #0b192c;
-        border-radius: 0 0 1rem 1rem;
+        border-radius: 0 0 0.75rem 0.75rem;
         z-index: 15;
         border-top: 1px solid rgba(59, 130, 246, 0.25);
     }
@@ -272,9 +273,9 @@
         background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%);
         clip-path: polygon(0 0, 100% 0, 50% 100%);
         transform-origin: top center;
-        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), z-index 0s linear 0.28s;
         z-index: 20;
-        backface-visibility: hidden;
+        backface-visibility: visible;
     }
     .envelope-box.is-opened .envelope-flap {
         transform: rotateX(180deg);
@@ -286,17 +287,22 @@
         left: 50%;
         transform: translate(-50%, -50%);
         z-index: 25;
-        transition: opacity 0.3s ease, transform 0.3s ease;
+        transition: opacity 0.25s ease, transform 0.3s ease;
     }
     .envelope-box.is-opened .envelope-seal {
         opacity: 0;
-        transform: translate(-50%, -50%) scale(0.6);
+        transform: translate(-50%, -50%) scale(0.3) rotate(20deg);
         pointer-events: none;
+    }
+    .envelope-box.is-entering {
+        transform: scale(1.3) translateY(30px);
+        opacity: 0;
+        transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.55s ease;
     }
     .invitation-overlay-leave {
         opacity: 0 !important;
-        transform: scale(1.05) !important;
         pointer-events: none !important;
+        transition: opacity 0.65s ease-out;
     }
 
     html {
@@ -896,7 +902,7 @@
             });
         }
 
-        // 3. Interactive Envelope Opening Animation
+        // 3. Interactive Envelope Opening Animation (Koreografi Realistis & Sinematik)
         window.openInvitationEnvelope = function(instant = false) {
             const overlay = document.getElementById('invitationOverlay');
             const box = document.getElementById('envelopeBox');
@@ -906,20 +912,34 @@
                 overlay.classList.add('invitation-overlay-leave');
                 setTimeout(() => {
                     overlay.remove();
-                }, 500);
+                }, 400);
                 return;
             }
 
             if (box) {
-                box.classList.add('is-opened');
-            }
+                // Jika sudah terbuka dan diklik lagi, langsung transisi cepat
+                if (box.classList.contains('is-opened')) {
+                    box.classList.add('is-entering');
+                    overlay.classList.add('invitation-overlay-leave');
+                    setTimeout(() => {
+                        overlay.remove();
+                    }, 500);
+                    return;
+                }
 
-            setTimeout(() => {
-                overlay.classList.add('invitation-overlay-leave');
+                // Tahap 1 & 2: Segel lepas & Flap melipat ke atas 180° secara 3D
+                // Tahap 3: Kartu surat undangan meluncur naik secara halus (CSS delay 0.35s)
+                box.classList.add('is-opened');
+
+                // Tahap 4: Zoom halus masuk ke formulir pendaftaran setelah kartu terungkap jelas (1450ms)
                 setTimeout(() => {
-                    overlay.remove();
-                }, 600);
-            }, 650);
+                    box.classList.add('is-entering');
+                    overlay.classList.add('invitation-overlay-leave');
+                    setTimeout(() => {
+                        overlay.remove();
+                    }, 650);
+                }, 1450);
+            }
         };
     });
 </script>
