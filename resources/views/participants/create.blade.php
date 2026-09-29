@@ -238,10 +238,10 @@
                 </p>
             </div>
 
-            <!-- Tombol Aksi Cepat 3D -->
-            <div class="flex flex-wrap items-center gap-3 pt-1">
+            <!-- Tombol Aksi Cepat 3D (Responsif Mobile Elegan) -->
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1">
                 <a href="#registration-section" 
-                   class="btn-3d-dark px-6 py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm tracking-wide rounded-xl flex items-center gap-2.5 border border-slate-900 cursor-pointer">
+                   class="btn-3d-dark px-6 py-3.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm tracking-wide rounded-xl flex items-center justify-center gap-2.5 border border-slate-900 cursor-pointer text-center">
                     <span>Isi Formulir Pendaftaran</span>
                     <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
@@ -252,7 +252,7 @@
                     <a href="{{ $settings['event_maps_url'] }}" 
                        target="_blank" 
                        rel="noopener noreferrer"
-                       class="btn-3d-white px-5 py-3.5 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 font-semibold text-xs sm:text-sm rounded-xl border border-slate-300 flex items-center gap-2">
+                       class="btn-3d-white px-5 py-3.5 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 font-semibold text-xs sm:text-sm rounded-xl border border-slate-300 flex items-center justify-center gap-2 text-center">
                         <svg class="w-4 h-4 text-rose-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -281,31 +281,24 @@
                             style="aspect-ratio: 1/1; width: 100%; object-fit: cover;"
                         >
                     @else
-                        <!-- Poster Grafis Default C LEVEL yang Proporsional -->
-                        <div class="bg-slate-900 text-white p-7 flex flex-col justify-between border-b-4 border-blue-600 rounded-2xl" style="aspect-ratio: 1/1; min-height: 340px;">
+                        <!-- Poster Grafis Default C LEVEL yang Proporsional & Super Clean -->
+                        <div class="bg-slate-900 text-white p-6 sm:p-7 flex flex-col justify-between border-b-4 border-blue-600 rounded-2xl" style="aspect-ratio: 1/1; min-height: 280px;">
                             
-                            <div class="flex items-center justify-between">
-                                <span class="px-2.5 py-1 bg-blue-600 text-white font-black text-xs tracking-widest uppercase rounded-lg">
+                            <div>
+                                <span class="px-2.5 py-1 bg-blue-600 text-white font-black text-xs tracking-widest uppercase rounded-lg shadow-xs">
                                     C LEVEL
-                                </span>
-                                <span class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">
-                                    TAHUN 2026
                                 </span>
                             </div>
 
-                            <div class="my-auto py-4 space-y-2">
-                                <span class="text-[10px] uppercase tracking-widest text-blue-400 font-bold block">
-                                    Official Invitation
-                                </span>
+                            <div class="my-auto py-5">
                                 <h3 class="text-xl sm:text-2xl font-black text-white leading-tight tracking-tight">
                                     {{ $settings['event_title'] }}
                                 </h3>
-                                <p class="text-xs text-slate-400 font-medium">C LEVEL Indonesia</p>
                             </div>
 
-                            <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
+                            <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-[11px] sm:text-xs text-slate-400">
                                 <span>{{ $settings['event_date'] }}</span>
-                                <span>{{ $settings['event_venue_name'] }}</span>
+                                <span class="truncate max-w-[160px] text-right">{{ $settings['event_venue_name'] }}</span>
                             </div>
 
                         </div>
@@ -426,13 +419,13 @@
         </div>
 
         <!-- Wadah Card Terpadu (Smooth & 3D Multi-Layer Shadow) -->
-        <div class="max-w-5xl mx-auto rounded-3xl p-6 sm:p-8 lg:p-10 card-3d-main">
+        <div class="max-w-5xl mx-auto rounded-2xl sm:rounded-3xl p-5 sm:p-8 lg:p-10 card-3d-main">
             
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
                 
                 <!-- SISI KIRI: FLYER ACARA / POSTER (SMOOTH ROUNDED 3D) -->
                 <div class="lg:col-span-5 flex flex-col">
-                    <div class="w-full h-full min-h-[380px] lg:min-h-[500px] rounded-2xl overflow-hidden border border-slate-200 flyer-3d-box relative flex flex-col">
+                    <div class="w-full h-full min-h-[250px] sm:min-h-[350px] lg:min-h-[480px] rounded-2xl overflow-hidden border border-slate-200 flyer-3d-box relative flex flex-col">
                         @if(!empty($settings['event_flyer']))
                             <img 
                                 src="{{ asset($settings['event_flyer']) }}" 
@@ -442,25 +435,18 @@
                             >
                         @else
                             <!-- Poster Grafis Digital C LEVEL yang Estetik & Super Clean (Ala Gambar 2) -->
-                            <div class="bg-slate-900 text-white p-7 sm:p-8 flex flex-col justify-between h-full relative overflow-hidden rounded-2xl border-b-4 border-blue-600">
+                            <div class="bg-slate-900 text-white p-6 sm:p-8 flex flex-col justify-between h-full relative overflow-hidden rounded-2xl border-b-4 border-blue-600">
                                 
-                                <div class="flex items-center justify-between">
-                                    <span class="px-2.5 py-1 bg-blue-600 text-white font-black text-xs tracking-widest uppercase rounded-lg">
+                                <div>
+                                    <span class="px-2.5 py-1 bg-blue-600 text-white font-black text-xs tracking-widest uppercase rounded-lg shadow-xs">
                                         C LEVEL
-                                    </span>
-                                    <span class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">
-                                        TAHUN 2026
                                     </span>
                                 </div>
 
-                                <div class="my-auto py-6 space-y-2.5">
-                                    <span class="text-[10px] uppercase tracking-widest text-blue-400 font-bold block">
-                                        Official Invitation
-                                    </span>
+                                <div class="my-auto py-6">
                                     <h3 class="text-2xl sm:text-3xl font-black text-white leading-tight tracking-tight">
                                         {{ $settings['event_title'] }}
                                     </h3>
-                                    <p class="text-xs text-slate-400 font-medium">C LEVEL Indonesia</p>
                                 </div>
 
                                 <div class="pt-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
