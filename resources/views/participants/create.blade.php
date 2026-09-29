@@ -441,51 +441,31 @@
                                 style="width: 100%; height: 100%; object-fit: cover;"
                             >
                         @else
-                            <!-- Poster Grafis Digital C LEVEL yang Estetik & Elegan -->
+                            <!-- Poster Grafis Digital C LEVEL yang Estetik & Super Clean (Ala Gambar 2) -->
                             <div class="bg-slate-900 text-white p-7 sm:p-8 flex flex-col justify-between h-full relative overflow-hidden rounded-2xl border-b-4 border-blue-600">
                                 
-                                <div class="space-y-4 relative z-10">
-                                    <div class="flex items-center justify-between">
-                                        <span class="px-3 py-1 bg-blue-600 text-white font-extrabold text-xs tracking-widest uppercase rounded-lg shadow-xs">
-                                            C LEVEL
-                                        </span>
-                                        <span class="text-xs font-mono text-slate-400 uppercase tracking-wider">
-                                            TAHUN 2026
-                                        </span>
-                                    </div>
-                                    <span class="text-[11px] uppercase tracking-widest text-blue-400 font-bold block pt-1">
-                                        Official Invitation Poster
+                                <div class="flex items-center justify-between">
+                                    <span class="px-2.5 py-1 bg-blue-600 text-white font-black text-xs tracking-widest uppercase rounded-lg">
+                                        C LEVEL
+                                    </span>
+                                    <span class="text-[11px] font-mono text-slate-400 uppercase tracking-wider">
+                                        TAHUN 2026
                                     </span>
                                 </div>
 
-                                <div class="py-6 space-y-3 relative z-10">
+                                <div class="my-auto py-6 space-y-2.5">
+                                    <span class="text-[10px] uppercase tracking-widest text-blue-400 font-bold block">
+                                        Official Invitation
+                                    </span>
                                     <h3 class="text-2xl sm:text-3xl font-black text-white leading-tight tracking-tight">
                                         {{ $settings['event_title'] }}
                                     </h3>
-                                    <p class="text-xs text-slate-300 font-medium leading-relaxed">
-                                        Pertemuan strategis para eksekutif dan pemimpin industri nasional.
-                                    </p>
-                                    <div class="inline-flex items-center gap-2 px-3 py-1.5 bg-slate-800/80 rounded-xl text-xs text-blue-300 font-semibold border border-slate-700/80">
-                                        <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
-                                        </svg>
-                                        <span>E-Ticket QR Code Resmi</span>
-                                    </div>
+                                    <p class="text-xs text-slate-400 font-medium">C LEVEL Indonesia</p>
                                 </div>
 
-                                <div class="pt-4 border-t border-slate-800 space-y-2 text-xs text-slate-300 relative z-10">
-                                    <div class="flex items-center gap-2">
-                                        <svg class="w-4 h-4 text-blue-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                        </svg>
-                                        <span>{{ $settings['event_date'] }} &bull; {{ $settings['event_time'] }}</span>
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <svg class="w-4 h-4 text-rose-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                        </svg>
-                                        <span class="truncate">{{ $settings['event_venue_name'] }}</span>
-                                    </div>
+                                <div class="pt-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+                                    <span>{{ $settings['event_date'] }}</span>
+                                    <span class="truncate max-w-[200px] text-right">{{ $settings['event_venue_name'] }}</span>
                                 </div>
 
                             </div>
@@ -501,9 +481,6 @@
                         <div class="flex items-center justify-between">
                             <span class="px-2.5 py-1 bg-slate-900 text-white text-[10px] font-bold rounded-lg tracking-wider uppercase shadow-2xs">
                                 C LEVEL
-                            </span>
-                            <span class="text-[10px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-lg uppercase tracking-wider shadow-2xs">
-                                BEBAS BIAYA
                             </span>
                         </div>
                         <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight pt-1">
