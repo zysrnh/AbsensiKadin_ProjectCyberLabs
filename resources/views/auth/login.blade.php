@@ -88,15 +88,8 @@
     <!-- Card Login dengan 3D Depth, Smooth Rounded & Realistic Shadow -->
     <div class="login-card-3d p-7 sm:p-9 relative overflow-hidden">
         
-        <!-- Header Brand & Badge -->
+        <!-- Header Brand -->
         <div class="text-center pb-6 mb-6 border-b border-slate-100 relative">
-            
-            <!-- Badge Brand Pill Halus -->
-            <div class="inline-flex items-center gap-1.5 px-3.5 py-1 bg-slate-900 text-white font-extrabold text-[11px] tracking-wider uppercase rounded-full mb-3 shadow-xs">
-                <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span>
-                <span>C LEVEL ADMIN</span>
-            </div>
-
             <h1 class="text-2xl font-black text-slate-900 tracking-tight">Portal Administrator</h1>
             <p class="text-xs text-slate-500 mt-2 leading-relaxed">
                 Silakan masuk untuk mengelola data kehadiran & sistem acara.
@@ -202,16 +195,13 @@
                 </label>
             </div>
 
-            <!-- Tombol Submit 3D Tactile (Sama dengan Beranda) -->
+            <!-- Tombol Submit 3D Tactile "Masuk" -->
             <div class="pt-2">
                 <button 
                     type="submit" 
-                    class="btn-3d-dark w-full py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm tracking-wide rounded-xl cursor-pointer flex items-center justify-center gap-2.5 border border-slate-900"
+                    class="btn-3d-dark w-full py-3 px-4 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm tracking-wide rounded-xl cursor-pointer flex items-center justify-center border border-slate-900"
                 >
-                    <span>Masuk ke Dashboard</span>
-                    <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                    </svg>
+                    <span>Masuk</span>
                 </button>
             </div>
         </form>
