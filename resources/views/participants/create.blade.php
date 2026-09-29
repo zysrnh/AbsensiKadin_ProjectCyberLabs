@@ -239,17 +239,20 @@
         bottom: 12px;
         left: 14px;
         right: 14px;
-        height: 185px;
+        height: 180px;
         background: #ffffff;
         border-radius: 0.75rem;
-        padding: 1rem;
+        padding: 1.1rem;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-        transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+        transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
         z-index: 5;
+        opacity: 0;
+        transform: translateY(15px);
     }
     .envelope-box.is-opened .envelope-card {
-        transform: translateY(-85px) scale(1.02);
-        box-shadow: 0 20px 35px -8px rgba(0, 0, 0, 0.35);
+        transform: translateY(-95px) scale(1.02);
+        opacity: 1;
+        box-shadow: 0 25px 45px -8px rgba(0, 0, 0, 0.4);
     }
     .envelope-pocket {
         position: absolute;
@@ -312,14 +315,6 @@
             
             <!-- Header You Are Invited -->
             <div class="space-y-2 relative">
-                <!-- Sparkle Accent -->
-                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-400/30 text-blue-400 text-[11px] font-bold tracking-widest uppercase mb-1">
-                    <svg class="w-3.5 h-3.5 text-blue-400 anim-spin" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/>
-                    </svg>
-                    <span>Official Invitation</span>
-                </div>
-
                 <h1 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
                     You Are Invited
                 </h1>
@@ -337,7 +332,7 @@
             </div>
 
             <!-- Interactive 3D Envelope Object -->
-            <div class="envelope-wrapper py-3">
+            <div class="envelope-wrapper py-2">
                 <div id="envelopeBox" class="envelope-box mx-auto cursor-pointer" onclick="openInvitationEnvelope()">
                     
                     <!-- Inside Lining -->
@@ -388,20 +383,13 @@
                 </div>
             </div>
 
-            <!-- Tombol Aksi Utama -->
-            <div class="space-y-3 pt-2">
-                <button type="button" onclick="openInvitationEnvelope()" class="btn-3d-dark inline-flex items-center justify-center gap-2.5 px-8 py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm tracking-wide rounded-xl border border-blue-500 cursor-pointer shadow-xl transition-all">
-                    <span>Buka Undangan Resmi</span>
-                    <svg class="w-4 h-4 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                    </svg>
-                </button>
-                <div>
-                    <button type="button" onclick="openInvitationEnvelope(true)" class="text-[11px] text-slate-400 hover:text-white transition-colors cursor-pointer underline underline-offset-4">
-                        Langsung ke Formulir Pendaftaran &rarr;
-                    </button>
-                </div>
-            </div>
+            <!-- Petunjuk Minimalis di Bawah Amplop -->
+            <p class="text-xs text-slate-400 tracking-wide font-medium flex items-center justify-center gap-1.5 animate-pulse cursor-pointer" onclick="openInvitationEnvelope()">
+                <span>Ketuk amplop untuk membuka</span>
+                <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                </svg>
+            </p>
 
         </div>
     </div>
