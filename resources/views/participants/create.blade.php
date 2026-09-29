@@ -87,16 +87,16 @@
         will-change: transform;
     }
 
-    /* Scroll Reveal System */
+    /* Reversible Scroll Reveal & Exit Animation (Mobile & Desktop) */
     .scroll-reveal {
         opacity: 0;
-        transform: translateY(28px);
-        transition: opacity 0.85s var(--ease-expo), transform 0.85s var(--ease-expo);
+        transform: translateY(28px) scale(0.98);
+        transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         will-change: opacity, transform;
     }
     .scroll-reveal.is-visible {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
     }
 
     /* Info Card Hover Lift */
@@ -207,7 +207,7 @@
     <!-- ==========================================================================
          1. HERO SECTION ATAS (HEADLINE + FLYER ATAS DENGAN 3D PARALLAX TILT)
          ========================================================================== -->
-    <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center pt-2 sm:pt-4">
+    <section class="scroll-reveal grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center pt-2 sm:pt-4">
         
         <!-- Sisi Kiri Hero: Teks & Action -->
         <div class="lg:col-span-7 space-y-6 anim-hero-text">
@@ -635,19 +635,20 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // 1. Intersection Observer untuk scroll reveal yang halus
+        // 1. Intersection Observer Dua Arah (Entrance Masuk & Exit Keluar saat Scroll di Mobile & Desktop)
         const reveals = document.querySelectorAll('.scroll-reveal');
         if ('IntersectionObserver' in window) {
-            const observer = new IntersectionObserver((entries, obs) => {
+            const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('is-visible');
-                        obs.unobserve(entry.target);
+                    } else {
+                        entry.target.classList.remove('is-visible');
                     }
                 });
             }, {
-                threshold: 0.1,
-                rootMargin: '0px 0px -40px 0px'
+                threshold: 0.08,
+                rootMargin: '0px 0px -30px 0px'
             });
 
             reveals.forEach(el => observer.observe(el));
