@@ -49,11 +49,26 @@ class EventSettingController extends Controller
             'event_maps_iframe' => 'nullable|string',
             'event_dresscode' => 'required|string|max:255',
             'event_description' => 'nullable|string|max:2000',
-            'flyer_file' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:3072',
+            'flyer_file' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:10240',
             'display_welcome_text' => 'nullable|string|max:255',
             'display_event_title' => 'nullable|string|max:255',
             'display_instruction_text' => 'nullable|string|max:1000',
+        ], [
+            'flyer_file.image' => 'File flyer harus berupa format gambar (JPG, PNG, atau WEBP).',
+            'flyer_file.mimes' => 'Format file flyer yang diperbolehkan hanya JPG, JPEG, PNG, atau WEBP.',
+            'flyer_file.max' => 'Ukuran file flyer terlalu besar, maksimal 10 MB.',
+            'event_title.required' => 'Judul / nama acara wajib diisi.',
+            'event_date.required' => 'Tanggal acara wajib diisi.',
+            'event_time.required' => 'Waktu acara wajib diisi.',
+            'event_venue_name.required' => 'Nama gedung / ballroom wajib diisi.',
+            'event_venue_address.required' => 'Alamat lengkap venue wajib diisi.',
+            'event_dresscode.required' => 'Dresscode acara wajib diisi.',
         ]);
+
+        // Hapus flyer jika ada permintaan hapus
+        if ($request->input('remove_flyer') == '1') {
+            Setting::set('event_flyer', '');
+        }
 
         // Simpan flyer jika ada upload
         if ($request->hasFile('flyer_file')) {

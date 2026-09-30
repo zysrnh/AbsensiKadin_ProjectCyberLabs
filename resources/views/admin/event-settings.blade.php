@@ -61,19 +61,54 @@
                     <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">
                         Flyer / Poster Acara
                     </label>
-                    <div class="border border-slate-200 rounded-xl p-3.5 bg-slate-50 text-center space-y-2">
-                        @if(!empty($settings['event_flyer']))
-                            <img src="{{ asset($settings['event_flyer']) }}" alt="Flyer Acara" class="w-full h-auto max-h-56 object-cover rounded-lg border border-slate-200 mb-2 mx-auto">
-                        @else
-                            <div class="w-full h-44 bg-slate-100 border border-dashed border-slate-300 rounded-lg flex flex-col items-center justify-center text-slate-400 mb-2">
-                                <svg class="w-8 h-8 text-slate-400 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    <div class="border border-slate-200 rounded-xl p-3.5 bg-slate-50 text-center space-y-2.5">
+                        <input type="hidden" name="remove_flyer" id="removeFlyerInput" value="0">
+
+                        <!-- Gambar Preview / Placeholder -->
+                        <div id="flyerPreviewContainer" class="relative overflow-hidden rounded-xl border border-slate-200 bg-slate-100 min-h-[180px] max-h-[260px] flex items-center justify-center">
+                            <img 
+                                id="flyerPreviewImage" 
+                                src="{{ !empty($settings['event_flyer']) ? asset($settings['event_flyer']) : '' }}" 
+                                alt="Flyer Acara" 
+                                class="{{ empty($settings['event_flyer']) ? 'hidden' : '' }} w-full h-auto max-h-[260px] object-cover rounded-xl"
+                            >
+                            
+                            <div id="flyerPlaceholder" class="{{ !empty($settings['event_flyer']) ? 'hidden' : '' }} w-full py-10 flex flex-col items-center justify-center text-slate-400">
+                                <svg class="w-10 h-10 text-slate-300 mb-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                 </svg>
-                                <span class="text-xs font-medium">Belum ada flyer</span>
+                                <span class="text-xs font-semibold text-slate-500">Belum ada flyer</span>
+                                <span class="text-[10px] text-slate-400 mt-0.5">Pilih file gambar untuk pratinjau</span>
                             </div>
-                        @endif
-                        <input type="file" name="flyer_file" accept="image/*" class="text-xs text-slate-600 w-full file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-slate-900 file:text-white hover:file:bg-slate-800 cursor-pointer">
-                        <span class="text-[10px] text-slate-400 block">Format: JPG, PNG, WEBP (Maks 3MB)</span>
+                        </div>
+
+                        <!-- Info File Terpilih & Tombol Batal/Hapus -->
+                        <div id="flyerActionRow" class="flex items-center justify-between text-[11px] px-1 {{ empty($settings['event_flyer']) ? 'hidden' : '' }}">
+                            <span id="flyerFileName" class="text-slate-600 font-mono truncate max-w-[160px] text-left">
+                                {{ !empty($settings['event_flyer']) ? basename($settings['event_flyer']) : '' }}
+                            </span>
+                            <button 
+                                type="button" 
+                                id="btnRemoveFlyer" 
+                                onclick="removeCurrentFlyer()" 
+                                class="text-rose-600 hover:text-rose-700 font-bold hover:underline cursor-pointer"
+                            >
+                                Hapus Flyer
+                            </button>
+                        </div>
+
+                        <!-- Input File -->
+                        <div>
+                            <input 
+                                type="file" 
+                                name="flyer_file" 
+                                id="flyerFileInput" 
+                                accept="image/jpeg,image/png,image/webp,image/jpg" 
+                                onchange="handleFlyerSelect(this)"
+                                class="text-xs text-slate-600 w-full file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-slate-900 file:text-white hover:file:bg-slate-800 cursor-pointer"
+                            >
+                        </div>
+                        <span class="text-[10px] text-slate-400 block">Format: JPG, PNG, WEBP (Maksimal 10MB)</span>
                     </div>
                 </div>
 
@@ -317,3 +352,58 @@
 
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    function handleFlyerSelect(input) {
+        const file = input.files && input.files[0];
+        const previewImg = document.getElementById('flyerPreviewImage');
+        const placeholder = document.getElementById('flyerPlaceholder');
+        const actionRow = document.getElementById('flyerActionRow');
+        const fileNameEl = document.getElementById('flyerFileName');
+        const removeInput = document.getElementById('removeFlyerInput');
+
+        if (!file) return;
+
+        // Validasi ukuran sisi klien (10MB)
+        const maxSize = 10 * 1024 * 1024;
+        if (file.size > maxSize) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Ukuran File Terlalu Besar',
+                text: `Ukuran file flyer Anda adalah ${(file.size / (1024 * 1024)).toFixed(1)} MB. Batas maksimal yang diperbolehkan adalah 10 MB.`,
+                confirmButtonColor: '#0f172a'
+            });
+            input.value = '';
+            return;
+        }
+
+        // Tampilkan instant preview via URL.createObjectURL
+        const objectUrl = URL.createObjectURL(file);
+        previewImg.src = objectUrl;
+        previewImg.classList.remove('hidden');
+        placeholder.classList.add('hidden');
+
+        // Tampilkan info file
+        actionRow.classList.remove('hidden');
+        const sizeFormatted = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
+        fileNameEl.textContent = `${file.name} (${sizeFormatted})`;
+        removeInput.value = '0';
+    }
+
+    function removeCurrentFlyer() {
+        const input = document.getElementById('flyerFileInput');
+        const previewImg = document.getElementById('flyerPreviewImage');
+        const placeholder = document.getElementById('flyerPlaceholder');
+        const actionRow = document.getElementById('flyerActionRow');
+        const removeInput = document.getElementById('removeFlyerInput');
+
+        input.value = '';
+        previewImg.src = '';
+        previewImg.classList.add('hidden');
+        placeholder.classList.remove('hidden');
+        actionRow.classList.add('hidden');
+        removeInput.value = '1';
+    }
+</script>
+@endpush
