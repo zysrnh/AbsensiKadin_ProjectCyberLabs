@@ -57,7 +57,6 @@
                 <div class="flex items-center justify-between pb-3.5 border-b border-slate-100">
                     <div class="flex items-center gap-2">
                         <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-800">Pemindai Kamera</h2>
                     </div>
                     <button 
                         type="button" 

@@ -135,10 +135,16 @@ class DashboardController extends Controller
     public function printIdCard(Participant $participant)
     {
         $participants = collect([$participant]);
+        $rawTitle = Setting::get('event_title', 'Musyawarah & Temu Bisnis C LEVEL Indonesia 2026');
+        $rawVenue = Setting::get('event_venue_name', 'Grand Ballroom C LEVEL Indonesia');
+
+        $cleanTitle = str_ireplace(['KADIN Indonesia', 'KADIN'], 'C LEVEL Indonesia', $rawTitle);
+        $cleanVenue = str_ireplace(['Menara Kadin Indonesia', 'Menara Kadin'], 'C LEVEL Summit Hall', $rawVenue);
+
         $eventSettings = [
-            'nama_acara' => Setting::get('event_title', 'Musyawarah & Temu Bisnis KADIN Indonesia 2026'),
+            'nama_acara' => $cleanTitle,
             'tanggal' => Setting::get('event_date', '28 Oktober 2026'),
-            'venue' => Setting::get('event_venue_name', 'Grand Ballroom Menara Kadin Indonesia'),
+            'venue' => $cleanVenue,
         ];
 
         return view('admin.id-card', compact('participants', 'eventSettings'));
@@ -183,10 +189,16 @@ class DashboardController extends Controller
 
         $participants = $query->latest()->get();
 
+        $rawTitle = Setting::get('event_title', 'Musyawarah & Temu Bisnis C LEVEL Indonesia 2026');
+        $rawVenue = Setting::get('event_venue_name', 'Grand Ballroom C LEVEL Indonesia');
+
+        $cleanTitle = str_ireplace(['KADIN Indonesia', 'KADIN'], 'C LEVEL Indonesia', $rawTitle);
+        $cleanVenue = str_ireplace(['Menara Kadin Indonesia', 'Menara Kadin'], 'C LEVEL Summit Hall', $rawVenue);
+
         $eventSettings = [
-            'nama_acara' => Setting::get('event_title', 'Musyawarah & Temu Bisnis KADIN Indonesia 2026'),
+            'nama_acara' => $cleanTitle,
             'tanggal' => Setting::get('event_date', '28 Oktober 2026'),
-            'venue' => Setting::get('event_venue_name', 'Grand Ballroom Menara Kadin Indonesia'),
+            'venue' => $cleanVenue,
         ];
 
         return view('admin.id-card', compact('participants', 'eventSettings'));
