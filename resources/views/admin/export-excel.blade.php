@@ -1,28 +1,9 @@
-<html xmlns:o="urn:schemas-microsoft-com:office:office"
-      xmlns:x="urn:schemas-microsoft-com:office:excel"
-      xmlns="http://www.w3.org/TR/REC-html40">
+<!DOCTYPE html>
+<html lang="id">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<!--[if gte mso 9]>
-<xml>
- <x:ExcelWorkbook>
-  <x:ExcelWorksheets>
-   <x:ExcelWorksheet>
-    <x:Name>Laporan Presensi C-Level</x:Name>
-    <x:WorksheetOptions>
-     <x:DisplayGridlines/>
-     <x:Print>
-      <x:ValidPrinterInfo/>
-      <x:PaperSizeIndex>9</x:PaperSizeIndex>
-      <x:HorizontalResolution>600</x:HorizontalResolution>
-      <x:VerticalResolution>600</x:VerticalResolution>
-     </x:Print>
-    </x:WorksheetOptions>
-   </x:ExcelWorksheet>
-  </x:ExcelWorksheets>
- </x:ExcelWorkbook>
-</xml>
-<![endif]-->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Laporan Presensi Peserta</title>
 <style>
   body {
     font-family: 'Segoe UI', Calibri, Arial, sans-serif;
