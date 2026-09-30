@@ -43,8 +43,16 @@
             color: #0f172a;
         }
 
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
         #sidebar {
-            transition: margin-left 0.25s var(--ease-expo);
+            transition: transform 0.3s var(--ease-expo), margin-left 0.25s var(--ease-expo);
         }
         body.sidebar-closed #sidebar {
             margin-left: -16.5rem !important;
@@ -148,11 +156,11 @@
 </head>
 <body class="bg-slate-50/70 text-slate-800 antialiased min-h-screen flex selection:bg-blue-600 selection:text-white">
 
-    <!-- Mobile Backdrop Overlay -->
-    <div id="sidebarBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-950/70 z-40 hidden backdrop-blur-xs transition-opacity lg:hidden"></div>
+    <!-- Mobile Backdrop Overlay dengan Smooth Opacity Fade -->
+    <div id="sidebarBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-950/70 z-40 opacity-0 pointer-events-none transition-opacity duration-300 ease-out backdrop-blur-xs lg:hidden"></div>
 
     <!-- Sidebar Kiri Solid Charcoal/Slate-900: Desktop Sidebar + Mobile Slide-over Drawer -->
-    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-72 lg:w-64 bg-slate-900 text-white shrink-0 flex flex-col justify-between border-r border-slate-800/80 h-full lg:h-screen lg:sticky lg:top-0 -translate-x-full lg:translate-x-0 transition-all duration-300 ease-in-out shadow-2xl lg:shadow-xl">
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-72 lg:w-64 bg-slate-900 text-white shrink-0 flex flex-col justify-between border-r border-slate-800/80 h-full lg:h-screen lg:sticky lg:top-0 -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-out shadow-2xl lg:shadow-xl">
         
         <div>
             <!-- Sidebar Header Brand -->
@@ -330,34 +338,35 @@
         <header class="bg-white/85 backdrop-blur-md border-b border-slate-200/80 h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8 sticky top-0 z-30 shadow-2xs">
             
             <!-- Toggle Sidebar & Title -->
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2 sm:gap-3 min-w-0">
                 <button 
                     type="button" 
                     onclick="toggleSidebar()" 
                     title="Buka / Tutup Sidebar"
-                    class="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200 rounded-xl transition-all cursor-pointer flex items-center justify-center shadow-xs"
+                    class="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200 rounded-xl transition-all cursor-pointer flex items-center justify-center shadow-xs shrink-0"
                 >
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
                 </button>
-                <div class="flex items-center gap-2">
-                    <span class="text-xs font-semibold text-slate-500">C Level Presensi</span>
-                    <span class="text-slate-300">/</span>
-                    <span class="text-xs font-bold text-slate-900">@yield('page_title', 'Admin Dashboard')</span>
+                <div class="flex items-center gap-1.5 min-w-0">
+                    <span class="hidden sm:inline text-xs font-semibold text-slate-500 shrink-0">C Level Presensi</span>
+                    <span class="hidden sm:inline text-slate-300">/</span>
+                    <span class="text-xs font-bold text-slate-900 truncate">@yield('page_title', 'Admin Dashboard')</span>
                 </div>
             </div>
 
             <!-- Topbar Right Badges -->
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2 sm:gap-3 shrink-0">
                 <div class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 text-slate-600 font-semibold text-xs rounded-full">
                     <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                     </svg>
                     <span>{{ date('d F Y') }}</span>
                 </div>
-                <a href="{{ route('participants.create') }}" target="_blank" class="btn-3d-dark px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition-all flex items-center gap-1.5 border border-slate-900">
-                    <span>+ Form Publik</span>
+                <a href="{{ route('participants.create') }}" target="_blank" class="btn-3d-dark px-2.5 sm:px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition-all flex items-center gap-1 sm:gap-1.5 border border-slate-900">
+                    <span class="hidden sm:inline">+ Form Publik</span>
+                    <span class="sm:hidden text-[11px]">+ Form</span>
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                     </svg>
@@ -444,7 +453,7 @@
     <nav class="fixed bottom-0 inset-x-0 z-40 bg-slate-900/95 backdrop-blur-md border-t border-slate-800 text-white lg:hidden h-16 px-1 flex items-center justify-around shadow-2xl">
         
         <!-- Tab 1: Dashboard / Beranda -->
-        <a href="{{ route('admin.dashboard') }}" class="flex flex-col items-center justify-center flex-1 py-1 text-center transition-colors {{ request()->routeIs('admin.dashboard') ? 'text-blue-400 font-bold' : 'text-slate-400 hover:text-slate-200' }}">
+        <a href="{{ route('admin.dashboard') }}" class="flex flex-col items-center justify-center flex-1 py-1.5 text-center transition-colors {{ request()->routeIs('admin.dashboard') ? 'text-blue-400 font-bold' : 'text-slate-400 hover:text-slate-200' }}">
             <svg class="w-5 h-5 mb-0.5 {{ request()->routeIs('admin.dashboard') ? 'text-blue-400' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
             </svg>
@@ -452,7 +461,7 @@
         </a>
 
         <!-- Tab 2: Kirim Undangan -->
-        <a href="{{ route('admin.invitation') }}" class="flex flex-col items-center justify-center flex-1 py-1 text-center transition-colors {{ request()->routeIs('admin.invitation') ? 'text-blue-400 font-bold' : 'text-slate-400 hover:text-slate-200' }}">
+        <a href="{{ route('admin.invitation') }}" class="flex flex-col items-center justify-center flex-1 py-1.5 text-center transition-colors {{ request()->routeIs('admin.invitation') ? 'text-blue-400 font-bold' : 'text-slate-400 hover:text-slate-200' }}">
             <svg class="w-5 h-5 mb-0.5 {{ request()->routeIs('admin.invitation') ? 'text-blue-400' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
@@ -460,17 +469,17 @@
         </a>
 
         <!-- Tab 3: Center Elevated Scanner Button -->
-        <a href="{{ route('admin.scan') }}" class="flex flex-col items-center justify-center flex-1 -mt-5 group">
+        <a href="{{ route('admin.scan') }}" class="flex flex-col items-center justify-center flex-1 -mt-6 group">
             <div class="w-12 h-12 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white flex items-center justify-center shadow-lg shadow-blue-600/50 border-2 border-slate-900 transition-transform group-active:scale-95">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7V5a2 2 0 012-2h2m10 0h2a2 2 0 012 2v2m0 10v2a2 2 0 01-2 2h-2m-10 0H5a2 2 0 01-2-2v-2m4-5h6" />
                 </svg>
             </div>
-            <span class="text-[10px] font-bold text-slate-300 mt-0.5 {{ request()->routeIs('admin.scan') ? 'text-blue-400 font-extrabold' : '' }}">Scan QR</span>
+            <span class="text-[10px] font-bold text-slate-300 mt-1 {{ request()->routeIs('admin.scan') ? 'text-blue-400 font-extrabold' : '' }}">Scan QR</span>
         </a>
 
         <!-- Tab 4: Kirim Tiket QR -->
-        <a href="{{ route('admin.tickets') }}" class="flex flex-col items-center justify-center flex-1 py-1 text-center transition-colors {{ request()->routeIs('admin.tickets') ? 'text-blue-400 font-bold' : 'text-slate-400 hover:text-slate-200' }}">
+        <a href="{{ route('admin.tickets') }}" class="flex flex-col items-center justify-center flex-1 py-1.5 text-center transition-colors {{ request()->routeIs('admin.tickets') ? 'text-blue-400 font-bold' : 'text-slate-400 hover:text-slate-200' }}">
             <svg class="w-5 h-5 mb-0.5 {{ request()->routeIs('admin.tickets') ? 'text-blue-400' : 'text-slate-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
             </svg>
@@ -478,7 +487,7 @@
         </a>
 
         <!-- Tab 5: Menu / Drawer Toggle -->
-        <button type="button" onclick="toggleSidebar()" class="flex flex-col items-center justify-center flex-1 py-1 text-center text-slate-400 hover:text-slate-200 cursor-pointer">
+        <button type="button" onclick="toggleSidebar()" class="flex flex-col items-center justify-center flex-1 py-1.5 text-center text-slate-400 hover:text-slate-200 active:text-blue-400 cursor-pointer transition-colors">
             <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
@@ -487,22 +496,24 @@
 
     </nav>
 
-    <!-- Script Global Sidebar Toggle (Mobile Drawer + Desktop Collapse) -->
+    <!-- Script Global Sidebar Toggle (Mobile Drawer Smooth Slide + Desktop Collapse) -->
     <script>
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const backdrop = document.getElementById('sidebarBackdrop');
             if (window.innerWidth < 1024) {
                 // Mobile slide-over drawer
-                const isClosed = sidebar.classList.contains('-translate-x-full');
-                if (isClosed) {
-                    sidebar.classList.remove('-translate-x-full');
-                    backdrop.classList.remove('hidden');
-                    document.body.classList.add('overflow-hidden');
-                } else {
+                const isOpen = !sidebar.classList.contains('-translate-x-full');
+                if (isOpen) {
                     sidebar.classList.add('-translate-x-full');
-                    backdrop.classList.add('hidden');
+                    backdrop.classList.remove('opacity-100', 'pointer-events-auto');
+                    backdrop.classList.add('opacity-0', 'pointer-events-none');
                     document.body.classList.remove('overflow-hidden');
+                } else {
+                    sidebar.classList.remove('-translate-x-full');
+                    backdrop.classList.remove('opacity-0', 'pointer-events-none');
+                    backdrop.classList.add('opacity-100', 'pointer-events-auto');
+                    document.body.classList.add('overflow-hidden');
                 }
             } else {
                 // Desktop toggle
