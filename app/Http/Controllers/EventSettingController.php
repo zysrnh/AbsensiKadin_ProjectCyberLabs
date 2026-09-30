@@ -14,13 +14,13 @@ class EventSettingController extends Controller
     public function index()
     {
         $settings = [
-            'event_title' => Setting::get('event_title', 'Musyawarah & Temu Bisnis KADIN Indonesia 2026'),
-            'event_organizer' => Setting::get('event_organizer', 'KADIN Indonesia'),
+            'event_title' => Setting::get('event_title', 'Musyawarah & Temu Bisnis C LEVEL Indonesia 2026'),
+            'event_organizer' => Setting::get('event_organizer', 'C LEVEL Indonesia'),
             'event_date' => Setting::get('event_date', '28 Oktober 2026'),
             'event_time' => Setting::get('event_time', '08:30 - 16:30 WIB'),
-            'event_venue_name' => Setting::get('event_venue_name', 'Grand Ballroom Menara Kadin Indonesia'),
-            'event_venue_address' => Setting::get('event_venue_address', 'Jl. H. R. Rasuna Said Blok X-5 Kav. 2-3, Setiabudi, Jakarta Selatan'),
-            'event_maps_url' => Setting::get('event_maps_url', 'https://maps.google.com/?q=Menara+Kadin+Indonesia'),
+            'event_venue_name' => Setting::get('event_venue_name', 'Grand Ballroom C LEVEL Indonesia'),
+            'event_venue_address' => Setting::get('event_venue_address', 'Grand Ballroom C LEVEL Indonesia, Jakarta'),
+            'event_maps_url' => Setting::get('event_maps_url', 'https://maps.google.com/?q=Jakarta'),
             'event_maps_iframe' => Setting::get('event_maps_iframe', ''),
             'event_dresscode' => Setting::get('event_dresscode', 'Batik Formal / Pakaian Bisnis Rapi'),
             'event_description' => Setting::get('event_description', 'Pertemuan strategis para pelaku usaha, pimpinan asosiasi, dan pemangku kepentingan industri nasional dalam rangka akselerasi ekonomi dan kolaborasi bisnis berkelanjutan.'),
@@ -64,7 +64,7 @@ class EventSettingController extends Controller
         }
 
         Setting::set('event_title', $validated['event_title']);
-        Setting::set('event_organizer', $validated['event_organizer'] ?? 'KADIN Indonesia');
+        Setting::set('event_organizer', $validated['event_organizer'] ?? 'C LEVEL Indonesia');
         Setting::set('event_date', $validated['event_date']);
         Setting::set('event_time', $validated['event_time']);
         Setting::set('event_venue_name', $validated['event_venue_name']);

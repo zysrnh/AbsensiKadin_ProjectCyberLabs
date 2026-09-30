@@ -626,7 +626,7 @@
                     {!! $settings['event_maps_iframe'] !!}
                 @else
                     <iframe 
-                        src="https://maps.google.com/maps?q={{ urlencode(($settings['event_venue_name'] ?? '') . ' ' . ($settings['event_venue_address'] ?? 'Menara Kadin Indonesia')) }}&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                        src="https://maps.google.com/maps?q={{ urlencode(($settings['event_venue_name'] ?? '') . ' ' . ($settings['event_venue_address'] ?? 'Grand Ballroom C LEVEL Indonesia, Jakarta')) }}&t=&z=15&ie=UTF8&iwloc=&output=embed"
                         class="w-full h-full border-0"
                         allowfullscreen="" 
                         loading="lazy" 
