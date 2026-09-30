@@ -76,20 +76,80 @@
             pointer-events: none;
         }
 
-        /* Welcome Card Animation */
-        @keyframes popupZoomIn {
-            0% {
-                opacity: 0;
-                transform: scale(0.92) translateY(15px);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
+        /* ===== PREMIUM TEXT REVEAL SYSTEM ===== */
+
+        /* Staggered line animation base */
+        .reveal-line {
+            display: block;
+            opacity: 0;
+            transform: translateY(24px);
+            filter: blur(8px);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                        filter 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .animate-welcome-card {
-            animation: popupZoomIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        .reveal-line.visible {
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0);
+        }
+
+        .reveal-line.exit {
+            opacity: 0;
+            transform: translateY(-20px);
+            filter: blur(6px);
+        }
+
+        /* Per-character animation for hero name */
+        .char-reveal {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(40px) scale(0.94);
+            filter: blur(12px);
+            transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                        filter 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .char-reveal.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0);
+        }
+
+        .char-reveal.exit {
+            opacity: 0;
+            transform: translateY(-30px) scale(0.96);
+            filter: blur(10px);
+        }
+
+        /* Word spacing for char-reveal */
+        .char-space {
+            display: inline-block;
+            width: 0.3em;
+        }
+
+        /* Smooth detail line (company, position) */
+        .detail-reveal {
+            opacity: 0;
+            transform: translateY(16px);
+            filter: blur(6px);
+            transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+                        filter 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .detail-reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0);
+        }
+
+        .detail-reveal.exit {
+            opacity: 0;
+            transform: translateY(-12px);
+            filter: blur(4px);
         }
     </style>
 </head>
@@ -186,37 +246,38 @@
         </div>
     </header>
 
-    <!-- Main Content Area: In-Place Typography Stage (Tanpa Pop-up Card) -->
+    <!-- Main Content Area: In-Place Typography Stage -->
     <main class="relative z-10 flex-grow flex items-center justify-center p-8 text-center select-none">
 
         <div class="relative w-full max-w-5xl mx-auto flex items-center justify-center min-h-[360px]">
 
             <!-- 1. Standby Hero Typography (Tampil Default) -->
-            <div id="standby-screen" class="space-y-4 transition-all duration-700 ease-out transform opacity-100 translate-y-0">
+            <div id="standby-screen" class="space-y-4">
                 <h1 class="text-4xl sm:text-6xl lg:text-7xl font-bold text-slate-900 tracking-tight leading-tight">
-                    Selamat Datang di <br>
-                    <span class="text-slate-900 font-extrabold">C LEVEL INDONESIA 2026</span>
+                    <span class="reveal-line visible" style="transition-delay: 0ms;">Selamat Datang di</span>
+                    <span class="reveal-line visible" style="transition-delay: 80ms;">
+                        <span class="text-slate-900 font-extrabold">C LEVEL INDONESIA 2026</span>
+                    </span>
                 </h1>
 
-                <p class="text-base sm:text-xl text-slate-500 max-w-2xl mx-auto font-normal leading-relaxed pt-2">
+                <p class="reveal-line visible text-base sm:text-xl text-slate-500 max-w-2xl mx-auto font-normal leading-relaxed pt-2" style="transition-delay: 160ms;">
                     Silakan arahkan tiket QR Anda pada meja registrasi. Layar ini akan otomatis menampilkan verifikasi kehadiran secara real-time.
                 </p>
             </div>
 
             <!-- 2. Guest Welcome Typography (In-Place Reveal saat Scan) -->
-            <div id="welcome-screen" class="hidden absolute inset-0 flex flex-col items-center justify-center space-y-4 sm:space-y-6 transition-all duration-700 ease-out transform opacity-0 translate-y-8">
-                <!-- Sambutan -->
-                <p class="text-sm sm:text-lg font-semibold tracking-widest text-slate-400 uppercase">
+            <div id="welcome-screen" class="hidden absolute inset-0 flex flex-col items-center justify-center space-y-4 sm:space-y-6">
+                <!-- Label Sambutan -->
+                <p id="welcome-label" class="detail-reveal text-sm sm:text-lg font-semibold tracking-widest text-slate-400 uppercase">
                     Selamat Datang Yang Terhormat
                 </p>
 
-                <!-- Nama Tamu Raksasa & Elegan -->
+                <!-- Nama Tamu — akan di-split per karakter oleh JS -->
                 <h2 id="guest-name" class="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-slate-900 tracking-tight leading-tight max-w-5xl px-4">
-                    Nama Peserta
                 </h2>
 
                 <!-- Instansi & Jabatan -->
-                <div class="pt-2 flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-xl sm:text-3xl font-semibold">
+                <div id="guest-details" class="detail-reveal pt-2 flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-xl sm:text-3xl font-semibold">
                     <span id="guest-company" class="text-blue-600">
                         Perusahaan / Instansi
                     </span>
@@ -236,6 +297,7 @@
         let isAudioEnabled = true;
         let lastAttendedTime = '{{ $recentAttended->first() && $recentAttended->first()->attended_at ? $recentAttended->first()->attended_at->toIso8601String() : now()->toIso8601String() }}';
         let welcomeTimeout = null;
+        let isAnimating = false;
 
         // Digital Clock Live
         function updateClock() {
@@ -314,18 +376,100 @@
             }
         }
 
-        // Tampilkan Sambutan Tamu (In-Place Typography Morph)
+        // ===== PREMIUM TEXT REVEAL ENGINE =====
+
+        /**
+         * Split teks menjadi per-karakter <span> dengan class char-reveal
+         * Spasi dihandle pakai .char-space supaya tetap rapi
+         */
+        function splitTextToChars(container, text) {
+            container.innerHTML = '';
+            const chars = text.split('');
+
+            chars.forEach((char) => {
+                if (char === ' ') {
+                    const space = document.createElement('span');
+                    space.className = 'char-space';
+                    container.appendChild(space);
+                } else {
+                    const span = document.createElement('span');
+                    span.className = 'char-reveal';
+                    span.textContent = char;
+                    container.appendChild(span);
+                }
+            });
+        }
+
+        /**
+         * Animate karakter masuk secara staggered (cascade reveal)
+         * @param {HTMLElement} container - Element yang berisi .char-reveal spans
+         * @param {number} baseDelay - Delay awal sebelum animasi dimulai (ms)
+         * @param {number} stagger - Delay antar karakter (ms)
+         */
+        function revealChars(container, baseDelay = 0, stagger = 28) {
+            const chars = container.querySelectorAll('.char-reveal');
+            chars.forEach((char, i) => {
+                setTimeout(() => {
+                    char.classList.add('visible');
+                }, baseDelay + (i * stagger));
+            });
+        }
+
+        /**
+         * Animate karakter keluar secara staggered (cascade exit)
+         */
+        function exitChars(container, baseDelay = 0, stagger = 15) {
+            const chars = container.querySelectorAll('.char-reveal');
+            chars.forEach((char, i) => {
+                setTimeout(() => {
+                    char.classList.remove('visible');
+                    char.classList.add('exit');
+                }, baseDelay + (i * stagger));
+            });
+        }
+
+        /**
+         * Animate reveal-line elements keluar secara staggered
+         */
+        function exitLines(container, baseDelay = 0, stagger = 60) {
+            const lines = container.querySelectorAll('.reveal-line');
+            lines.forEach((line, i) => {
+                setTimeout(() => {
+                    line.classList.remove('visible');
+                    line.classList.add('exit');
+                }, baseDelay + (i * stagger));
+            });
+        }
+
+        /**
+         * Animate reveal-line elements masuk kembali secara staggered
+         */
+        function revealLines(container, baseDelay = 0, stagger = 80) {
+            const lines = container.querySelectorAll('.reveal-line');
+            lines.forEach((line, i) => {
+                setTimeout(() => {
+                    line.classList.remove('exit');
+                    line.classList.add('visible');
+                }, baseDelay + (i * stagger));
+            });
+        }
+
+        // Tampilkan Sambutan Tamu (Apple Keynote-Style Reveal)
         function showWelcomeModal(guest) {
+            if (isAnimating) return;
+            isAnimating = true;
+
             const standby = document.getElementById('standby-screen');
             const welcome = document.getElementById('welcome-screen');
             const nameEl = document.getElementById('guest-name');
             const compEl = document.getElementById('guest-company');
             const posEl = document.getElementById('guest-position');
             const divider = document.getElementById('company-divider');
+            const label = document.getElementById('welcome-label');
+            const details = document.getElementById('guest-details');
 
-            nameEl.innerText = guest.name;
+            // Siapkan data
             compEl.innerText = guest.company || 'C-Level Indonesia';
-
             if (guest.position && guest.position !== '-') {
                 posEl.innerText = guest.position;
                 posEl.classList.remove('hidden');
@@ -335,31 +479,94 @@
                 if (divider) divider.classList.add('hidden');
             }
 
+            // Split nama jadi per-karakter
+            splitTextToChars(nameEl, guest.name);
+
             // Bunyikan nada sambutan
             playChimeSound();
 
-            // 1. Standby keluar dengan fade & slide naik
-            standby.classList.add('opacity-0', '-translate-y-6', 'pointer-events-none');
+            // ──────────────────────────────
+            // FASE 1: Standby lines keluar (staggered blur+slide)
+            // ──────────────────────────────
+            exitLines(standby, 0, 60);
 
-            // 2. Welcome masuk dengan smooth slide & fade in
-            welcome.classList.remove('hidden');
-            void welcome.offsetWidth; // Trigger reflow
-            welcome.classList.remove('opacity-0', 'translate-y-8');
-            welcome.classList.add('opacity-100', 'translate-y-0');
+            // ──────────────────────────────
+            // FASE 2: Welcome screen masuk setelah standby selesai keluar
+            // ──────────────────────────────
+            const standbyExitDuration = 350; // waktu tunggu sebelum welcome masuk
 
-            // 3. Reset Timer: Otomatis kembali ke Standby setelah 7 detik
+            setTimeout(() => {
+                standby.classList.add('hidden');
+                welcome.classList.remove('hidden');
+
+                // Reset state welcome elements
+                label.classList.remove('visible', 'exit');
+                details.classList.remove('visible', 'exit');
+
+                // 2a. Label "Selamat Datang Yang Terhormat" — blur-to-sharp
+                setTimeout(() => {
+                    label.classList.add('visible');
+                }, 50);
+
+                // 2b. Nama peserta — per-karakter cascade reveal (hero moment)
+                revealChars(nameEl, 250, 30);
+
+                // 2c. Detail (company/jabatan) — masuk setelah nama hampir selesai
+                const nameLength = guest.name.length;
+                const detailDelay = 250 + (nameLength * 30) + 100;
+                setTimeout(() => {
+                    details.classList.add('visible');
+                }, detailDelay);
+
+            }, standbyExitDuration);
+
+            // ──────────────────────────────
+            // FASE 3: Auto-reset kembali ke Standby setelah 7 detik
+            // ──────────────────────────────
             clearTimeout(welcomeTimeout);
             welcomeTimeout = setTimeout(() => {
-                // Welcome keluar
-                welcome.classList.remove('opacity-100', 'translate-y-0');
-                welcome.classList.add('opacity-0', 'translate-y-8');
 
+                // 3a. Detail keluar duluan
+                details.classList.remove('visible');
+                details.classList.add('exit');
+
+                // 3b. Nama keluar per-karakter (cascade exit)
+                exitChars(nameEl, 100, 18);
+
+                // 3c. Label keluar terakhir
+                const nameExitDuration = 100 + (guest.name.length * 18) + 50;
+                setTimeout(() => {
+                    label.classList.remove('visible');
+                    label.classList.add('exit');
+                }, nameExitDuration);
+
+                // 3d. Setelah semua welcome keluar, tampilkan standby kembali
+                const totalExitDuration = nameExitDuration + 400;
                 setTimeout(() => {
                     welcome.classList.add('hidden');
-                    // Standby masuk kembali
-                    standby.classList.remove('opacity-0', '-translate-y-6', 'pointer-events-none');
-                    standby.classList.add('opacity-100', 'translate-y-0');
-                }, 500);
+
+                    // Reset semua class welcome
+                    label.classList.remove('visible', 'exit');
+                    details.classList.remove('visible', 'exit');
+                    nameEl.querySelectorAll('.char-reveal').forEach(c => {
+                        c.classList.remove('visible', 'exit');
+                    });
+
+                    // Standby kembali muncul
+                    standby.classList.remove('hidden');
+
+                    // Reset standby lines lalu reveal
+                    const lines = standby.querySelectorAll('.reveal-line');
+                    lines.forEach(line => {
+                        line.classList.remove('visible', 'exit');
+                    });
+
+                    // Reveal standby lines dengan stagger
+                    revealLines(standby, 100, 80);
+
+                    isAnimating = false;
+                }, totalExitDuration);
+
             }, 7000);
         }
 
