@@ -63,42 +63,17 @@
     <!-- Kartu E-Tiket Modern 3D -->
     <div id="printableTicket" class="card-3d-ticket rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-200">
         
-        <!-- Header Acara Formal & Elegan -->
-        <div class="bg-slate-950 text-white p-5 sm:p-6 relative overflow-hidden">
-            <div class="flex items-center justify-between gap-3 mb-2">
-                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-blue-500/20 text-blue-300 border border-blue-400/30 font-bold text-[10px] uppercase tracking-wider rounded-lg">
-                    <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span>
-                    E-Tiket Presensi Resmi
-                </span>
-                <span class="text-[11px] font-mono text-slate-400 font-bold tracking-wider">
-                    {{ $participant->qr_token }}
-                </span>
+        <!-- Header Tiket Solid & Bersih -->
+        <div class="bg-slate-900 text-white px-5 sm:px-6 py-4 flex items-center justify-between border-b border-slate-800">
+            <div>
+                <h1 class="text-sm font-bold tracking-tight text-white uppercase">
+                    {{ $eventSettings['title'] ?? 'C LEVEL INDONESIA 2026' }}
+                </h1>
+                <span class="text-[11px] text-slate-400 block mt-0.5">E-Tiket Presensi</span>
             </div>
-
-            <h1 class="text-base sm:text-lg font-black text-white uppercase tracking-tight leading-snug">
-                {{ $eventSettings['title'] ?? 'C LEVEL INDONESIA 2026' }}
-            </h1>
-
-            <div class="mt-3 pt-3 border-t border-slate-800/80 flex flex-wrap items-center gap-y-1.5 gap-x-4 text-xs text-slate-300">
-                <div class="flex items-center gap-1.5">
-                    <svg class="w-3.5 h-3.5 text-blue-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                    </svg>
-                    <span>{{ $eventSettings['date'] ?? '28 Oktober 2026' }}</span>
-                </div>
-                <div class="flex items-center gap-1.5">
-                    <svg class="w-3.5 h-3.5 text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    <span>{{ $eventSettings['time'] ?? '08:30 - 16:30 WIB' }}</span>
-                </div>
-                <div class="flex items-center gap-1.5 w-full">
-                    <svg class="w-3.5 h-3.5 text-rose-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    </svg>
-                    <span class="truncate">{{ $eventSettings['venue'] ?? 'Grand Ballroom C LEVEL Indonesia' }}</span>
-                </div>
+            <div class="text-right">
+                <span class="text-[10px] text-slate-400 font-mono block">KODE TIKET</span>
+                <span class="text-xs font-mono font-bold text-white tracking-wider">{{ $participant->qr_token }}</span>
             </div>
         </div>
 
@@ -135,40 +110,16 @@
                 </p>
             </div>
 
-            <!-- Banner Status Presensi -->
+            <!-- Status Presensi Flat Solid -->
             @if($participant->status === 'attended')
-            <div class="p-3.5 bg-emerald-50 border border-emerald-200 text-emerald-900 rounded-xl flex items-center justify-between gap-3">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-7 h-7 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <span class="font-extrabold text-xs block text-emerald-900">TERVERIFIKASI HADIR</span>
-                        <span class="text-[11px] text-emerald-700">Presensi berhasil dicatat petugas</span>
-                    </div>
-                </div>
-                <span class="px-2.5 py-1 bg-white border border-emerald-300 font-bold text-[11px] text-emerald-800 rounded-lg shadow-2xs font-mono">
-                    {{ $participant->attended_at ? $participant->attended_at->timezone('Asia/Jakarta')->format('H:i') . ' WIB' : 'Hadir' }}
-                </span>
+            <div class="py-2.5 px-3.5 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs rounded-xl flex items-center justify-between font-semibold">
+                <span>Status Kehadiran</span>
+                <span class="font-bold text-emerald-700">Hadir ({{ $participant->attended_at ? $participant->attended_at->timezone('Asia/Jakarta')->format('H:i') . ' WIB' : 'Hadir' }})</span>
             </div>
             @else
-            <div class="p-3.5 bg-amber-50 border border-amber-200 text-amber-900 rounded-xl flex items-center justify-between gap-3">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-7 h-7 rounded-full bg-amber-500 text-white flex items-center justify-center shrink-0">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <span class="font-extrabold text-xs block text-amber-900">TERDAFTAR RESMI</span>
-                        <span class="text-[11px] text-amber-700">Menunggu kedatangan di meja registrasi</span>
-                    </div>
-                </div>
-                <span class="px-2.5 py-1 bg-white border border-amber-300 font-bold text-[10px] text-amber-800 rounded-lg shadow-2xs uppercase">
-                    Belum Hadir
-                </span>
+            <div class="py-2.5 px-3.5 bg-amber-50 border border-amber-200 text-amber-800 text-xs rounded-xl flex items-center justify-between font-semibold">
+                <span>Status Kehadiran</span>
+                <span class="font-bold text-amber-700">Terdaftar (Belum Hadir)</span>
             </div>
             @endif
 
