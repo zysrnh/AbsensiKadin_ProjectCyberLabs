@@ -355,29 +355,57 @@
 
         <!-- Main Body -->
         <main class="flex-grow p-4 sm:p-6 lg:p-8">
-            <!-- Flash Alert -->
+            <!-- Global Flash Toast Notification (Plus Jakarta Sans & Rounded-xl) -->
             @if(session('success'))
-                <div class="mb-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold rounded-2xl flex items-center justify-between shadow-xs">
-                    <div class="flex items-center space-x-2.5">
-                        <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                        </svg>
-                        <span>{{ session('success') }}</span>
-                    </div>
-                    <button type="button" onclick="this.parentElement.remove()" class="text-emerald-700 hover:text-emerald-900 font-bold ml-4 p-1">✕</button>
-                </div>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        Swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            html: `
+                                <div class="text-left text-xs py-1 px-0.5 font-sans">
+                                    <div class="flex items-center gap-2 mb-1 text-emerald-700 font-extrabold text-[11px] uppercase tracking-wider">
+                                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block shrink-0 shadow-2xs"></span>
+                                        <span>SUKSES</span>
+                                    </div>
+                                    <p class="font-extrabold text-slate-900 text-xs">{{ session('success') }}</p>
+                                </div>
+                            `,
+                            customClass: {
+                                popup: 'rounded-xl border border-slate-200 bg-white p-3.5 shadow-xl text-left font-sans'
+                            }
+                        });
+                    });
+                </script>
             @endif
 
             @if(session('error'))
-                <div class="mb-6 p-4 bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold rounded-2xl flex items-center justify-between shadow-xs">
-                    <div class="flex items-center space-x-2.5">
-                        <svg class="w-4 h-4 text-rose-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                        <span>{{ session('error') }}</span>
-                    </div>
-                    <button type="button" onclick="this.parentElement.remove()" class="text-rose-700 hover:text-rose-900 font-bold ml-4 p-1">✕</button>
-                </div>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        Swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3500,
+                            timerProgressBar: true,
+                            html: `
+                                <div class="text-left text-xs py-1 px-0.5 font-sans">
+                                    <div class="flex items-center gap-2 mb-1 text-rose-700 font-extrabold text-[11px] uppercase tracking-wider">
+                                        <span class="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block shrink-0 shadow-2xs"></span>
+                                        <span>PERHATIAN</span>
+                                    </div>
+                                    <p class="font-extrabold text-slate-900 text-xs">{{ session('error') }}</p>
+                                </div>
+                            `,
+                            customClass: {
+                                popup: 'rounded-xl border border-slate-200 bg-white p-3.5 shadow-xl text-left font-sans'
+                            }
+                        });
+                    });
+                </script>
             @endif
 
             @yield('content')
