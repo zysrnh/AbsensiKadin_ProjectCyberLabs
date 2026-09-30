@@ -25,6 +25,9 @@ class EventSettingController extends Controller
             'event_dresscode' => Setting::get('event_dresscode', 'Batik Formal / Pakaian Bisnis Rapi'),
             'event_description' => Setting::get('event_description', 'Pertemuan strategis para pelaku usaha, pimpinan asosiasi, dan pemangku kepentingan industri nasional dalam rangka akselerasi ekonomi dan kolaborasi bisnis berkelanjutan.'),
             'event_flyer' => Setting::get('event_flyer', ''),
+            'display_welcome_text' => Setting::get('display_welcome_text', 'Selamat Datang di'),
+            'display_event_title' => Setting::get('display_event_title', 'C LEVEL INDONESIA 2026'),
+            'display_instruction_text' => Setting::get('display_instruction_text', 'Silakan arahkan tiket QR Anda pada meja registrasi. Layar ini akan otomatis menampilkan verifikasi kehadiran secara real-time.'),
         ];
 
         return view('admin.event-settings', compact('settings'));
@@ -47,6 +50,9 @@ class EventSettingController extends Controller
             'event_dresscode' => 'required|string|max:255',
             'event_description' => 'nullable|string|max:2000',
             'flyer_file' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:3072',
+            'display_welcome_text' => 'nullable|string|max:255',
+            'display_event_title' => 'nullable|string|max:255',
+            'display_instruction_text' => 'nullable|string|max:1000',
         ]);
 
         // Simpan flyer jika ada upload
@@ -73,6 +79,9 @@ class EventSettingController extends Controller
         Setting::set('event_maps_iframe', $validated['event_maps_iframe'] ?? null);
         Setting::set('event_dresscode', $validated['event_dresscode']);
         Setting::set('event_description', $validated['event_description'] ?? null);
+        Setting::set('display_welcome_text', $validated['display_welcome_text'] ?? 'Selamat Datang di');
+        Setting::set('display_event_title', $validated['display_event_title'] ?? 'C LEVEL INDONESIA 2026');
+        Setting::set('display_instruction_text', $validated['display_instruction_text'] ?? 'Silakan arahkan tiket QR Anda pada meja registrasi. Layar ini akan otomatis menampilkan verifikasi kehadiran secara real-time.');
 
         return redirect()->route('admin.event-settings')->with('success', 'Pengaturan acara berhasil diperbarui!');
     }

@@ -244,6 +244,63 @@
             </div>
         </div>
 
+        <!-- Card 3: Tampilan Layar Sambutan TV (Display Mode) -->
+        <div class="card-3d p-6 space-y-5">
+            <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+                <div>
+                    <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wider">3. Tampilan Layar Sambutan TV (Display Mode)</h2>
+                    <p class="text-[11px] text-slate-400 mt-0.5">Kustomisasi teks sambutan standby pada layar besar stage / foyer sebelum tamu melakukan tap tiket QR.</p>
+                </div>
+                <a href="{{ route('admin.display') }}" target="_blank" class="text-[11px] font-bold text-blue-600 hover:underline flex items-center gap-1">
+                    <span>Buka Layar Display</span>
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label for="display_welcome_text" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+                        Teks Pembuka Sambutan (Baris 1)
+                    </label>
+                    <input 
+                        type="text" 
+                        name="display_welcome_text" 
+                        id="display_welcome_text" 
+                        value="{{ old('display_welcome_text', $settings['display_welcome_text'] ?? 'Selamat Datang di') }}" 
+                        placeholder="Contoh: Selamat Datang di" 
+                        class="input-3d w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
+                    >
+                </div>
+
+                <div>
+                    <label for="display_event_title" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+                        Judul Utama di Layar TV (Baris 2)
+                    </label>
+                    <input 
+                        type="text" 
+                        name="display_event_title" 
+                        id="display_event_title" 
+                        value="{{ old('display_event_title', $settings['display_event_title'] ?? 'C LEVEL INDONESIA 2026') }}" 
+                        placeholder="Contoh: C LEVEL INDONESIA 2026" 
+                        class="input-3d w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
+                    >
+                </div>
+            </div>
+
+            <div>
+                <label for="display_instruction_text" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
+                    Teks Petunjuk / Keterangan di Layar
+                </label>
+                <textarea 
+                    name="display_instruction_text" 
+                    id="display_instruction_text" 
+                    rows="2" 
+                    class="input-3d w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white transition-all leading-relaxed" 
+                    placeholder="Contoh: Silakan arahkan tiket QR Anda pada meja registrasi. Layar ini akan otomatis menampilkan verifikasi kehadiran secara real-time."
+                >{{ old('display_instruction_text', $settings['display_instruction_text'] ?? 'Silakan arahkan tiket QR Anda pada meja registrasi. Layar ini akan otomatis menampilkan verifikasi kehadiran secara real-time.') }}</textarea>
+            </div>
+        </div>
+
         <!-- Tombol Aksi Simpan Solid Charcoal -->
         <div class="flex items-center justify-end gap-3 pt-2">
             <button 

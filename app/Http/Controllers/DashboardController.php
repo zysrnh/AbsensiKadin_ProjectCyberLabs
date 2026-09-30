@@ -313,7 +313,13 @@ class DashboardController extends Controller
             'attended' => Participant::where('status', 'attended')->count(),
         ];
 
-        return view('admin.display', compact('recentAttended', 'stats'));
+        $displaySettings = [
+            'welcome_text' => Setting::get('display_welcome_text', 'Selamat Datang di'),
+            'event_title' => Setting::get('display_event_title', Setting::get('event_title', 'C LEVEL INDONESIA 2026')),
+            'instruction_text' => Setting::get('display_instruction_text', 'Silakan arahkan tiket QR Anda pada meja registrasi. Layar ini akan otomatis menampilkan verifikasi kehadiran secara real-time.'),
+        ];
+
+        return view('admin.display', compact('recentAttended', 'stats', 'displaySettings'));
     }
 
     /**

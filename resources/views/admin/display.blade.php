@@ -254,14 +254,14 @@
             <!-- 1. Standby Hero Typography (Tampil Default) -->
             <div id="standby-screen" class="space-y-4">
                 <h1 class="text-4xl sm:text-6xl lg:text-7xl font-bold text-slate-900 tracking-tight leading-tight">
-                    <span class="reveal-line visible" style="transition-delay: 0ms;">Selamat Datang di</span>
+                    <span class="reveal-line visible" style="transition-delay: 0ms;">{{ $displaySettings['welcome_text'] ?? 'Selamat Datang di' }}</span>
                     <span class="reveal-line visible" style="transition-delay: 80ms;">
-                        <span class="text-slate-900 font-extrabold">C LEVEL INDONESIA 2026</span>
+                        <span class="text-slate-900 font-extrabold uppercase">{{ $displaySettings['event_title'] ?? 'C LEVEL INDONESIA 2026' }}</span>
                     </span>
                 </h1>
 
                 <p class="reveal-line visible text-base sm:text-xl text-slate-500 max-w-2xl mx-auto font-normal leading-relaxed pt-2" style="transition-delay: 160ms;">
-                    Silakan arahkan tiket QR Anda pada meja registrasi. Layar ini akan otomatis menampilkan verifikasi kehadiran secara real-time.
+                    {{ $displaySettings['instruction_text'] ?? 'Silakan arahkan tiket QR Anda pada meja registrasi. Layar ini akan otomatis menampilkan verifikasi kehadiran secara real-time.' }}
                 </p>
             </div>
 
