@@ -66,22 +66,31 @@
         .id-card-box {
             width: 95mm;
             height: 135mm;
-            page-break-inside: avoid;
             box-sizing: border-box;
             background-color: #ffffff;
             border: 1px solid #e2e8f0;
             border-radius: 1rem;
             box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.06);
+            position: relative;
         }
 
+        /* Screen Wrapper */
+        .id-card-page-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Print Settings: 1 Kartu per Halaman (Page Break per Card) */
         @media print {
             @page {
                 size: A4 portrait;
-                margin: 8mm;
+                margin: 0;
             }
-            body {
+            html, body {
                 background: transparent !important;
                 padding: 0 !important;
+                margin: 0 !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
             }
@@ -89,18 +98,31 @@
                 display: none !important;
             }
             .print-container {
-                display: flex !important;
-                flex-wrap: wrap !important;
-                gap: 5mm !important;
-                justify-content: flex-start !important;
+                display: block !important;
                 padding: 0 !important;
                 margin: 0 !important;
                 max-width: none !important;
+            }
+            .id-card-page-wrapper {
+                width: 100vw !important;
+                height: 100vh !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                page-break-after: always !important;
+                break-after: page !important;
+                box-sizing: border-box !important;
+                padding: 10mm !important;
+            }
+            .id-card-page-wrapper:last-child {
+                page-break-after: auto !important;
+                break-after: auto !important;
             }
             .id-card-box {
                 box-shadow: none !important;
                 border: 1px dashed #94a3b8 !important; /* Garis panduan potong gunting */
                 border-radius: 0 !important;
+                margin: 0 auto !important;
             }
         }
     </style>
@@ -111,7 +133,7 @@
     <div class="no-print card-3d max-w-5xl mx-auto mb-8 p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
             <h1 class="text-xl font-black text-slate-900 tracking-tight">Format Cetak ID Card Peserta</h1>
-            <p class="text-xs text-slate-500 mt-0.5">Total: <strong>{{ count($participants) }} ID Card</strong>. Ukuran standar lanyard B3/B4 (95mm × 135mm).</p>
+            <p class="text-xs text-slate-500 mt-0.5">Total: <strong>{{ count($participants) }} ID Card</strong>. Format cetak: <strong>1 Kartu per Halaman</strong> (Ukuran Lanyard B3/B4 95mm × 135mm).</p>
         </div>
 
         <div class="flex items-center gap-2.5">
@@ -135,62 +157,64 @@
     <div class="print-container max-w-5xl mx-auto flex flex-wrap justify-center gap-6">
 
         @forelse($participants as $p)
-        <!-- Single ID Card Item -->
-        <div class="id-card-box flex flex-col justify-between overflow-hidden relative text-slate-900">
-            
-            <!-- Lubang Tali Lanyard Guide -->
-            <div class="w-full pt-3 pb-1 flex flex-col items-center justify-center">
-                <div class="w-10 h-2 border border-slate-300 rounded-full bg-slate-100 flex items-center justify-center">
-                    <span class="w-3 h-0.5 bg-slate-300 rounded-full"></span>
-                </div>
-            </div>
-
-            <!-- Header Organisasi -->
-            <div class="px-5 pt-2 pb-2.5 text-center">
-                <span class="text-[9px] font-black tracking-widest text-slate-400 uppercase block">C LEVEL EXECUTIVE INDONESIA</span>
-                <h2 class="text-sm font-black tracking-tight text-slate-900 uppercase mt-0.5">C LEVEL INDONESIA 2026</h2>
-            </div>
-
-            <!-- Pita Kategori Peserta (Solid Royal Blue C LEVEL) -->
-            <div class="bg-blue-600 text-white text-center py-1.5 px-4 font-black text-xs tracking-wider uppercase">
-                {{ !empty($p->position) && str_contains(strtolower($p->position), 'ketua') ? 'TAMU KEHORMATAN' : 'PESERTA' }}
-            </div>
-
-            <!-- Konten Utama: Nama, Instansi, Jabatan (Proporsional & Seimbang) -->
-            <div class="px-6 py-6 text-center flex-grow flex flex-col justify-center items-center">
+        <!-- Single ID Card Page Wrapper (Untuk Page-Break Cetak 1 Kartu per Halaman) -->
+        <div class="id-card-page-wrapper">
+            <div class="id-card-box flex flex-col justify-between overflow-hidden text-slate-900">
                 
-                <!-- Nama Peserta -->
-                <h3 class="text-xl sm:text-2xl font-black text-slate-950 uppercase tracking-tight leading-snug max-w-full break-words">
-                    {{ $p->name }}
-                </h3>
-
-                <!-- Garis Pemisah Elegan -->
-                <div class="w-10 h-0.5 bg-blue-600 my-3.5 rounded-full"></div>
-
-                <!-- Instansi / Perusahaan (Badge Bersih) -->
-                <div class="inline-block px-3.5 py-1 bg-slate-100 border border-slate-200/80 rounded-lg text-xs font-bold text-slate-900 uppercase tracking-wider max-w-full truncate">
-                    {{ $p->company ?: 'C LEVEL Indonesia' }}
+                <!-- Lubang Tali Lanyard Guide -->
+                <div class="w-full pt-3 pb-1 flex flex-col items-center justify-center">
+                    <div class="w-10 h-2 border border-slate-300 rounded-full bg-slate-100 flex items-center justify-center">
+                        <span class="w-3 h-0.5 bg-slate-300 rounded-full"></span>
+                    </div>
                 </div>
 
-                <!-- Jabatan -->
-                @if($p->position && $p->position !== '-')
-                <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wide mt-2">
-                    {{ $p->position }}
-                </p>
-                @endif
+                <!-- Header Organisasi -->
+                <div class="px-5 pt-2 pb-2.5 text-center">
+                    <span class="text-[9px] font-black tracking-widest text-slate-400 uppercase block">C LEVEL EXECUTIVE INDONESIA</span>
+                    <h2 class="text-sm font-black tracking-tight text-slate-900 uppercase mt-0.5">C LEVEL INDONESIA 2026</h2>
+                </div>
+
+                <!-- Pita Kategori Peserta (Solid Royal Blue C LEVEL) -->
+                <div class="bg-blue-600 text-white text-center py-1.5 px-4 font-black text-xs tracking-wider uppercase">
+                    {{ !empty($p->position) && str_contains(strtolower($p->position), 'ketua') ? 'TAMU KEHORMATAN' : 'PESERTA' }}
+                </div>
+
+                <!-- Konten Utama: Nama, Instansi, Jabatan (Proporsional & Seimbang) -->
+                <div class="px-6 py-6 text-center flex-grow flex flex-col justify-center items-center">
+                    
+                    <!-- Nama Peserta -->
+                    <h3 class="text-xl sm:text-2xl font-black text-slate-950 uppercase tracking-tight leading-snug max-w-full break-words">
+                        {{ $p->name }}
+                    </h3>
+
+                    <!-- Garis Pemisah Elegan -->
+                    <div class="w-10 h-0.5 bg-blue-600 my-3.5 rounded-full"></div>
+
+                    <!-- Instansi / Perusahaan (Badge Bersih) -->
+                    <div class="inline-block px-3.5 py-1 bg-slate-100 border border-slate-200/80 rounded-lg text-xs font-bold text-slate-900 uppercase tracking-wider max-w-full truncate">
+                        {{ $p->company ?: 'C LEVEL Indonesia' }}
+                    </div>
+
+                    <!-- Jabatan -->
+                    @if($p->position && $p->position !== '-')
+                    <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wide mt-2">
+                        {{ $p->position }}
+                    </p>
+                    @endif
+
+                </div>
+
+                <!-- Footer ID Card Formal Solid Slate-900 -->
+                <div class="bg-slate-900 text-white px-4 py-2.5 text-center border-t border-slate-800">
+                    <p class="text-[9px] font-bold text-slate-200 uppercase tracking-wider leading-tight">
+                        {{ $eventSettings['nama_acara'] ?? 'Musyawarah & Temu Bisnis C LEVEL Indonesia 2026' }}
+                    </p>
+                    <p class="text-[8px] text-slate-400 mt-0.5 font-medium">
+                        {{ $eventSettings['tanggal'] ?? '28 Oktober 2026' }} &bull; {{ $eventSettings['venue'] ?? 'Grand Ballroom C LEVEL Indonesia' }}
+                    </p>
+                </div>
 
             </div>
-
-            <!-- Footer ID Card Formal Solid Slate-900 -->
-            <div class="bg-slate-900 text-white px-4 py-2.5 text-center border-t border-slate-800">
-                <p class="text-[9px] font-bold text-slate-200 uppercase tracking-wider leading-tight">
-                    {{ $eventSettings['nama_acara'] ?? 'Musyawarah & Temu Bisnis C LEVEL Indonesia 2026' }}
-                </p>
-                <p class="text-[8px] text-slate-400 mt-0.5 font-medium">
-                    {{ $eventSettings['tanggal'] ?? '28 Oktober 2026' }} &bull; {{ $eventSettings['venue'] ?? 'Grand Ballroom C LEVEL Indonesia' }}
-                </p>
-            </div>
-
         </div>
         @empty
         <div class="w-full text-center py-16 text-slate-500 card-3d p-8">
