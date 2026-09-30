@@ -186,70 +186,56 @@
         </div>
     </header>
 
-    <!-- Main Content Area: Standby Mode & Welcome Popup -->
-    <main class="relative z-10 flex-grow flex items-center justify-center p-8 text-center">
+    <!-- Main Content Area: In-Place Typography Stage (Tanpa Pop-up Card) -->
+    <main class="relative z-10 flex-grow flex items-center justify-center p-8 text-center select-none">
 
-        <!-- Standby Hero Banner (Tampil saat belum ada scan baru) -->
-        <div id="standby-screen" class="max-w-4xl mx-auto space-y-4 transition-opacity duration-500">
-            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 tracking-tight leading-tight">
-                Selamat Datang di <br>
-                <span class="text-slate-900">C LEVEL INDONESIA 2026</span>
-            </h1>
+        <div class="relative w-full max-w-5xl mx-auto flex items-center justify-center min-h-[360px]">
 
-            <p class="text-base sm:text-lg text-slate-500 max-w-xl mx-auto font-normal leading-relaxed">
-                Silakan arahkan tiket QR Anda pada meja registrasi. Layar ini akan otomatis menampilkan verifikasi kehadiran secara real-time.
-            </p>
-        </div>
+            <!-- 1. Standby Hero Typography (Tampil Default) -->
+            <div id="standby-screen" class="space-y-4 transition-all duration-700 ease-out transform opacity-100 translate-y-0">
+                <h1 class="text-4xl sm:text-6xl lg:text-7xl font-bold text-slate-900 tracking-tight leading-tight">
+                    Selamat Datang di <br>
+                    <span class="text-slate-900 font-extrabold">C LEVEL INDONESIA 2026</span>
+                </h1>
 
-        <!-- Grand Welcome Card (Muncul saat ada scan baru) -->
-        <div id="welcome-card" class="hidden absolute inset-x-4 max-w-3xl mx-auto z-30 animate-welcome-card">
-            <div class="relative bg-white border border-slate-200/90 rounded-2xl p-8 sm:p-12 shadow-2xl backdrop-blur-xl">
-                
-                <!-- Waktu Presensi Minimalis di Atas -->
-                <div class="flex items-center justify-center mb-5">
-                    <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-50 border border-slate-200 text-xs font-medium text-slate-600">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                        <span>Waktu Presensi: <span id="guest-time" class="text-slate-900 font-semibold font-mono">-</span></span>
+                <p class="text-base sm:text-xl text-slate-500 max-w-2xl mx-auto font-normal leading-relaxed pt-2">
+                    Silakan arahkan tiket QR Anda pada meja registrasi. Layar ini akan otomatis menampilkan verifikasi kehadiran secara real-time.
+                </p>
+            </div>
+
+            <!-- 2. Guest Welcome Typography (In-Place Reveal saat Scan) -->
+            <div id="welcome-screen" class="hidden absolute inset-0 flex flex-col items-center justify-center space-y-4 sm:space-y-6 transition-all duration-700 ease-out transform opacity-0 translate-y-8">
+                <!-- Sambutan -->
+                <p class="text-sm sm:text-lg font-semibold tracking-widest text-slate-400 uppercase">
+                    Selamat Datang Yang Terhormat
+                </p>
+
+                <!-- Nama Tamu Raksasa & Elegan -->
+                <h2 id="guest-name" class="text-4xl sm:text-6xl lg:text-7xl font-extrabold text-slate-900 tracking-tight leading-tight max-w-5xl px-4">
+                    Nama Peserta
+                </h2>
+
+                <!-- Instansi & Jabatan -->
+                <div class="pt-2 flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-xl sm:text-3xl font-semibold">
+                    <span id="guest-company" class="text-blue-600">
+                        Perusahaan / Instansi
+                    </span>
+                    <span id="company-divider" class="text-slate-300">•</span>
+                    <span id="guest-position" class="text-slate-500 font-normal">
+                        Jabatan
                     </span>
                 </div>
-
-                <!-- Info Tamu Undangan -->
-                <div class="space-y-3 my-2">
-                    <p class="text-xs sm:text-sm uppercase tracking-wider text-slate-400 font-medium">Selamat Datang Yang Terhormat</p>
-                    
-                    <!-- Nama Peserta -->
-                    <h2 id="guest-name" class="text-3xl sm:text-5xl font-bold text-slate-900 tracking-normal leading-tight">
-                        Nama Peserta
-                    </h2>
-
-                    <!-- Instansi & Jabatan -->
-                    <div class="pt-2 flex flex-col items-center justify-center gap-1">
-                        <p id="guest-company" class="text-xl sm:text-2xl font-semibold text-blue-600">
-                            Perusahaan / Instansi
-                        </p>
-                        <p id="guest-position" class="text-sm sm:text-base font-normal text-slate-500">
-                            Jabatan
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Progress Bar Otomatis Hitung Mundur (Subtle, Clean) -->
-                <div class="absolute bottom-0 left-0 right-0 h-1 bg-slate-100 rounded-b-2xl overflow-hidden">
-                    <div id="welcome-progress" class="h-full bg-blue-600 transition-all duration-100 ease-linear w-full"></div>
-                </div>
             </div>
+
         </div>
 
     </main>
-
-
 
     <!-- Audio Chime Synthesizer & Polling Script -->
     <script>
         let isAudioEnabled = true;
         let lastAttendedTime = '{{ $recentAttended->first() && $recentAttended->first()->attended_at ? $recentAttended->first()->attended_at->toIso8601String() : now()->toIso8601String() }}';
         let welcomeTimeout = null;
-        let progressInterval = null;
 
         // Digital Clock Live
         function updateClock() {
@@ -328,46 +314,53 @@
             }
         }
 
-        // Tampilkan Popup Sambutan Megah
+        // Tampilkan Sambutan Tamu (In-Place Typography Morph)
         function showWelcomeModal(guest) {
             const standby = document.getElementById('standby-screen');
-            const card = document.getElementById('welcome-card');
+            const welcome = document.getElementById('welcome-screen');
             const nameEl = document.getElementById('guest-name');
             const compEl = document.getElementById('guest-company');
             const posEl = document.getElementById('guest-position');
-            const timeEl = document.getElementById('guest-time');
-            const progress = document.getElementById('welcome-progress');
+            const divider = document.getElementById('company-divider');
 
             nameEl.innerText = guest.name;
             compEl.innerText = guest.company || 'C-Level Indonesia';
-            posEl.innerText = guest.position || '-';
-            timeEl.innerText = guest.time;
+
+            if (guest.position && guest.position !== '-') {
+                posEl.innerText = guest.position;
+                posEl.classList.remove('hidden');
+                if (divider) divider.classList.remove('hidden');
+            } else {
+                posEl.classList.add('hidden');
+                if (divider) divider.classList.add('hidden');
+            }
 
             // Bunyikan nada sambutan
             playChimeSound();
 
-            // Tampilkan card, sembunyikan standby
-            standby.classList.add('opacity-0');
-            card.classList.remove('hidden');
-            // Reset Timer & Progress Bar (Tampil 6.5 detik)
+            // 1. Standby keluar dengan fade & slide naik
+            standby.classList.add('opacity-0', '-translate-y-6', 'pointer-events-none');
+
+            // 2. Welcome masuk dengan smooth slide & fade in
+            welcome.classList.remove('hidden');
+            void welcome.offsetWidth; // Trigger reflow
+            welcome.classList.remove('opacity-0', 'translate-y-8');
+            welcome.classList.add('opacity-100', 'translate-y-0');
+
+            // 3. Reset Timer: Otomatis kembali ke Standby setelah 7 detik
             clearTimeout(welcomeTimeout);
-            clearInterval(progressInterval);
-
-            const duration = 6500;
-            const startTime = Date.now();
-
-            progress.style.width = '100%';
-            progressInterval = setInterval(() => {
-                const elapsed = Date.now() - startTime;
-                const remaining = Math.max(0, 1 - (elapsed / duration));
-                progress.style.width = (remaining * 100) + '%';
-            }, 50);
-
             welcomeTimeout = setTimeout(() => {
-                clearInterval(progressInterval);
-                card.classList.add('hidden');
-                standby.classList.remove('opacity-0');
-            }, duration);
+                // Welcome keluar
+                welcome.classList.remove('opacity-100', 'translate-y-0');
+                welcome.classList.add('opacity-0', 'translate-y-8');
+
+                setTimeout(() => {
+                    welcome.classList.add('hidden');
+                    // Standby masuk kembali
+                    standby.classList.remove('opacity-0', '-translate-y-6', 'pointer-events-none');
+                    standby.classList.add('opacity-100', 'translate-y-0');
+                }, 500);
+            }, 7000);
         }
 
         function escapeHtml(text) {
