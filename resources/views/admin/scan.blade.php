@@ -25,10 +25,18 @@
         </div>
 
         <div class="flex items-center space-x-2">
-            <a href="{{ route('admin.dashboard') }}" class="px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-800 font-semibold text-xs rounded-sm border border-slate-300 transition-colors">
-                ← Kembali ke Dashboard
+            <!-- Tombol Buka Layar Sambutan TV -->
+            <a href="{{ route('admin.display') }}" target="_blank" class="px-3.5 py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs rounded-xl border border-indigo-200 transition-colors flex items-center gap-1.5 shadow-2xs" title="Buka tampilan TV untuk layar panggung / sambutan">
+                <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+                <span>Mode Layar TV ↗</span>
             </a>
-            <a href="{{ route('participants.create') }}" target="_blank" class="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs rounded-sm transition-colors">
+
+            <a href="{{ route('admin.dashboard') }}" class="px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-800 font-semibold text-xs rounded-xl border border-slate-300 transition-colors">
+                ← Dashboard
+            </a>
+            <a href="{{ route('participants.create') }}" target="_blank" class="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs rounded-xl transition-colors">
                 + Tambah Peserta
             </a>
         </div>

@@ -255,4 +255,59 @@ class DashboardController extends Controller
             fclose($handle);
         }, 200, $headers);
     }
+
+    /**
+     * Halaman Layar Sambutan TV / Display Mode
+     */
+    public function displayScreen()
+    {
+        $recentAttended = Participant::where('status', 'attended')
+            ->orderByDesc('attended_at')
+            ->limit(5)
+            ->get();
+
+        $stats = [
+            'total' => Participant::count(),
+            'attended' => Participant::where('status', 'attended')->count(),
+        ];
+
+        return view('admin.display', compact('recentAttended', 'stats'));
+    }
+
+    /**
+     * Endpoint Polling Real-time Checkin Terbaru untuk Layar TV
+     */
+    public function latestCheckin(Request $request)
+    {
+        $lastTime = $request->query('last_time');
+        $query = Participant::where('status', 'attended');
+
+        if ($lastTime) {
+            try {
+                $query->where('attended_at', '>', \Carbon\Carbon::parse($lastTime));
+            } catch (\Exception $e) {
+                // fallback jika format parse error
+            }
+        }
+
+        $latest = $query->orderByDesc('attended_at')->first();
+        $totalAttended = Participant::where('status', 'attended')->count();
+        $totalRegistered = Participant::count();
+
+        return response()->json([
+            'has_new' => (bool)$latest,
+            'participant' => $latest ? [
+                'id' => $latest->id,
+                'name' => $latest->name,
+                'company' => $latest->company ?? '-',
+                'position' => $latest->position ?? '-',
+                'time' => $latest->attended_at ? $latest->attended_at->timezone('Asia/Jakarta')->format('H:i:s') . ' WIB' : now()->timezone('Asia/Jakarta')->format('H:i:s') . ' WIB',
+                'attended_at_raw' => $latest->attended_at ? $latest->attended_at->toIso8601String() : now()->toIso8601String(),
+            ] : null,
+            'stats' => [
+                'attended' => $totalAttended,
+                'total' => $totalRegistered,
+            ]
+        ]);
+    }
 }

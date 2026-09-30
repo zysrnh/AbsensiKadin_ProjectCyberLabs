@@ -76,6 +76,10 @@ Route::prefix('admin')->middleware('auth')->group(function () {
             ->get();
         return view('admin.scan', compact('recentAttended'));
     })->name('admin.scan');
+
+    // Layar Sambutan TV / Live Welcome Screen Real-time
+    Route::get('/display', [DashboardController::class, 'displayScreen'])->name('admin.display');
+    Route::get('/display/latest', [DashboardController::class, 'latestCheckin'])->name('admin.display.latest');
 });
 
 // Shortcut /dashboard langsung ke /admin/dashboard
