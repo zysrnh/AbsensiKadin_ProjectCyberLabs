@@ -7,25 +7,25 @@
 <div class="space-y-6">
 
     <!-- Header Section -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
-            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-blue-50 border border-blue-200 rounded-sm mb-1 text-[11px] font-bold uppercase tracking-wider text-blue-800">
-                Distribusi Tiket Masuk
-            </div>
-            <h1 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Kirim Tiket Presensi QR</h1>
+            <h1 class="text-2xl font-black text-slate-900 tracking-tight">Kirim Tiket Presensi QR</h1>
             <p class="text-xs text-slate-500 mt-0.5">Kirimkan kartu tiket masuk ber-QR Code kepada peserta yang telah disetujui / terdaftar via WhatsApp.</p>
         </div>
 
-        <div class="flex items-center gap-2">
-            <a href="{{ route('admin.wa-settings') }}" class="px-3 py-2 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs rounded-sm border border-slate-300 transition-colors flex items-center gap-1.5">
+        <div class="flex items-center flex-wrap gap-2">
+            <!-- Pengaturan Twilio & Template -->
+            <a href="{{ route('admin.wa-settings') }}" class="btn-3d-white px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl border border-slate-200 transition-all flex items-center gap-1.5 shadow-2xs">
                 <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
                 <span>Pengaturan Twilio & Template</span>
             </a>
-            <a href="{{ route('admin.dashboard') }}" class="px-3 py-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs rounded-sm transition-colors">
-                ← Ke Dashboard
+
+            <!-- Tombol Dashboard (Text-only) -->
+            <a href="{{ route('admin.dashboard') }}" class="btn-3d-white px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl border border-slate-200 shadow-2xs transition-all">
+                Dashboard
             </a>
         </div>
     </div>
@@ -37,13 +37,13 @@
         <div class="lg:col-span-7 space-y-5">
             
             <!-- Card 1: Generator Pesan Tiket QR -->
-            <div class="bg-white border border-slate-200 rounded-sm p-5 shadow-2xs space-y-4">
+            <div class="card-3d p-5 space-y-4">
                 <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
                     <div>
-                        <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Generator Tiket Presensi QR</h2>
+                        <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Generator Tiket Presensi QR</h2>
                         <p class="text-[11px] text-slate-400">Sesuaikan data peserta dan format pesan tiket QR sebelum dikirimkan.</p>
                     </div>
-                    <span class="px-2 py-0.5 bg-blue-50 text-blue-700 text-[10px] font-bold rounded-sm border border-blue-200 font-mono">
+                    <span class="px-2.5 py-1 bg-blue-50 text-blue-700 text-[10px] font-bold rounded-full border border-blue-200/80 font-mono">
                         Tiket Presensi
                     </span>
                 </div>
@@ -59,7 +59,7 @@
                             id="ticketNameInput" 
                             value="{{ $sample->name }}" 
                             placeholder="Contoh: Budi Santoso, S.E."
-                            class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-sm text-xs text-slate-900 focus:outline-none focus:border-slate-900 focus:bg-white transition-colors"
+                            class="input-3d w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
                             oninput="updateTicketMessage()"
                         >
                     </div>
@@ -74,7 +74,7 @@
                             id="ticketPhoneInput" 
                             value="{{ $sample->phone }}"
                             placeholder="081234567890" 
-                            class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-sm text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-900 focus:bg-white transition-colors"
+                            class="input-3d w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono font-bold text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
                         >
                     </div>
 
@@ -88,7 +88,7 @@
                             id="ticketCompanyInput" 
                             value="{{ $sample->company }}" 
                             placeholder="Contoh: PT Sumber Pangan Nusantara"
-                            class="w-full px-3.5 py-2 bg-slate-50 border border-slate-300 rounded-sm text-xs text-slate-900 focus:outline-none focus:border-slate-900 focus:bg-white transition-colors"
+                            class="input-3d w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white transition-all font-semibold"
                             oninput="updateTicketMessage()"
                         >
                     </div>
@@ -103,8 +103,8 @@
                                 type="text" 
                                 id="ticketPositionInput" 
                                 value="{{ $sample->position }}" 
-                                placeholder="Direktur"
-                                class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-sm text-xs text-slate-900 focus:outline-none focus:border-slate-900 focus:bg-white transition-colors"
+                                placeholder="Contoh: Direktur"
+                                class="input-3d w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
                                 oninput="updateTicketMessage()"
                             >
                         </div>
@@ -116,8 +116,8 @@
                                 type="text" 
                                 id="ticketTokenInput" 
                                 value="{{ $sample->qr_token }}" 
-                                placeholder="KD26-XXXXX"
-                                class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-sm text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-900 focus:bg-white transition-colors uppercase"
+                                placeholder="KD26-XXXX"
+                                class="input-3d w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono font-bold text-slate-900 uppercase focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
                                 oninput="onQrTokenChanged()"
                             >
                         </div>
@@ -128,54 +128,54 @@
                 <div>
                     <span class="text-[11px] font-semibold text-slate-600 block mb-1.5">Sisipkan variabel ke kursor:</span>
                     <div class="flex flex-wrap gap-1.5">
-                        <button type="button" onclick="insertTicketVar('{nama}')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-[11px] font-mono font-semibold rounded-sm cursor-pointer transition">
+                        <button type="button" onclick="insertTicketVar('{nama}')" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-mono font-bold rounded-lg border border-slate-200 cursor-pointer transition-all">
                             {nama}
                         </button>
-                        <button type="button" onclick="insertTicketVar('{instansi}')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-[11px] font-mono font-semibold rounded-sm cursor-pointer transition">
+                        <button type="button" onclick="insertTicketVar('{instansi}')" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-mono font-bold rounded-lg border border-slate-200 cursor-pointer transition-all">
                             {instansi}
                         </button>
-                        <button type="button" onclick="insertTicketVar('{jabatan}')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-[11px] font-mono font-semibold rounded-sm cursor-pointer transition">
+                        <button type="button" onclick="insertTicketVar('{jabatan}')" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-mono font-bold rounded-lg border border-slate-200 cursor-pointer transition-all">
                             {jabatan}
                         </button>
-                        <button type="button" onclick="insertTicketVar('{kode_tiket}')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 text-[11px] font-mono font-semibold rounded-sm cursor-pointer transition">
+                        <button type="button" onclick="insertTicketVar('{kode_tiket}')" class="px-2.5 py-1 bg-blue-50 hover:bg-blue-100 text-blue-800 text-[11px] font-mono font-bold rounded-lg border border-blue-200 cursor-pointer transition-all">
                             {kode_tiket}
                         </button>
-                        <button type="button" onclick="insertTicketVar('{link_tiket}')" class="px-2 py-1 bg-blue-100 hover:bg-blue-200 border border-blue-300 text-blue-800 text-[11px] font-mono font-semibold rounded-sm cursor-pointer transition">
+                        <button type="button" onclick="insertTicketVar('{link_tiket}')" class="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-[11px] font-mono font-bold rounded-lg border border-emerald-200 cursor-pointer transition-all">
                             {link_tiket}
                         </button>
                     </div>
                 </div>
 
-                <!-- Textarea Pesan Tiket -->
+                <!-- Textarea Template Pesan Tiket -->
                 <div>
                     <div class="flex items-center justify-between mb-1.5">
-                        <label for="ticketTextArea" class="text-xs font-semibold text-slate-700 uppercase tracking-wider">
-                            Isi Pesan WhatsApp Tiket Masuk <span class="text-rose-500">*</span>
+                        <label for="ticketTextArea" class="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                            Isi Pesan WhatsApp Tiket <span class="text-rose-500">*</span>
                         </label>
-                        <button type="button" onclick="resetToDefaultTicketTemplate()" class="text-[11px] text-slate-500 hover:text-slate-800 underline cursor-pointer">
+                        <button type="button" onclick="resetToDefaultTicketTemplate()" class="text-[11px] font-medium text-slate-500 hover:text-slate-800 underline cursor-pointer">
                             Reset ke template asal
                         </button>
                     </div>
                     <textarea 
                         id="ticketTextArea" 
-                        rows="10" 
-                        class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-sm text-xs font-mono text-slate-900 leading-relaxed focus:outline-none focus:border-slate-900 focus:bg-white transition-colors"
+                        rows="8" 
+                        class="input-3d w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono text-slate-900 leading-relaxed focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
                         oninput="onTicketTextManualInput()"
                     ></textarea>
-                    <div class="mt-1 text-[11px] text-slate-500 flex items-center justify-between">
-                        <span>Tautan kartu QR: <strong id="previewTicketUrlText" class="text-slate-800 font-mono">{{ route('participants.card', $sample->qr_token) }}</strong></span>
+                    <div class="mt-1.5 text-[11px] text-slate-500 flex items-center justify-between">
+                        <span>Pesan menyertakan link tiket web & gambar QR Code via Twilio</span>
                         <span id="ticketCharCount" class="font-mono text-slate-400">0 karakter</span>
                     </div>
                 </div>
 
-                <!-- Action Buttons: 3 Opsi Pengiriman -->
+                <!-- Action Buttons: 3 Opsi Pengiriman Tiket -->
                 <div class="pt-3 border-t border-slate-100 flex flex-wrap items-center gap-2.5">
                     
                     <!-- 1. Salin Teks -->
                     <button 
                         type="button" 
                         onclick="copyTicketMessage()" 
-                        class="px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs rounded-sm transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                        class="btn-3d-dark px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl border border-slate-900 transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
                     >
                         <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
@@ -187,7 +187,7 @@
                     <button 
                         type="button" 
                         onclick="openTicketWaWeb()" 
-                        class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded-sm transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                        class="btn-3d-dark px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl border border-emerald-600 transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
                     >
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.299.144.35.49 1.199.533 1.286.044.087.073.189.014.305-.058.115-.087.188-.173.289l-.26.309c-.087.095-.179.199-.077.375.101.173.454.747.973 1.21 0.672.6 1.238.788 1.413.875.174.087.276.073.377-.044.101-.116.433-.506.549-.68.116-.173.232-.144.39-.087s1.011.477 1.184.564.289.13.332.202c.044.072.044.419-.1.824z" />
@@ -195,11 +195,11 @@
                         <span>Buka WhatsApp Web</span>
                     </button>
 
-                    <!-- 3. Blast Twilio -->
+                    <!-- 3. Blast Twilio (Dengan MediaUrl Gambar QR Asli) -->
                     <button 
                         type="button" 
                         onclick="sendSingleTicketTwilio()" 
-                        class="px-4 py-2.5 bg-blue-700 hover:bg-blue-800 text-white font-semibold text-xs rounded-sm transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                        class="btn-3d-blue px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl border border-blue-600 transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
                     >
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -211,17 +211,17 @@
 
             </div>
 
-            <!-- Card 2: Daftar Peserta Terdaftar (Checklist & Blast Tiket QR Massal) -->
-            <div class="bg-white border border-slate-200 rounded-sm p-5 shadow-2xs space-y-4">
+            <!-- Card 2: Daftar Peserta & Tiket QR Terdaftar -->
+            <div class="card-3d p-5 space-y-4">
                 <div class="border-b border-slate-100 pb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                     <div>
                         <div class="flex items-center gap-2">
-                            <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Daftar Peserta Terdaftar</h2>
-                            <span class="px-2 py-0.5 bg-slate-100 text-slate-700 text-[10px] font-bold rounded-sm border border-slate-300 font-mono">
+                            <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Peserta Terdaftar</h2>
+                            <span class="px-2.5 py-0.5 bg-slate-100 text-slate-700 text-[10px] font-bold rounded-full border border-slate-200 font-mono">
                                 {{ $participants->count() }} Peserta
                             </span>
                         </div>
-                        <p class="text-[11px] text-slate-400">Pilih peserta dengan checkbox untuk blast tiket QR via Twilio sekaligus.</p>
+                        <p class="text-[11px] text-slate-400">Pilih peserta untuk mengirimkan tiket via Twilio atau klik untuk preview.</p>
                     </div>
 
                     <!-- Input Filter Cari Cepat -->
@@ -229,15 +229,15 @@
                         <input 
                             type="text" 
                             id="searchParticipantInput" 
-                            placeholder="Cari nama, instansi, token..." 
-                            class="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 text-xs rounded-sm focus:outline-none focus:border-slate-900 focus:bg-white"
+                            placeholder="Cari nama / token / instansi..." 
+                            class="input-3d w-full px-3.5 py-2 bg-slate-50 border border-slate-200 text-xs rounded-xl focus:outline-none focus:border-blue-600 focus:bg-white"
                             oninput="filterParticipantTable()"
                         >
                     </div>
                 </div>
 
                 <!-- Checkbox Toolbar & Bulk Action -->
-                <div class="p-3 bg-slate-50 border border-slate-200 rounded-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div class="p-3 bg-slate-50/80 border border-slate-200/80 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3">
                     <div class="flex items-center gap-3 w-full sm:w-auto">
                         <label class="flex items-center gap-2 text-xs font-semibold text-slate-800 cursor-pointer select-none">
                             <input 
@@ -260,7 +260,7 @@
                         id="btnBulkTicketTwilio" 
                         onclick="sendBulkTicketTwilio()" 
                         disabled
-                        class="w-full sm:w-auto px-4 py-2 bg-blue-700 hover:bg-blue-800 disabled:bg-slate-300 disabled:cursor-not-allowed text-white font-semibold text-xs rounded-sm transition-colors flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs"
+                        class="w-full sm:w-auto btn-3d-blue px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 disabled:border-slate-300 disabled:shadow-none disabled:cursor-not-allowed text-white font-bold text-xs rounded-xl border border-blue-600 transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs"
                     >
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -270,9 +270,9 @@
                 </div>
 
                 <!-- Tabel Peserta -->
-                <div class="overflow-x-auto border border-slate-200 rounded-sm max-h-[380px] overflow-y-auto">
+                <div class="overflow-x-auto border border-slate-200/80 rounded-xl max-h-[380px] overflow-y-auto">
                     <table class="w-full text-left text-xs text-slate-700 divide-y divide-slate-200">
-                        <thead class="bg-slate-100 text-[11px] font-bold text-slate-700 uppercase tracking-wider sticky top-0 z-10 shadow-2xs">
+                        <thead class="bg-slate-50 text-[11px] font-bold text-slate-700 uppercase tracking-wider sticky top-0 z-10 shadow-2xs">
                             <tr>
                                 <th scope="col" class="w-10 px-3 py-2.5 text-center">&bull;</th>
                                 <th scope="col" class="px-3.5 py-2.5">Peserta & Instansi</th>
@@ -298,15 +298,15 @@
                                     <span class="text-[10px] text-slate-400 font-mono block mt-0.5">{{ $p->phone }}</span>
                                 </td>
                                 <td class="px-3 py-2.5 font-mono text-slate-800 text-[11px]">
-                                    <span class="px-1.5 py-0.5 bg-slate-100 border border-slate-200 rounded-2xs font-bold">{{ $p->qr_token }}</span>
+                                    <span class="px-2 py-0.5 bg-slate-100 border border-slate-200 rounded-md font-bold">{{ $p->qr_token }}</span>
                                 </td>
                                 <td class="px-3 py-2.5">
                                     @if($p->status === 'attended')
-                                        <span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-200 rounded-xs">
+                                        <span class="px-2.5 py-0.5 bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-200/80 rounded-full">
                                             Hadir
                                         </span>
                                     @else
-                                        <span class="px-2 py-0.5 bg-amber-50 text-amber-700 text-[10px] font-bold border border-amber-200 rounded-xs">
+                                        <span class="px-2.5 py-0.5 bg-amber-50 text-amber-700 text-[10px] font-bold border border-amber-200/80 rounded-full">
                                             Terdaftar
                                         </span>
                                     @endif
@@ -317,7 +317,7 @@
                                         type="button" 
                                         onclick="pickParticipantToEditor('{{ addslashes($p->name) }}', '{{ $p->phone }}', '{{ addslashes($p->company) }}', '{{ addslashes($p->position) }}', '{{ $p->qr_token }}')" 
                                         title="Muat data ke form editor & pratinjau QR"
-                                        class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold text-[10px] rounded-xs border border-slate-300 transition cursor-pointer"
+                                        class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-[10px] rounded-lg border border-slate-200 transition cursor-pointer"
                                     >
                                         Pilih
                                     </button>
@@ -326,7 +326,7 @@
                                         type="button" 
                                         onclick="directTicketWaWeb('{{ addslashes($p->name) }}', '{{ $p->phone }}', '{{ addslashes($p->company) }}', '{{ addslashes($p->position) }}', '{{ $p->qr_token }}')" 
                                         title="Langsung chat WhatsApp Web tiket ini"
-                                        class="px-2 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-[10px] rounded-xs transition cursor-pointer"
+                                        class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] rounded-lg transition cursor-pointer shadow-2xs"
                                     >
                                         WA Web
                                     </button>
@@ -348,7 +348,7 @@
 
         <!-- Kolom Kanan: Live Mockup Chat WhatsApp dengan Gambar QR Code Asli (5 cols) -->
         <div class="lg:col-span-5 sticky top-20">
-            <div class="bg-white border border-slate-300 rounded-sm overflow-hidden shadow-sm">
+            <div class="card-3d overflow-hidden">
                 
                 <!-- Mockup Phone Header WA -->
                 <div class="bg-[#075e54] text-white px-4 py-3 flex items-center justify-between">
@@ -361,7 +361,7 @@
                             <span class="text-[10px] text-emerald-200">Online &bull; Tiket Presensi Resmi</span>
                         </div>
                     </div>
-                    <span class="text-[10px] font-bold text-white/80 bg-black/20 px-2 py-0.5 rounded-sm">
+                    <span class="text-[10px] font-bold text-white/90 bg-black/20 px-2 py-0.5 rounded-full">
                         Live Preview QR
                     </span>
                 </div>
@@ -370,21 +370,21 @@
                 <div class="bg-[#efeae2] p-4 min-h-[460px] max-h-[580px] overflow-y-auto space-y-3 font-sans text-xs">
                     
                     <div class="text-center">
-                        <span class="px-2 py-0.5 bg-white/80 text-slate-500 text-[10px] font-medium rounded-sm shadow-2xs inline-block">
+                        <span class="px-2.5 py-0.5 bg-white/85 text-slate-500 text-[10px] font-semibold rounded-full shadow-2xs inline-block">
                             HARI INI
                         </span>
                     </div>
 
                     <!-- Chat Bubble Masuk -->
-                    <div class="max-w-[92%] bg-white rounded-sm shadow-xs p-3.5 space-y-2.5 border border-slate-200/50">
+                    <div class="max-w-[92%] bg-white rounded-2xl rounded-tl-sm shadow-xs p-3.5 space-y-2.5 border border-slate-200/50">
                         
                         <!-- QR Code Container Asli -->
-                        <div class="bg-slate-50 border border-slate-200 rounded-sm p-3 text-center">
+                        <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-3 text-center">
                             <div class="flex justify-center">
-                                <div id="previewTicketQrcode" class="p-1.5 bg-white border border-slate-300 inline-block shadow-2xs"></div>
+                                <div id="previewTicketQrcode" class="p-2 bg-white border border-slate-200 rounded-lg inline-block shadow-2xs"></div>
                             </div>
                             <span id="previewTicketQrTokenText" class="font-mono font-bold text-[11px] text-slate-800 mt-2 block">{{ $sample->qr_token }}</span>
-                            <span class="text-[9px] text-slate-400 block">Gambar Tiket QR Masuk Acara</span>
+                            <span class="text-[10px] text-slate-400 block">Gambar Tiket QR Masuk Acara</span>
                         </div>
 
                         <!-- Text Body Message Live -->
@@ -404,7 +404,7 @@
                 </div>
 
                 <!-- Mockup Chat Input Footer -->
-                <div class="bg-slate-100 border-t border-slate-200 p-2.5 flex items-center justify-between text-[11px] text-slate-500">
+                <div class="bg-slate-50 border-t border-slate-200 p-3 flex items-center justify-between text-[11px] text-slate-500">
                     <span>Peserta melihat gambar QR tiket langsung di chat</span>
                     <span class="font-mono text-slate-400">WhatsApp App</span>
                 </div>
@@ -429,7 +429,6 @@
     const textArea = document.getElementById('ticketTextArea');
     const previewBody = document.getElementById('previewTicketMessageBody');
     const previewTokenText = document.getElementById('previewTicketQrTokenText');
-    const previewUrlText = document.getElementById('previewTicketUrlText');
     const charCountEl = document.getElementById('ticketCharCount');
 
     let currentQrCodeInstance = null;
@@ -468,7 +467,6 @@
             correctLevel : QRCode.CorrectLevel.M
         });
         previewTokenText.textContent = token || '-';
-        previewUrlText.textContent = "{{ url('/ticket') }}/" + (token || '');
     }
 
     function initPage() {
