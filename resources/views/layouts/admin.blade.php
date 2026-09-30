@@ -286,7 +286,7 @@
                 </div>
                 <div class="truncate min-w-0">
                     <p class="font-bold text-white truncate text-xs">{{ auth()->user()->name ?? 'Administrator' }}</p>
-                    <p class="text-[10px] text-slate-400 truncate">{{ auth()->user()->email ?? 'admin@kadin.id' }}</p>
+                    <p class="text-[10px] text-slate-400 truncate">{{ auth()->user()->email ?? 'admin@clevel.id' }}</p>
                 </div>
             </div>
             <form action="{{ route('logout') }}" method="POST">

@@ -116,7 +116,7 @@
                                 type="text" 
                                 id="ticketTokenInput" 
                                 value="{{ $sample->qr_token }}" 
-                                placeholder="KD26-XXXX"
+                                placeholder="CL26-XXXX"
                                 class="input-3d w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono font-bold text-slate-900 uppercase focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
                                 oninput="onQrTokenChanged()"
                             >
@@ -439,7 +439,7 @@
         text = text.replaceAll('{nama}', data.nama || 'Peserta C LEVEL')
                    .replaceAll('{instansi}', data.instansi || '-')
                    .replaceAll('{jabatan}', data.jabatan || '-')
-                   .replaceAll('{kode_tiket}', data.kode_tiket || 'KD26-XXXXX')
+                   .replaceAll('{kode_tiket}', data.kode_tiket || 'CL26-XXXXX')
                    .replaceAll('{link_tiket}', linkTiket);
         return text;
     }
@@ -459,7 +459,7 @@
         if (!qrEl) return;
         qrEl.innerHTML = '';
         currentQrCodeInstance = new QRCode(qrEl, {
-            text: token || 'KD26-EXMPL',
+            text: token || 'CL26-EXMPL',
             width: 130,
             height: 130,
             colorDark : "#0f172a",
