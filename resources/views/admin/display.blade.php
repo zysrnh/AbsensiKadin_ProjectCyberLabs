@@ -82,29 +82,17 @@
 
     <!-- Top Bar: Header & Live Clock -->
     <header class="relative z-10 px-8 py-6 flex items-center justify-between border-b border-white/10 backdrop-blur-md bg-navy-950/40">
-        <!-- Logo & Event Info -->
+        <!-- Logo C Level -->
         <div class="flex items-center gap-4">
             <div class="px-3.5 py-1.5 bg-blue-600 text-white font-black text-sm tracking-wider rounded-lg shadow-lg shadow-blue-600/30 flex items-center gap-2">
                 <span>C LEVEL</span>
                 <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
             </div>
-            <div>
-                <h2 class="text-sm font-extrabold text-white tracking-wide uppercase">Musyawarah & Temu Bisnis C LEVEL Indonesia</h2>
-                <p class="text-xs text-slate-400 font-medium">Hotel Pullman Bandung Grand Central • 2026</p>
-            </div>
         </div>
 
         <!-- Live Digital Clock & Stats Widget -->
         <div class="flex items-center gap-6">
-            <!-- Counter Kehadiran -->
-            <div class="flex items-center gap-3 bg-white/5 border border-white/10 px-4 py-2 rounded-xl">
-                <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
-                <div class="text-left">
-                    <span class="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">Tamu Hadir</span>
-                    <span class="text-sm font-black text-white" id="stat-attended">{{ number_format($stats['attended']) }}</span>
-                    <span class="text-xs text-slate-400 font-medium">/ <span id="stat-total">{{ number_format($stats['total']) }}</span></span>
-                </div>
-            </div>
+
 
             <!-- Jam Digital Real-time -->
             <div class="text-right">
@@ -138,11 +126,6 @@
 
         <!-- Standby Hero Banner (Tampil saat belum ada scan baru) -->
         <div id="standby-screen" class="max-w-4xl mx-auto space-y-6 transition-opacity duration-500">
-            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-400/30 text-blue-400 text-xs font-extrabold uppercase tracking-widest">
-                <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
-                <span>Gerbang Presensi Resmi Tamu Undangan</span>
-            </div>
-
             <h1 class="text-4xl sm:text-6xl font-black text-white tracking-tight leading-tight">
                 Selamat Datang di <br>
                 <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-sky-300 to-emerald-400">
@@ -153,22 +136,6 @@
             <p class="text-lg text-slate-400 max-w-2xl mx-auto font-medium leading-relaxed">
                 Silakan arahkan tiket QR Anda pada meja registrasi. Layar ini akan otomatis menampilkan verifikasi kehadiran secara real-time.
             </p>
-
-            <div class="pt-4 flex items-center justify-center gap-4 text-xs text-slate-500">
-                <span class="inline-flex items-center gap-1.5">
-                    <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span>Sistem Terhubung Real-Time</span>
-                </span>
-                <span>•</span>
-                <span class="inline-flex items-center gap-1.5">
-                    <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                    </svg>
-                    <span>Mendukung Scan dari HP Panitia</span>
-                </span>
-            </div>
         </div>
 
         <!-- Grand Welcome Overlay Card (Muncul saat ada scan baru) -->
@@ -222,28 +189,7 @@
 
     </main>
 
-    <!-- Bottom Bar: Daftar Tamu Terbaru Yang Hadir -->
-    <footer class="relative z-10 px-8 py-4 bg-navy-950/60 border-t border-white/10 backdrop-blur-md">
-        <div class="max-w-7xl mx-auto flex items-center justify-between gap-6">
-            <span class="text-xs font-bold uppercase tracking-wider text-slate-400 shrink-0 flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-blue-500"></span>
-                <span>Baru Hadir</span>
-            </span>
 
-            <div id="recent-guests-marquee" class="flex items-center gap-4 overflow-x-auto no-scrollbar text-xs">
-                @forelse($recentAttended as $attendee)
-                <div class="px-3.5 py-1.5 bg-white/5 border border-white/10 rounded-xl flex items-center gap-2 shrink-0">
-                    <span class="font-bold text-white">{{ $attendee->name }}</span>
-                    <span class="text-slate-400">•</span>
-                    <span class="text-amber-400 font-medium">{{ $attendee->company ?? 'C-Level' }}</span>
-                    <span class="text-[10px] text-slate-400 font-mono">({{ $attendee->attended_at ? $attendee->attended_at->format('H:i') : '' }})</span>
-                </div>
-                @empty
-                <span class="text-slate-500 italic text-xs">Belum ada peserta yang hadir.</span>
-                @endforelse
-            </div>
-        </div>
-    </footer>
 
     <!-- Audio Chime Synthesizer & Polling Script -->
     <script>
@@ -350,10 +296,6 @@
             // Tampilkan card, sembunyikan standby
             standby.classList.add('opacity-0');
             card.classList.remove('hidden');
-
-            // Tambahkan tamu ke daftar marquee bawah
-            prependRecentGuest(guest);
-
             // Reset Timer & Progress Bar (Tampil 6.5 detik)
             clearTimeout(welcomeTimeout);
             clearInterval(progressInterval);
@@ -375,23 +317,6 @@
             }, duration);
         }
 
-        function prependRecentGuest(guest) {
-            const container = document.getElementById('recent-guests-marquee');
-            const item = document.createElement('div');
-            item.className = 'px-3.5 py-1.5 bg-emerald-500/20 border border-emerald-500/50 rounded-xl flex items-center gap-2 shrink-0 animate-pulse';
-            item.innerHTML = `
-                <span class="font-bold text-white">${escapeHtml(guest.name)}</span>
-                <span class="text-slate-400">•</span>
-                <span class="text-amber-400 font-medium">${escapeHtml(guest.company)}</span>
-                <span class="text-[10px] text-emerald-400 font-mono font-bold">(${guest.time})</span>
-            `;
-            if (container.firstElementChild) {
-                container.insertBefore(item, container.firstElementChild);
-            } else {
-                container.appendChild(item);
-            }
-        }
-
         function escapeHtml(text) {
             if (!text) return '';
             return text.replace(/[&<>"']/g, function(m) {
@@ -408,10 +333,12 @@
             })
             .then(res => res.json())
             .then(data => {
-                // Update statistik counter
+                // Update statistik counter jika ada di DOM
                 if (data.stats) {
-                    document.getElementById('stat-attended').innerText = Number(data.stats.attended).toLocaleString('id-ID');
-                    document.getElementById('stat-total').innerText = Number(data.stats.total).toLocaleString('id-ID');
+                    const elAttended = document.getElementById('stat-attended');
+                    const elTotal = document.getElementById('stat-total');
+                    if (elAttended) elAttended.innerText = Number(data.stats.attended).toLocaleString('id-ID');
+                    if (elTotal) elTotal.innerText = Number(data.stats.total).toLocaleString('id-ID');
                 }
 
                 if (data.has_new && data.participant) {
