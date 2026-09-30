@@ -24,36 +24,23 @@
     <!-- Top Header & Action Buttons -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
-            <div class="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 border border-blue-200/80 rounded-full mb-1.5 text-[11px] font-bold uppercase tracking-wider text-blue-800">
-                <span class="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse"></span>
-                <span>Pos Presensi Masuk</span>
-            </div>
             <h1 class="text-2xl font-black text-slate-900 tracking-tight">Scanner Presensi Kehadiran</h1>
             <p class="text-xs text-slate-500 mt-0.5">Arahkan kamera ke tiket QR peserta atau ketikkan kode tiket untuk memverifikasi kehadiran.</p>
         </div>
 
         <div class="flex items-center flex-wrap gap-2">
             <!-- Tombol Buka Layar Sambutan TV -->
-            <a href="{{ route('admin.display') }}" target="_blank" class="btn-3d-white px-3.5 py-2 bg-white hover:bg-slate-50 text-indigo-900 font-bold text-xs rounded-xl border border-indigo-200 flex items-center gap-1.5 shadow-2xs transition-all" title="Buka tampilan TV untuk layar panggung / sambutan">
-                <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                </svg>
-                <span>Mode Layar TV ↗</span>
+            <a href="{{ route('admin.display') }}" target="_blank" class="btn-3d-white px-4 py-2 bg-white hover:bg-slate-50 text-indigo-900 font-bold text-xs rounded-xl border border-indigo-200 shadow-2xs transition-all" title="Buka tampilan TV untuk layar panggung / sambutan">
+                <span>Mode Layar TV</span>
             </a>
 
             <!-- Tombol Kembali ke Dashboard -->
-            <a href="{{ route('admin.dashboard') }}" class="btn-3d-white px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl border border-slate-200 flex items-center gap-1.5 shadow-2xs transition-all">
-                <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
+            <a href="{{ route('admin.dashboard') }}" class="btn-3d-white px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl border border-slate-200 shadow-2xs transition-all">
                 <span>Dashboard</span>
             </a>
 
             <!-- Tambah Peserta Baru -->
-            <a href="{{ route('participants.create') }}" target="_blank" class="btn-3d-blue px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 border border-blue-600 shadow-2xs transition-all">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
-                </svg>
+            <a href="{{ route('participants.create') }}" target="_blank" class="btn-3d-blue px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl border border-blue-600 shadow-2xs transition-all">
                 <span>Tambah Peserta</span>
             </a>
         </div>
@@ -123,15 +110,15 @@
                     >
                     <button 
                         type="submit" 
-                        class="btn-3d-dark px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl border border-slate-900 transition-all cursor-pointer flex items-center gap-1.5 shrink-0"
+                        class="btn-3d-dark w-11 h-11 bg-slate-900 hover:bg-slate-800 text-white rounded-xl border border-slate-900 transition-all cursor-pointer flex items-center justify-center shrink-0"
+                        title="Verifikasi Tiket"
                     >
-                        <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
                         </svg>
-                        <span>Verifikasi</span>
                     </button>
                 </form>
-                <p class="text-[11px] text-slate-400">Tekan Enter atau klik Verifikasi setelah memasukkan kode tiket.</p>
+                <p class="text-[11px] text-slate-400">Tekan Enter atau klik tombol ceklis setelah memasukkan kode tiket.</p>
             </div>
 
         </div>
