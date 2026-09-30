@@ -143,9 +143,33 @@
         }
     });
 
+    function cleanToken(raw) {
+        if (!raw) return '';
+        let t = raw.trim();
+        if (t.includes('/')) {
+            const parts = t.split('/').filter(Boolean);
+            t = parts[parts.length - 1];
+        }
+        return t.toUpperCase();
+    }
+
     function startCamera() {
-        html5QrCode = new Html5Qrcode("reader");
-        const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+        html5QrCode = new Html5Qrcode("reader", {
+            experimentalFeatures: {
+                useBarCodeDetectorIfSupported: true
+            }
+        });
+
+        const config = { 
+            fps: 20, 
+            qrbox: function(viewfinderWidth, viewfinderHeight) {
+                const minEdge = Math.min(viewfinderWidth, viewfinderHeight);
+                const edge = Math.floor(minEdge * 0.85);
+                return { width: edge, height: edge };
+            },
+            aspectRatio: 1.0,
+            showTorchButtonIfSupported: true
+        };
 
         html5QrCode.start(
             { facingMode: "environment" },
@@ -179,13 +203,15 @@
 
     function onScanSuccess(decodedText) {
         if (isProcessing) return;
+        const token = cleanToken(decodedText);
+        if (!token) return;
         isProcessing = true;
-        processAttendance(decodedText);
+        processAttendance(token);
     }
 
     manualForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        const token = manualInput.value.trim();
+        const token = cleanToken(manualInput.value);
         if (!token) return;
         if (isProcessing) return;
         isProcessing = true;

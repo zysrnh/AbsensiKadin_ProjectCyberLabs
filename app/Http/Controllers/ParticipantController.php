@@ -175,13 +175,24 @@ class ParticipantController extends Controller
             'qr_token' => 'required|string',
         ]);
 
-        $token = trim($request->qr_token);
-        $participant = Participant::where('qr_token', $token)->first();
+        $rawToken = trim($request->qr_token);
+        
+        // Ekstraksi jika yang di-scan berupa URL lengkap (misal: http://.../ticket/KD26-XXX)
+        $token = $rawToken;
+        if (str_contains($rawToken, '/')) {
+            $parts = explode('/', rtrim($rawToken, '/'));
+            $token = end($parts);
+        }
+        $token = strtoupper(trim($token));
+
+        $participant = Participant::where('qr_token', $token)
+            ->orWhere('qr_token', $rawToken)
+            ->first();
 
         if (!$participant) {
             return response()->json([
                 'success' => false,
-                'message' => 'QR Code tidak terdaftar dalam sistem Kadin 2026.',
+                'message' => "QR Code ({$token}) tidak terdaftar dalam sistem C LEVEL 2026.",
             ], 404);
         }
 
