@@ -115,8 +115,15 @@ class ParticipantController extends Controller
     public function card(string $token)
     {
         $participant = Participant::where('qr_token', $token)->firstOrFail();
+        $eventSettings = [
+            'title' => Setting::get('event_title', 'Musyawarah & Temu Bisnis C LEVEL Indonesia 2026'),
+            'date' => Setting::get('event_date', '28 Oktober 2026'),
+            'time' => Setting::get('event_time', '08:30 - 16:30 WIB'),
+            'venue' => Setting::get('event_venue_name', 'Grand Ballroom C LEVEL Indonesia'),
+            'dresscode' => Setting::get('event_dresscode', 'Batik Formal / Pakaian Bisnis Rapi'),
+        ];
 
-        return view('participants.card', compact('participant'));
+        return view('participants.card', compact('participant', 'eventSettings'));
     }
 
     /**
