@@ -299,11 +299,39 @@
     </div>
 
     <!-- Data Table Pendaftar Smooth & Polished -->
-    <div class="card-3d">
+    <div class="card-3d overflow-hidden">
+        <!-- Floating Bulk Action Bar -->
+        <div id="bulkActionBar" class="hidden px-5 py-3 bg-slate-900 text-white border-b border-slate-800 flex items-center justify-between transition-all">
+            <div class="flex items-center gap-2.5">
+                <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+                <span id="bulkSelectedText" class="text-xs font-bold font-mono">0 peserta dipilih</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <button 
+                    type="button" 
+                    onclick="confirmBulkDelete()" 
+                    class="btn-3d-dark px-3.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl border border-rose-600 transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                >
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                    <span>Hapus Terpilih (<span id="bulkDeleteCount">0</span>)</span>
+                </button>
+            </div>
+        </div>
+
         <div class="overflow-x-auto min-h-[360px] pb-28">
             <table class="w-full text-left text-xs border-collapse">
                 <thead class="bg-slate-50/90 text-slate-600 uppercase text-[11px] font-extrabold tracking-wider border-b border-slate-200/80">
                     <tr>
+                        <th class="py-3.5 px-3 w-10 text-center">
+                            <input 
+                                type="checkbox" 
+                                id="selectAllDashboard" 
+                                class="rounded-sm border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer w-4 h-4"
+                                onchange="toggleSelectAllDashboard(this)"
+                            >
+                        </th>
                         <th class="py-3.5 px-4 w-12 text-center text-slate-400">No</th>
                         <th class="py-3.5 px-5">Nama Lengkap</th>
                         <th class="py-3.5 px-5">Instansi & Jabatan</th>
@@ -315,6 +343,16 @@
                 <tbody class="divide-y divide-slate-100 text-slate-800">
                     @forelse($participants as $index => $item)
                     <tr class="hover:bg-slate-50/70 transition-colors">
+                        <!-- Checkbox -->
+                        <td class="py-4 px-3 text-center">
+                            <input 
+                                type="checkbox" 
+                                value="{{ $item->id }}" 
+                                class="dashboard-guest-checkbox rounded-sm border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer w-4 h-4"
+                                onchange="onDashboardCheckboxChange()"
+                            >
+                        </td>
+
                         <!-- No -->
                         <td class="py-4 px-4 text-center text-slate-400 font-mono text-xs font-bold">
                             {{ $participants->firstItem() + $index }}
@@ -485,7 +523,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="py-16 text-center text-slate-400">
+                        <td colspan="7" class="py-16 text-center text-slate-400">
                             <div class="flex flex-col items-center justify-center space-y-2">
                                 <svg class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
@@ -749,6 +787,114 @@
         }
     });
 
+    // CHECKBOX & BULK ACTIONS DASHBOARD
+    function toggleSelectAllDashboard(master) {
+        const checkboxes = document.querySelectorAll('.dashboard-guest-checkbox');
+        checkboxes.forEach(cb => {
+            cb.checked = master.checked;
+        });
+        updateDashboardBulkUI();
+    }
+
+    function onDashboardCheckboxChange() {
+        updateDashboardBulkUI();
+    }
+
+    function updateDashboardBulkUI() {
+        const selected = document.querySelectorAll('.dashboard-guest-checkbox:checked');
+        const count = selected.length;
+        const total = document.querySelectorAll('.dashboard-guest-checkbox').length;
+        const bar = document.getElementById('bulkActionBar');
+        const countText = document.getElementById('bulkSelectedText');
+        const countBadge = document.getElementById('bulkDeleteCount');
+        const selectAll = document.getElementById('selectAllDashboard');
+
+        if (count > 0) {
+            bar.classList.remove('hidden');
+            countText.textContent = `${count} peserta dipilih`;
+            countBadge.textContent = count;
+        } else {
+            bar.classList.add('hidden');
+        }
+
+        if (selectAll) {
+            selectAll.checked = (count > 0 && count === total);
+            selectAll.indeterminate = (count > 0 && count < total);
+        }
+    }
+
+    function confirmBulkDelete() {
+        const selected = document.querySelectorAll('.dashboard-guest-checkbox:checked');
+        const ids = Array.from(selected).map(cb => cb.value);
+
+        if (ids.length === 0) return;
+
+        Swal.fire({
+            title: `Hapus ${ids.length} Peserta?`,
+            text: `Data ${ids.length} peserta yang dipilih akan dihapus permanen. Tindakan ini tidak dapat dibatalkan.`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#e11d48',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: `Ya, Hapus (${ids.length}) Data`,
+            cancelButtonText: 'Batal',
+            customClass: {
+                popup: 'rounded-2xl border border-slate-200 shadow-xl',
+                confirmButton: 'rounded-xl font-bold text-xs px-4 py-2',
+                cancelButton: 'rounded-xl font-bold text-xs px-4 py-2'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Menghapus Data...',
+                    text: 'Sedang memproses penghapusan data peserta...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                fetch("{{ route('admin.participants.bulk-destroy') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ ids: ids })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil Dihapus!',
+                            text: data.message,
+                            confirmButtonColor: '#0f172a'
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal Menghapus',
+                            text: data.message || 'Terjadi kesalahan saat menghapus data.',
+                            confirmButtonColor: '#0f172a'
+                        });
+                    }
+                })
+                .catch(() => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error Koneksi',
+                        text: 'Tidak dapat menghubungi server.',
+                        confirmButtonColor: '#0f172a'
+                    });
+                });
+            }
+        });
+    }
+
     function confirmDelete(e, name) {
         e.preventDefault();
         const form = e.target;
@@ -757,7 +903,7 @@
             text: `Yakin ingin menghapus data "${name}"?`,
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#0f172a',
+            confirmButtonColor: '#e11d48',
             cancelButtonColor: '#64748b',
             confirmButtonText: 'Ya, Hapus',
             cancelButtonText: 'Batal',

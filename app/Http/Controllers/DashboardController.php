@@ -130,6 +130,36 @@ class DashboardController extends Controller
     }
 
     /**
+     * Hapus data pendaftar terpilih (bulk delete) dari dashboard
+     */
+    public function bulkDestroy(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        if (is_string($ids)) {
+            $ids = explode(',', $ids);
+        }
+        $ids = array_filter((array) $ids);
+
+        if (empty($ids)) {
+            if ($request->wantsJson() || $request->ajax()) {
+                return response()->json(['success' => false, 'message' => 'Tidak ada peserta yang dipilih untuk dihapus.'], 422);
+            }
+            return redirect()->back()->with('error', 'Tidak ada data peserta yang dipilih untuk dihapus.');
+        }
+
+        $count = Participant::whereIn('id', $ids)->delete();
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => "{$count} data peserta berhasil dihapus."
+            ]);
+        }
+
+        return redirect()->back()->with('success', "{$count} data peserta berhasil dihapus.");
+    }
+
+    /**
      * Cetak ID Card Lanyard / Name Tag satuan untuk 1 peserta
      */
     public function printIdCard(Participant $participant)

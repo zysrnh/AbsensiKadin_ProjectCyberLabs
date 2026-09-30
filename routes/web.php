@@ -37,6 +37,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::post('/participants/{participant}/toggle-checkin', [DashboardController::class, 'toggleCheckin'])->name('admin.participants.toggle');
     Route::post('/participants/{participant}/twilio', [WaSettingController::class, 'blastTwilio'])->name('admin.participants.twilio');
     Route::delete('/participants/{participant}', [DashboardController::class, 'destroy'])->name('admin.participants.destroy');
+    Route::post('/participants/bulk-delete', [DashboardController::class, 'bulkDestroy'])->name('admin.participants.bulk-destroy');
     Route::get('/export/csv', [DashboardController::class, 'exportCsv'])->name('admin.export.csv');
     
     // Cetak ID Card Lanyard / Name Tag Peserta
