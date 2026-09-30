@@ -1,27 +1,45 @@
 @extends('layouts.admin')
 
 @section('title', 'Pengaturan WhatsApp & Twilio - C Level 2026')
-@section('page_title', 'Pengaturan WhatsApp')
+@section('page_title', 'Pengaturan WA & Twilio')
 
 @section('content')
 <div class="space-y-6">
 
     <!-- Header Section -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-200">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
-            <div class="inline-flex items-center gap-1.5 px-2 py-0.5 bg-blue-50 border border-blue-200 rounded-sm mb-1 text-[10px] font-bold uppercase tracking-wider text-blue-800">
-                Gateway & Kredensial API
-            </div>
-            <h1 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Pengaturan WhatsApp & Twilio</h1>
+            <h1 class="text-2xl font-black text-slate-900 tracking-tight">Pengaturan WhatsApp & Twilio</h1>
             <p class="text-xs text-slate-500 mt-0.5">Kelola kredensial akun Twilio, nomor pengirim, dan 3 slot Content SID resmi Meta untuk broadcast otomatis.</p>
         </div>
 
         <div class="flex items-center gap-2">
-            <a href="{{ route('admin.dashboard') }}" class="px-3 py-2 bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs rounded-sm border border-slate-300 transition-colors shadow-2xs">
-                ← Kembali ke Dashboard
+            <a href="{{ route('admin.dashboard') }}" class="btn-3d-white px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl border border-slate-200 transition-all shadow-2xs">
+                Dashboard
             </a>
         </div>
     </div>
+
+    <!-- Alert Notifikasi -->
+    @if(session('success'))
+        <div class="p-3.5 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-xl text-xs flex items-center gap-2 font-medium">
+            <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span>{{ session('success') }}</span>
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div class="p-3.5 bg-rose-50 border border-rose-200 text-rose-800 rounded-xl text-xs">
+            <p class="font-bold mb-1">Terjadi kesalahan pengisian:</p>
+            <ul class="list-disc list-inside space-y-0.5 ml-2 text-rose-700 font-medium">
+                @foreach($errors->all() as $err)
+                    <li>{{ $err }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
     <!-- Main Grid: Settings Form Left (7 cols), Test & Shortcuts Right (5 cols) -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
@@ -33,15 +51,10 @@
                 @csrf
 
                 <!-- Card 1: Kredensial Akun Twilio -->
-                <div class="bg-white border border-slate-200 rounded-sm p-5 shadow-2xs space-y-4">
-                    <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
-                        <div>
-                            <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Kredensial Akun Twilio</h2>
-                            <p class="text-[11px] text-slate-400">Didapat dari Console Twilio (Dashboard Akun Anda).</p>
-                        </div>
-                        <span class="px-2 py-0.5 bg-slate-100 text-slate-700 text-[10px] font-bold rounded-sm border border-slate-300 font-mono">
-                            Twilio REST API
-                        </span>
+                <div class="card-3d p-6 space-y-4">
+                    <div class="border-b border-slate-100 pb-3">
+                        <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Kredensial Akun Twilio</h2>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Didapat dari Console Twilio (Dashboard Akun Anda).</p>
                     </div>
 
                     <!-- Mode Pengiriman -->
@@ -51,13 +64,13 @@
                         </label>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                             <!-- Mode Template Resmi -->
-                            <label class="border border-slate-200 rounded-sm p-3 cursor-pointer hover:border-slate-400 transition-colors flex items-start gap-2.5 bg-slate-50/50 has-[:checked]:border-blue-700 has-[:checked]:bg-blue-50/40">
+                            <label class="border border-slate-200 rounded-xl p-3.5 cursor-pointer hover:border-slate-400 transition-all flex items-start gap-2.5 bg-slate-50/50 has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50/50 has-[:checked]:ring-1 has-[:checked]:ring-blue-600">
                                 <input 
                                     type="radio" 
                                     name="twilio_mode" 
                                     value="template" 
                                     {{ old('twilio_mode', $twilioMode) === 'template' ? 'checked' : '' }}
-                                    class="mt-0.5 text-blue-700 focus:ring-blue-700 cursor-pointer"
+                                    class="mt-0.5 text-blue-600 focus:ring-blue-600 cursor-pointer"
                                 >
                                 <div class="space-y-0.5">
                                     <span class="text-xs font-bold text-slate-900 block">Mode Meta Template (Resmi)</span>
@@ -68,13 +81,13 @@
                             </label>
 
                             <!-- Mode Freeform / Sandbox -->
-                            <label class="border border-slate-200 rounded-sm p-3 cursor-pointer hover:border-slate-400 transition-colors flex items-start gap-2.5 bg-slate-50/50 has-[:checked]:border-blue-700 has-[:checked]:bg-blue-50/40">
+                            <label class="border border-slate-200 rounded-xl p-3.5 cursor-pointer hover:border-slate-400 transition-all flex items-start gap-2.5 bg-slate-50/50 has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50/50 has-[:checked]:ring-1 has-[:checked]:ring-blue-600">
                                 <input 
                                     type="radio" 
                                     name="twilio_mode" 
                                     value="freeform" 
                                     {{ old('twilio_mode', $twilioMode) === 'freeform' ? 'checked' : '' }}
-                                    class="mt-0.5 text-blue-700 focus:ring-blue-700 cursor-pointer"
+                                    class="mt-0.5 text-blue-600 focus:ring-blue-600 cursor-pointer"
                                 >
                                 <div class="space-y-0.5">
                                     <span class="text-xs font-bold text-slate-900 block">Mode Sandbox / Bebas</span>
@@ -98,7 +111,7 @@
                                 id="twilio_sid" 
                                 value="{{ old('twilio_sid', $twilioSid) }}" 
                                 placeholder="ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-                                class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-sm text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-900 focus:bg-white transition-colors"
+                                class="input-3d w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono font-bold text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
                             >
                         </div>
 
@@ -113,7 +126,7 @@
                                 id="twilio_token" 
                                 value="{{ old('twilio_token', $twilioToken) }}" 
                                 placeholder="Masukkan Auth Token Twilio"
-                                class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-sm text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-900 focus:bg-white transition-colors"
+                                class="input-3d w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono font-bold text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
                             >
                         </div>
                     </div>
@@ -129,29 +142,24 @@
                             id="twilio_from" 
                             value="{{ old('twilio_from', $twilioFrom) }}" 
                             placeholder="+14155238886 (sandbox) atau +628xxxxxxxx (resmi)"
-                            class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-sm text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-900 focus:bg-white transition-colors"
+                            class="input-3d w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono font-bold text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
                         >
-                        <span class="text-[11px] text-slate-400 mt-1 block">
-                            Gunakan <code>+14155238886</code> jika masih memakai Twilio Sandbox, atau ganti nomor resmi WhatsApp Business jika sudah live.
+                        <span class="text-[11px] text-slate-400 mt-1.5 block">
+                            Gunakan <code class="font-mono text-slate-600">+14155238886</code> jika masih memakai Twilio Sandbox, atau ganti nomor resmi WhatsApp Business jika sudah live.
                         </span>
                     </div>
                 </div>
 
                 <!-- Card 2: 3 Slot Twilio Content SID Resmi Meta -->
-                <div class="bg-white border border-slate-200 rounded-sm p-5 shadow-2xs space-y-4">
-                    <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
-                        <div>
-                            <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider">3 Slot Twilio Content SID</h2>
-                            <p class="text-[11px] text-slate-400">Kode template resmi yang disetujui Meta di Twilio Content Template Builder.</p>
-                        </div>
-                        <span class="px-2 py-0.5 bg-blue-50 text-blue-800 text-[10px] font-bold rounded-sm border border-blue-200 font-mono">
-                            Meta Approved
-                        </span>
+                <div class="card-3d p-6 space-y-4">
+                    <div class="border-b border-slate-100 pb-3">
+                        <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wider">3 Slot Twilio Content SID</h2>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Kode template resmi yang disetujui Meta di Twilio Content Template Builder.</p>
                     </div>
 
                     <div class="space-y-4">
                         <!-- Slot 1: Undangan Acara -->
-                        <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-sm space-y-1.5">
+                        <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5">
                             <div class="flex items-center justify-between">
                                 <label for="twilio_invitation_template_id" class="block text-xs font-bold text-slate-900 uppercase tracking-wider">
                                     Slot 1: Undangan Registrasi Acara
@@ -164,13 +172,13 @@
                                 id="twilio_invitation_template_id" 
                                 value="{{ old('twilio_invitation_template_id', $twilioInvitationTemplateId) }}" 
                                 placeholder="HX55189df5f82668658e0c028e8a3892f1"
-                                class="w-full px-3 py-2 bg-white border border-slate-300 rounded-sm text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-900"
+                                class="input-3d w-full px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-xs font-mono text-slate-900 focus:outline-none focus:border-blue-600"
                             >
                             <span class="text-[10px] text-slate-400 block">Digunakan saat melakukan broadcast undangan di menu <em>Kirim Undangan</em>.</span>
                         </div>
 
                         <!-- Slot 2: Tiket QR Media -->
-                        <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-sm space-y-1.5">
+                        <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5">
                             <div class="flex items-center justify-between">
                                 <label for="twilio_template_id" class="block text-xs font-bold text-slate-900 uppercase tracking-wider">
                                     Slot 2: Tiket Presensi QR Code Media
@@ -183,13 +191,13 @@
                                 id="twilio_template_id" 
                                 value="{{ old('twilio_template_id', $twilioTemplateId) }}" 
                                 placeholder="HXb5bb1bdad43f0d1d4198c4ae1c8cc5d9"
-                                class="w-full px-3 py-2 bg-white border border-slate-300 rounded-sm text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-900"
+                                class="input-3d w-full px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-xs font-mono text-slate-900 focus:outline-none focus:border-blue-600"
                             >
                             <span class="text-[10px] text-slate-400 block">Digunakan saat mengirim tiket QR masuk di menu <em>Kirim Tiket QR</em> & Dashboard.</span>
                         </div>
 
                         <!-- Slot 3: Reminder & RSVP -->
-                        <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-sm space-y-1.5">
+                        <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5">
                             <div class="flex items-center justify-between">
                                 <label for="twilio_reminder_template_id" class="block text-xs font-bold text-slate-900 uppercase tracking-wider">
                                     Slot 3: Pengingat & RSVP Kehadiran
@@ -202,7 +210,7 @@
                                 id="twilio_reminder_template_id" 
                                 value="{{ old('twilio_reminder_template_id', $twilioReminderTemplateId) }}" 
                                 placeholder="HXd5eba0c89c4950f3c1edec3740e25f19"
-                                class="w-full px-3 py-2 bg-white border border-slate-300 rounded-sm text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-900"
+                                class="input-3d w-full px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-xs font-mono text-slate-900 focus:outline-none focus:border-blue-600"
                             >
                             <span class="text-[10px] text-slate-400 block">Digunakan saat blast pengingat H-1 / Hari-H di menu <em>Kirim Reminder</em>.</span>
                         </div>
@@ -213,7 +221,7 @@
                 <div class="flex items-center justify-end">
                     <button 
                         type="submit" 
-                        class="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs rounded-sm transition-colors shadow-2xs cursor-pointer"
+                        class="btn-3d-dark px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl border border-slate-900 transition-all shadow-2xs cursor-pointer"
                     >
                         Simpan Pengaturan Twilio
                     </button>
@@ -227,18 +235,13 @@
         <div class="lg:col-span-5 space-y-5">
             
             <!-- Card 1: Uji Coba Pengiriman Twilio (Test Send) -->
-            <div class="bg-white border border-slate-200 rounded-sm p-5 shadow-2xs space-y-4">
-                <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
-                    <div>
-                        <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Uji Coba Pengiriman</h2>
-                        <p class="text-[11px] text-slate-400">Pastikan kredensial & saldo Twilio aktif dengan mengirim pesan tes.</p>
-                    </div>
-                    <span class="px-2 py-0.5 bg-emerald-50 text-emerald-800 text-[10px] font-bold rounded-sm border border-emerald-200">
-                        Live Test
-                    </span>
+            <div class="card-3d p-6 space-y-4">
+                <div class="border-b border-slate-100 pb-3">
+                    <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Uji Coba Pengiriman</h2>
+                    <p class="text-[11px] text-slate-400 mt-0.5">Pastikan kredensial & saldo Twilio aktif dengan mengirim pesan tes.</p>
                 </div>
 
-                <form action="{{ route('admin.wa-settings.test') }}" method="POST" class="space-y-3">
+                <form action="{{ route('admin.wa-settings.test') }}" method="POST" class="space-y-3.5">
                     @csrf
                     <div>
                         <label for="test_phone" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
@@ -251,14 +254,14 @@
                             value="{{ old('test_phone', '083861669565') }}"
                             placeholder="081234567890" 
                             required
-                            class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-sm text-xs font-mono text-slate-900 focus:outline-none focus:border-slate-900 focus:bg-white"
+                            class="input-3d w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono font-bold text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
                         >
                         <span class="text-[10px] text-slate-400 mt-1 block">Pastikan nomor tester sudah join sandbox jika memakai mode sandbox.</span>
                     </div>
 
                     <button 
                         type="submit" 
-                        class="w-full py-2 bg-blue-700 hover:bg-blue-800 text-white font-semibold text-xs rounded-sm transition-colors flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
+                        class="btn-3d-blue w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl border border-blue-600 transition-all flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
                     >
                         <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
@@ -269,40 +272,40 @@
             </div>
 
             <!-- Card 2: Kelola Pesan & Format Teks (Navigasi Cepat) -->
-            <div class="bg-white border border-slate-200 rounded-sm p-5 shadow-2xs space-y-3">
+            <div class="card-3d p-6 space-y-3">
                 <div class="border-b border-slate-100 pb-2.5">
-                    <h2 class="text-sm font-bold text-slate-900 uppercase tracking-wider">Editor Format Pesan</h2>
-                    <p class="text-[11px] text-slate-500 mt-0.5">
+                    <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Editor Format Pesan</h2>
+                    <p class="text-[11px] text-slate-400 mt-0.5">
                         Format kata-kata teks & template pesan dikelola langsung pada halaman kerja masing-masing:
                     </p>
                 </div>
 
                 <div class="space-y-2">
                     <!-- Shortcut 1: Undangan -->
-                    <a href="{{ route('admin.invitation') }}" class="p-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-sm flex items-center justify-between group transition">
+                    <a href="{{ route('admin.invitation') }}" class="p-3.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl flex items-center justify-between group transition-all">
                         <div>
-                            <span class="text-xs font-bold text-slate-900 block group-hover:text-blue-700">1. Editor Undangan Acara</span>
+                            <span class="text-xs font-bold text-slate-900 block group-hover:text-blue-600">1. Editor Undangan Acara</span>
                             <span class="text-[11px] text-slate-500">Sesuaikan kalimat undangan & batas waktu pendaftaran.</span>
                         </div>
-                        <span class="text-xs font-bold text-slate-400 group-hover:text-slate-700">→</span>
+                        <span class="text-xs font-bold text-slate-400 group-hover:text-slate-800 transition">→</span>
                     </a>
 
                     <!-- Shortcut 2: Tiket QR -->
-                    <a href="{{ route('admin.tickets') }}" class="p-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-sm flex items-center justify-between group transition">
+                    <a href="{{ route('admin.tickets') }}" class="p-3.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl flex items-center justify-between group transition-all">
                         <div>
-                            <span class="text-xs font-bold text-slate-900 block group-hover:text-blue-700">2. Editor Tiket Presensi QR</span>
+                            <span class="text-xs font-bold text-slate-900 block group-hover:text-blue-600">2. Editor Tiket Presensi QR</span>
                             <span class="text-[11px] text-slate-500">Sesuaikan kalimat tiket & lampiran QR Code peserta.</span>
                         </div>
-                        <span class="text-xs font-bold text-slate-400 group-hover:text-slate-700">→</span>
+                        <span class="text-xs font-bold text-slate-400 group-hover:text-slate-800 transition">→</span>
                     </a>
 
                     <!-- Shortcut 3: Reminder RSVP -->
-                    <a href="{{ route('admin.reminder') }}" class="p-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-sm flex items-center justify-between group transition">
+                    <a href="{{ route('admin.reminder') }}" class="p-3.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl flex items-center justify-between group transition-all">
                         <div>
-                            <span class="text-xs font-bold text-slate-900 block group-hover:text-blue-700">3. Editor Reminder & RSVP</span>
+                            <span class="text-xs font-bold text-slate-900 block group-hover:text-blue-600">3. Editor Reminder & RSVP</span>
                             <span class="text-[11px] text-slate-500">Sesuaikan pesan pengingat H-1 dan tombol konfirmasi kehadiran.</span>
                         </div>
-                        <span class="text-xs font-bold text-slate-400 group-hover:text-slate-700">→</span>
+                        <span class="text-xs font-bold text-slate-400 group-hover:text-slate-800 transition">→</span>
                     </a>
                 </div>
             </div>
