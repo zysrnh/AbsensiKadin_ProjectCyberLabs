@@ -38,7 +38,7 @@ class TwilioService
         if ($attachQr) {
             $localQr = route('participants.qr-image', $participant->qr_token);
             if (str_contains($localQr, 'localhost') || str_contains($localQr, '127.0.0.1')) {
-                $mediaUrl = "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=" . urlencode($participant->qr_token);
+                $mediaUrl = "https://api.qrserver.com/v1/create-qr-code/?size=500x500&margin=30&ecc=H&data=" . urlencode($participant->qr_token);
             } else {
                 $mediaUrl = $localQr;
             }

@@ -247,7 +247,7 @@ class ParticipantController extends Controller
     public function qrImage(string $token)
     {
         $participant = Participant::where('qr_token', $token)->firstOrFail();
-        $qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=" . urlencode($participant->qr_token);
+        $qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=500x500&margin=30&ecc=H&data=" . urlencode($participant->qr_token);
 
         try {
             $imageContent = \Illuminate\Support\Facades\Http::timeout(5)->get($qrUrl)->body();
