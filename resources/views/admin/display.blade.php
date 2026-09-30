@@ -53,10 +53,7 @@
         @keyframes popupZoomIn {
             0% {
                 opacity: 0;
-                transform: scale(0.85) translateY(20px);
-            }
-            70% {
-                transform: scale(1.02) translateY(0);
+                transform: scale(0.92) translateY(15px);
             }
             100% {
                 opacity: 1;
@@ -65,44 +62,33 @@
         }
 
         .animate-welcome-card {
-            animation: popupZoomIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        /* Pulse glow */
-        .glow-box {
-            box-shadow: 0 0 50px -10px rgba(59, 130, 246, 0.3), 0 0 100px -20px rgba(16, 185, 129, 0.2);
+            animation: popupZoomIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
     </style>
 </head>
 <body class="h-full bg-navy-950 flex flex-col justify-between relative bg-grid-pattern">
 
-    <!-- Ambient Lights Background -->
-    <div class="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-blue-600/15 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="absolute -bottom-40 right-10 w-[500px] h-[350px] bg-emerald-600/10 rounded-full blur-3xl pointer-events-none"></div>
-
     <!-- Top Bar: Header & Live Clock -->
-    <header class="relative z-10 px-8 py-6 flex items-center justify-between border-b border-white/10 backdrop-blur-md bg-navy-950/40">
+    <header class="relative z-10 px-8 py-5 flex items-center justify-between border-b border-white/10 backdrop-blur-md bg-navy-950/60">
         <!-- Logo C Level -->
         <div class="flex items-center gap-4">
-            <div class="px-3.5 py-1.5 bg-blue-600 text-white font-black text-sm tracking-wider rounded-lg shadow-lg shadow-blue-600/30 flex items-center gap-2">
+            <div class="px-3.5 py-1.5 bg-blue-600 text-white font-bold text-sm tracking-wider rounded-lg flex items-center gap-2">
                 <span>C LEVEL</span>
-                <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                <span class="w-1.5 h-1.5 rounded-full bg-white/80"></span>
             </div>
         </div>
 
-        <!-- Live Digital Clock & Stats Widget -->
+        <!-- Live Digital Clock & Actions -->
         <div class="flex items-center gap-6">
-
-
             <!-- Jam Digital Real-time -->
             <div class="text-right">
-                <div id="live-clock" class="text-2xl font-black font-mono tracking-tight text-white">00:00:00</div>
-                <div id="live-date" class="text-xs font-semibold text-slate-400">Memuat tanggal...</div>
+                <div id="live-clock" class="text-xl font-bold font-mono tracking-tight text-white">00:00:00</div>
+                <div id="live-date" class="text-xs font-medium text-slate-400">Memuat tanggal...</div>
             </div>
 
             <!-- Fullscreen & Audio Controls -->
             <div class="flex items-center gap-2 pl-2 border-l border-white/10">
-                <button type="button" id="btn-audio" onclick="toggleAudio()" class="p-2.5 bg-white/5 hover:bg-white/15 text-slate-300 hover:text-white rounded-lg transition-colors cursor-pointer border border-white/10" title="Suara Sambutan">
+                <button type="button" id="btn-audio" onclick="toggleAudio()" class="p-2.5 bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white rounded-lg transition-colors cursor-pointer border border-white/10" title="Suara Sambutan">
                     <svg id="icon-sound-on" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
                     </svg>
@@ -112,7 +98,7 @@
                     </svg>
                 </button>
 
-                <button type="button" onclick="toggleFullscreen()" class="p-2.5 bg-white/5 hover:bg-white/15 text-slate-300 hover:text-white rounded-lg transition-colors cursor-pointer border border-white/10" title="Layar Penuh (F11)">
+                <button type="button" onclick="toggleFullscreen()" class="p-2.5 bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white rounded-lg transition-colors cursor-pointer border border-white/10" title="Layar Penuh (F11)">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
                     </svg>
@@ -125,64 +111,52 @@
     <main class="relative z-10 flex-grow flex items-center justify-center p-8 text-center">
 
         <!-- Standby Hero Banner (Tampil saat belum ada scan baru) -->
-        <div id="standby-screen" class="max-w-4xl mx-auto space-y-6 transition-opacity duration-500">
-            <h1 class="text-4xl sm:text-6xl font-black text-white tracking-tight leading-tight">
+        <div id="standby-screen" class="max-w-4xl mx-auto space-y-4 transition-opacity duration-500">
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight leading-tight">
                 Selamat Datang di <br>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-sky-300 to-emerald-400">
-                    C LEVEL INDONESIA 2026
-                </span>
+                <span class="text-white">C LEVEL INDONESIA 2026</span>
             </h1>
 
-            <p class="text-lg text-slate-400 max-w-2xl mx-auto font-medium leading-relaxed">
+            <p class="text-base sm:text-lg text-slate-400 max-w-xl mx-auto font-normal leading-relaxed">
                 Silakan arahkan tiket QR Anda pada meja registrasi. Layar ini akan otomatis menampilkan verifikasi kehadiran secara real-time.
             </p>
         </div>
 
-        <!-- Grand Welcome Overlay Card (Muncul saat ada scan baru) -->
-        <div id="welcome-card" class="hidden absolute inset-x-4 max-w-4xl mx-auto z-30 animate-welcome-card">
-            <div class="relative bg-gradient-to-b from-slate-900/95 to-navy-900/95 border-2 border-emerald-500/80 rounded-3xl p-8 sm:p-12 shadow-2xl backdrop-blur-2xl glow-box">
+        <!-- Grand Welcome Card (Muncul saat ada scan baru) -->
+        <div id="welcome-card" class="hidden absolute inset-x-4 max-w-3xl mx-auto z-30 animate-welcome-card">
+            <div class="relative bg-slate-900/95 border border-slate-800 rounded-2xl p-8 sm:p-12 shadow-2xl backdrop-blur-xl">
                 
-                <!-- Badge Atas -->
-                <div class="flex items-center justify-center gap-2 mb-4">
-                    <span class="px-4 py-1.5 rounded-full bg-emerald-500 text-navy-950 font-black text-xs uppercase tracking-widest flex items-center gap-2 shadow-lg shadow-emerald-500/20">
-                        <svg class="w-4 h-4 text-navy-950" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
-                        </svg>
-                        <span>PRESENSI TERVERIFIKASI</span>
+                <!-- Waktu Presensi Minimalis di Atas -->
+                <div class="flex items-center justify-center mb-5">
+                    <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/80 border border-slate-700/60 text-xs font-medium text-slate-300">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                        <span>Waktu Presensi: <span id="guest-time" class="text-white font-semibold font-mono">-</span></span>
                     </span>
                 </div>
 
-                <div class="space-y-4 my-2">
-                    <p class="text-sm uppercase tracking-widest text-slate-400 font-extrabold">Selamat Datang Yang Terhormat</p>
+                <!-- Info Tamu Undangan -->
+                <div class="space-y-3 my-2">
+                    <p class="text-xs sm:text-sm uppercase tracking-wider text-slate-400 font-medium">Selamat Datang Yang Terhormat</p>
                     
-                    <!-- Nama Peserta Raksasa -->
-                    <h2 id="guest-name" class="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight">
+                    <!-- Nama Peserta -->
+                    <h2 id="guest-name" class="text-3xl sm:text-5xl font-bold text-white tracking-normal leading-tight">
                         Nama Peserta
                     </h2>
 
                     <!-- Instansi & Jabatan -->
                     <div class="pt-2 flex flex-col items-center justify-center gap-1">
-                        <p id="guest-company" class="text-xl sm:text-2xl font-black text-amber-400">
+                        <p id="guest-company" class="text-xl sm:text-2xl font-semibold text-amber-400">
                             Perusahaan / Instansi
                         </p>
-                        <p id="guest-position" class="text-sm sm:text-base font-semibold text-slate-300">
+                        <p id="guest-position" class="text-sm sm:text-base font-normal text-slate-300">
                             Jabatan
                         </p>
                     </div>
                 </div>
 
-                <!-- Footer Card Sambutan -->
-                <div class="mt-8 pt-6 border-t border-white/10 flex items-center justify-between text-xs text-slate-400">
-                    <div class="flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                        <span>Waktu Presensi: <b id="guest-time" class="text-white font-mono font-bold">-</b></span>
-                    </div>
-                    <span class="font-bold tracking-wider text-slate-500 uppercase">C LEVEL INDONESIA 2026</span>
-                </div>
-
-                <!-- Progress Bar Otomatis Hitung Mundur -->
-                <div class="absolute bottom-0 left-0 right-0 h-1.5 bg-white/10 rounded-b-3xl overflow-hidden">
-                    <div id="welcome-progress" class="h-full bg-emerald-500 transition-all duration-100 ease-linear w-full"></div>
+                <!-- Progress Bar Otomatis Hitung Mundur (Subtle, Clean) -->
+                <div class="absolute bottom-0 left-0 right-0 h-1 bg-slate-800/80 rounded-b-2xl overflow-hidden">
+                    <div id="welcome-progress" class="h-full bg-blue-500 transition-all duration-100 ease-linear w-full"></div>
                 </div>
             </div>
         </div>
