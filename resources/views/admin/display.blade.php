@@ -35,18 +35,45 @@
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #060a17;
-            color: #ffffff;
+            background-color: #f8fafc;
+            color: #0f172a;
             overflow: hidden;
             user-select: none;
         }
 
-        /* Ambient Glow & Grid */
+        /* Subtle Light Grid Pattern */
         .bg-grid-pattern {
             background-size: 40px 40px;
             background-image: 
-                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+                linear-gradient(to right, rgba(15, 23, 42, 0.035) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(15, 23, 42, 0.035) 1px, transparent 1px);
+        }
+
+        /* Floating Stars Animation (Bottom to Top) */
+        @keyframes floatStar {
+            0% {
+                transform: translateY(105vh) rotate(0deg) scale(0.6);
+                opacity: 0;
+            }
+            15% {
+                opacity: var(--star-opacity, 0.45);
+            }
+            85% {
+                opacity: var(--star-opacity, 0.45);
+            }
+            100% {
+                transform: translateY(-10vh) rotate(180deg) scale(1.1);
+                opacity: 0;
+            }
+        }
+
+        .star-particle {
+            position: absolute;
+            bottom: 0;
+            animation: floatStar var(--duration, 14s) ease-in-out infinite;
+            animation-delay: var(--delay, 0s);
+            will-change: transform, opacity;
+            pointer-events: none;
         }
 
         /* Welcome Card Animation */
@@ -66,10 +93,62 @@
         }
     </style>
 </head>
-<body class="h-full bg-navy-950 flex flex-col justify-between relative bg-grid-pattern">
+<body class="h-full bg-slate-50 text-slate-900 flex flex-col justify-between relative bg-grid-pattern">
+
+    <!-- Floating Star Particles Background (Bintang 4 Sudut dari Bawah ke Atas) -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <!-- Partikel Bintang 1 -->
+        <div class="star-particle text-blue-500" style="left: 4%; --duration: 16s; --delay: 0s; --star-opacity: 0.35;">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
+        </div>
+        <!-- Partikel Bintang 2 -->
+        <div class="star-particle text-sky-400" style="left: 12%; --duration: 12s; --delay: 4s; --star-opacity: 0.5;">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
+        </div>
+        <!-- Partikel Bintang 3 -->
+        <div class="star-particle text-blue-600" style="left: 19%; --duration: 19s; --delay: 8s; --star-opacity: 0.3;">
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
+        </div>
+        <!-- Partikel Bintang 4 -->
+        <div class="star-particle text-blue-400" style="left: 28%; --duration: 14s; --delay: 2s; --star-opacity: 0.45;">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
+        </div>
+        <!-- Partikel Bintang 5 -->
+        <div class="star-particle text-sky-500" style="left: 36%; --duration: 17s; --delay: 9s; --star-opacity: 0.35;">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
+        </div>
+        <!-- Partikel Bintang 6 -->
+        <div class="star-particle text-blue-500" style="left: 45%; --duration: 13s; --delay: 1s; --star-opacity: 0.4;">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
+        </div>
+        <!-- Partikel Bintang 7 -->
+        <div class="star-particle text-indigo-400" style="left: 54%; --duration: 18s; --delay: 6s; --star-opacity: 0.35;">
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
+        </div>
+        <!-- Partikel Bintang 8 -->
+        <div class="star-particle text-blue-400" style="left: 63%; --duration: 15s; --delay: 3s; --star-opacity: 0.5;">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
+        </div>
+        <!-- Partikel Bintang 9 -->
+        <div class="star-particle text-sky-400" style="left: 72%; --duration: 14s; --delay: 10s; --star-opacity: 0.4;">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
+        </div>
+        <!-- Partikel Bintang 10 -->
+        <div class="star-particle text-blue-600" style="left: 81%; --duration: 16s; --delay: 5s; --star-opacity: 0.35;">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
+        </div>
+        <!-- Partikel Bintang 11 -->
+        <div class="star-particle text-blue-500" style="left: 90%; --duration: 13s; --delay: 7s; --star-opacity: 0.45;">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
+        </div>
+        <!-- Partikel Bintang 12 -->
+        <div class="star-particle text-sky-500" style="left: 96%; --duration: 18s; --delay: 2s; --star-opacity: 0.3;">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
+        </div>
+    </div>
 
     <!-- Top Bar: Header & Live Clock -->
-    <header class="relative z-10 px-8 py-5 flex items-center justify-between border-b border-white/10 backdrop-blur-md bg-navy-950/60">
+    <header class="relative z-10 px-8 py-5 flex items-center justify-between border-b border-slate-200/80 backdrop-blur-md bg-white/80">
         <!-- Logo C Level -->
         <div class="flex items-center gap-4">
             <div class="px-3.5 py-1.5 bg-blue-600 text-white font-bold text-sm tracking-wider rounded-lg flex items-center gap-2">
@@ -82,23 +161,23 @@
         <div class="flex items-center gap-6">
             <!-- Jam Digital Real-time -->
             <div class="text-right">
-                <div id="live-clock" class="text-xl font-bold font-mono tracking-tight text-white">00:00:00</div>
-                <div id="live-date" class="text-xs font-medium text-slate-400">Memuat tanggal...</div>
+                <div id="live-clock" class="text-xl font-bold font-mono tracking-tight text-slate-900">00:00:00</div>
+                <div id="live-date" class="text-xs font-medium text-slate-500">Memuat tanggal...</div>
             </div>
 
             <!-- Fullscreen & Audio Controls -->
-            <div class="flex items-center gap-2 pl-2 border-l border-white/10">
-                <button type="button" id="btn-audio" onclick="toggleAudio()" class="p-2.5 bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white rounded-lg transition-colors cursor-pointer border border-white/10" title="Suara Sambutan">
+            <div class="flex items-center gap-2 pl-2 border-l border-slate-200">
+                <button type="button" id="btn-audio" onclick="toggleAudio()" class="p-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 rounded-lg transition-colors cursor-pointer border border-slate-200" title="Suara Sambutan">
                     <svg id="icon-sound-on" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
                     </svg>
-                    <svg id="icon-sound-off" class="w-4 h-4 hidden text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg id="icon-sound-off" class="w-4 h-4 hidden text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
                     </svg>
                 </button>
 
-                <button type="button" onclick="toggleFullscreen()" class="p-2.5 bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white rounded-lg transition-colors cursor-pointer border border-white/10" title="Layar Penuh (F11)">
+                <button type="button" onclick="toggleFullscreen()" class="p-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 rounded-lg transition-colors cursor-pointer border border-slate-200" title="Layar Penuh (F11)">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
                     </svg>
@@ -112,25 +191,25 @@
 
         <!-- Standby Hero Banner (Tampil saat belum ada scan baru) -->
         <div id="standby-screen" class="max-w-4xl mx-auto space-y-4 transition-opacity duration-500">
-            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight leading-tight">
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 tracking-tight leading-tight">
                 Selamat Datang di <br>
-                <span class="text-white">C LEVEL INDONESIA 2026</span>
+                <span class="text-slate-900">C LEVEL INDONESIA 2026</span>
             </h1>
 
-            <p class="text-base sm:text-lg text-slate-400 max-w-xl mx-auto font-normal leading-relaxed">
+            <p class="text-base sm:text-lg text-slate-500 max-w-xl mx-auto font-normal leading-relaxed">
                 Silakan arahkan tiket QR Anda pada meja registrasi. Layar ini akan otomatis menampilkan verifikasi kehadiran secara real-time.
             </p>
         </div>
 
         <!-- Grand Welcome Card (Muncul saat ada scan baru) -->
         <div id="welcome-card" class="hidden absolute inset-x-4 max-w-3xl mx-auto z-30 animate-welcome-card">
-            <div class="relative bg-slate-900/95 border border-slate-800 rounded-2xl p-8 sm:p-12 shadow-2xl backdrop-blur-xl">
+            <div class="relative bg-white border border-slate-200/90 rounded-2xl p-8 sm:p-12 shadow-2xl backdrop-blur-xl">
                 
                 <!-- Waktu Presensi Minimalis di Atas -->
                 <div class="flex items-center justify-center mb-5">
-                    <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/80 border border-slate-700/60 text-xs font-medium text-slate-300">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                        <span>Waktu Presensi: <span id="guest-time" class="text-white font-semibold font-mono">-</span></span>
+                    <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-50 border border-slate-200 text-xs font-medium text-slate-600">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                        <span>Waktu Presensi: <span id="guest-time" class="text-slate-900 font-semibold font-mono">-</span></span>
                     </span>
                 </div>
 
@@ -139,24 +218,24 @@
                     <p class="text-xs sm:text-sm uppercase tracking-wider text-slate-400 font-medium">Selamat Datang Yang Terhormat</p>
                     
                     <!-- Nama Peserta -->
-                    <h2 id="guest-name" class="text-3xl sm:text-5xl font-bold text-white tracking-normal leading-tight">
+                    <h2 id="guest-name" class="text-3xl sm:text-5xl font-bold text-slate-900 tracking-normal leading-tight">
                         Nama Peserta
                     </h2>
 
                     <!-- Instansi & Jabatan -->
                     <div class="pt-2 flex flex-col items-center justify-center gap-1">
-                        <p id="guest-company" class="text-xl sm:text-2xl font-semibold text-amber-400">
+                        <p id="guest-company" class="text-xl sm:text-2xl font-semibold text-blue-600">
                             Perusahaan / Instansi
                         </p>
-                        <p id="guest-position" class="text-sm sm:text-base font-normal text-slate-300">
+                        <p id="guest-position" class="text-sm sm:text-base font-normal text-slate-500">
                             Jabatan
                         </p>
                     </div>
                 </div>
 
                 <!-- Progress Bar Otomatis Hitung Mundur (Subtle, Clean) -->
-                <div class="absolute bottom-0 left-0 right-0 h-1 bg-slate-800/80 rounded-b-2xl overflow-hidden">
-                    <div id="welcome-progress" class="h-full bg-blue-500 transition-all duration-100 ease-linear w-full"></div>
+                <div class="absolute bottom-0 left-0 right-0 h-1 bg-slate-100 rounded-b-2xl overflow-hidden">
+                    <div id="welcome-progress" class="h-full bg-blue-600 transition-all duration-100 ease-linear w-full"></div>
                 </div>
             </div>
         </div>
