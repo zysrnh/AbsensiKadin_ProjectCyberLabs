@@ -28,6 +28,7 @@ class ParticipantController extends Controller
             'event_dresscode' => Setting::get('event_dresscode', 'Batik Formal / Pakaian Bisnis Rapi'),
             'event_description' => Setting::get('event_description', 'Pertemuan strategis para pelaku usaha, pimpinan asosiasi, dan pemangku kepentingan industri nasional dalam rangka akselerasi ekonomi dan kolaborasi bisnis berkelanjutan.'),
             'event_flyer' => Setting::get('event_flyer', ''),
+            'event_flyer_fit' => Setting::get('event_flyer_fit', 'contain'),
             'registration_deadline_enabled' => Setting::get('registration_deadline_enabled', '0') === '1',
             'registration_deadline' => Setting::get('registration_deadline', '2026-10-27T23:59'),
             'registration_deadline_text' => Setting::get('registration_deadline_text', '27 Oktober 2026, 23:59 WIB'),

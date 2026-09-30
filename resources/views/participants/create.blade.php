@@ -481,12 +481,16 @@
                 <div id="heroFlyerCard" class="tilt-card hero-card-3d border-2 border-slate-900 bg-white rounded-2xl overflow-hidden cursor-pointer">
                     
                     @if(!empty($settings['event_flyer']))
-                        <img 
-                            src="{{ asset($settings['event_flyer']) }}" 
-                            alt="{{ $settings['event_title'] }}" 
-                            class="w-full h-auto object-cover rounded-2xl"
-                            style="aspect-ratio: 1/1; width: 100%; object-fit: cover;"
-                        >
+                        @php
+                            $flyerFit = $settings['event_flyer_fit'] ?? 'contain';
+                        @endphp
+                        <div class="w-full flex items-center justify-center {{ $flyerFit === 'contain' ? 'bg-slate-950 p-2 sm:p-2.5' : '' }}">
+                            <img 
+                                src="{{ asset($settings['event_flyer']) }}" 
+                                alt="{{ $settings['event_title'] }}" 
+                                class="w-full {{ $flyerFit === 'cover' ? 'h-auto aspect-square object-cover' : 'h-auto max-h-[460px] object-contain' }} rounded-xl block"
+                            >
+                        </div>
                     @else
                         <!-- Poster Grafis Default C LEVEL yang Proporsional & Super Clean -->
                         <div class="bg-slate-900 text-white p-6 sm:p-7 flex flex-col justify-between border-b-4 border-blue-600 rounded-2xl" style="aspect-ratio: 1/1; min-height: 280px;">
@@ -661,13 +665,15 @@
                 
                 <!-- SISI KIRI: FLYER ACARA / POSTER (SMOOTH ROUNDED 3D) -->
                 <div class="lg:col-span-5 flex flex-col">
-                    <div class="w-full h-full min-h-[250px] sm:min-h-[350px] lg:min-h-[480px] rounded-2xl overflow-hidden border border-slate-200 flyer-3d-box relative flex flex-col">
+                    @php
+                        $flyerFit = $settings['event_flyer_fit'] ?? 'contain';
+                    @endphp
+                    <div class="w-full h-full min-h-[250px] sm:min-h-[350px] lg:min-h-[480px] rounded-2xl overflow-hidden border border-slate-200 flyer-3d-box relative flex items-center justify-center {{ $flyerFit === 'contain' ? 'bg-slate-950 p-2.5 sm:p-3' : 'flex-col' }}">
                         @if(!empty($settings['event_flyer']))
                             <img 
                                 src="{{ asset($settings['event_flyer']) }}" 
                                 alt="{{ $settings['event_title'] }}" 
-                                class="w-full h-full object-cover rounded-2xl"
-                                style="width: 100%; height: 100%; object-fit: cover;"
+                                class="w-full {{ $flyerFit === 'cover' ? 'h-full object-cover' : 'h-auto max-h-[640px] object-contain' }} rounded-xl block"
                             >
                         @else
                             <!-- Poster Grafis Digital C LEVEL yang Estetik & Super Clean (Ala Gambar 2) -->

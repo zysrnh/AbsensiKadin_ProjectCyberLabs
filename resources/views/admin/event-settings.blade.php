@@ -65,12 +65,12 @@
                         <input type="hidden" name="remove_flyer" id="removeFlyerInput" value="0">
 
                         <!-- Gambar Preview / Placeholder -->
-                        <div id="flyerPreviewContainer" class="relative overflow-hidden rounded-xl border border-slate-200 bg-slate-100 min-h-[180px] max-h-[260px] flex items-center justify-center">
+                        <div id="flyerPreviewContainer" class="relative overflow-hidden rounded-xl border border-slate-200 bg-slate-100 min-h-[180px] max-h-[260px] flex items-center justify-center p-2">
                             <img 
                                 id="flyerPreviewImage" 
                                 src="{{ !empty($settings['event_flyer']) ? asset($settings['event_flyer']) : '' }}" 
                                 alt="Flyer Acara" 
-                                class="{{ empty($settings['event_flyer']) ? 'hidden' : '' }} w-full h-auto max-h-[260px] object-cover rounded-xl"
+                                class="{{ empty($settings['event_flyer']) ? 'hidden' : '' }} w-full h-auto max-h-[240px] object-contain rounded-lg shadow-2xs"
                             >
                             
                             <div id="flyerPlaceholder" class="{{ !empty($settings['event_flyer']) ? 'hidden' : '' }} w-full py-10 flex flex-col items-center justify-center text-slate-400">
@@ -109,6 +109,41 @@
                             >
                         </div>
                         <span class="text-[10px] text-slate-400 block">Format: JPG, PNG, WEBP (Maksimal 10MB)</span>
+
+                        <!-- Opsi Penyesuaian Tampilan Flyer di Halaman Regis -->
+                        <div class="pt-2.5 text-left border-t border-slate-200 space-y-1.5">
+                            <label class="block text-[11px] font-bold text-slate-700 uppercase tracking-wider">
+                                Proporsi Tampilan di Halaman Regis
+                            </label>
+                            <div class="space-y-1.5">
+                                <label class="flex items-start gap-2 p-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 cursor-pointer transition-colors">
+                                    <input 
+                                        type="radio" 
+                                        name="event_flyer_fit" 
+                                        value="contain" 
+                                        {{ ($settings['event_flyer_fit'] ?? 'contain') === 'contain' ? 'checked' : '' }}
+                                        class="mt-0.5 text-blue-600 focus:ring-blue-500"
+                                    >
+                                    <div class="min-w-0">
+                                        <span class="font-bold text-slate-800 block text-[11px]">Tampil Utuh (Bebas Terpotong)</span>
+                                        <span class="text-[10px] text-slate-400 block leading-tight">Flyer muncul penuh dari ujung atas hingga bawah tanpa ada gambar/teks terpotong.</span>
+                                    </div>
+                                </label>
+                                <label class="flex items-start gap-2 p-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 cursor-pointer transition-colors">
+                                    <input 
+                                        type="radio" 
+                                        name="event_flyer_fit" 
+                                        value="cover" 
+                                        {{ ($settings['event_flyer_fit'] ?? '') === 'cover' ? 'checked' : '' }}
+                                        class="mt-0.5 text-blue-600 focus:ring-blue-500"
+                                    >
+                                    <div class="min-w-0">
+                                        <span class="font-bold text-slate-800 block text-[11px]">Isi Penuh Wadah (Potong Sisi)</span>
+                                        <span class="text-[10px] text-slate-400 block leading-tight">Mengisi seluruh wadah kartu, tepi flyer dapat terpotong jika rasio gambar berbeda.</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

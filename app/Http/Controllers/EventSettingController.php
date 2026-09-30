@@ -25,6 +25,7 @@ class EventSettingController extends Controller
             'event_dresscode' => Setting::get('event_dresscode', 'Batik Formal / Pakaian Bisnis Rapi'),
             'event_description' => Setting::get('event_description', 'Pertemuan strategis para pelaku usaha, pimpinan asosiasi, dan pemangku kepentingan industri nasional dalam rangka akselerasi ekonomi dan kolaborasi bisnis berkelanjutan.'),
             'event_flyer' => Setting::get('event_flyer', ''),
+            'event_flyer_fit' => Setting::get('event_flyer_fit', 'contain'),
             'display_welcome_text' => Setting::get('display_welcome_text', 'Selamat Datang di'),
             'display_event_title' => Setting::get('display_event_title', 'C LEVEL INDONESIA 2026'),
             'display_instruction_text' => Setting::get('display_instruction_text', 'Silakan arahkan tiket QR Anda pada meja registrasi. Layar ini akan otomatis menampilkan verifikasi kehadiran secara real-time.'),
@@ -50,6 +51,7 @@ class EventSettingController extends Controller
             'event_dresscode' => 'required|string|max:255',
             'event_description' => 'nullable|string|max:2000',
             'flyer_file' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:10240',
+            'event_flyer_fit' => 'nullable|string|in:contain,cover',
             'display_welcome_text' => 'nullable|string|max:255',
             'display_event_title' => 'nullable|string|max:255',
             'display_instruction_text' => 'nullable|string|max:1000',
@@ -83,6 +85,9 @@ class EventSettingController extends Controller
             $file->move($destinationPath, $filename);
             Setting::set('event_flyer', 'uploads/flyers/' . $filename);
         }
+
+        // Simpan preferensi proporsi tampilan flyer (contain vs cover)
+        Setting::set('event_flyer_fit', $request->input('event_flyer_fit', 'contain'));
 
         Setting::set('event_title', $validated['event_title']);
         Setting::set('event_organizer', $validated['event_organizer'] ?? 'C LEVEL Indonesia');

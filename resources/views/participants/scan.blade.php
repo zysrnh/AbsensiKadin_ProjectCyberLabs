@@ -42,18 +42,31 @@
             
             <!-- Camera Scanner Box Clean Flat -->
             <div class="bg-white border border-slate-200 rounded-sm p-4 shadow-xs">
-                <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-3 flex-wrap gap-2">
                     <span class="text-xs font-semibold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
                         <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
                         <span>Pemindai Kamera</span>
                     </span>
-                    <button 
-                        type="button" 
-                        id="toggleCameraBtn" 
-                        class="px-3 py-1 text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-white rounded-sm cursor-pointer transition-colors"
-                    >
-                        Nyalakan Kamera
-                    </button>
+                    <div class="flex items-center gap-2">
+                        <button 
+                            type="button" 
+                            id="switchCameraBtn" 
+                            title="Ganti Kamera (Belakang / Depan)"
+                            class="px-2.5 py-1 text-xs font-semibold bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-sm cursor-pointer transition-colors flex items-center gap-1"
+                        >
+                            <svg class="w-3.5 h-3.5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            <span id="cameraFacingLabel">Kamera Belakang</span>
+                        </button>
+                        <button 
+                            type="button" 
+                            id="toggleCameraBtn" 
+                            class="px-3 py-1 text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-white rounded-sm cursor-pointer transition-colors"
+                        >
+                            Nyalakan Kamera
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Viewfinder Div -->
@@ -129,11 +142,31 @@
     let html5QrCode = null;
     let isCameraRunning = false;
     let isProcessing = false;
+    let currentFacingMode = "environment"; // "environment" (belakang) atau "user" (depan)
 
     const toggleBtn = document.getElementById('toggleCameraBtn');
+    const switchBtn = document.getElementById('switchCameraBtn');
+    const facingLabel = document.getElementById('cameraFacingLabel');
     const manualForm = document.getElementById('manualScanForm');
     const manualInput = document.getElementById('manualTokenInput');
     const recentList = document.getElementById('recentAttendedList');
+
+    if (switchBtn) {
+        switchBtn.addEventListener('click', function() {
+            currentFacingMode = currentFacingMode === "environment" ? "user" : "environment";
+            facingLabel.textContent = currentFacingMode === "environment" ? 'Kamera Belakang' : 'Kamera Depan';
+            if (isCameraRunning && html5QrCode) {
+                html5QrCode.stop().then(() => {
+                    isCameraRunning = false;
+                    startCamera();
+                }).catch(err => {
+                    console.error("Gagal stop sebelum switch:", err);
+                    isCameraRunning = false;
+                    startCamera();
+                });
+            }
+        });
+    }
 
     toggleBtn.addEventListener('click', function() {
         if (isCameraRunning) {
@@ -172,7 +205,7 @@
         };
 
         html5QrCode.start(
-            { facingMode: "environment" },
+            { facingMode: currentFacingMode },
             config,
             onScanSuccess
         ).then(() => {

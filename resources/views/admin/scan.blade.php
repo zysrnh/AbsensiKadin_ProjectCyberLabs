@@ -54,20 +54,37 @@
             
             <!-- Camera Scanner Card -->
             <div class="card-3d p-5 space-y-4">
-                <div class="flex items-center justify-between pb-3.5 border-b border-slate-100">
+                <div class="flex items-center justify-between pb-3.5 border-b border-slate-100 flex-wrap gap-2">
                     <div class="flex items-center gap-2">
                         <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span class="text-xs font-bold text-slate-700">Area Pemindaian QR</span>
                     </div>
-                    <button 
-                        type="button" 
-                        id="toggleCameraBtn" 
-                        class="btn-3d-dark px-3.5 py-1.5 text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white rounded-xl cursor-pointer border border-slate-900 transition-all flex items-center gap-1.5"
-                    >
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
-                        </svg>
-                        <span id="toggleCameraText">Nyalakan Kamera</span>
-                    </button>
+                    <div class="flex items-center gap-2">
+                        <!-- Tombol Switch Kamera Depan / Belakang -->
+                        <button 
+                            type="button" 
+                            id="switchCameraBtn" 
+                            title="Ganti Kamera (Belakang / Depan)"
+                            class="btn-3d-white px-3 py-1.5 text-xs font-bold bg-white hover:bg-slate-50 text-slate-700 rounded-xl cursor-pointer border border-slate-200 shadow-2xs transition-all flex items-center gap-1.5"
+                        >
+                            <svg class="w-3.5 h-3.5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            <span id="cameraFacingLabel">Kamera Belakang</span>
+                        </button>
+
+                        <!-- Tombol On/Off Kamera -->
+                        <button 
+                            type="button" 
+                            id="toggleCameraBtn" 
+                            class="btn-3d-dark px-3.5 py-1.5 text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white rounded-xl cursor-pointer border border-slate-900 transition-all flex items-center gap-1.5"
+                        >
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                            </svg>
+                            <span id="toggleCameraText">Nyalakan Kamera</span>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Viewfinder Div -->
@@ -180,12 +197,32 @@
     let html5QrCode = null;
     let isCameraRunning = false;
     let isProcessing = false;
+    let currentFacingMode = "environment"; // "environment" (belakang) atau "user" (depan)
 
     const toggleBtn = document.getElementById('toggleCameraBtn');
     const toggleText = document.getElementById('toggleCameraText');
+    const switchBtn = document.getElementById('switchCameraBtn');
+    const facingLabel = document.getElementById('cameraFacingLabel');
     const manualForm = document.getElementById('manualScanForm');
     const manualInput = document.getElementById('manualTokenInput');
     const recentList = document.getElementById('recentAttendedList');
+
+    if (switchBtn) {
+        switchBtn.addEventListener('click', function() {
+            currentFacingMode = currentFacingMode === "environment" ? "user" : "environment";
+            facingLabel.textContent = currentFacingMode === "environment" ? 'Kamera Belakang' : 'Kamera Depan';
+            if (isCameraRunning && html5QrCode) {
+                html5QrCode.stop().then(() => {
+                    isCameraRunning = false;
+                    startCamera();
+                }).catch(err => {
+                    console.error("Gagal stop sebelum switch:", err);
+                    isCameraRunning = false;
+                    startCamera();
+                });
+            }
+        });
+    }
 
     toggleBtn.addEventListener('click', function() {
         if (isCameraRunning) {
@@ -224,7 +261,7 @@
         };
 
         html5QrCode.start(
-            { facingMode: "environment" },
+            { facingMode: currentFacingMode },
             config,
             onScanSuccess
         ).then(() => {
