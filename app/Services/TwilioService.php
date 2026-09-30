@@ -38,14 +38,14 @@ class TwilioService
         if ($attachQr) {
             $localQr = route('participants.qr-image', $participant->qr_token);
             if (str_contains($localQr, 'localhost') || str_contains($localQr, '127.0.0.1')) {
-                $mediaUrl = "https://api.qrserver.com/v1/create-qr-code/?size=500x500&margin=30&ecc=H&data=" . urlencode($participant->qr_token);
+                $mediaUrl = "https://api.qrserver.com/v1/create-qr-code/?size=500x500&qzone=4&margin=25&ecc=H&data=" . urlencode($participant->qr_token);
             } else {
                 $mediaUrl = $localQr;
             }
         }
         $targetPhone = $toPhoneOverride ?: $participant->phone;
 
-        if (!empty($contentSid)) {
+        if ($mode === 'template' && !empty($contentSid)) {
             // Mode Production Meta Template via Twilio Content API (Template Media Image)
             $variables = [
                 '1' => (string) $participant->name,
@@ -84,20 +84,21 @@ class TwilioService
         ?string $customMessage = null, 
         ?string $contentSidOverride = null
     ): array {
+        $mode = Setting::get('twilio_mode', 'freeform');
         $contentSid = $contentSidOverride ?: Setting::get('twilio_invitation_template_id', '');
         $guestName = $name ?: 'Bapak/Ibu Pimpinan';
 
-        if (!empty($contentSid)) {
+        if ($mode === 'template' && !empty($contentSid)) {
             $deadlineEnabled = Setting::get('registration_deadline_enabled', '0') === '1';
             $deadlineText = Setting::get('registration_deadline_text', '27 Oktober 2026, 23:59 WIB');
             $deadlineStr = $deadlineEnabled ? $deadlineText : 'Sesuai kuota tersedia';
 
             $variables = [
                 '1' => (string) $guestName,
-                '2' => (string) Setting::get('event_title', 'Musyawarah & Temu Bisnis KADIN Indonesia 2026'),
+                '2' => (string) Setting::get('event_title', 'Musyawarah & Temu Bisnis C LEVEL Indonesia 2026'),
                 '3' => (string) Setting::get('event_date', '28 Oktober 2026'),
                 '4' => (string) Setting::get('event_time', '08:30 - 16:30 WIB'),
-                '5' => (string) Setting::get('event_venue_name', 'Grand Ballroom Menara Kadin Indonesia'),
+                '5' => (string) Setting::get('event_venue_name', 'Grand Ballroom C LEVEL Indonesia'),
                 '6' => (string) Setting::get('event_dresscode', 'Batik Formal / Pakaian Bisnis Rapi'),
                 '7' => (string) $deadlineStr,
                 '8' => (string) route('home'),
@@ -126,13 +127,13 @@ class TwilioService
         $contentSid = $contentSidOverride ?: Setting::get('twilio_reminder_template_id', '');
         $targetPhone = $toPhoneOverride ?: $participant->phone;
 
-        if (!empty($contentSid)) {
+        if ($mode === 'template' && !empty($contentSid)) {
             $variables = [
                 '1' => (string) $participant->name,
-                '2' => (string) Setting::get('event_title', 'Musyawarah & Temu Bisnis KADIN Indonesia 2026'),
+                '2' => (string) Setting::get('event_title', 'Musyawarah & Temu Bisnis C LEVEL Indonesia 2026'),
                 '3' => (string) Setting::get('event_date', '28 Oktober 2026'),
                 '4' => (string) Setting::get('event_time', '08:30 - 16:30 WIB'),
-                '5' => (string) Setting::get('event_venue_name', 'Grand Ballroom Menara Kadin Indonesia'),
+                '5' => (string) Setting::get('event_venue_name', 'Grand Ballroom C LEVEL Indonesia'),
                 '6' => (string) Setting::get('event_dresscode', 'Batik Formal / Pakaian Bisnis Rapi'),
                 '7' => (string) route('participants.card', $participant->qr_token),
             ];
