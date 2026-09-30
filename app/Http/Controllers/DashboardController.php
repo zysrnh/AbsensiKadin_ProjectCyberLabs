@@ -237,10 +237,32 @@ class DashboardController extends Controller
     /**
      * Export data pendaftar ke file CSV
      */
-    public function exportCsv(): StreamedResponse
+    public function exportCsv(Request $request): StreamedResponse
     {
-        $fileName = 'pendaftar_kadin_2026_' . date('Y-m-d_His') . '.csv';
-        $participants = Participant::latest()->get();
+        $fileName = 'pendaftar_clevel_2026_' . date('Y-m-d_His') . '.csv';
+        
+        $query = Participant::query();
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('company', 'like', "%{$search}%")
+                  ->orWhere('phone', 'like', "%{$search}%")
+                  ->orWhere('qr_token', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
+
+        if ($request->filled('rsvp')) {
+            $query->where('rsvp_status', $request->input('rsvp'));
+        }
+
+        $participants = $query->latest()->get();
 
         $headers = [
             'Content-Type' => 'text/csv; charset=UTF-8',
@@ -296,6 +318,64 @@ class DashboardController extends Controller
 
             fclose($handle);
         }, 200, $headers);
+    }
+
+    /**
+     * Export data pendaftar ke file Excel (XLS) ber-styling profesional
+     */
+    public function exportExcel(Request $request)
+    {
+        $fileName = 'laporan_presensi_clevel_2026_' . date('Y-m-d_His') . '.xls';
+
+        $query = Participant::query();
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('company', 'like', "%{$search}%")
+                  ->orWhere('phone', 'like', "%{$search}%")
+                  ->orWhere('qr_token', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
+
+        if ($request->filled('rsvp')) {
+            $query->where('rsvp_status', $request->input('rsvp'));
+        }
+
+        $participants = $query->latest()->get();
+
+        $total = $participants->count();
+        $attended = $participants->where('status', 'attended')->count();
+        $unattended = $total - $attended;
+        $rate = $total > 0 ? round(($attended / $total) * 100, 1) : 0;
+
+        $stats = [
+            'total' => $total,
+            'attended' => $attended,
+            'unattended' => $unattended,
+            'rate' => $rate,
+        ];
+
+        $eventSettings = [
+            'title' => Setting::get('event_title', 'Musyawarah & Temu Bisnis C LEVEL Indonesia 2026'),
+            'date' => Setting::get('event_date', '28 Oktober 2026'),
+        ];
+
+        $headers = [
+            'Content-Type' => 'application/vnd.ms-excel; charset=UTF-8',
+            'Content-Disposition' => "attachment; filename=\"{$fileName}\"",
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
+        ];
+
+        return response(view('admin.export-excel', compact('participants', 'stats', 'eventSettings')), 200, $headers);
     }
 
     /**

@@ -39,6 +39,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::delete('/participants/{participant}', [DashboardController::class, 'destroy'])->name('admin.participants.destroy');
     Route::post('/participants/bulk-delete', [DashboardController::class, 'bulkDestroy'])->name('admin.participants.bulk-destroy');
     Route::get('/export/csv', [DashboardController::class, 'exportCsv'])->name('admin.export.csv');
+    Route::get('/export/excel', [DashboardController::class, 'exportExcel'])->name('admin.export.excel');
     
     // Cetak ID Card Lanyard / Name Tag Peserta
     Route::get('/participants/id-cards/bulk', [DashboardController::class, 'printBulkIdCards'])->name('admin.participants.id-cards.bulk');
