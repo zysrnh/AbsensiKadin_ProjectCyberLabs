@@ -190,7 +190,7 @@
             <!-- Remember Me -->
             <div class="flex items-center justify-between text-xs pt-1">
                 <label class="flex items-center gap-2.5 cursor-pointer text-slate-600 select-none font-medium">
-                    <input type="checkbox" name="remember" class="w-4 h-4 rounded text-slate-900 focus:ring-slate-900 border-slate-300 cursor-pointer">
+                    <input type="checkbox" name="remember" checked class="w-4 h-4 rounded text-slate-900 focus:ring-slate-900 border-slate-300 cursor-pointer">
                     <span>Ingat sesi masuk</span>
                 </label>
             </div>
