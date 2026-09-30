@@ -52,25 +52,25 @@
         /* Floating Stars Animation (Bottom to Top) */
         @keyframes floatStar {
             0% {
-                transform: translateY(105vh) rotate(0deg) scale(0.6);
+                transform: translateY(0) rotate(0deg) scale(0.6);
                 opacity: 0;
             }
-            15% {
+            10% {
                 opacity: var(--star-opacity, 0.45);
             }
-            85% {
+            90% {
                 opacity: var(--star-opacity, 0.45);
             }
             100% {
-                transform: translateY(-10vh) rotate(180deg) scale(1.1);
+                transform: translateY(-118vh) rotate(180deg) scale(1.1);
                 opacity: 0;
             }
         }
 
         .star-particle {
             position: absolute;
-            bottom: 0;
-            animation: floatStar var(--duration, 14s) ease-in-out infinite;
+            bottom: -50px;
+            animation: floatStar var(--duration, 14s) linear infinite;
             animation-delay: var(--delay, 0s);
             will-change: transform, opacity;
             pointer-events: none;
@@ -98,51 +98,51 @@
     <!-- Floating Star Particles Background (Bintang 4 Sudut dari Bawah ke Atas) -->
     <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
         <!-- Partikel Bintang 1 -->
-        <div class="star-particle text-blue-500" style="left: 4%; --duration: 16s; --delay: 0s; --star-opacity: 0.35;">
+        <div class="star-particle text-blue-500" style="left: 4%; --duration: 16s; --delay: -3s; --star-opacity: 0.4;">
             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
         </div>
         <!-- Partikel Bintang 2 -->
-        <div class="star-particle text-sky-400" style="left: 12%; --duration: 12s; --delay: 4s; --star-opacity: 0.5;">
+        <div class="star-particle text-sky-400" style="left: 12%; --duration: 12s; --delay: -9s; --star-opacity: 0.55;">
             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
         </div>
         <!-- Partikel Bintang 3 -->
-        <div class="star-particle text-blue-600" style="left: 19%; --duration: 19s; --delay: 8s; --star-opacity: 0.3;">
+        <div class="star-particle text-blue-600" style="left: 19%; --duration: 19s; --delay: -14s; --star-opacity: 0.35;">
             <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
         </div>
         <!-- Partikel Bintang 4 -->
-        <div class="star-particle text-blue-400" style="left: 28%; --duration: 14s; --delay: 2s; --star-opacity: 0.45;">
+        <div class="star-particle text-blue-400" style="left: 28%; --duration: 14s; --delay: -5s; --star-opacity: 0.5;">
             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
         </div>
         <!-- Partikel Bintang 5 -->
-        <div class="star-particle text-sky-500" style="left: 36%; --duration: 17s; --delay: 9s; --star-opacity: 0.35;">
+        <div class="star-particle text-sky-500" style="left: 36%; --duration: 17s; --delay: -11s; --star-opacity: 0.4;">
             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
         </div>
         <!-- Partikel Bintang 6 -->
-        <div class="star-particle text-blue-500" style="left: 45%; --duration: 13s; --delay: 1s; --star-opacity: 0.4;">
+        <div class="star-particle text-blue-500" style="left: 45%; --duration: 13s; --delay: -2s; --star-opacity: 0.45;">
             <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
         </div>
         <!-- Partikel Bintang 7 -->
-        <div class="star-particle text-indigo-400" style="left: 54%; --duration: 18s; --delay: 6s; --star-opacity: 0.35;">
+        <div class="star-particle text-indigo-400" style="left: 54%; --duration: 18s; --delay: -8s; --star-opacity: 0.4;">
             <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
         </div>
         <!-- Partikel Bintang 8 -->
-        <div class="star-particle text-blue-400" style="left: 63%; --duration: 15s; --delay: 3s; --star-opacity: 0.5;">
+        <div class="star-particle text-blue-400" style="left: 63%; --duration: 15s; --delay: -13s; --star-opacity: 0.55;">
             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
         </div>
         <!-- Partikel Bintang 9 -->
-        <div class="star-particle text-sky-400" style="left: 72%; --duration: 14s; --delay: 10s; --star-opacity: 0.4;">
+        <div class="star-particle text-sky-400" style="left: 72%; --duration: 14s; --delay: -4s; --star-opacity: 0.45;">
             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
         </div>
         <!-- Partikel Bintang 10 -->
-        <div class="star-particle text-blue-600" style="left: 81%; --duration: 16s; --delay: 5s; --star-opacity: 0.35;">
+        <div class="star-particle text-blue-600" style="left: 81%; --duration: 16s; --delay: -10s; --star-opacity: 0.4;">
             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
         </div>
         <!-- Partikel Bintang 11 -->
-        <div class="star-particle text-blue-500" style="left: 90%; --duration: 13s; --delay: 7s; --star-opacity: 0.45;">
+        <div class="star-particle text-blue-500" style="left: 90%; --duration: 13s; --delay: -1s; --star-opacity: 0.5;">
             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
         </div>
         <!-- Partikel Bintang 12 -->
-        <div class="star-particle text-sky-500" style="left: 96%; --duration: 18s; --delay: 2s; --star-opacity: 0.3;">
+        <div class="star-particle text-sky-500" style="left: 96%; --duration: 18s; --delay: -7s; --star-opacity: 0.35;">
             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
         </div>
     </div>
