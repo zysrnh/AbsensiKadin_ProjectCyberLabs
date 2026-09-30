@@ -16,16 +16,12 @@
         <div class="flex items-center flex-wrap gap-2">
             <!-- Pengaturan Twilio -->
             <a href="{{ route('admin.wa-settings') }}" class="btn-3d-white px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl border border-slate-200 transition-all flex items-center gap-1.5 shadow-2xs">
-                <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
                 <span>Pengaturan Twilio</span>
             </a>
 
             <!-- Tombol Dashboard (Text-only) -->
-            <a href="{{ route('admin.dashboard') }}" class="btn-3d-white px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl border border-slate-200 shadow-2xs transition-all">
-                Dashboard
+            <a href="{{ route('admin.dashboard') }}" class="btn-3d-white px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl border border-slate-200 transition-all shadow-2xs">
+                <span>Dashboard</span>
             </a>
         </div>
     </div>
@@ -37,30 +33,104 @@
         $totalBatal = $participants->where('rsvp_status', 'confirmed_no')->count();
         $totalPending = $participants->where('rsvp_status', 'pending')->count();
     @endphp
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+        
         <!-- 1. Total Peserta -->
-        <div class="card-3d p-4.5 flex flex-col justify-between">
-            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Total Peserta</span>
-            <p class="text-2xl font-black text-slate-900 mt-1 font-mono">{{ $totalPeserta }}</p>
-            <span class="text-[11px] text-slate-500 mt-0.5">Pendaftar terverifikasi</span>
+        <div class="card-3d p-5 flex flex-col justify-between relative overflow-hidden">
+            <div class="flex items-start justify-between">
+                <div>
+                    <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Total Peserta</span>
+                    <div class="flex items-baseline gap-2 mt-1.5">
+                        <span class="text-3xl font-black text-slate-900 font-mono">{{ $totalPeserta }}</span>
+                    </div>
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                </div>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100">
+                <span class="text-[11px] text-slate-500 block">Pendaftar terverifikasi</span>
+            </div>
         </div>
+
         <!-- 2. Pasti Hadir -->
-        <div class="card-3d p-4.5 border-emerald-200/80 flex flex-col justify-between">
-            <span class="text-[10px] font-bold text-emerald-700 uppercase tracking-wider block">Pasti Hadir</span>
-            <p class="text-2xl font-black text-emerald-700 mt-1 font-mono">{{ $totalHadir }}</p>
-            <span class="text-[11px] text-emerald-600 mt-0.5">Konfirmasi Yes</span>
+        <div class="card-3d p-5 flex flex-col justify-between relative overflow-hidden">
+            <div class="flex items-start justify-between">
+                <div>
+                    <span class="text-[11px] font-bold text-emerald-700 uppercase tracking-wider block">Pasti Hadir</span>
+                    <div class="flex items-baseline gap-2 mt-1.5">
+                        <span class="text-3xl font-black text-emerald-600 font-mono">{{ $totalHadir }}</span>
+                        <span class="text-xs font-semibold text-slate-400">
+                            {{ $totalPeserta > 0 ? round(($totalHadir / $totalPeserta) * 100) : 0 }}%
+                        </span>
+                    </div>
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100">
+                <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                    <div class="bg-emerald-500 h-1.5 rounded-full" style="width: {{ $totalPeserta > 0 ? ($totalHadir / $totalPeserta) * 100 : 0 }}%"></div>
+                </div>
+                <span class="text-[11px] text-emerald-600 font-medium mt-1.5 block">Konfirmasi Yes</span>
+            </div>
         </div>
+
         <!-- 3. Berhalangan -->
-        <div class="card-3d p-4.5 border-rose-200/80 flex flex-col justify-between">
-            <span class="text-[10px] font-bold text-rose-700 uppercase tracking-wider block">Berhalangan</span>
-            <p class="text-2xl font-black text-rose-700 mt-1 font-mono">{{ $totalBatal }}</p>
-            <span class="text-[11px] text-rose-600 mt-0.5">Konfirmasi No</span>
+        <div class="card-3d p-5 flex flex-col justify-between relative overflow-hidden">
+            <div class="flex items-start justify-between">
+                <div>
+                    <span class="text-[11px] font-bold text-rose-700 uppercase tracking-wider block">Berhalangan</span>
+                    <div class="flex items-baseline gap-2 mt-1.5">
+                        <span class="text-3xl font-black text-rose-600 font-mono">{{ $totalBatal }}</span>
+                        <span class="text-xs font-semibold text-slate-400">
+                            {{ $totalPeserta > 0 ? round(($totalBatal / $totalPeserta) * 100) : 0 }}%
+                        </span>
+                    </div>
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-600 shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100">
+                <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                    <div class="bg-rose-500 h-1.5 rounded-full" style="width: {{ $totalPeserta > 0 ? ($totalBatal / $totalPeserta) * 100 : 0 }}%"></div>
+                </div>
+                <span class="text-[11px] text-rose-600 font-medium mt-1.5 block">Konfirmasi No</span>
+            </div>
         </div>
+
         <!-- 4. Belum Respon -->
-        <div class="card-3d p-4.5 border-amber-200/80 flex flex-col justify-between">
-            <span class="text-[10px] font-bold text-amber-700 uppercase tracking-wider block">Belum Respon</span>
-            <p class="text-2xl font-black text-amber-700 mt-1 font-mono">{{ $totalPending }}</p>
-            <span class="text-[11px] text-amber-600 mt-0.5">Menunggu balasan</span>
+        <div class="card-3d p-5 flex flex-col justify-between relative overflow-hidden">
+            <div class="flex items-start justify-between">
+                <div>
+                    <span class="text-[11px] font-bold text-amber-700 uppercase tracking-wider block">Belum Respon</span>
+                    <div class="flex items-baseline gap-2 mt-1.5">
+                        <span class="text-3xl font-black text-amber-600 font-mono">{{ $totalPending }}</span>
+                        <span class="text-xs font-semibold text-slate-400">
+                            {{ $totalPeserta > 0 ? round(($totalPending / $totalPeserta) * 100) : 0 }}%
+                        </span>
+                    </div>
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600 shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+            </div>
+            <div class="mt-4 pt-3 border-t border-slate-100">
+                <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                    <div class="bg-amber-500 h-1.5 rounded-full" style="width: {{ $totalPeserta > 0 ? ($totalPending / $totalPeserta) * 100 : 0 }}%"></div>
+                </div>
+                <span class="text-[11px] text-amber-600 font-medium mt-1.5 block">Menunggu balasan</span>
+            </div>
         </div>
     </div>
 
@@ -76,9 +146,6 @@
                         <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Generator Pesan Pengingat</h2>
                         <p class="text-[11px] text-slate-400">Pilih preset template atau sesuaikan pesan pengingat.</p>
                     </div>
-                    <span class="px-2.5 py-1 bg-blue-50 text-blue-700 text-[10px] font-bold rounded-full border border-blue-200/80 font-mono">
-                        Reminder & RSVP
-                    </span>
                 </div>
 
                 <!-- Tombol Preset Template Cepat -->
@@ -87,13 +154,13 @@
                         Pilihan Preset Template:
                     </label>
                     <div class="grid grid-cols-3 gap-2">
-                        <button type="button" onclick="loadPreset('h3')" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 transition-all cursor-pointer text-center">
+                        <button type="button" onclick="loadPreset('h3')" id="btnPresetH3" class="preset-btn px-3 py-2 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 transition-all cursor-pointer text-center">
                             Reminder H-3
                         </button>
-                        <button type="button" onclick="loadPreset('h1')" class="px-3 py-2 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-xl text-xs font-bold text-blue-900 transition-all cursor-pointer text-center">
-                            Reminder H-1 ⭐
+                        <button type="button" onclick="loadPreset('h1')" id="btnPresetH1" class="preset-btn px-3 py-2 bg-blue-50 border border-blue-200 rounded-xl text-xs font-bold text-blue-900 transition-all cursor-pointer text-center">
+                            Reminder H-1
                         </button>
-                        <button type="button" onclick="loadPreset('h0')" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 transition-all cursor-pointer text-center">
+                        <button type="button" onclick="loadPreset('h0')" id="btnPresetH0" class="preset-btn px-3 py-2 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 transition-all cursor-pointer text-center">
                             Reminder Hari-H
                         </button>
                     </div>
@@ -117,7 +184,7 @@
                     <!-- Nomor WhatsApp -->
                     <div>
                         <label for="reminderPhoneInput" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
-                            Nomor WhatsApp <span class="text-slate-400 font-normal">(opsional untuk salin)</span>
+                            Nomor WhatsApp
                         </label>
                         <input 
                             type="tel" 
@@ -139,22 +206,22 @@
                         <button type="button" onclick="insertVar('{nama_acara}')" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-[11px] font-mono font-bold rounded-lg cursor-pointer transition-all">
                             {nama_acara}
                         </button>
-                        <button type="button" onclick="insertVar('{tanggal}')" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-[11px] font-mono font-bold rounded-lg border border-slate-200 cursor-pointer transition-all">
+                        <button type="button" onclick="insertVar('{tanggal}')" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-[11px] font-mono font-bold rounded-lg cursor-pointer transition-all">
                             {tanggal}
                         </button>
-                        <button type="button" onclick="insertVar('{waktu}')" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-[11px] font-mono font-bold rounded-lg border border-slate-200 cursor-pointer transition-all">
+                        <button type="button" onclick="insertVar('{waktu}')" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-[11px] font-mono font-bold rounded-lg cursor-pointer transition-all">
                             {waktu}
                         </button>
-                        <button type="button" onclick="insertVar('{venue}')" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-[11px] font-mono font-bold rounded-lg border border-slate-200 cursor-pointer transition-all">
+                        <button type="button" onclick="insertVar('{venue}')" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-[11px] font-mono font-bold rounded-lg cursor-pointer transition-all">
                             {venue}
                         </button>
-                        <button type="button" onclick="insertVar('{link_tiket}')" class="px-2.5 py-1 bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-800 text-[11px] font-mono font-bold rounded-lg cursor-pointer transition-all">
+                        <button type="button" onclick="insertVar('{link_tiket}')" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-[11px] font-mono font-bold rounded-lg cursor-pointer transition-all">
                             {link_tiket}
                         </button>
-                        <button type="button" onclick="insertVar('{link_konfirmasi_hadir}')" class="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 text-[11px] font-mono font-bold rounded-lg cursor-pointer transition-all">
+                        <button type="button" onclick="insertVar('{link_konfirmasi_hadir}')" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-[11px] font-mono font-bold rounded-lg cursor-pointer transition-all">
                             {link_konfirmasi_hadir}
                         </button>
-                        <button type="button" onclick="insertVar('{link_konfirmasi_batal}')" class="px-2.5 py-1 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-800 text-[11px] font-mono font-bold rounded-lg cursor-pointer transition-all">
+                        <button type="button" onclick="insertVar('{link_konfirmasi_batal}')" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-[11px] font-mono font-bold rounded-lg cursor-pointer transition-all">
                             {link_konfirmasi_batal}
                         </button>
                     </div>
@@ -488,7 +555,7 @@
     const charCountEl = document.getElementById('charCount');
     const contentSidInput = document.getElementById('contentSidInput');
 
-    let currentGuestToken = '{{ $sample->qr_token ?? "KD26-EXMPL01" }}';
+    let currentGuestToken = '{{ $sample->qr_token ?? "CL26-EXMPL01" }}';
     let currentRsvpFilter = 'all';
 
     // Preset templates
@@ -531,6 +598,18 @@
         if (presets[type]) {
             rawDefaultTemplate = presets[type];
             updateReminderText();
+
+            ['h3', 'h1', 'h0'].forEach(p => {
+                const btn = document.getElementById('btnPreset' + p.toUpperCase());
+                if (btn) {
+                    if (p === type) {
+                        btn.className = "preset-btn px-3 py-2 bg-blue-50 border border-blue-200 rounded-xl text-xs font-bold text-blue-900 transition-all cursor-pointer text-center";
+                    } else {
+                        btn.className = "preset-btn px-3 py-2 bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 transition-all cursor-pointer text-center";
+                    }
+                }
+            });
+
             Swal.fire({
                 toast: true,
                 position: 'top-end',

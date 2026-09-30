@@ -426,26 +426,30 @@ class WaSettingController extends Controller
             . "Mohon konfirmasi kesediaan kehadiran Bapak/Ibu melalui tautan berikut:\n"
             . "✅ *Pasti Hadir:* {link_konfirmasi_hadir}\n"
             . "❌ *Berhalangan:* {link_konfirmasi_batal}\n\n"
-            . "Terima kasih atas kerja samanya.\n*Panitia KADIN Indonesia 2026*";
+            . "Terima kasih atas kerja samanya.\n*Panitia C LEVEL Indonesia 2026*";
 
         $reminderTemplate = Setting::get('wa_reminder_template', $defaultReminderTemplate);
+        // Replace any lingering KADIN text if template still has old default
+        $reminderTemplate = str_replace('KADIN Indonesia 2026', 'C LEVEL Indonesia 2026', $reminderTemplate);
+        $reminderTemplate = str_replace('Menara Kadin Indonesia', 'Grand Ballroom C LEVEL Indonesia', $reminderTemplate);
+
         $contentSidReminder = Setting::get('twilio_reminder_template_id', '');
         $participants = Participant::latest()->get();
 
         $eventSettings = [
-            'nama_acara' => Setting::get('event_title', 'Musyawarah & Temu Bisnis KADIN Indonesia 2026'),
+            'nama_acara' => Setting::get('event_title', 'Musyawarah & Temu Bisnis C LEVEL Indonesia 2026'),
             'tanggal' => Setting::get('event_date', '28 Oktober 2026'),
             'waktu' => Setting::get('event_time', '08:30 - 16:30 WIB'),
-            'venue' => Setting::get('event_venue_name', 'Grand Ballroom Menara Kadin Indonesia'),
+            'venue' => Setting::get('event_venue_name', 'Grand Ballroom C LEVEL Indonesia'),
             'dresscode' => Setting::get('event_dresscode', 'Batik Formal / Pakaian Bisnis Rapi'),
         ];
 
         $sample = $participants->first() ?? new Participant([
             'name' => 'Bpk. Ir. Hendro Wibowo',
-            'company' => 'Kadin Jawa Barat',
-            'position' => 'Wakil Ketua Bidang Perdagangan',
+            'company' => 'C LEVEL Indonesia',
+            'position' => 'Executive Director',
             'phone' => '081234567890',
-            'qr_token' => 'KD26-EXMPL01',
+            'qr_token' => 'CL26-EXMPL01',
         ]);
 
         return view('admin.reminder', compact(
