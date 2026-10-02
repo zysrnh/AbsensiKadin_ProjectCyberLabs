@@ -10,13 +10,35 @@ use Illuminate\Support\Str;
 class ParticipantController extends Controller
 {
     /**
-     * Tampilkan form registrasi / pendaftaran
+     * Tampilkan landing page informasi acara di route /
+     */
+    public function event(Request $request)
+    {
+        $showEnvelope = !$request->has('direct');
+        $settings = $this->getEventSettings();
+        $isExpired = $this->checkIsExpired($settings);
+
+        return view('participants.event', compact('settings', 'isExpired', 'showEnvelope'));
+    }
+
+    /**
+     * Tampilkan form registrasi / pendaftaran di route /register
      */
     public function create(Request $request)
     {
-        $showEnvelope = !$request->is('register') && !$request->has('direct');
+        $showEnvelope = false;
+        $settings = $this->getEventSettings();
+        $isExpired = $this->checkIsExpired($settings);
 
-        $settings = [
+        return view('participants.create', compact('settings', 'isExpired', 'showEnvelope'));
+    }
+
+    /**
+     * Helper load konfigurasi acara
+     */
+    private function getEventSettings(): array
+    {
+        return [
             'event_title' => Setting::get('event_title', 'Musyawarah & Temu Bisnis C LEVEL Indonesia 2026'),
             'event_organizer' => Setting::get('event_organizer', 'C LEVEL Indonesia'),
             'event_date' => Setting::get('event_date', '28 Oktober 2026'),
@@ -33,18 +55,21 @@ class ParticipantController extends Controller
             'registration_deadline' => Setting::get('registration_deadline', '2026-10-27T23:59'),
             'registration_deadline_text' => Setting::get('registration_deadline_text', '27 Oktober 2026, 23:59 WIB'),
         ];
+    }
 
-        // Cek status kadaluarsa
-        $isExpired = false;
+    /**
+     * Helper cek kadaluarsa batas waktu pendaftaran
+     */
+    private function checkIsExpired(array $settings): bool
+    {
         if ($settings['registration_deadline_enabled'] && !empty($settings['registration_deadline'])) {
             try {
-                $isExpired = now()->greaterThan(\Carbon\Carbon::parse($settings['registration_deadline']));
+                return now()->greaterThan(\Carbon\Carbon::parse($settings['registration_deadline']));
             } catch (\Throwable $e) {
-                $isExpired = false;
+                return false;
             }
         }
-
-        return view('participants.create', compact('settings', 'isExpired', 'showEnvelope'));
+        return false;
     }
 
     /**

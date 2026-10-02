@@ -261,7 +261,8 @@
                 closed_alert_title: "Pendaftaran Telah Ditutup",
                 btn_closed: "Pendaftaran Telah Ditutup",
                 zoom_badge: "Lihat Ukuran Penuh",
-                preview_close: "Tutup Preview (Esc)"
+                preview_close: "Tutup Preview (Esc)",
+                back_to_event: "Kembali ke Detail Acara"
             },
             en: {
                 header_subtitle: "Executive Forum",
@@ -299,7 +300,8 @@
                 closed_alert_title: "Registration Is Closed",
                 btn_closed: "Registration Is Closed",
                 zoom_badge: "View Fullscreen",
-                preview_close: "Close Preview (Esc)"
+                preview_close: "Close Preview (Esc)",
+                back_to_event: "Back to Event Details"
             }
         };
 
