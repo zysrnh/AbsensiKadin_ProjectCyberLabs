@@ -103,12 +103,12 @@
                                 type="file" 
                                 name="flyer_file" 
                                 id="flyerFileInput" 
-                                accept="image/jpeg,image/png,image/webp,image/jpg" 
+                                accept="image/jpeg,image/png,image/webp,image/jpg,image/avif" 
                                 onchange="handleFlyerSelect(this)"
                                 class="text-xs text-slate-600 w-full file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-slate-900 file:text-white hover:file:bg-slate-800 cursor-pointer"
                             >
                         </div>
-                        <span class="text-[10px] text-slate-400 block">Format: JPG, PNG, WEBP (Maksimal 10MB)</span>
+                        <span class="text-[10px] text-slate-400 block">Format: JPG, PNG, WEBP, AVIF (Maksimal 10MB)</span>
 
                         <!-- Opsi Penyesuaian Tampilan Flyer di Halaman Regis -->
                         <div class="pt-2.5 text-left border-t border-slate-200 space-y-1.5">

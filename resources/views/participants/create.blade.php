@@ -512,13 +512,25 @@
 
             <!-- Host Info ala Luma (Dinamis dari Admin Settings: event_organizer) -->
             @if(!empty($settings['event_organizer']))
-                <div class="pt-2 border-t border-white/10 flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white font-bold text-xs shadow-md">
-                        {{ strtoupper(substr($settings['event_organizer'], 0, 2)) }}
-                    </div>
-                    <div>
-                        <span class="text-[10px] uppercase font-bold tracking-wider text-neutral-400 block">Diselenggarakan Oleh</span>
-                        <span class="text-xs font-bold text-neutral-200">{{ $settings['event_organizer'] }}</span>
+                @php
+                    $hosts = array_filter(array_map('trim', preg_split('/[\r\n,]+/', $settings['event_organizer'])));
+                    $hostGradients = [
+                        'from-zinc-300 via-neutral-400 to-zinc-600',
+                        'from-blue-300 via-indigo-300 to-slate-400',
+                        'from-slate-200 via-slate-400 to-zinc-500',
+                    ];
+                @endphp
+                <div class="pt-3 border-t border-white/10 space-y-2.5">
+                    <span class="text-[10px] uppercase font-bold tracking-wider text-neutral-400 block">Diselenggarakan Oleh</span>
+                    <div class="space-y-2">
+                        @foreach($hosts as $idx => $host)
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-7 h-7 rounded-full bg-gradient-to-tr {{ $hostGradients[$idx % count($hostGradients)] }} text-neutral-950 border border-white/20 flex items-center justify-center font-bold text-[11px] shadow-xs shrink-0">
+                                    {{ strtoupper(substr($host, 0, 1)) }}
+                                </div>
+                                <span class="text-xs font-bold text-neutral-200">{{ $host }}</span>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
             @endif
