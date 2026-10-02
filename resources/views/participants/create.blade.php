@@ -342,11 +342,6 @@
             
             <!-- Header You Are Invited -->
             <div class="space-y-2 relative">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-neutral-200 text-xs font-semibold uppercase tracking-wider mb-1">
-                    <span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>
-                    <span>Executive VIP Invitation</span>
-                </div>
-
                 <h1 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
                     You Are Invited
                 </h1>
@@ -441,20 +436,6 @@
         <div class="lg:col-span-7 space-y-6 anim-hero-text">
             
             <div class="space-y-3 relative">
-                <!-- Tag / Category Pill ala Luma (Monochromatic Grey Glass) -->
-                <div class="flex flex-wrap items-center gap-2">
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-neutral-200 text-xs font-semibold">
-                        <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
-                        Executive Forum
-                    </span>
-                    <span class="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-neutral-400 text-xs font-medium">
-                        # C-Level
-                    </span>
-                    <span class="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-neutral-400 text-xs font-medium">
-                        # Exclusive
-                    </span>
-                </div>
-
                 <!-- Headline Acara -->
                 <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-[1.15] tracking-tight">
                     {{ $settings['event_title'] }}
@@ -529,16 +510,18 @@
                 @endif
             </div>
 
-            <!-- Host Info ala Luma ("Diselenggarakan Oleh") -->
-            <div class="pt-2 border-t border-white/10 flex items-center gap-3">
-                <div class="w-9 h-9 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white font-bold text-xs shadow-md">
-                    CL
+            <!-- Host Info ala Luma (Dinamis dari Admin Settings: event_organizer) -->
+            @if(!empty($settings['event_organizer']))
+                <div class="pt-2 border-t border-white/10 flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white font-bold text-xs shadow-md">
+                        {{ strtoupper(substr($settings['event_organizer'], 0, 2)) }}
+                    </div>
+                    <div>
+                        <span class="text-[10px] uppercase font-bold tracking-wider text-neutral-400 block">Diselenggarakan Oleh</span>
+                        <span class="text-xs font-bold text-neutral-200">{{ $settings['event_organizer'] }}</span>
+                    </div>
                 </div>
-                <div>
-                    <span class="text-[10px] uppercase font-bold tracking-wider text-neutral-400 block">Diselenggarakan Oleh</span>
-                    <span class="text-xs font-bold text-neutral-200">C LEVEL Indonesia & Executive Board</span>
-                </div>
-            </div>
+            @endif
 
         </div>
 
@@ -641,7 +624,7 @@
                 </div>
 
                 <!-- 2. TANGGAL -->
-                <div class="info-card-dark p-6 sm:p-7 flex flex-col justify-between">
+                <div class="info-card-dark p-6 sm:p-7 flex flex-col justify-center">
                     <div class="space-y-2">
                         <div class="flex items-center gap-2 text-neutral-300">
                             <svg class="w-4 h-4 shrink-0 text-neutral-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -653,13 +636,10 @@
                             {{ $settings['event_date'] }}
                         </h3>
                     </div>
-                    <p class="text-xs text-neutral-400 font-medium pt-3">
-                        Agenda Resmi C LEVEL 2026
-                    </p>
                 </div>
 
                 <!-- 3. WAKTU -->
-                <div class="info-card-dark p-6 sm:p-7 flex flex-col justify-between">
+                <div class="info-card-dark p-6 sm:p-7 flex flex-col justify-center">
                     <div class="space-y-2">
                         <div class="flex items-center gap-2 text-neutral-300">
                             <svg class="w-4 h-4 shrink-0 text-neutral-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -671,13 +651,10 @@
                             {{ $settings['event_time'] }}
                         </h3>
                     </div>
-                    <p class="text-xs text-neutral-400 font-medium pt-3">
-                        Registrasi & Sesi Konferensi
-                    </p>
                 </div>
 
                 <!-- 4. DRESSCODE -->
-                <div class="info-card-dark p-6 sm:p-7 flex flex-col justify-between cursor-default">
+                <div class="info-card-dark p-6 sm:p-7 flex flex-col justify-center cursor-default">
                     <div class="space-y-2">
                         <div class="flex items-center gap-2 text-neutral-300">
                             <svg class="w-4 h-4 shrink-0 text-neutral-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -689,9 +666,6 @@
                             {{ $settings['event_dresscode'] }}
                         </h3>
                     </div>
-                    <p class="text-xs text-neutral-400 font-medium pt-3">
-                        Standar Kehadiran Eksekutif
-                    </p>
                 </div>
 
             </div>
@@ -724,10 +698,6 @@
         
         <!-- Header Registrasi Bersih -->
         <div class="text-center max-w-xl mx-auto space-y-2 mb-8">
-            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-neutral-300 text-xs font-semibold mb-1">
-                <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
-                <span>Pendaftaran Resmi</span>
-            </div>
             <h2 class="text-2xl sm:text-3xl font-black text-white tracking-tight">
                 Formulir Pendaftaran & E-Ticket
             </h2>

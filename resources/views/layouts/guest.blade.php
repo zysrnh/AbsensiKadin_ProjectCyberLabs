@@ -59,12 +59,11 @@
 
         /* ------------------------------------------------------------------
            COSMIC BACKGROUND — Near-pure black with very faint grey aurora
-           (Same approach as Luma: barely-there vertical light curtain)
            ------------------------------------------------------------------ */
         .bg-cosmic {
             background-color: var(--bg-void);
             background-image:
-                /* Micro stardust — very sparse white specks */
+                /* Micro stardust — sparse white specks */
                 radial-gradient(0.8px 0.8px at 12%  18%, rgba(255,255,255,0.55) 0%, transparent 100%),
                 radial-gradient(0.8px 0.8px at 34%   7%, rgba(255,255,255,0.45) 0%, transparent 100%),
                 radial-gradient(1.2px 1.2px at 58%  29%, rgba(255,255,255,0.5)  0%, transparent 100%),
@@ -110,7 +109,6 @@
                 transparent               26%
             );
             filter: blur(55px);
-            /* Mask so rays only appear at top-centre, fading out downward */
             mask-image: radial-gradient(ellipse 90% 65% at 50% 5%, black 0%, transparent 75%);
             -webkit-mask-image: radial-gradient(ellipse 90% 65% at 50% 5%, black 0%, transparent 75%);
         }
@@ -125,8 +123,8 @@
             -webkit-backdrop-filter: blur(40px) saturate(160%);
             border: 1px solid var(--border-glass);
             box-shadow:
-                inset 0  1px 0   var(--rim-light),       /* top rim highlight */
-                inset 0 -1px 0   rgba(255,255,255,0.04),  /* bottom inner glow */
+                inset 0  1px 0   var(--rim-light),
+                inset 0 -1px 0   rgba(255,255,255,0.04),
                 0 2px  4px rgba(0,0,0,0.35),
                 0 8px 30px rgba(0,0,0,0.55),
                 0 25px 60px rgba(0,0,0,0.35);
@@ -179,16 +177,6 @@
                     Executive Forum
                 </span>
             </a>
-
-            <!-- Right side: subtle "Official" badge -->
-            <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] text-white/40 font-medium"
-                 style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);">
-                <svg class="w-3 h-3 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                </svg>
-                Official Portal
-            </div>
 
         </div>
     </header>

@@ -166,15 +166,17 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label for="event_organizer" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">
-                                Penyelenggara (Host)
+                                Penyelenggara (Diselenggarakan Oleh)
                             </label>
                             <input 
                                 type="text" 
                                 name="event_organizer" 
                                 id="event_organizer" 
                                 value="{{ old('event_organizer', $settings['event_organizer']) }}" 
+                                placeholder="Contoh: C LEVEL Indonesia & Executive Board"
                                 class="input-3d w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
                             >
+                            <span class="text-[10px] text-slate-400 mt-1 block">Tampil pada bagian "Diselenggarakan Oleh" di halaman depan pendaftaran.</span>
                         </div>
 
                         <div>
