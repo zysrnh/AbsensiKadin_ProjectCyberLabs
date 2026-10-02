@@ -360,72 +360,334 @@
     </div>
 @endif
 
-<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 sm:space-y-16 py-4">
+@php
+    $dateStr = $settings['event_date'] ?? '';
+    $dayNumber = '27';
+    $monthAbbr = 'OKT';
+    if (preg_match('/(\d{1,2})\s+([A-Za-z]+)/', $dateStr, $matches)) {
+        $dayNumber = $matches[1];
+        $monthAbbr = strtoupper(substr($matches[2], 0, 3));
+    } elseif (preg_match('/\d{1,2}/', $dateStr, $matches)) {
+        $dayNumber = $matches[0];
+    }
+    $hosts = !empty($settings['event_organizer']) 
+        ? array_filter(array_map('trim', preg_split('/[\r\n,]+/', $settings['event_organizer']))) 
+        : ['Daphne Kusuma', 'Dina Ernawati Saksono'];
+    $hostGradients = [
+        'from-zinc-300 via-neutral-400 to-zinc-600',
+        'from-blue-300 via-indigo-300 to-slate-400',
+        'from-slate-200 via-slate-400 to-zinc-500',
+    ];
+@endphp
+
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
 
     <!-- ==========================================================================
-         1. HERO SECTION (HEADLINE + FLYER ATAS DENGAN 3D PARALLAX TILT)
+         A. MOBILE VIEW (PERSIS SESUAI SCREENSHOT LUMA MOBILE)
+         Urutan: Flyer di Paling Atas (Gede) -> Judul Acara -> Host -> 
+                 Tanggal & Lokasi -> Card Pendaftaran -> Tentang Acara -> Lokasi -> Host
          ========================================================================== -->
-    <section class="scroll-reveal grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start pt-4 sm:pt-8">
+    <div class="block lg:hidden space-y-6 pt-2 pb-10 max-w-lg mx-auto">
         
-        <!-- Sisi Kiri Hero: Teks & Action Ala Luma Event Landing -->
-        <div class="lg:col-span-7 space-y-6 anim-hero-text">
+        <!-- 1. FLYER POSTER DI PALING ATAS & BESAR (ALA LUMA MOBILE) -->
+        <div class="w-full relative anim-flyer-card tilt-card-container">
+            <div class="flyer-glow-ambient anim-aurora-glow"></div>
+
+            <div class="w-full relative z-10">
+                <div class="tilt-card card-glass rounded-2xl sm:rounded-3xl overflow-hidden cursor-zoom-in group p-2 shadow-2xl relative" 
+                     onclick="openFlyerPreview('{{ !empty($settings['event_flyer']) ? asset($settings['event_flyer']) : '' }}')" 
+                     title="Ketuk untuk memperbesar flyer">
+                    
+                    @if(!empty($settings['event_flyer']))
+                        <div class="w-full flex items-center justify-center rounded-xl sm:rounded-2xl overflow-hidden bg-black/60 relative">
+                            <img 
+                                src="{{ asset($settings['event_flyer']) }}" 
+                                alt="{{ $settings['event_title'] }}" 
+                                class="w-full h-auto max-h-[500px] object-contain rounded-xl block shadow-lg"
+                            >
+                            <div class="absolute bottom-3 right-3 px-3 py-1.5 rounded-lg bg-black/75 backdrop-blur-md border border-white/20 text-white text-xs font-semibold flex items-center gap-1.5 shadow-xl pointer-events-none">
+                                <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                                </svg>
+                                <span data-i18n="zoom_badge">Lihat Ukuran Penuh</span>
+                            </div>
+                        </div>
+                    @else
+                        <div class="bg-gradient-to-b from-neutral-900 to-black text-white p-7 flex flex-col justify-between rounded-2xl border border-white/10 aspect-square">
+                            <div class="flex items-center justify-between">
+                                <img src="{{ asset('images/wonderful-logo.png') }}" alt="Wonderful" class="w-6 h-6 object-contain">
+                                <span class="w-2.5 h-2.5 rounded-full bg-white animate-ping"></span>
+                            </div>
+                            <div class="my-auto py-4">
+                                <h3 class="text-xl font-black text-white leading-tight">
+                                    {{ $settings['event_title'] }}
+                                </h3>
+                            </div>
+                            <div class="pt-3 border-t border-white/10 text-xs text-neutral-400">
+                                {{ $settings['event_date'] }}
+                            </div>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. JUDUL ACARA & CURVE SVG -->
+        <div class="space-y-3 pt-1">
+            <h1 class="text-2xl sm:text-3xl font-black text-white leading-tight tracking-tight">
+                {{ $settings['event_title'] }}
+            </h1>
+            <div class="w-48 pt-0.5">
+                <svg viewBox="0 0 260 20" fill="none" class="w-full h-auto" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 12C60 4 140 18 256 6" stroke="rgba(255, 255, 255, 0.35)" stroke-width="4" stroke-linecap="round" class="svg-draw-line" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- 3. BARIS HOST (AVATAR CIRCLE + NAMA HOST) -->
+        <div class="flex items-center gap-2.5 py-1">
+            <div class="flex -space-x-2 overflow-hidden shrink-0">
+                @foreach(array_slice($hosts, 0, 3) as $idx => $host)
+                    <div class="inline-block h-7 w-7 rounded-full ring-2 ring-neutral-950 bg-gradient-to-tr {{ $hostGradients[$idx % count($hostGradients)] }} text-neutral-950 flex items-center justify-center font-bold text-[10px]">
+                        {{ strtoupper(substr($host, 0, 1)) }}
+                    </div>
+                @endforeach
+            </div>
+            <div class="text-xs sm:text-sm font-medium text-neutral-300 truncate">
+                <span class="text-neutral-400" data-i18n="hosted_by_prefix">Diselenggarakan oleh</span> 
+                <span class="text-white font-bold">{{ implode(', ', $hosts) }}</span>
+            </div>
+        </div>
+
+        <!-- 4. BARIS TANGGAL & LOKASI (ALA LUMA) -->
+        <div class="space-y-2.5">
+            <!-- Row Tanggal & Jam -->
+            <div class="flex items-center gap-3.5 p-3 rounded-xl card-glass-subtle">
+                <div class="w-11 h-12 rounded-lg bg-neutral-900 border border-white/15 text-white flex flex-col items-center justify-center shrink-0 overflow-hidden shadow-xs">
+                    <div class="w-full bg-white/10 text-[9px] uppercase font-bold tracking-wider text-neutral-300 text-center py-0.5 leading-none">{{ $monthAbbr }}</div>
+                    <div class="text-base font-black text-white leading-none mt-1">{{ $dayNumber }}</div>
+                </div>
+                <div class="min-w-0">
+                    <div class="text-xs sm:text-sm font-bold text-white truncate">{{ $settings['event_date'] }}</div>
+                    <div class="text-xs text-neutral-400 truncate mt-0.5">{{ $settings['event_time'] }}</div>
+                </div>
+            </div>
+
+            <!-- Row Lokasi & Alamat -->
+            <div class="flex items-center gap-3.5 p-3 rounded-xl card-glass-subtle">
+                <div class="w-11 h-12 rounded-lg bg-white/10 border border-white/15 text-neutral-300 flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5 text-neutral-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                </div>
+                <div class="min-w-0">
+                    <div class="text-xs sm:text-sm font-bold text-white truncate">{{ $settings['event_venue_name'] }}</div>
+                    <div class="text-xs text-neutral-400 truncate mt-0.5">{{ $settings['event_venue_address'] }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. CARD PENDAFTARAN (ALA SCREENSHOT 2 LUMA) -->
+        <div class="space-y-2 pt-1">
+            <span class="text-xs font-bold text-neutral-400 uppercase tracking-wider block px-1" data-i18n="registration_card_title">
+                Pendaftaran
+            </span>
+            <div class="p-5 rounded-2xl card-glass space-y-4 shadow-xl">
+                <!-- Persetujuan Diperlukan banner -->
+                <div class="flex items-start gap-3 p-3.5 rounded-xl bg-white/[0.04] border border-white/10">
+                    <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center shrink-0 text-white">
+                        <svg class="w-4 h-4 text-neutral-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                    </div>
+                    <div class="min-w-0">
+                        <div class="text-xs font-bold text-white" data-i18n="approval_required">Persetujuan Diperlukan</div>
+                        <div class="text-[11px] text-neutral-400 mt-0.5" data-i18n="approval_desc">Pendaftaran Anda memerlukan persetujuan host.</div>
+                    </div>
+                </div>
+
+                <!-- Welcome Text -->
+                <p class="text-xs sm:text-sm text-neutral-300 font-medium leading-relaxed" data-i18n="welcome_msg">
+                    Selamat datang! Untuk mengikuti acara ini, silakan daftar di bawah.
+                </p>
+
+                <!-- Tombol Putih Besar "Minta untuk Bergabung / Request to Join" -->
+                <a href="{{ route('participants.create') }}" 
+                   class="btn-glow-white w-full py-3.5 px-6 font-black text-xs sm:text-sm tracking-wide rounded-xl flex items-center justify-center gap-2 cursor-pointer text-center shadow-xl hover:scale-[1.01] active:scale-[0.99] transition-all">
+                    <span data-i18n="btn_request_join">Minta untuk Bergabung</span>
+                    <svg class="w-4 h-4 text-neutral-950 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        <!-- 6. SECTION TENTANG ACARA (ALA SCREENSHOT 2) -->
+        <div class="space-y-3 pt-2">
+            <h3 class="text-base font-black text-white tracking-tight" data-i18n="about_event">
+                Tentang Acara
+            </h3>
+            <div class="text-xs sm:text-sm text-neutral-300 leading-relaxed font-normal space-y-3.5">
+                @foreach(array_filter(explode("\n", str_replace("\r", "", $settings['event_description'] ?? ''))) as $paragraph)
+                    @if(trim($paragraph) !== '')
+                        <p>{{ trim($paragraph) }}</p>
+                    @endif
+                @endforeach
+            </div>
+        </div>
+
+        <!-- 7. SECTION LOKASI & GOOGLE MAPS (ALA SCREENSHOT 3) -->
+        <div class="space-y-3 pt-2">
+            <h3 class="text-base font-black text-white tracking-tight" data-i18n="location_title">
+                Lokasi
+            </h3>
+            <div>
+                <div class="text-xs sm:text-sm font-bold text-white leading-snug" data-i18n="location_prompt">
+                    Harap mendaftar untuk melihat lokasi tepat acara ini.
+                </div>
+                <div class="text-xs text-neutral-400 mt-0.5">
+                    {{ $settings['event_venue_address'] }}
+                </div>
+            </div>
+
+            <!-- Wadah Peta Embed dengan Badge Maps ↗ -->
+            <div class="rounded-2xl overflow-hidden card-glass p-1.5 relative">
+                <div class="relative h-[220px] w-full rounded-xl overflow-hidden bg-black maps-iframe-container">
+                    @if(!empty($settings['event_maps_url']))
+                        <a href="{{ $settings['event_maps_url'] }}" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           class="absolute top-3 left-3 z-10 px-3 py-1.5 rounded-lg bg-white/90 hover:bg-white text-neutral-950 font-bold text-xs flex items-center gap-1.5 shadow-md backdrop-blur-md transition-all">
+                            <span data-i18n="btn_maps">Maps</span>
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                        </a>
+                    @endif
+
+                    @if(!empty($settings['event_maps_iframe']))
+                        {!! $settings['event_maps_iframe'] !!}
+                    @else
+                        <iframe 
+                            src="https://maps.google.com/maps?q={{ urlencode(($settings['event_venue_name'] ?? '') . ' ' . ($settings['event_venue_address'] ?? 'SCBD Area, Jakarta')) }}&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                            class="w-full h-full border-0"
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    @endif
+                </div>
+            </div>
+        </div>
+
+        <!-- 8. SECTION DISELENGGARAKAN OLEH (ALA SCREENSHOT 3) -->
+        <div class="space-y-4 pt-2">
+            <h3 class="text-base font-black text-white tracking-tight" data-i18n="hosted_by">
+                Diselenggarakan Oleh
+            </h3>
             
-            <div class="space-y-4 relative">
-                <!-- Headline Acara -->
-                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-[1.2] tracking-tight">
+            <div class="space-y-3">
+                @foreach($hosts as $idx => $host)
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-tr {{ $hostGradients[$idx % count($hostGradients)] }} text-neutral-950 border border-white/20 flex items-center justify-center font-bold text-xs shadow-xs shrink-0">
+                            {{ strtoupper(substr($host, 0, 1)) }}
+                        </div>
+                        <span class="text-xs sm:text-sm font-bold text-white">{{ $host }}</span>
+                    </div>
+                @endforeach
+            </div>
+
+            <!-- Action links & Tag ala Luma -->
+            <div class="space-y-2 pt-2 text-xs text-neutral-400">
+                <div>
+                    <a href="mailto:contact@wonderful.ai" class="hover:text-white transition-colors" data-i18n="contact_host">Hubungi Penyelenggara</a>
+                </div>
+                <div>
+                    <a href="javascript:void(0)" onclick="alert('Laporan Anda telah diterima.')" class="hover:text-white transition-colors" data-i18n="report_event">Laporkan Acara</a>
+                </div>
+            </div>
+
+            <div class="pt-2">
+                <span class="inline-flex items-center px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-neutral-300">
+                    # AI
+                </span>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================================================
+         B. DESKTOP VIEW (MODERN 2-COLUMN LAYOUT)
+         Kiri: Konten Detail, Tentang Acara, Lokasi & Host
+         Kanan: Flyer Poster (Besar) + Card Pendaftaran Sticky
+         ========================================================================== -->
+    <div class="hidden lg:grid lg:grid-cols-12 gap-12 lg:gap-14 items-start pt-6 pb-14">
+        
+        <!-- Sisi Kiri Desktop: Detail Acara Lengkap -->
+        <div class="lg:col-span-7 space-y-8 anim-hero-text">
+            
+            <!-- Headline & Curve -->
+            <div class="space-y-4">
+                <h1 class="text-4xl lg:text-5xl font-black text-white leading-[1.18] tracking-tight">
                     {{ $settings['event_title'] }}
                 </h1>
-
-                <!-- Self-Drawing SVG Curved Line (Silver/White Stroke) -->
-                <div class="w-48 sm:w-64 pt-0.5">
+                <div class="w-60 pt-0.5">
                     <svg viewBox="0 0 260 20" fill="none" class="w-full h-auto" xmlns="http://www.w3.org/2000/svg">
                         <path d="M4 12C60 4 140 18 256 6" stroke="rgba(255, 255, 255, 0.35)" stroke-width="4" stroke-linecap="round" class="svg-draw-line" />
                     </svg>
                 </div>
-                
-                @php
-                    $dateStr = $settings['event_date'] ?? '';
-                    $dayNumber = '27';
-                    $monthAbbr = 'OKT';
-                    if (preg_match('/(\d{1,2})\s+([A-Za-z]+)/', $dateStr, $matches)) {
-                        $dayNumber = $matches[1];
-                        $monthAbbr = strtoupper(substr($matches[2], 0, 3));
-                    } elseif (preg_match('/\d{1,2}/', $dateStr, $matches)) {
-                        $dayNumber = $matches[0];
-                    }
-                @endphp
+            </div>
 
-                <!-- Quick Date & Venue Indicator Card (Monochromatic Glass ala Luma) -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                    <!-- Date Quick Badge -->
-                    <div class="flex items-center gap-3.5 p-3.5 rounded-xl card-glass-subtle">
-                        <div class="w-11 h-11 rounded-lg bg-white/10 border border-white/15 text-white flex flex-col items-center justify-center font-bold shrink-0">
-                            <span class="text-[9px] uppercase font-bold tracking-wider text-neutral-400 leading-none">{{ $monthAbbr }}</span>
-                            <span class="text-base font-black leading-none mt-1">{{ $dayNumber }}</span>
+            <!-- Host Line -->
+            <div class="flex items-center gap-3">
+                <div class="flex -space-x-2 overflow-hidden shrink-0">
+                    @foreach(array_slice($hosts, 0, 3) as $idx => $host)
+                        <div class="inline-block h-8 w-8 rounded-full ring-2 ring-neutral-950 bg-gradient-to-tr {{ $hostGradients[$idx % count($hostGradients)] }} text-neutral-950 flex items-center justify-center font-bold text-xs">
+                            {{ strtoupper(substr($host, 0, 1)) }}
                         </div>
-                        <div class="min-w-0">
-                            <div class="text-xs font-bold text-white truncate">{{ $settings['event_date'] }}</div>
-                            <div class="text-[11px] text-neutral-400 truncate mt-0.5">{{ $settings['event_time'] }}</div>
-                        </div>
+                    @endforeach
+                </div>
+                <div class="text-sm font-medium text-neutral-300">
+                    <span class="text-neutral-400" data-i18n="hosted_by_prefix">Diselenggarakan oleh</span> 
+                    <span class="text-white font-bold">{{ implode(', ', $hosts) }}</span>
+                </div>
+            </div>
+
+            <!-- Quick Date & Venue Cards -->
+            <div class="grid grid-cols-2 gap-3.5 pt-2">
+                <div class="flex items-center gap-3.5 p-4 rounded-xl card-glass-subtle">
+                    <div class="w-12 h-12 rounded-lg bg-neutral-900 border border-white/15 text-white flex flex-col items-center justify-center shrink-0 overflow-hidden shadow-xs">
+                        <span class="w-full bg-white/10 text-[9px] uppercase font-bold tracking-wider text-neutral-300 text-center py-0.5 leading-none">{{ $monthAbbr }}</span>
+                        <span class="text-lg font-black text-white leading-none mt-1">{{ $dayNumber }}</span>
                     </div>
-
-                    <!-- Venue Quick Badge -->
-                    <div class="flex items-center gap-3.5 p-3.5 rounded-xl card-glass-subtle">
-                        <div class="w-11 h-11 rounded-lg bg-white/10 border border-white/15 text-neutral-300 flex items-center justify-center shrink-0">
-                            <svg class="w-5 h-5 text-neutral-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
-                        </div>
-                        <div class="min-w-0">
-                            <div class="text-xs font-bold text-white truncate">{{ $settings['event_venue_name'] }}</div>
-                            <div class="text-[11px] text-neutral-400 truncate mt-0.5" data-i18n="quick_venue_label">{{ $settings['event_venue_address'] }}</div>
-                        </div>
+                    <div class="min-w-0">
+                        <div class="text-sm font-bold text-white truncate">{{ $settings['event_date'] }}</div>
+                        <div class="text-xs text-neutral-400 truncate mt-0.5">{{ $settings['event_time'] }}</div>
                     </div>
                 </div>
 
-                <!-- Deskripsi Acara (Paragraf Rapi ala Luma) -->
-                <div class="text-sm sm:text-base text-neutral-300 leading-relaxed max-w-2xl font-normal pt-2 space-y-3.5">
+                <div class="flex items-center gap-3.5 p-4 rounded-xl card-glass-subtle">
+                    <div class="w-12 h-12 rounded-lg bg-white/10 border border-white/15 text-neutral-300 flex items-center justify-center shrink-0">
+                        <svg class="w-5 h-5 text-neutral-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                    </div>
+                    <div class="min-w-0">
+                        <div class="text-sm font-bold text-white truncate">{{ $settings['event_venue_name'] }}</div>
+                        <div class="text-xs text-neutral-400 truncate mt-0.5" data-i18n="quick_venue_label">{{ $settings['event_venue_address'] }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tentang Acara (Paragraf Rapi) -->
+            <div class="space-y-4 pt-3 border-t border-white/10">
+                <h3 class="text-xl font-black text-white tracking-tight" data-i18n="about_event">
+                    Tentang Acara
+                </h3>
+                <div class="text-base text-neutral-300 leading-relaxed font-normal space-y-4">
                     @foreach(array_filter(explode("\n", str_replace("\r", "", $settings['event_description'] ?? ''))) as $paragraph)
                         @if(trim($paragraph) !== '')
                             <p>{{ trim($paragraph) }}</p>
@@ -434,88 +696,93 @@
                 </div>
             </div>
 
-            <!-- Host Info & Request to Join Action (Berdampingan ke URL /register) -->
-            <div class="pt-5 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-5">
-                
-                <!-- Sisi Kiri: Host Info (Diselenggarakan Oleh) -->
-                <div class="space-y-2">
-                    <span class="text-[10px] uppercase font-bold tracking-wider text-neutral-400 block" data-i18n="hosted_by">
-                        Diselenggarakan Oleh
-                    </span>
-                    @if(!empty($settings['event_organizer']))
-                        @php
-                            $hosts = array_filter(array_map('trim', preg_split('/[\r\n,]+/', $settings['event_organizer'])));
-                            $hostGradients = [
-                                'from-zinc-300 via-neutral-400 to-zinc-600',
-                                'from-blue-300 via-indigo-300 to-slate-400',
-                                'from-slate-200 via-slate-400 to-zinc-500',
-                            ];
-                        @endphp
-                        <div class="flex flex-wrap items-center gap-3">
-                            @foreach($hosts as $idx => $host)
-                                <div class="flex items-center gap-2">
-                                    <div class="w-7 h-7 rounded-full bg-gradient-to-tr {{ $hostGradients[$idx % count($hostGradients)] }} text-neutral-950 border border-white/20 flex items-center justify-center font-bold text-[11px] shadow-xs shrink-0">
-                                        {{ strtoupper(substr($host, 0, 1)) }}
-                                    </div>
-                                    <span class="text-xs font-bold text-neutral-200">{{ $host }}</span>
-                                </div>
-                            @endforeach
-                        </div>
-                    @else
-                        <div class="flex items-center gap-2">
-                            <img src="{{ asset('images/wonderful-logo.png') }}" alt="Wonderful" class="w-7 h-7 object-contain">
-                            <span class="text-xs font-bold text-neutral-200">Wonderful</span>
-                        </div>
-                    @endif
+            <!-- Lokasi & Map -->
+            <div class="space-y-4 pt-3 border-t border-white/10">
+                <h3 class="text-xl font-black text-white tracking-tight" data-i18n="location_title">
+                    Lokasi
+                </h3>
+                <div>
+                    <div class="text-sm font-bold text-white" data-i18n="location_prompt">
+                        Harap mendaftar untuk melihat lokasi tepat acara ini.
+                    </div>
+                    <div class="text-xs text-neutral-400 mt-0.5">
+                        {{ $settings['event_venue_address'] }}
+                    </div>
                 </div>
 
-                <!-- Sisi Kanan: Tombol Request to Join (Mengarah ke /register) -->
-                <div class="flex items-center gap-2.5 shrink-0 w-full sm:w-auto pt-1 sm:pt-0">
-                    <a href="{{ route('participants.create') }}" 
-                       class="btn-glow-white flex-1 sm:flex-none px-7 py-3.5 font-black text-xs sm:text-sm tracking-wide rounded-xl flex items-center justify-center gap-2.5 cursor-pointer text-center shadow-xl hover:scale-[1.03] active:scale-[0.98] transition-all">
-                        <span data-i18n="btn_request_join">Request to Join</span>
-                        <svg class="w-4 h-4 text-neutral-950 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                        </svg>
-                    </a>
+                <div class="rounded-2xl overflow-hidden card-glass p-2 relative">
+                    <div class="relative h-[320px] w-full rounded-xl overflow-hidden bg-black maps-iframe-container">
+                        @if(!empty($settings['event_maps_url']))
+                            <a href="{{ $settings['event_maps_url'] }}" 
+                               target="_blank" 
+                               rel="noopener noreferrer"
+                               class="absolute top-3 left-3 z-10 px-3.5 py-2 rounded-xl bg-white hover:bg-neutral-100 text-neutral-950 font-bold text-xs flex items-center gap-1.5 shadow-lg backdrop-blur-md transition-all">
+                                <span data-i18n="btn_maps">Maps</span>
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                </svg>
+                            </a>
+                        @endif
 
-                    @if(!empty($settings['event_maps_url']))
-                        <a href="{{ $settings['event_maps_url'] }}" 
-                           target="_blank" 
-                           rel="noopener noreferrer"
-                           class="btn-glass p-3.5 font-semibold rounded-xl flex items-center justify-center text-center shrink-0"
-                           title="Buka Rute Lokasi (Google Maps)">
-                            <svg class="w-4 h-4 text-neutral-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
-                        </a>
-                    @endif
+                        @if(!empty($settings['event_maps_iframe']))
+                            {!! $settings['event_maps_iframe'] !!}
+                        @else
+                            <iframe 
+                                src="https://maps.google.com/maps?q={{ urlencode(($settings['event_venue_name'] ?? '') . ' ' . ($settings['event_venue_address'] ?? 'SCBD Area, Jakarta')) }}&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                                class="w-full h-full border-0"
+                                allowfullscreen="" 
+                                loading="lazy" 
+                                referrerpolicy="no-referrer-when-downgrade">
+                            </iframe>
+                        @endif
+                    </div>
+                </div>
+            </div>
+
+            <!-- Diselenggarakan Oleh (Host List) -->
+            <div class="space-y-4 pt-3 border-t border-white/10">
+                <h3 class="text-xl font-black text-white tracking-tight" data-i18n="hosted_by">
+                    Diselenggarakan Oleh
+                </h3>
+                <div class="flex flex-wrap items-center gap-6">
+                    @foreach($hosts as $idx => $host)
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-tr {{ $hostGradients[$idx % count($hostGradients)] }} text-neutral-950 border border-white/20 flex items-center justify-center font-bold text-sm shadow-xs shrink-0">
+                                {{ strtoupper(substr($host, 0, 1)) }}
+                            </div>
+                            <span class="text-sm font-bold text-white">{{ $host }}</span>
+                        </div>
+                    @endforeach
                 </div>
 
+                <div class="flex items-center gap-6 pt-2 text-xs text-neutral-400">
+                    <a href="mailto:contact@wonderful.ai" class="hover:text-white transition-colors" data-i18n="contact_host">Hubungi Penyelenggara</a>
+                    <span>•</span>
+                    <a href="javascript:void(0)" onclick="alert('Laporan Anda telah diterima.')" class="hover:text-white transition-colors" data-i18n="report_event">Laporkan Acara</a>
+                    <span>•</span>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-neutral-300"># AI</span>
+                </div>
             </div>
 
         </div>
 
-        <!-- Sisi Kanan Hero: Visual Flyer Acara Atas dengan 3D Parallax Tilt & Lightbox -->
-        <div class="lg:col-span-5 flex justify-center lg:justify-end anim-flyer-card tilt-card-container relative">
-            <div class="flyer-glow-ambient anim-aurora-glow"></div>
-
-            <div class="w-full max-w-[370px] anim-floating relative z-10">
-                <div id="heroFlyerCard" class="tilt-card card-glass rounded-2xl overflow-hidden cursor-zoom-in group p-2.5 relative" onclick="openFlyerPreview('{{ !empty($settings['event_flyer']) ? asset($settings['event_flyer']) : '' }}')" title="Klik untuk memperbesar flyer">
-                    
+        <!-- Sisi Kanan Desktop: Sticky Sidebar (Flyer Besar + Card Pendaftaran) -->
+        <div class="lg:col-span-5 sticky top-24 space-y-6 anim-flyer-card">
+            
+            <!-- Poster Flyer Besar -->
+            <div class="relative tilt-card-container">
+                <div class="flyer-glow-ambient anim-aurora-glow"></div>
+                <div class="tilt-card card-glass rounded-3xl overflow-hidden cursor-zoom-in group p-2.5 relative shadow-2xl" 
+                     onclick="openFlyerPreview('{{ !empty($settings['event_flyer']) ? asset($settings['event_flyer']) : '' }}')" 
+                     title="Klik untuk memperbesar flyer">
                     @if(!empty($settings['event_flyer']))
-                        @php
-                            $flyerFit = $settings['event_flyer_fit'] ?? 'contain';
-                        @endphp
-                        <div class="w-full flex items-center justify-center rounded-xl overflow-hidden {{ $flyerFit === 'contain' ? 'bg-black/60 p-2' : '' }} relative">
+                        <div class="w-full flex items-center justify-center rounded-2xl overflow-hidden bg-black/60 relative">
                             <img 
                                 src="{{ asset($settings['event_flyer']) }}" 
                                 alt="{{ $settings['event_title'] }}" 
-                                class="w-full {{ $flyerFit === 'cover' ? 'h-auto aspect-square object-cover' : 'h-auto max-h-[460px] object-contain' }} rounded-lg block shadow-lg transition-transform duration-300 group-hover:scale-[1.01]"
+                                class="w-full h-auto max-h-[480px] object-contain rounded-xl block shadow-lg transition-transform duration-300 group-hover:scale-[1.01]"
                             >
-                            
-                            <div class="absolute bottom-3 right-3 px-2.5 py-1 rounded-lg bg-black/70 backdrop-blur-md border border-white/20 text-white text-[11px] font-semibold opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center gap-1.5 shadow-xl pointer-events-none transform translate-y-1 group-hover:translate-y-0">
+                            <div class="absolute bottom-3 right-3 px-3 py-1.5 rounded-lg bg-black/75 backdrop-blur-md border border-white/20 text-white text-xs font-semibold opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center gap-1.5 shadow-xl pointer-events-none">
                                 <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
                                 </svg>
@@ -523,162 +790,49 @@
                             </div>
                         </div>
                     @else
-                        <div class="bg-gradient-to-b from-neutral-900 to-black text-white p-6 sm:p-7 flex flex-col justify-between rounded-xl border border-white/10" style="aspect-ratio: 1/1; min-height: 290px;">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-1.5 px-2.5 py-1 bg-white/10 rounded-lg border border-white/15">
-                                    <img src="{{ asset('images/wonderful-logo.png') }}" alt="Wonderful" class="w-4 h-4 object-contain">
-                                    <img src="{{ asset('images/won.png') }}" alt="Wonderful" class="h-3 w-auto object-contain filter invert brightness-200">
-                                </div>
-                                <span class="w-2.5 h-2.5 rounded-full bg-white animate-ping"></span>
-                            </div>
-
-                            <div class="my-auto py-5">
-                                <h3 class="text-xl sm:text-2xl font-black text-white leading-tight tracking-tight">
-                                    {{ $settings['event_title'] }}
-                                </h3>
-                                <p class="text-xs text-neutral-400 mt-2 line-clamp-2">
-                                    {{ $settings['event_description'] }}
-                                </p>
-                            </div>
-
-                            <div class="pt-3 border-t border-white/10 flex items-center justify-between text-[11px] sm:text-xs text-neutral-400">
-                                <span class="text-neutral-300 font-semibold">{{ $settings['event_date'] }}</span>
-                                <span class="truncate max-w-[160px] text-right text-neutral-300">{{ $settings['event_venue_name'] }}</span>
-                            </div>
-                        </div>
-                    @endif
-
-                </div>
-            </div>
-        </div>
-
-    </section>
-
-
-    <!-- ==========================================================================
-         2. BLOK INFORMASI ACARA (LOKASI -> TANGGAL -> WAKTU -> DRESSCODE)
-         ========================================================================== -->
-    <section class="scroll-reveal space-y-6">
-        
-        <!-- Glassmorphism Segmented Bar -->
-        <div class="card-glass rounded-2xl overflow-hidden">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 lg:divide-x divide-white/10 items-stretch">
-                
-                <!-- 1. LOKASI / GEDUNG -->
-                <div class="info-card-dark p-6 sm:p-7 flex flex-col justify-between cursor-default">
-                    <div class="space-y-2">
-                        <div class="flex items-center gap-2 text-neutral-300">
-                            <svg class="w-4 h-4 shrink-0 text-neutral-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
-                            <span class="text-[11px] font-bold uppercase tracking-wider text-neutral-400" data-i18n="venue_title">Lokasi / Venue</span>
-                        </div>
-                        <h3 class="text-base sm:text-lg font-black text-white leading-snug tracking-tight">
-                            {{ $settings['event_venue_name'] }}
-                        </h3>
-                        <p class="text-xs text-neutral-300 leading-relaxed font-normal">
-                            {{ $settings['event_venue_address'] }}
-                        </p>
-                    </div>
-                    @if(!empty($settings['event_maps_url']))
-                        <div class="pt-4">
-                            <a href="{{ $settings['event_maps_url'] }}" 
-                               target="_blank" 
-                               rel="noopener noreferrer"
-                               class="inline-flex items-center gap-1.5 text-[11px] font-bold text-neutral-200 bg-white/10 hover:bg-white/15 border border-white/15 px-3 py-1.5 rounded-lg transition-all">
-                                <span data-i18n="btn_maps">Buka Google Maps</span>
-                                <svg class="w-3 h-3 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                </svg>
-                            </a>
+                        <div class="bg-gradient-to-b from-neutral-900 to-black text-white p-7 flex flex-col justify-between rounded-2xl border border-white/10 aspect-square">
+                            <img src="{{ asset('images/wonderful-logo.png') }}" alt="Wonderful" class="w-7 h-7 object-contain">
+                            <h3 class="text-2xl font-black text-white leading-tight my-auto">{{ $settings['event_title'] }}</h3>
+                            <div class="pt-3 border-t border-white/10 text-xs text-neutral-400">{{ $settings['event_date'] }}</div>
                         </div>
                     @endif
                 </div>
+            </div>
 
-                <!-- 2. TANGGAL -->
-                <div class="info-card-dark p-6 sm:p-7 flex flex-col justify-center">
-                    <div class="space-y-2">
-                        <div class="flex items-center gap-2 text-neutral-300">
-                            <svg class="w-4 h-4 shrink-0 text-neutral-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            <span class="text-[11px] font-bold uppercase tracking-wider text-neutral-400" data-i18n="date_title">Tanggal Pelaksanaan</span>
-                        </div>
-                        <h3 class="text-xl sm:text-2xl font-black text-white leading-tight tracking-tight">
-                            {{ $settings['event_date'] }}
-                        </h3>
+            <!-- Card Pendaftaran Sticky Desktop -->
+            <div class="p-6 rounded-3xl card-glass space-y-4 shadow-2xl border border-white/10">
+                <span class="text-xs font-bold text-neutral-400 uppercase tracking-wider block" data-i18n="registration_card_title">
+                    Pendaftaran
+                </span>
+
+                <div class="flex items-start gap-3 p-3.5 rounded-xl bg-white/[0.04] border border-white/10">
+                    <div class="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center shrink-0 text-white">
+                        <svg class="w-4 h-4 text-neutral-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                    </div>
+                    <div class="min-w-0">
+                        <div class="text-xs font-bold text-white" data-i18n="approval_required">Persetujuan Diperlukan</div>
+                        <div class="text-[11px] text-neutral-400 mt-0.5" data-i18n="approval_desc">Pendaftaran Anda memerlukan persetujuan host.</div>
                     </div>
                 </div>
 
-                <!-- 3. WAKTU -->
-                <div class="info-card-dark p-6 sm:p-7 flex flex-col justify-center">
-                    <div class="space-y-2">
-                        <div class="flex items-center gap-2 text-neutral-300">
-                            <svg class="w-4 h-4 shrink-0 text-neutral-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            <span class="text-[11px] font-bold uppercase tracking-wider text-neutral-400" data-i18n="time_title">Waktu / Jam</span>
-                        </div>
-                        <h3 class="text-xl sm:text-2xl font-black text-white leading-tight tracking-tight">
-                            {{ $settings['event_time'] }}
-                        </h3>
-                    </div>
-                </div>
+                <p class="text-xs sm:text-sm text-neutral-300 font-medium leading-relaxed" data-i18n="welcome_msg">
+                    Selamat datang! Untuk mengikuti acara ini, silakan daftar di bawah.
+                </p>
 
-                <!-- 4. DRESSCODE -->
-                <div class="info-card-dark p-6 sm:p-7 flex flex-col justify-center cursor-default">
-                    <div class="space-y-2">
-                        <div class="flex items-center gap-2 text-neutral-300">
-                            <svg class="w-4 h-4 shrink-0 text-neutral-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                            </svg>
-                            <span class="text-[11px] font-bold uppercase tracking-wider text-neutral-400" data-i18n="dresscode_title">Ketentuan Busana</span>
-                        </div>
-                        <h3 class="text-base sm:text-lg font-black text-white leading-snug tracking-tight">
-                            {{ $settings['event_dresscode'] }}
-                        </h3>
-                    </div>
-                </div>
-
+                <a href="{{ route('participants.create') }}" 
+                   class="btn-glow-white w-full py-4 px-6 font-black text-sm tracking-wide rounded-xl flex items-center justify-center gap-2 cursor-pointer text-center shadow-xl hover:scale-[1.01] active:scale-[0.99] transition-all">
+                    <span data-i18n="btn_request_join">Minta untuk Bergabung</span>
+                    <svg class="w-4 h-4 text-neutral-950 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                    </svg>
+                </a>
             </div>
+
         </div>
 
-        <!-- Wadah Iframe Google Maps Dark Glass -->
-        <div class="rounded-2xl overflow-hidden card-glass p-2 relative">
-            <div class="h-[280px] sm:h-[350px] w-full maps-iframe-container rounded-xl overflow-hidden bg-black">
-                @if(!empty($settings['event_maps_iframe']))
-                    {!! $settings['event_maps_iframe'] !!}
-                @else
-                    <iframe 
-                        src="https://maps.google.com/maps?q={{ urlencode(($settings['event_venue_name'] ?? '') . ' ' . ($settings['event_venue_address'] ?? 'SCBD Area, Jakarta')) }}&t=&z=15&ie=UTF8&iwloc=&output=embed"
-                        class="w-full h-full border-0"
-                        allowfullscreen="" 
-                        loading="lazy" 
-                        referrerpolicy="no-referrer-when-downgrade">
-                    </iframe>
-                @endif
-            </div>
-        </div>
-
-    </section>
-
-    <!-- Bottom CTA Bar -->
-    <section class="scroll-reveal py-4 text-center">
-        <div class="p-8 rounded-2xl card-glass max-w-2xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-5 text-left">
-            <div>
-                <h3 class="text-lg font-black text-white" data-i18n="form_section_title">Formulir Pendaftaran & E-Ticket</h3>
-                <p class="text-xs text-neutral-400 mt-1" data-i18n="form_section_subtitle">Silakan isi formulir untuk mendapatkan E-Ticket WhatsApp resmi.</p>
-            </div>
-            <a href="{{ route('participants.create') }}" 
-               class="btn-glow-white px-7 py-3.5 font-black text-xs sm:text-sm tracking-wide rounded-xl flex items-center justify-center gap-2 cursor-pointer text-center shrink-0 w-full sm:w-auto shadow-lg hover:scale-105 active:scale-95 transition-all">
-                <span data-i18n="btn_request_join">Request to Join</span>
-                <svg class="w-4 h-4 text-neutral-950 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                </svg>
-            </a>
-        </div>
-    </section>
+    </div>
 
     <!-- ==========================================================================
          LIGHTBOX MODAL PREVIEW FLYER FULLSCREEN
@@ -731,8 +885,8 @@
             reveals.forEach(el => el.classList.add('is-visible'));
         }
 
-        const tiltCard = document.getElementById('heroFlyerCard');
-        if (tiltCard) {
+        const tiltCards = document.querySelectorAll('.tilt-card');
+        tiltCards.forEach(tiltCard => {
             tiltCard.addEventListener('mousemove', function(e) {
                 const rect = tiltCard.getBoundingClientRect();
                 const x = e.clientX - rect.left;
@@ -741,10 +895,10 @@
                 const centerX = rect.width / 2;
                 const centerY = rect.height / 2;
                 
-                const rotateX = ((y - centerY) / centerY) * -10;
-                const rotateY = ((x - centerX) / centerX) * 10;
+                const rotateX = ((y - centerY) / centerY) * -8;
+                const rotateY = ((x - centerX) / centerX) * 8;
                 
-                tiltCard.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+                tiltCard.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.01)`;
                 tiltCard.style.boxShadow = `0 25px 45px -10px rgba(0, 0, 0, 0.8)`;
             });
 
@@ -752,7 +906,7 @@
                 tiltCard.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)`;
                 tiltCard.style.boxShadow = ``;
             });
-        }
+        });
 
         window.openInvitationEnvelope = function(instant = false) {
             const overlay = document.getElementById('invitationOverlay');

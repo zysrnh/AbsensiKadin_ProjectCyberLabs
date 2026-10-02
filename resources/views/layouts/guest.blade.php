@@ -162,16 +162,10 @@
                    box-shadow: 0 1px 0 rgba(255,255,255,0.06), 0 4px 20px rgba(0,0,0,0.5);">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between relative z-10">
 
-            <a href="{{ route('home') }}" class="flex items-center gap-2.5 sm:gap-3 group">
-                <!-- Wonderful Logo (Sphere Icon + Wordmark) -->
-                <div class="flex items-center gap-2 px-2.5 py-1.5 rounded-xl transition-all duration-200 group-hover:bg-white/10"
-                     style="background: rgba(255,255,255,0.06);
-                            border: 1px solid rgba(255,255,255,0.12);
-                            box-shadow: inset 0 1px 0 rgba(255,255,255,0.14);">
-                    <img src="{{ asset('images/wonderful-logo.png') }}" alt="Wonderful Logo" class="w-6 h-6 sm:w-6.5 sm:h-6.5 object-contain drop-shadow">
-                    <img src="{{ asset('images/won.png') }}" alt="Wonderful" class="h-4 sm:h-4.5 w-auto object-contain filter invert brightness-200 contrast-200">
-                </div>
-                <span class="text-[11px] font-medium text-white/40 tracking-widest uppercase hidden sm:block" data-i18n="header_subtitle">
+            <a href="{{ route('home') }}" class="flex items-center gap-2.5 group">
+                <!-- Wonderful Logo (Pure Logo, No Background Box) -->
+                <img src="{{ asset('images/wonderful-logo.png') }}" alt="Wonderful" class="w-7 h-7 sm:w-8 sm:h-8 object-contain transition-transform duration-200 group-hover:scale-110 drop-shadow-md">
+                <span class="text-[11px] font-medium text-white/40 tracking-widest uppercase hidden sm:block pl-1" data-i18n="header_subtitle">
                     Executive Roundtable
                 </span>
             </a>
@@ -229,15 +223,24 @@
                 footer_sub: "All rights reserved. Executive Event Management System.",
                 you_are_invited: "You Are Invited",
                 envelope_badge: "Wonderful",
-                envelope_action: "Buka Formulir Pendaftaran",
+                envelope_action: "Buka Detail Acara",
                 envelope_hint: "Ketuk amplop untuk membuka",
                 quick_date_label: "Tanggal Pelaksanaan",
                 quick_venue_label: "Lokasi / Venue",
-                btn_request_join: "Request to Join",
-                btn_directions: "Buka Rute Lokasi",
+                hosted_by_prefix: "Diselenggarakan oleh",
                 hosted_by: "Diselenggarakan Oleh",
+                registration_card_title: "Pendaftaran",
+                approval_required: "Persetujuan Diperlukan",
+                approval_desc: "Pendaftaran Anda memerlukan persetujuan host.",
+                welcome_msg: "Selamat datang! Untuk mengikuti acara ini, silakan daftar di bawah.",
+                btn_request_join: "Minta untuk Bergabung",
+                about_event: "Tentang Acara",
+                location_title: "Lokasi",
+                location_prompt: "Harap mendaftar untuk melihat lokasi tepat acara ini.",
+                btn_maps: "Maps",
+                contact_host: "Hubungi Penyelenggara",
+                report_event: "Laporkan Acara",
                 venue_title: "Lokasi / Venue",
-                btn_maps: "Buka Google Maps",
                 date_title: "Tanggal Pelaksanaan",
                 time_title: "Waktu / Jam",
                 dresscode_title: "Ketentuan Busana",
@@ -268,15 +271,24 @@
                 footer_sub: "All rights reserved. Executive Event Management System.",
                 you_are_invited: "You Are Invited",
                 envelope_badge: "Wonderful",
-                envelope_action: "Open Registration Form",
+                envelope_action: "Open Event Details",
                 envelope_hint: "Tap envelope to open",
                 quick_date_label: "Event Date",
                 quick_venue_label: "Venue / Location",
-                btn_request_join: "Request to Join",
-                btn_directions: "Get Directions",
+                hosted_by_prefix: "Hosted by",
                 hosted_by: "Hosted By",
+                registration_card_title: "Registration",
+                approval_required: "Approval Required",
+                approval_desc: "Your registration requires host approval.",
+                welcome_msg: "Welcome! To attend this event, please register below.",
+                btn_request_join: "Request to Join",
+                about_event: "About Event",
+                location_title: "Location",
+                location_prompt: "Please register to view the exact location of this event.",
+                btn_maps: "Maps",
+                contact_host: "Contact Host",
+                report_event: "Report Event",
                 venue_title: "Venue / Location",
-                btn_maps: "Open in Google Maps",
                 date_title: "Event Date",
                 time_title: "Time",
                 dresscode_title: "Dress Code",

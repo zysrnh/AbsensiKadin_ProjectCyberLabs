@@ -8,6 +8,72 @@
         --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
     }
 
+    /* Floating Stars Animation (Bottom to Top ala Layar TV Display) */
+    @keyframes floatStar {
+        0% {
+            transform: translateY(0) rotate(0deg) scale(0.6);
+            opacity: 0;
+        }
+        10% {
+            opacity: var(--star-opacity, 0.45);
+        }
+        90% {
+            opacity: var(--star-opacity, 0.45);
+        }
+        100% {
+            transform: translateY(-118vh) rotate(180deg) scale(1.1);
+            opacity: 0;
+        }
+    }
+
+    .star-particle {
+        position: absolute;
+        bottom: -50px;
+        animation: floatStar var(--duration, 14s) linear infinite;
+        animation-delay: var(--delay, 0s);
+        will-change: transform, opacity;
+        pointer-events: none;
+    }
+
+    /* Kinetic Staggered TV Screen Reveal */
+    @keyframes tvRevealUp {
+        0% {
+            opacity: 0;
+            transform: translateY(28px) scale(0.97);
+            filter: blur(12px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0);
+        }
+    }
+
+    .anim-tv-back {
+        animation: tvRevealUp 0.65s var(--ease-expo) 0.05s backwards;
+    }
+    .anim-tv-banner {
+        animation: tvRevealUp 0.75s var(--ease-expo) 0.15s backwards;
+    }
+    .anim-tv-card {
+        animation: tvRevealUp 0.85s var(--ease-expo) 0.25s backwards;
+    }
+    .anim-tv-input-1 {
+        animation: tvRevealUp 0.65s var(--ease-expo) 0.35s backwards;
+    }
+    .anim-tv-input-2 {
+        animation: tvRevealUp 0.65s var(--ease-expo) 0.42s backwards;
+    }
+    .anim-tv-input-3 {
+        animation: tvRevealUp 0.65s var(--ease-expo) 0.49s backwards;
+    }
+    .anim-tv-input-4 {
+        animation: tvRevealUp 0.65s var(--ease-expo) 0.56s backwards;
+    }
+    .anim-tv-btn {
+        animation: tvRevealUp 0.75s var(--ease-expo) 0.63s backwards;
+    }
+
     .card-glass {
         background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%), rgba(12, 14, 20, 0.70);
         backdrop-filter: blur(36px) saturate(170%);
@@ -72,10 +138,32 @@
 @endpush
 
 @section('content')
-<div class="max-w-2xl mx-auto px-4 sm:px-6 py-4 space-y-6">
+<!-- Floating Star Particles Background (Bintang 4 Sudut dari Layar TV) -->
+<div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+    <div class="star-particle text-white/40" style="left: 6%; --duration: 16s; --delay: -2s; --star-opacity: 0.35;">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
+    </div>
+    <div class="star-particle text-sky-200/50" style="left: 18%; --duration: 13s; --delay: -7s; --star-opacity: 0.4;">
+        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
+    </div>
+    <div class="star-particle text-white/50" style="left: 32%; --duration: 18s; --delay: -11s; --star-opacity: 0.3;">
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
+    </div>
+    <div class="star-particle text-purple-200/40" style="left: 65%; --duration: 14s; --delay: -4s; --star-opacity: 0.35;">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
+    </div>
+    <div class="star-particle text-white/45" style="left: 82%; --duration: 15s; --delay: -8s; --star-opacity: 0.4;">
+        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
+    </div>
+    <div class="star-particle text-blue-200/40" style="left: 93%; --duration: 17s; --delay: -12s; --star-opacity: 0.3;">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"/></svg>
+    </div>
+</div>
+
+<div class="max-w-2xl mx-auto px-4 sm:px-6 py-4 space-y-6 relative z-10">
 
     <!-- Tombol Kembali ke Halaman Detail Acara -->
-    <div>
+    <div class="anim-tv-back">
         <a href="{{ route('home') }}" 
            class="inline-flex items-center gap-2 text-xs font-bold text-neutral-400 hover:text-white transition-colors py-2 px-3 rounded-lg hover:bg-white/10 group">
             <svg class="w-4 h-4 text-neutral-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -86,7 +174,7 @@
     </div>
 
     <!-- Ringkasan Info Acara (Event Context Banner) -->
-    <div class="card-glass-subtle p-4 sm:p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div class="card-glass-subtle p-4 sm:p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 anim-tv-banner">
         <div class="space-y-1 min-w-0">
             <span class="text-[10px] uppercase font-bold tracking-wider text-neutral-400 block" data-i18n="form_section_title">
                 Formulir Pendaftaran
@@ -109,7 +197,7 @@
     </div>
 
     <!-- Wadah Card Form Terpisah (Standalone Registration Card) -->
-    <div class="rounded-2xl sm:rounded-3xl p-6 sm:p-10 card-glass space-y-6">
+    <div class="rounded-2xl sm:rounded-3xl p-6 sm:p-10 card-glass space-y-6 anim-tv-card">
         
         <!-- Header Form -->
         <div class="space-y-1.5 border-b border-white/10 pb-4">
@@ -155,7 +243,7 @@
             @csrf
 
             <!-- 1. Nama Lengkap -->
-            <div>
+            <div class="anim-tv-input-1">
                 <label for="name" class="block text-xs font-semibold text-neutral-300 uppercase tracking-wider mb-1.5">
                     <span data-i18n="label_name">Nama Lengkap</span> <span class="text-neutral-400">*</span>
                 </label>
@@ -173,7 +261,7 @@
             </div>
 
             <!-- 2. No Telpon / WhatsApp -->
-            <div>
+            <div class="anim-tv-input-2">
                 <label for="phone" class="block text-xs font-semibold text-neutral-300 uppercase tracking-wider mb-1.5">
                     <span data-i18n="label_phone">Nomor WhatsApp Aktif</span> <span class="text-neutral-400">*</span>
                 </label>
@@ -197,7 +285,7 @@
             </div>
 
             <!-- 3. Perusahaan & 4. Jabatan (Grid 2 Kolom) -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 anim-tv-input-3">
                 <!-- Company -->
                 <div>
                     <label for="company" class="block text-xs font-semibold text-neutral-300 uppercase tracking-wider mb-1.5">
@@ -234,7 +322,7 @@
             </div>
 
             <!-- 5. Email (Opsional) -->
-            <div>
+            <div class="anim-tv-input-4">
                 <label for="email" class="block text-xs font-semibold text-neutral-300 uppercase tracking-wider mb-1.5">
                     <span data-i18n="label_email">Alamat Email</span> <span class="text-neutral-400 font-normal">(Opsional)</span>
                 </label>
@@ -251,7 +339,7 @@
             </div>
 
             <!-- Tombol Submit Request to Join -->
-            <div class="pt-3">
+            <div class="pt-3 anim-tv-btn">
                 @if($isExpired)
                     <button 
                         type="button" 
