@@ -193,16 +193,8 @@
         <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-80 h-36 bg-emerald-500/15 blur-3xl pointer-events-none rounded-full"></div>
 
         <!-- Header Konfirmasi -->
-        <div class="text-center relative z-10 space-y-3">
+        <div class="text-center relative z-10 space-y-4">
             
-            <!-- Mini Event Badge -->
-            <div class="flex items-center justify-center">
-                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.06] border border-white/10 text-[11px] font-semibold text-neutral-300">
-                    <img src="{{ asset('images/wonderful-logo.png') }}" alt="Wonderful" class="w-3.5 h-3.5 object-contain">
-                    <span class="truncate max-w-[240px]">{{ $eventTitle ?? 'Executive Roundtable' }}</span>
-                </span>
-            </div>
-
             <!-- Ikon Centang Sukses dengan Soft Glow -->
             <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/10 relative">
                 <div class="absolute inset-0 rounded-2xl bg-emerald-400/20 blur-md pointer-events-none"></div>
@@ -215,17 +207,6 @@
             <h1 class="text-xl sm:text-2xl font-black text-white tracking-tight leading-snug" data-i18n="req_success_title">
                 Permintaan Bergabung Berhasil Diajukan
             </h1>
-
-            <!-- Status Pill: Menunggu Persetujuan Panitia dengan Pulsing Indicator -->
-            <div class="flex items-center justify-center pt-1">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/25 text-amber-300 text-xs font-semibold">
-                    <span class="relative flex h-2 w-2">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
-                    </span>
-                    <span data-i18n="req_status_badge">Menunggu Persetujuan Panitia</span>
-                </div>
-            </div>
 
         </div>
 
