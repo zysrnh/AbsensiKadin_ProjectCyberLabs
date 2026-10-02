@@ -758,14 +758,9 @@
                     
                     <!-- Header Form -->
                     <div class="space-y-1.5 border-b border-white/10 pb-4">
-                        <div class="flex items-center justify-between">
-                            <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight">
-                                Data Calon Peserta
-                            </h2>
-                            <span class="text-[11px] font-semibold text-neutral-200 bg-white/10 border border-white/15 px-2.5 py-0.5 rounded-full">
-                                WhatsApp Ticket
-                            </span>
-                        </div>
+                        <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight">
+                            Data Calon Peserta
+                        </h2>
                         <p class="text-xs text-neutral-400 font-normal">
                             Isi seluruh informasi dengan akurat untuk penerbitan tiket QR via WhatsApp.
                         </p>
