@@ -342,7 +342,7 @@
             
             <!-- Header You Are Invited -->
             <div class="space-y-2 relative">
-                <h1 class="text-3xl sm:text-5xl font-black text-white tracking-tight">
+                <h1 class="text-3xl sm:text-5xl font-black text-white tracking-tight" data-i18n="you_are_invited">
                     You Are Invited
                 </h1>
 
@@ -369,7 +369,7 @@
                     <div class="envelope-card">
                         <div class="h-full flex flex-col justify-between text-left">
                             <div class="flex items-center justify-between border-b border-neutral-200 pb-2.5">
-                                <span class="px-2.5 py-0.5 bg-neutral-900 text-white font-extrabold text-[10px] tracking-wider uppercase rounded-md shadow-xs">
+                                <span class="px-2.5 py-0.5 bg-neutral-900 text-white font-extrabold text-[10px] tracking-wider uppercase rounded-md shadow-xs" data-i18n="envelope_badge">
                                     C LEVEL
                                 </span>
                                 <span class="text-xs text-neutral-500 font-semibold">{{ $settings['event_date'] }}</span>
@@ -387,7 +387,7 @@
                                 </p>
                             </div>
                             <div class="text-xs text-neutral-900 font-bold flex items-center justify-between border-t border-neutral-200 pt-2">
-                                <span>Buka Formulir Pendaftaran</span>
+                                <span data-i18n="envelope_action">Buka Formulir Pendaftaran</span>
                                 <svg class="w-3.5 h-3.5 text-neutral-900 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
                                 </svg>
@@ -415,7 +415,7 @@
 
             <!-- Petunjuk Minimalis di Bawah Amplop -->
             <p class="text-xs text-neutral-400 tracking-wide font-medium flex items-center justify-center gap-1.5 animate-pulse cursor-pointer" onclick="openInvitationEnvelope()">
-                <span>Ketuk amplop untuk membuka</span>
+                <span data-i18n="envelope_hint">Ketuk amplop untuk membuka</span>
                 <svg class="w-3.5 h-3.5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
                 </svg>
@@ -484,7 +484,7 @@
                         </div>
                         <div class="min-w-0">
                             <div class="text-xs font-bold text-white truncate">{{ $settings['event_venue_name'] }}</div>
-                            <div class="text-[11px] text-neutral-400 truncate mt-0.5">{{ $settings['event_venue_address'] }}</div>
+                            <div class="text-[11px] text-neutral-400 truncate mt-0.5" data-i18n="quick_venue_label">{{ $settings['event_venue_address'] }}</div>
                         </div>
                     </div>
                 </div>
@@ -499,57 +499,68 @@
                 </div>
             </div>
 
-            <!-- Tombol Aksi Cepat (White Glow Button + Glass Outline) -->
-            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-1">
-                <a href="#registration-section" 
-                   class="btn-glow-white px-7 py-3.5 font-bold text-xs sm:text-sm tracking-wide rounded-xl flex items-center justify-center gap-2.5 cursor-pointer text-center">
-                    <span>Minta untuk Bergabung</span>
-                    <svg class="w-4 h-4 text-neutral-950" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
-                    </svg>
-                </a>
+            <!-- Host Info & Request to Join Action (Berdampingan Sesuai Permintaan) -->
+            <div class="pt-5 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-5">
                 
-                @if(!empty($settings['event_maps_url']))
-                    <a href="{{ $settings['event_maps_url'] }}" 
-                       target="_blank" 
-                       rel="noopener noreferrer"
-                       class="btn-glass px-5 py-3.5 font-semibold text-xs sm:text-sm rounded-xl flex items-center justify-center gap-2 text-center">
-                        <svg class="w-4 h-4 text-neutral-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        <span>Buka Rute Lokasi</span>
-                        <svg class="w-3.5 h-3.5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                <!-- Sisi Kiri: Host Info (Diselenggarakan Oleh) -->
+                <div class="space-y-2">
+                    <span class="text-[10px] uppercase font-bold tracking-wider text-neutral-400 block" data-i18n="hosted_by">
+                        Diselenggarakan Oleh
+                    </span>
+                    @if(!empty($settings['event_organizer']))
+                        @php
+                            $hosts = array_filter(array_map('trim', preg_split('/[\r\n,]+/', $settings['event_organizer'])));
+                            $hostGradients = [
+                                'from-zinc-300 via-neutral-400 to-zinc-600',
+                                'from-blue-300 via-indigo-300 to-slate-400',
+                                'from-slate-200 via-slate-400 to-zinc-500',
+                            ];
+                        @endphp
+                        <div class="flex flex-wrap items-center gap-3">
+                            @foreach($hosts as $idx => $host)
+                                <div class="flex items-center gap-2">
+                                    <div class="w-7 h-7 rounded-full bg-gradient-to-tr {{ $hostGradients[$idx % count($hostGradients)] }} text-neutral-950 border border-white/20 flex items-center justify-center font-bold text-[11px] shadow-xs shrink-0">
+                                        {{ strtoupper(substr($host, 0, 1)) }}
+                                    </div>
+                                    <span class="text-xs font-bold text-neutral-200">{{ $host }}</span>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="flex items-center gap-2">
+                            <div class="w-7 h-7 rounded-full bg-white/20 text-white border border-white/20 flex items-center justify-center font-bold text-[11px] shadow-xs shrink-0">
+                                C
+                            </div>
+                            <span class="text-xs font-bold text-neutral-200">C LEVEL Indonesia</span>
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Sisi Kanan: Tombol Request to Join & Buka Rute Lokasi -->
+                <div class="flex items-center gap-2.5 shrink-0 w-full sm:w-auto pt-1 sm:pt-0">
+                    <a href="#registration-section" 
+                       class="btn-glow-white flex-1 sm:flex-none px-6 py-3.5 font-black text-xs sm:text-sm tracking-wide rounded-xl flex items-center justify-center gap-2 cursor-pointer text-center shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all">
+                        <span data-i18n="btn_request_join">Request to Join</span>
+                        <svg class="w-4 h-4 text-neutral-950 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
                         </svg>
                     </a>
-                @endif
-            </div>
 
-            <!-- Host Info ala Luma (Dinamis dari Admin Settings: event_organizer) -->
-            @if(!empty($settings['event_organizer']))
-                @php
-                    $hosts = array_filter(array_map('trim', preg_split('/[\r\n,]+/', $settings['event_organizer'])));
-                    $hostGradients = [
-                        'from-zinc-300 via-neutral-400 to-zinc-600',
-                        'from-blue-300 via-indigo-300 to-slate-400',
-                        'from-slate-200 via-slate-400 to-zinc-500',
-                    ];
-                @endphp
-                <div class="pt-3 border-t border-white/10 space-y-2.5">
-                    <span class="text-[10px] uppercase font-bold tracking-wider text-neutral-400 block">Diselenggarakan Oleh</span>
-                    <div class="space-y-2">
-                        @foreach($hosts as $idx => $host)
-                            <div class="flex items-center gap-2.5">
-                                <div class="w-7 h-7 rounded-full bg-gradient-to-tr {{ $hostGradients[$idx % count($hostGradients)] }} text-neutral-950 border border-white/20 flex items-center justify-center font-bold text-[11px] shadow-xs shrink-0">
-                                    {{ strtoupper(substr($host, 0, 1)) }}
-                                </div>
-                                <span class="text-xs font-bold text-neutral-200">{{ $host }}</span>
-                            </div>
-                        @endforeach
-                    </div>
+                    @if(!empty($settings['event_maps_url']))
+                        <a href="{{ $settings['event_maps_url'] }}" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           class="btn-glass p-3.5 font-semibold rounded-xl flex items-center justify-center text-center shrink-0"
+                           title="Buka Rute Lokasi (Google Maps)">
+                            <svg class="w-4 h-4 text-neutral-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                        </a>
+                    @endif
                 </div>
-            @endif
+
+            </div>
 
         </div>
 
@@ -579,7 +590,7 @@
                                 <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
                                 </svg>
-                                <span>Lihat Ukuran Penuh</span>
+                                <span data-i18n="zoom_badge">Lihat Ukuran Penuh</span>
                             </div>
                         </div>
                     @else
@@ -635,7 +646,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                             </svg>
-                            <span class="text-[11px] font-bold uppercase tracking-wider text-neutral-400">Lokasi / Venue</span>
+                            <span class="text-[11px] font-bold uppercase tracking-wider text-neutral-400" data-i18n="venue_title">Lokasi / Venue</span>
                         </div>
                         <h3 class="text-base sm:text-lg font-black text-white leading-snug tracking-tight">
                             {{ $settings['event_venue_name'] }}
@@ -650,7 +661,7 @@
                                target="_blank" 
                                rel="noopener noreferrer"
                                class="inline-flex items-center gap-1.5 text-[11px] font-bold text-neutral-200 bg-white/10 hover:bg-white/15 border border-white/15 px-3 py-1.5 rounded-lg transition-all">
-                                <span>Buka Google Maps</span>
+                                <span data-i18n="btn_maps">Buka Google Maps</span>
                                 <svg class="w-3 h-3 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                                 </svg>
@@ -666,7 +677,7 @@
                             <svg class="w-4 h-4 shrink-0 text-neutral-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
-                            <span class="text-[11px] font-bold uppercase tracking-wider text-neutral-400">Tanggal Pelaksanaan</span>
+                            <span class="text-[11px] font-bold uppercase tracking-wider text-neutral-400" data-i18n="date_title">Tanggal Pelaksanaan</span>
                         </div>
                         <h3 class="text-xl sm:text-2xl font-black text-white leading-tight tracking-tight">
                             {{ $settings['event_date'] }}
@@ -681,7 +692,7 @@
                             <svg class="w-4 h-4 shrink-0 text-neutral-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
-                            <span class="text-[11px] font-bold uppercase tracking-wider text-neutral-400">Waktu / Jam</span>
+                            <span class="text-[11px] font-bold uppercase tracking-wider text-neutral-400" data-i18n="time_title">Waktu / Jam</span>
                         </div>
                         <h3 class="text-xl sm:text-2xl font-black text-white leading-tight tracking-tight">
                             {{ $settings['event_time'] }}
@@ -696,7 +707,7 @@
                             <svg class="w-4 h-4 shrink-0 text-neutral-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg>
-                            <span class="text-[11px] font-bold uppercase tracking-wider text-neutral-400">Ketentuan Busana</span>
+                            <span class="text-[11px] font-bold uppercase tracking-wider text-neutral-400" data-i18n="dresscode_title">Ketentuan Busana</span>
                         </div>
                         <h3 class="text-base sm:text-lg font-black text-white leading-snug tracking-tight">
                             {{ $settings['event_dresscode'] }}
@@ -728,242 +739,188 @@
 
 
     <!-- ==========================================================================
-         3. SECTION REGISTRASI (LAYOUT 2 KOLOM: FLYER KIRI & FORM KANAN)
+         3. SECTION REGISTRASI (FORMULIR TERPISAH, FOKUS & RESPONSIF)
          ========================================================================== -->
     <section id="registration-section" class="scroll-reveal pt-4">
         
         <!-- Header Registrasi Bersih -->
         <div class="text-center max-w-xl mx-auto space-y-2 mb-8">
-            <h2 class="text-2xl sm:text-3xl font-black text-white tracking-tight">
+            <h2 class="text-2xl sm:text-3xl font-black text-white tracking-tight" data-i18n="form_section_title">
                 Formulir Pendaftaran & E-Ticket
             </h2>
-            <p class="text-xs sm:text-sm text-neutral-400 leading-relaxed font-normal">
+            <p class="text-xs sm:text-sm text-neutral-400 leading-relaxed font-normal" data-i18n="form_section_subtitle">
                 Silakan lengkapi formulir di bawah ini. E-Ticket QR Code presensi resmi akan langsung dikirimkan ke kontak WhatsApp Anda.
             </p>
         </div>
 
-        <!-- Wadah Card Terpadu (Dark Glassmorphic Box ala Luma Pendaftaran) -->
-        <div class="max-w-5xl mx-auto rounded-2xl sm:rounded-3xl p-5 sm:p-8 lg:p-10 card-glass">
+        <!-- Wadah Card Form Terpisah (Standalone Centered Card ala Luma) -->
+        <div class="max-w-2xl mx-auto rounded-2xl sm:rounded-3xl p-6 sm:p-10 card-glass space-y-6">
             
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
-                
-                <!-- SISI KIRI: FLYER ACARA / POSTER (DARK GLASS FRAME) -->
-                <div class="lg:col-span-5 flex flex-col">
-                    @php
-                        $flyerFit = $settings['event_flyer_fit'] ?? 'contain';
-                    @endphp
-                    <div class="w-full h-full min-h-[250px] sm:min-h-[350px] lg:min-h-[480px] rounded-2xl overflow-hidden border border-white/10 relative flex items-center justify-center bg-black/60 p-3 {{ !empty($settings['event_flyer']) ? 'cursor-zoom-in group' : '' }}" 
-                         @if(!empty($settings['event_flyer'])) onclick="openFlyerPreview('{{ asset($settings['event_flyer']) }}')" title="Klik untuk memperbesar flyer" @endif>
-                        @if(!empty($settings['event_flyer']))
-                            <img 
-                                src="{{ asset($settings['event_flyer']) }}" 
-                                alt="{{ $settings['event_title'] }}" 
-                                class="w-full {{ $flyerFit === 'cover' ? 'h-full object-cover' : 'h-auto max-h-[640px] object-contain' }} rounded-xl block shadow-xl transition-transform duration-300 group-hover:scale-[1.01]"
-                            >
-                            <!-- Subtle Zoom Badge on Hover -->
-                            <div class="absolute bottom-5 right-5 px-2.5 py-1 rounded-lg bg-black/70 backdrop-blur-md border border-white/20 text-white text-[11px] font-semibold opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center gap-1.5 shadow-xl pointer-events-none transform translate-y-1 group-hover:translate-y-0">
-                                <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
-                                </svg>
-                                <span>Lihat Ukuran Penuh</span>
-                            </div>
-                        @else
-                            <!-- Poster Grafis Digital C LEVEL yang Estetik & Super Clean -->
-                            <div class="bg-gradient-to-b from-neutral-900 to-black text-white p-6 sm:p-8 flex flex-col justify-between h-full w-full relative overflow-hidden rounded-xl border border-white/10">
-                                
-                                <div class="flex items-center justify-between">
-                                    <span class="px-2.5 py-1 bg-white/10 text-neutral-200 border border-white/15 font-black text-xs tracking-widest uppercase rounded-lg">
-                                        C LEVEL
-                                    </span>
-                                    <span class="w-2 h-2 rounded-full bg-white animate-ping"></span>
-                                </div>
+            <!-- Header Form -->
+            <div class="space-y-1.5 border-b border-white/10 pb-4">
+                <h3 class="text-xl sm:text-2xl font-black text-white tracking-tight" data-i18n="form_card_title">
+                    Data Calon Peserta
+                </h3>
+                <p class="text-xs text-neutral-400 font-normal" data-i18n="form_card_subtitle">
+                    Isi seluruh informasi dengan akurat untuk penerbitan tiket QR via WhatsApp.
+                </p>
+            </div>
 
-                                <div class="my-auto py-6">
-                                    <h3 class="text-2xl sm:text-3xl font-black text-white leading-tight tracking-tight">
-                                        {{ $settings['event_title'] }}
-                                    </h3>
-                                    <p class="text-xs text-neutral-400 mt-2">
-                                        {{ $settings['event_description'] }}
-                                    </p>
-                                </div>
-
-                                <div class="pt-4 border-t border-white/10 flex items-center justify-between text-xs text-neutral-300">
-                                    <span>{{ $settings['event_date'] }}</span>
-                                    <span class="truncate max-w-[180px] text-right text-neutral-300">{{ $settings['event_venue_name'] }}</span>
-                                </div>
-
-                            </div>
-                        @endif
+            <!-- Alert Jika Pendaftaran Ditutup -->
+            @if($isExpired)
+                <div class="p-4 bg-neutral-900/80 border border-white/20 backdrop-blur-md rounded-xl text-xs text-neutral-200 flex items-start gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-white/10 text-neutral-200 flex items-center justify-center shrink-0 border border-white/20">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
                     </div>
-                </div>
-
-                <!-- SISI KANAN: FORMULIR PENDAFTARAN (DARK GLASS LIQUID) -->
-                <div class="lg:col-span-7 flex flex-col justify-center space-y-5">
-                    
-                    <!-- Header Form -->
-                    <div class="space-y-1.5 border-b border-white/10 pb-4">
-                        <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight">
-                            Data Calon Peserta
-                        </h2>
-                        <p class="text-xs text-neutral-400 font-normal">
-                            Isi seluruh informasi dengan akurat untuk penerbitan tiket QR via WhatsApp.
+                    <div class="space-y-0.5">
+                        <h4 class="font-bold text-white uppercase tracking-wider text-[11px]" data-i18n="closed_alert_title">Pendaftaran Telah Ditutup</h4>
+                        <p class="text-neutral-300 leading-relaxed text-[11px]">
+                            Mohon maaf, batas waktu pendaftaran untuk kegiatan ini telah berakhir pada <strong>{{ $settings['registration_deadline_text'] }}</strong>. Formulir tidak menerima pendaftaran baru.
                         </p>
                     </div>
+                </div>
+            @endif
 
-                    <!-- Alert Jika Pendaftaran Ditutup -->
-                    @if($isExpired)
-                        <div class="p-4 bg-neutral-900/80 border border-white/20 backdrop-blur-md rounded-xl text-xs text-neutral-200 flex items-start gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-white/10 text-neutral-200 flex items-center justify-center shrink-0 border border-white/20">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                                </svg>
-                            </div>
-                            <div class="space-y-0.5">
-                                <h4 class="font-bold text-white uppercase tracking-wider text-[11px]">Pendaftaran Telah Ditutup</h4>
-                                <p class="text-neutral-300 leading-relaxed text-[11px]">
-                                    Mohon maaf, batas waktu pendaftaran untuk kegiatan ini telah berakhir pada <strong>{{ $settings['registration_deadline_text'] }}</strong>. Formulir tidak menerima pendaftaran baru.
-                                </p>
-                            </div>
-                        </div>
-                    @endif
+            <!-- Alert Error Validasi Input -->
+            @if($errors->any())
+                <div class="p-3.5 bg-neutral-900/80 border border-white/20 backdrop-blur-md text-neutral-200 rounded-xl text-xs">
+                    <p class="font-bold mb-1 text-white">Periksa kembali data Anda:</p>
+                    <ul class="list-disc list-inside space-y-0.5 ml-1 text-neutral-300">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
-                    <!-- Alert Error Validasi Input -->
-                    @if($errors->any())
-                        <div class="p-3.5 bg-neutral-900/80 border border-white/20 backdrop-blur-md text-neutral-200 rounded-xl text-xs">
-                            <p class="font-bold mb-1 text-white">Periksa kembali data Anda:</p>
-                            <ul class="list-disc list-inside space-y-0.5 ml-1 text-neutral-300">
-                                @foreach($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
+            <!-- Formulir Form Action POST -->
+            <form action="{{ route('participants.store') }}" method="POST" class="space-y-4">
+                @csrf
 
-                    <!-- Formulir Form Action POST -->
-                    <form action="{{ route('participants.store') }}" method="POST" class="space-y-4">
-                        @csrf
-
-                        <!-- 1. Nama Lengkap -->
-                        <div>
-                            <label for="name" class="block text-xs font-semibold text-neutral-300 uppercase tracking-wider mb-1.5">
-                                Nama Lengkap <span class="text-neutral-400">*</span>
-                            </label>
-                            <input 
-                                type="text" 
-                                name="name" 
-                                id="name" 
-                                value="{{ old('name') }}" 
-                                {{ $isExpired ? 'disabled' : 'required' }}
-                                placeholder="Nama Lengkap & Gelar (jika ada)"
-                                class="input-glass w-full px-4 py-3 {{ $isExpired ? 'cursor-not-allowed opacity-50' : '' }} {{ $errors->has('name') ? '!border-white/60' : '' }} rounded-xl text-xs sm:text-sm"
-                            >
-                        </div>
-
-                        <!-- 2. No Telpon / WhatsApp -->
-                        <div>
-                            <label for="phone" class="block text-xs font-semibold text-neutral-300 uppercase tracking-wider mb-1.5">
-                                Nomor WhatsApp Aktif <span class="text-neutral-400">*</span>
-                            </label>
-                            <div class="relative">
-                                <input 
-                                    type="tel" 
-                                    name="phone" 
-                                    id="phone" 
-                                    value="{{ old('phone') }}" 
-                                    {{ $isExpired ? 'disabled' : 'required' }}
-                                    placeholder="08xxxxxxxxxx"
-                                    class="input-glass w-full px-4 py-3 {{ $isExpired ? 'cursor-not-allowed opacity-50' : '' }} {{ $errors->has('phone') ? '!border-white/60' : '' }} rounded-xl text-xs sm:text-sm"
-                                >
-                                <div class="absolute right-3.5 top-3.5 text-neutral-400 pointer-events-none">
-                                    <svg class="w-4 h-4 text-neutral-300" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.275.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/>
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 3. Perusahaan & 4. Jabatan (Grid 2 Kolom) -->
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <!-- Company -->
-                            <div>
-                                <label for="company" class="block text-xs font-semibold text-neutral-300 uppercase tracking-wider mb-1.5">
-                                    Instansi / Perusahaan <span class="text-neutral-400">*</span>
-                                </label>
-                                <input 
-                                    type="text" 
-                                    name="company" 
-                                    id="company" 
-                                    value="{{ old('company') }}" 
-                                    {{ $isExpired ? 'disabled' : 'required' }}
-                                    placeholder="Nama Perusahaan / Organisasi"
-                                    class="input-glass w-full px-4 py-3 {{ $isExpired ? 'cursor-not-allowed opacity-50' : '' }} {{ $errors->has('company') ? '!border-white/60' : '' }} rounded-xl text-xs sm:text-sm"
-                                >
-                            </div>
-
-                            <!-- Position -->
-                            <div>
-                                <label for="position" class="block text-xs font-semibold text-neutral-300 uppercase tracking-wider mb-1.5">
-                                    Jabatan / Posisi <span class="text-neutral-400">*</span>
-                                </label>
-                                <input 
-                                    type="text" 
-                                    name="position" 
-                                    id="position" 
-                                    value="{{ old('position') }}" 
-                                    {{ $isExpired ? 'disabled' : 'required' }}
-                                    placeholder="CEO, Direktur, Manager, dll"
-                                    class="input-glass w-full px-4 py-3 {{ $isExpired ? 'cursor-not-allowed opacity-50' : '' }} {{ $errors->has('position') ? '!border-white/60' : '' }} rounded-xl text-xs sm:text-sm"
-                                >
-                            </div>
-                        </div>
-
-                        <!-- 5. Email (Opsional) -->
-                        <div>
-                            <label for="email" class="block text-xs font-semibold text-neutral-300 uppercase tracking-wider mb-1.5">
-                                Alamat Email <span class="text-neutral-400 font-normal">(Opsional)</span>
-                            </label>
-                            <input 
-                                type="email" 
-                                name="email" 
-                                id="email" 
-                                value="{{ old('email') }}" 
-                                {{ $isExpired ? 'disabled' : '' }}
-                                placeholder="nama@perusahaan.com"
-                                class="input-glass w-full px-4 py-3 {{ $isExpired ? 'cursor-not-allowed opacity-50' : '' }} {{ $errors->has('email') ? '!border-white/60' : '' }} rounded-xl text-xs sm:text-sm"
-                            >
-                        </div>
-
-                        <!-- Tombol Submit Request to Join (Crisp Solid White ala Luma) -->
-                        <div class="pt-2">
-                            @if($isExpired)
-                                <button 
-                                    type="button" 
-                                    disabled
-                                    class="w-full py-4 px-5 bg-white/5 text-neutral-500 font-semibold text-xs sm:text-sm rounded-xl cursor-not-allowed flex items-center justify-center gap-2 border border-white/10"
-                                >
-                                    <svg class="w-4 h-4 text-neutral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-                                    </svg>
-                                    <span>Pendaftaran Telah Ditutup</span>
-                                </button>
-                            @else
-                                <button 
-                                    type="submit" 
-                                    class="btn-glow-white w-full py-4 px-6 font-black text-xs sm:text-sm tracking-wide rounded-xl cursor-pointer flex items-center justify-center gap-2 text-neutral-950"
-                                >
-                                    <span>Request to Join / Daftar Sekarang</span>
-                                    <svg class="w-4 h-4 text-neutral-950" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-                                    </svg>
-                                </button>
-                            @endif
-                        </div>
-
-                    </form>
-
+                <!-- 1. Nama Lengkap -->
+                <div>
+                    <label for="name" class="block text-xs font-semibold text-neutral-300 uppercase tracking-wider mb-1.5">
+                        <span data-i18n="label_name">Nama Lengkap</span> <span class="text-neutral-400">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        name="name" 
+                        id="name" 
+                        value="{{ old('name') }}" 
+                        {{ $isExpired ? 'disabled' : 'required' }}
+                        placeholder="Nama Lengkap & Gelar (jika ada)"
+                        data-i18n-placeholder="placeholder_name"
+                        class="input-glass w-full px-4 py-3 {{ $isExpired ? 'cursor-not-allowed opacity-50' : '' }} {{ $errors->has('name') ? '!border-white/60' : '' }} rounded-xl text-xs sm:text-sm"
+                    >
                 </div>
 
-            </div>
+                <!-- 2. No Telpon / WhatsApp -->
+                <div>
+                    <label for="phone" class="block text-xs font-semibold text-neutral-300 uppercase tracking-wider mb-1.5">
+                        <span data-i18n="label_phone">Nomor WhatsApp Aktif</span> <span class="text-neutral-400">*</span>
+                    </label>
+                    <div class="relative">
+                        <input 
+                            type="tel" 
+                            name="phone" 
+                            id="phone" 
+                            value="{{ old('phone') }}" 
+                            {{ $isExpired ? 'disabled' : 'required' }}
+                            placeholder="08xxxxxxxxxx"
+                            data-i18n-placeholder="placeholder_phone"
+                            class="input-glass w-full px-4 py-3 {{ $isExpired ? 'cursor-not-allowed opacity-50' : '' }} {{ $errors->has('phone') ? '!border-white/60' : '' }} rounded-xl text-xs sm:text-sm"
+                        >
+                        <div class="absolute right-3.5 top-3.5 text-neutral-400 pointer-events-none">
+                            <svg class="w-4 h-4 text-neutral-300" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.275.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Perusahaan & 4. Jabatan (Grid 2 Kolom) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Company -->
+                    <div>
+                        <label for="company" class="block text-xs font-semibold text-neutral-300 uppercase tracking-wider mb-1.5">
+                            <span data-i18n="label_company">Instansi / Perusahaan</span> <span class="text-neutral-400">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            name="company" 
+                            id="company" 
+                            value="{{ old('company') }}" 
+                            {{ $isExpired ? 'disabled' : 'required' }}
+                            placeholder="Nama Perusahaan / Organisasi"
+                            data-i18n-placeholder="placeholder_company"
+                            class="input-glass w-full px-4 py-3 {{ $isExpired ? 'cursor-not-allowed opacity-50' : '' }} {{ $errors->has('company') ? '!border-white/60' : '' }} rounded-xl text-xs sm:text-sm"
+                        >
+                    </div>
+
+                    <!-- Position -->
+                    <div>
+                        <label for="position" class="block text-xs font-semibold text-neutral-300 uppercase tracking-wider mb-1.5">
+                            <span data-i18n="label_position">Jabatan / Posisi</span> <span class="text-neutral-400">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            name="position" 
+                            id="position" 
+                            value="{{ old('position') }}" 
+                            {{ $isExpired ? 'disabled' : 'required' }}
+                            placeholder="CEO, Direktur, Manager, dll"
+                            data-i18n-placeholder="placeholder_position"
+                            class="input-glass w-full px-4 py-3 {{ $isExpired ? 'cursor-not-allowed opacity-50' : '' }} {{ $errors->has('position') ? '!border-white/60' : '' }} rounded-xl text-xs sm:text-sm"
+                        >
+                    </div>
+                </div>
+
+                <!-- 5. Email (Opsional) -->
+                <div>
+                    <label for="email" class="block text-xs font-semibold text-neutral-300 uppercase tracking-wider mb-1.5">
+                        <span data-i18n="label_email">Alamat Email</span> <span class="text-neutral-400 font-normal">(Opsional)</span>
+                    </label>
+                    <input 
+                        type="email" 
+                        name="email" 
+                        id="email" 
+                        value="{{ old('email') }}" 
+                        {{ $isExpired ? 'disabled' : '' }}
+                        placeholder="nama@perusahaan.com"
+                        data-i18n-placeholder="placeholder_email"
+                        class="input-glass w-full px-4 py-3 {{ $isExpired ? 'cursor-not-allowed opacity-50' : '' }} {{ $errors->has('email') ? '!border-white/60' : '' }} rounded-xl text-xs sm:text-sm"
+                    >
+                </div>
+
+                <!-- Tombol Submit Request to Join -->
+                <div class="pt-3">
+                    @if($isExpired)
+                        <button 
+                            type="button" 
+                            disabled
+                            class="w-full py-4 px-5 bg-white/5 text-neutral-500 font-semibold text-xs sm:text-sm rounded-xl cursor-not-allowed flex items-center justify-center gap-2 border border-white/10"
+                        >
+                            <svg class="w-4 h-4 text-neutral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                            </svg>
+                            <span data-i18n="btn_closed">Pendaftaran Telah Ditutup</span>
+                        </button>
+                    @else
+                        <button 
+                            type="submit" 
+                            class="btn-glow-white w-full py-4 px-6 font-black text-xs sm:text-sm tracking-wide rounded-xl cursor-pointer flex items-center justify-center gap-2 text-neutral-950 hover:scale-[1.01] active:scale-[0.99] transition-all shadow-xl"
+                        >
+                            <span data-i18n="btn_submit">Request to Join / Kirim Pendaftaran</span>
+                            <svg class="w-4 h-4 text-neutral-950" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                            </svg>
+                        </button>
+                    @endif
+                </div>
+
+            </form>
 
         </div>
 
@@ -1139,6 +1096,23 @@
                     closeFlyerPreview();
                 }
             }
+        });
+
+        // 5. Smooth Scroll to Registration Form & Auto Focus
+        document.querySelectorAll('a[href="#registration-section"]').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const formSection = document.getElementById('registration-section');
+                if (formSection) {
+                    formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    setTimeout(() => {
+                        const nameInput = document.getElementById('name');
+                        if (nameInput && !nameInput.disabled) {
+                            nameInput.focus();
+                        }
+                    }, 450);
+                }
+            });
         });
     });
 </script>

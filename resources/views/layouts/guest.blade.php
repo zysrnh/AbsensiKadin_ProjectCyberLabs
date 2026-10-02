@@ -152,7 +152,7 @@
     <div class="aurora-layer"></div>
 
     <!-- ==========================================================================
-         HEADER — Ultra-thin monochromatic dark glass
+         HEADER — Ultra-thin monochromatic dark glass with Bilingual Switcher
          ========================================================================== -->
     <header class="sticky top-0 z-50 transition-all duration-300"
             style="background: rgba(7, 9, 15, 0.75);
@@ -173,10 +173,28 @@
                     <span class="w-1.5 h-1.5 rounded-full bg-white opacity-70 group-hover:opacity-100 transition-opacity"></span>
                     C LEVEL
                 </span>
-                <span class="text-[11px] font-medium text-white/35 tracking-widest uppercase hidden sm:block">
+                <span class="text-[11px] font-medium text-white/35 tracking-widest uppercase hidden sm:block" data-i18n="header_subtitle">
                     Executive Forum
                 </span>
             </a>
+
+            <!-- Bilingual Switcher (ID & EN) -->
+            <div class="flex items-center gap-1 p-1 rounded-xl bg-white/[0.05] border border-white/12 backdrop-blur-md shadow-inner">
+                <button type="button" 
+                        onclick="setLanguage('id')" 
+                        id="langBtnId"
+                        class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer text-white bg-white/20 border border-white/20 shadow-xs"
+                        title="Bahasa Indonesia">
+                    ID
+                </button>
+                <button type="button" 
+                        onclick="setLanguage('en')" 
+                        id="langBtnEn"
+                        class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer text-neutral-400 hover:text-white hover:bg-white/10"
+                        title="English">
+                    EN
+                </button>
+            </div>
 
         </div>
     </header>
@@ -195,14 +213,141 @@
                    -webkit-backdrop-filter: blur(24px);
                    border-top: 1px solid rgba(255,255,255,0.06);">
         <div class="max-w-6xl mx-auto px-4 py-6 text-center space-y-1">
-            <p class="text-xs text-white/30 font-medium">
+            <p class="text-xs text-white/35 font-medium" data-i18n="footer_copy">
                 &copy; {{ date('Y') }} C LEVEL Indonesia &mdash; Sistem Presensi &amp; Pendaftaran Resmi
             </p>
-            <p class="text-[10px] text-white/15 font-light tracking-wide">
+            <p class="text-[10px] text-white/20 font-light tracking-wide" data-i18n="footer_sub">
                 All rights reserved. Executive Event Management System.
             </p>
         </div>
     </footer>
+
+    <!-- Global Bilingual Translation Engine -->
+    <script>
+        const i18nTranslations = {
+            id: {
+                header_subtitle: "Executive Forum",
+                footer_copy: "© " + new Date().getFullYear() + " C LEVEL Indonesia — Sistem Presensi & Pendaftaran Resmi",
+                footer_sub: "All rights reserved. Executive Event Management System.",
+                you_are_invited: "You Are Invited",
+                envelope_badge: "C LEVEL",
+                envelope_action: "Buka Formulir Pendaftaran",
+                envelope_hint: "Ketuk amplop untuk membuka",
+                quick_date_label: "Tanggal Pelaksanaan",
+                quick_venue_label: "Lokasi / Venue",
+                btn_request_join: "Request to Join",
+                btn_directions: "Buka Rute Lokasi",
+                hosted_by: "Diselenggarakan Oleh",
+                venue_title: "Lokasi / Venue",
+                btn_maps: "Buka Google Maps",
+                date_title: "Tanggal Pelaksanaan",
+                time_title: "Waktu / Jam",
+                dresscode_title: "Ketentuan Busana",
+                form_section_title: "Formulir Pendaftaran & E-Ticket",
+                form_section_subtitle: "Silakan lengkapi formulir di bawah ini. E-Ticket QR Code presensi resmi akan langsung dikirimkan ke kontak WhatsApp Anda.",
+                form_card_title: "Data Calon Peserta",
+                form_card_subtitle: "Isi seluruh informasi dengan akurat untuk penerbitan tiket QR via WhatsApp.",
+                label_name: "Nama Lengkap",
+                placeholder_name: "Nama Lengkap & Gelar (jika ada)",
+                label_phone: "Nomor WhatsApp Aktif",
+                placeholder_phone: "08xxxxxxxxxx",
+                label_company: "Instansi / Perusahaan",
+                placeholder_company: "Nama Perusahaan / Organisasi",
+                label_position: "Jabatan / Posisi",
+                placeholder_position: "CEO, Direktur, Manager, dll",
+                label_email: "Alamat Email",
+                placeholder_email: "nama@perusahaan.com",
+                btn_submit: "Kirim Pendaftaran / Request to Join",
+                closed_alert_title: "Pendaftaran Telah Ditutup",
+                btn_closed: "Pendaftaran Telah Ditutup",
+                zoom_badge: "Lihat Ukuran Penuh",
+                preview_close: "Tutup Preview (Esc)"
+            },
+            en: {
+                header_subtitle: "Executive Forum",
+                footer_copy: "© " + new Date().getFullYear() + " C LEVEL Indonesia — Official Attendance & Registration System",
+                footer_sub: "All rights reserved. Executive Event Management System.",
+                you_are_invited: "You Are Invited",
+                envelope_badge: "C LEVEL",
+                envelope_action: "Open Registration Form",
+                envelope_hint: "Tap envelope to open",
+                quick_date_label: "Event Date",
+                quick_venue_label: "Venue / Location",
+                btn_request_join: "Request to Join",
+                btn_directions: "Get Directions",
+                hosted_by: "Hosted By",
+                venue_title: "Venue / Location",
+                btn_maps: "Open in Google Maps",
+                date_title: "Event Date",
+                time_title: "Time",
+                dresscode_title: "Dress Code",
+                form_section_title: "Registration & E-Ticket",
+                form_section_subtitle: "Please complete the form below. Official QR Code E-Ticket will be directly sent to your WhatsApp number.",
+                form_card_title: "Attendee Information",
+                form_card_subtitle: "Fill in all details accurately for official WhatsApp QR ticketing.",
+                label_name: "Full Name",
+                placeholder_name: "Full Name & Title (if any)",
+                label_phone: "Active WhatsApp Number",
+                placeholder_phone: "08xxxxxxxxxx or international format",
+                label_company: "Company / Organization",
+                placeholder_company: "Company or Organization Name",
+                label_position: "Job Title / Position",
+                placeholder_position: "CEO, Director, VP, Manager, etc.",
+                label_email: "Email Address",
+                placeholder_email: "name@company.com",
+                btn_submit: "Submit Registration / Request to Join",
+                closed_alert_title: "Registration Is Closed",
+                btn_closed: "Registration Is Closed",
+                zoom_badge: "View Fullscreen",
+                preview_close: "Close Preview (Esc)"
+            }
+        };
+
+        window.currentLang = localStorage.getItem('app_lang') || 'id';
+
+        function setLanguage(lang) {
+            window.currentLang = lang;
+            localStorage.setItem('app_lang', lang);
+            applyLanguage(lang);
+        }
+
+        function applyLanguage(lang) {
+            const dict = i18nTranslations[lang] || i18nTranslations.id;
+            
+            // Update active buttons styling
+            const btnId = document.getElementById('langBtnId');
+            const btnEn = document.getElementById('langBtnEn');
+            if (btnId && btnEn) {
+                if (lang === 'en') {
+                    btnEn.className = "px-2.5 py-1 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer text-white bg-white/20 border border-white/20 shadow-xs";
+                    btnId.className = "px-2.5 py-1 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer text-neutral-400 hover:text-white hover:bg-white/10";
+                } else {
+                    btnId.className = "px-2.5 py-1 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer text-white bg-white/20 border border-white/20 shadow-xs";
+                    btnEn.className = "px-2.5 py-1 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer text-neutral-400 hover:text-white hover:bg-white/10";
+                }
+            }
+
+            // Translate text contents
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (dict[key]) {
+                    el.innerText = dict[key];
+                }
+            });
+
+            // Translate placeholders
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (dict[key]) {
+                    el.setAttribute('placeholder', dict[key]);
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            applyLanguage(window.currentLang);
+        });
+    </script>
 
     @stack('scripts')
 </body>
