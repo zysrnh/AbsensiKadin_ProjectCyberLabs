@@ -263,7 +263,17 @@
                 btn_closed: "Pendaftaran Telah Ditutup",
                 zoom_badge: "Lihat Ukuran Penuh",
                 preview_close: "Tutup Preview (Esc)",
-                back_to_event: "Kembali ke Detail Acara"
+                back_to_event: "Kembali ke Detail Acara",
+                req_success_title: "Permintaan Bergabung Berhasil Diajukan",
+                req_status_pending: "STATUS: MENUNGGU PERSETUJUAN",
+                req_status_badge: "Menunggu Persetujuan Panitia",
+                req_form_details: "Rincian Formulir",
+                label_reg_code: "Kode Registrasi",
+                btn_copy_code: "Salin Kode",
+                copied_tooltip: "Kode berhasil disalin!",
+                req_wa_notice_title: "Konfirmasi via WhatsApp",
+                req_wa_notice_desc: "Permohonan Anda telah tercatat. Notifikasi persetujuan dan tiket kehadiran resmi akan dikirimkan ke WhatsApp Anda setelah disetujui host.",
+                btn_back_to_home: "Kembali ke Beranda"
             },
             en: {
                 header_subtitle: "Executive Roundtable",
@@ -311,7 +321,17 @@
                 btn_closed: "Registration Is Closed",
                 zoom_badge: "View Fullscreen",
                 preview_close: "Close Preview (Esc)",
-                back_to_event: "Back to Event Details"
+                back_to_event: "Back to Event Details",
+                req_success_title: "Request to Join Submitted Successfully",
+                req_status_pending: "STATUS: PENDING APPROVAL",
+                req_status_badge: "Pending Host Approval",
+                req_form_details: "Form Details",
+                label_reg_code: "Registration Code",
+                btn_copy_code: "Copy Code",
+                copied_tooltip: "Code copied successfully!",
+                req_wa_notice_title: "WhatsApp Notification",
+                req_wa_notice_desc: "Your request has been recorded. Approval notification and official attendance ticket will be sent to your WhatsApp number once approved by the host.",
+                btn_back_to_home: "Back to Home"
             }
         };
 
