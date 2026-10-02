@@ -561,18 +561,26 @@
 
             <div class="w-full max-w-[370px] anim-floating relative z-10">
                 
-                <div id="heroFlyerCard" class="tilt-card card-glass rounded-2xl overflow-hidden cursor-pointer p-2.5">
+                <div id="heroFlyerCard" class="tilt-card card-glass rounded-2xl overflow-hidden cursor-zoom-in group p-2.5 relative" onclick="openFlyerPreview('{{ !empty($settings['event_flyer']) ? asset($settings['event_flyer']) : '' }}')" title="Klik untuk memperbesar flyer">
                     
                     @if(!empty($settings['event_flyer']))
                         @php
                             $flyerFit = $settings['event_flyer_fit'] ?? 'contain';
                         @endphp
-                        <div class="w-full flex items-center justify-center rounded-xl overflow-hidden {{ $flyerFit === 'contain' ? 'bg-black/60 p-2' : '' }}">
+                        <div class="w-full flex items-center justify-center rounded-xl overflow-hidden {{ $flyerFit === 'contain' ? 'bg-black/60 p-2' : '' }} relative">
                             <img 
                                 src="{{ asset($settings['event_flyer']) }}" 
                                 alt="{{ $settings['event_title'] }}" 
-                                class="w-full {{ $flyerFit === 'cover' ? 'h-auto aspect-square object-cover' : 'h-auto max-h-[460px] object-contain' }} rounded-lg block shadow-lg"
+                                class="w-full {{ $flyerFit === 'cover' ? 'h-auto aspect-square object-cover' : 'h-auto max-h-[460px] object-contain' }} rounded-lg block shadow-lg transition-transform duration-300 group-hover:scale-[1.01]"
                             >
+                            
+                            <!-- Subtle Zoom Badge on Hover -->
+                            <div class="absolute bottom-3 right-3 px-2.5 py-1 rounded-lg bg-black/70 backdrop-blur-md border border-white/20 text-white text-[11px] font-semibold opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center gap-1.5 shadow-xl pointer-events-none transform translate-y-1 group-hover:translate-y-0">
+                                <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                                </svg>
+                                <span>Lihat Ukuran Penuh</span>
+                            </div>
                         </div>
                     @else
                         <!-- Poster Grafis Default C LEVEL Monochromatic Glass -->
@@ -744,13 +752,21 @@
                     @php
                         $flyerFit = $settings['event_flyer_fit'] ?? 'contain';
                     @endphp
-                    <div class="w-full h-full min-h-[250px] sm:min-h-[350px] lg:min-h-[480px] rounded-2xl overflow-hidden border border-white/10 relative flex items-center justify-center bg-black/60 p-3">
+                    <div class="w-full h-full min-h-[250px] sm:min-h-[350px] lg:min-h-[480px] rounded-2xl overflow-hidden border border-white/10 relative flex items-center justify-center bg-black/60 p-3 {{ !empty($settings['event_flyer']) ? 'cursor-zoom-in group' : '' }}" 
+                         @if(!empty($settings['event_flyer'])) onclick="openFlyerPreview('{{ asset($settings['event_flyer']) }}')" title="Klik untuk memperbesar flyer" @endif>
                         @if(!empty($settings['event_flyer']))
                             <img 
                                 src="{{ asset($settings['event_flyer']) }}" 
                                 alt="{{ $settings['event_title'] }}" 
-                                class="w-full {{ $flyerFit === 'cover' ? 'h-full object-cover' : 'h-auto max-h-[640px] object-contain' }} rounded-xl block shadow-xl"
+                                class="w-full {{ $flyerFit === 'cover' ? 'h-full object-cover' : 'h-auto max-h-[640px] object-contain' }} rounded-xl block shadow-xl transition-transform duration-300 group-hover:scale-[1.01]"
                             >
+                            <!-- Subtle Zoom Badge on Hover -->
+                            <div class="absolute bottom-5 right-5 px-2.5 py-1 rounded-lg bg-black/70 backdrop-blur-md border border-white/20 text-white text-[11px] font-semibold opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center gap-1.5 shadow-xl pointer-events-none transform translate-y-1 group-hover:translate-y-0">
+                                <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                                </svg>
+                                <span>Lihat Ukuran Penuh</span>
+                            </div>
                         @else
                             <!-- Poster Grafis Digital C LEVEL yang Estetik & Super Clean -->
                             <div class="bg-gradient-to-b from-neutral-900 to-black text-white p-6 sm:p-8 flex flex-col justify-between h-full w-full relative overflow-hidden rounded-xl border border-white/10">
@@ -953,6 +969,33 @@
 
     </section>
 
+    <!-- ==========================================================================
+         LIGHTBOX MODAL PREVIEW FLYER FULLSCREEN
+         ========================================================================== -->
+    <div id="flyerPreviewModal" 
+         class="fixed inset-0 z-[120] hidden items-center justify-center p-3 sm:p-6 bg-black/90 backdrop-blur-2xl transition-all duration-300 opacity-0"
+         onclick="handlePreviewBackdropClick(event)">
+        
+        <!-- Tombol Tutup Modal (Esc) -->
+        <button type="button" 
+                onclick="closeFlyerPreview()" 
+                class="absolute top-4 right-4 sm:top-6 sm:right-6 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white flex items-center justify-center transition-all cursor-pointer shadow-xl z-20 hover:scale-105 active:scale-95"
+                title="Tutup Preview (Esc)">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+
+        <!-- Container Gambar Lightbox -->
+        <div id="previewCard" class="relative max-w-[95vw] max-h-[92vh] flex items-center justify-center transform scale-95 transition-transform duration-300">
+            <img id="previewModalImage" 
+                 src="" 
+                 alt="{{ $settings['event_title'] }}" 
+                 class="max-h-[88vh] max-w-[92vw] w-auto h-auto object-contain rounded-2xl shadow-2xl border border-white/15 block bg-black/60"
+            >
+        </div>
+    </div>
+
 </div>
 @endsection
 
@@ -1039,6 +1082,64 @@
                 }, 1450);
             }
         };
+
+        // 4. Interactive Fullscreen Flyer Preview (Lightbox)
+        window.openFlyerPreview = function(imageUrl) {
+            if (!imageUrl) return;
+            const modal = document.getElementById('flyerPreviewModal');
+            const img = document.getElementById('previewModalImage');
+            const card = document.getElementById('previewCard');
+            if (!modal || !img) return;
+
+            img.src = imageUrl;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+
+            requestAnimationFrame(() => {
+                modal.classList.remove('opacity-0');
+                modal.classList.add('opacity-100');
+                if (card) {
+                    card.classList.remove('scale-95');
+                    card.classList.add('scale-100');
+                }
+            });
+        };
+
+        window.closeFlyerPreview = function() {
+            const modal = document.getElementById('flyerPreviewModal');
+            const card = document.getElementById('previewCard');
+            if (!modal) return;
+
+            modal.classList.remove('opacity-100');
+            modal.classList.add('opacity-0');
+            if (card) {
+                card.classList.remove('scale-100');
+                card.classList.add('scale-95');
+            }
+
+            setTimeout(() => {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }, 250);
+        };
+
+        window.handlePreviewBackdropClick = function(event) {
+            const img = document.getElementById('previewModalImage');
+            if (img && !img.contains(event.target)) {
+                closeFlyerPreview();
+            }
+        };
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('flyerPreviewModal');
+                if (modal && !modal.classList.contains('hidden')) {
+                    closeFlyerPreview();
+                }
+            }
+        });
     });
 </script>
 @endpush
