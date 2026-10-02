@@ -95,10 +95,10 @@ class TwilioService
 
             $variables = [
                 '1' => (string) $guestName,
-                '2' => (string) Setting::get('event_title', 'Musyawarah & Temu Bisnis C LEVEL Indonesia 2026'),
-                '3' => (string) Setting::get('event_date', '28 Oktober 2026'),
-                '4' => (string) Setting::get('event_time', '08:30 - 16:30 WIB'),
-                '5' => (string) Setting::get('event_venue_name', 'Grand Ballroom C LEVEL Indonesia'),
+                '2' => (string) Setting::get('event_title', 'The Executive Roundtable — From AI Ambition to Enterprise Impact'),
+                '3' => (string) Setting::get('event_date', '27 Oktober 2026'),
+                '4' => (string) Setting::get('event_time', '15.30 - 19.00 WIB'),
+                '5' => (string) Setting::get('event_venue_name', 'SCBD Area'),
                 '6' => (string) Setting::get('event_dresscode', 'Batik Formal / Pakaian Bisnis Rapi'),
                 '7' => (string) $deadlineStr,
                 '8' => (string) route('home'),
@@ -130,10 +130,10 @@ class TwilioService
         if ($mode === 'template' && !empty($contentSid)) {
             $variables = [
                 '1' => (string) $participant->name,
-                '2' => (string) Setting::get('event_title', 'Musyawarah & Temu Bisnis C LEVEL Indonesia 2026'),
-                '3' => (string) Setting::get('event_date', '28 Oktober 2026'),
-                '4' => (string) Setting::get('event_time', '08:30 - 16:30 WIB'),
-                '5' => (string) Setting::get('event_venue_name', 'Grand Ballroom C LEVEL Indonesia'),
+                '2' => (string) Setting::get('event_title', 'The Executive Roundtable — From AI Ambition to Enterprise Impact'),
+                '3' => (string) Setting::get('event_date', '27 Oktober 2026'),
+                '4' => (string) Setting::get('event_time', '15.30 - 19.00 WIB'),
+                '5' => (string) Setting::get('event_venue_name', 'SCBD Area'),
                 '6' => (string) Setting::get('event_dresscode', 'Batik Formal / Pakaian Bisnis Rapi'),
                 '7' => (string) route('participants.card', $participant->qr_token),
             ];

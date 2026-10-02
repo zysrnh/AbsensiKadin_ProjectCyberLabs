@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Kirim Undangan Pendaftaran - C Level 2026')
+@section('title', 'Kirim Undangan Pendaftaran - Wonderful 2026')
 @section('page_title', 'Kirim Undangan Acara')
 
 @section('content')
@@ -409,11 +409,11 @@
                 <!-- Mockup Phone Header WA -->
                 <div class="bg-[#075e54] text-white px-4 py-3 flex items-center justify-between">
                     <div class="flex items-center space-x-2.5">
-                        <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center font-bold text-xs uppercase">
-                            CL
+                        <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center p-1 font-bold text-xs uppercase">
+                            <img src="{{ asset('images/wonderful-logo.png') }}" alt="Wonderful" class="w-5 h-5 object-contain">
                         </div>
                         <div>
-                            <span class="text-xs font-bold block leading-tight">C LEVEL INDONESIA 2026</span>
+                            <span class="text-xs font-bold block leading-tight">WONDERFUL 2026</span>
                             <span class="text-[10px] text-emerald-200">Online &bull; Undangan Resmi</span>
                         </div>
                     </div>

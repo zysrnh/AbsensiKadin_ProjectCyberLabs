@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Sistem Absensi C Level')</title>
+    <title>@yield('title', 'Sistem Absensi Wonderful')</title>
 
     <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -49,8 +49,9 @@
                 
                 <!-- Brand / Logo Minimalist Formal -->
                 <a href="{{ route('home') }}" class="flex items-center space-x-2.5">
-                    <span class="px-2 py-0.5 bg-slate-900 text-white font-extrabold text-xs tracking-wider rounded-sm">
-                        C LEVEL
+                    <span class="px-2 py-0.5 bg-slate-900 text-white font-extrabold text-xs tracking-wider rounded-sm flex items-center gap-1.5">
+                        <img src="{{ asset('images/wonderful-logo.png') }}" alt="Wonderful" class="w-3.5 h-3.5 object-contain">
+                        <span>Wonderful</span>
                     </span>
                     <span class="font-bold text-sm text-slate-900 tracking-tight">
                         Absensi 2026
@@ -85,7 +86,7 @@
     <!-- Footer Simple Flat -->
     <footer class="bg-white border-t border-slate-200 py-4 mt-auto">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500">
-            <span>&copy; {{ date('Y') }} C LEVEL Indonesia</span>
+            <span>&copy; {{ date('Y') }} Wonderful</span>
             <span class="mt-1 sm:mt-0 text-slate-400">Sistem Registrasi & Tiket Absensi QR</span>
         </div>
     </footer>

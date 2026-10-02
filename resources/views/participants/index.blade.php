@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Data Peserta & Blast WhatsApp - C Level 2026')
+@section('title', 'Data Peserta & Blast WhatsApp - Wonderful 2026')
 
 @section('content')
 <div class="py-8 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto space-y-6">

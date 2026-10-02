@@ -165,15 +165,15 @@ class DashboardController extends Controller
     public function printIdCard(Participant $participant)
     {
         $participants = collect([$participant]);
-        $rawTitle = Setting::get('event_title', 'Musyawarah & Temu Bisnis C LEVEL Indonesia 2026');
-        $rawVenue = Setting::get('event_venue_name', 'Grand Ballroom C LEVEL Indonesia');
+        $rawTitle = Setting::get('event_title', 'The Executive Roundtable — From AI Ambition to Enterprise Impact');
+        $rawVenue = Setting::get('event_venue_name', 'SCBD Area');
 
-        $cleanTitle = str_ireplace(['KADIN Indonesia', 'KADIN'], 'C LEVEL Indonesia', $rawTitle);
-        $cleanVenue = str_ireplace(['Menara Kadin Indonesia', 'Menara Kadin'], 'C LEVEL Summit Hall', $rawVenue);
+        $cleanTitle = str_ireplace(['KADIN Indonesia', 'KADIN', 'C LEVEL Indonesia', 'C LEVEL'], 'Wonderful', $rawTitle);
+        $cleanVenue = str_ireplace(['Menara Kadin Indonesia', 'Menara Kadin', 'Grand Ballroom C LEVEL Indonesia'], 'SCBD Area', $rawVenue);
 
         $eventSettings = [
             'nama_acara' => $cleanTitle,
-            'tanggal' => Setting::get('event_date', '28 Oktober 2026'),
+            'tanggal' => Setting::get('event_date', '27 Oktober 2026'),
             'venue' => $cleanVenue,
         ];
 
@@ -219,15 +219,15 @@ class DashboardController extends Controller
 
         $participants = $query->latest()->get();
 
-        $rawTitle = Setting::get('event_title', 'Musyawarah & Temu Bisnis C LEVEL Indonesia 2026');
-        $rawVenue = Setting::get('event_venue_name', 'Grand Ballroom C LEVEL Indonesia');
+        $rawTitle = Setting::get('event_title', 'The Executive Roundtable — From AI Ambition to Enterprise Impact');
+        $rawVenue = Setting::get('event_venue_name', 'SCBD Area');
 
-        $cleanTitle = str_ireplace(['KADIN Indonesia', 'KADIN'], 'C LEVEL Indonesia', $rawTitle);
-        $cleanVenue = str_ireplace(['Menara Kadin Indonesia', 'Menara Kadin'], 'C LEVEL Summit Hall', $rawVenue);
+        $cleanTitle = str_ireplace(['KADIN Indonesia', 'KADIN', 'C LEVEL Indonesia', 'C LEVEL'], 'Wonderful', $rawTitle);
+        $cleanVenue = str_ireplace(['Menara Kadin Indonesia', 'Menara Kadin', 'Grand Ballroom C LEVEL Indonesia'], 'SCBD Area', $rawVenue);
 
         $eventSettings = [
             'nama_acara' => $cleanTitle,
-            'tanggal' => Setting::get('event_date', '28 Oktober 2026'),
+            'tanggal' => Setting::get('event_date', '27 Oktober 2026'),
             'venue' => $cleanVenue,
         ];
 
@@ -363,8 +363,8 @@ class DashboardController extends Controller
         ];
 
         $eventSettings = [
-            'title' => Setting::get('event_title', 'Musyawarah & Temu Bisnis C LEVEL Indonesia 2026'),
-            'date' => Setting::get('event_date', '28 Oktober 2026'),
+            'title' => Setting::get('event_title', 'The Executive Roundtable — From AI Ambition to Enterprise Impact'),
+            'date' => Setting::get('event_date', '27 Oktober 2026'),
         ];
 
         $headers = [
@@ -395,7 +395,7 @@ class DashboardController extends Controller
 
         $displaySettings = [
             'welcome_text' => Setting::get('display_welcome_text', 'Selamat Datang di'),
-            'event_title' => Setting::get('display_event_title', Setting::get('event_title', 'C LEVEL INDONESIA 2026')),
+            'event_title' => Setting::get('display_event_title', Setting::get('event_title', 'Wonderful 2026')),
             'instruction_text' => Setting::get('display_instruction_text', 'Silakan arahkan tiket QR Anda pada meja registrasi. Layar ini akan otomatis menampilkan verifikasi kehadiran secara real-time.'),
         ];
 

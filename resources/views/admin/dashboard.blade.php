@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Dashboard Pendaftar - C Level 2026')
+@section('title', 'Dashboard Pendaftar - Wonderful 2026')
 @section('page_title', 'Dashboard Pendaftar')
 
 @section('content')

@@ -14,20 +14,20 @@ class EventSettingController extends Controller
     public function index()
     {
         $settings = [
-            'event_title' => Setting::get('event_title', 'Musyawarah & Temu Bisnis C LEVEL Indonesia 2026'),
-            'event_organizer' => Setting::get('event_organizer', 'C LEVEL Indonesia'),
-            'event_date' => Setting::get('event_date', '28 Oktober 2026'),
-            'event_time' => Setting::get('event_time', '08:30 - 16:30 WIB'),
-            'event_venue_name' => Setting::get('event_venue_name', 'Grand Ballroom C LEVEL Indonesia'),
-            'event_venue_address' => Setting::get('event_venue_address', 'Grand Ballroom C LEVEL Indonesia, Jakarta'),
-            'event_maps_url' => Setting::get('event_maps_url', 'https://maps.google.com/?q=Jakarta'),
+            'event_title' => Setting::get('event_title', 'The Executive Roundtable — From AI Ambition to Enterprise Impact'),
+            'event_organizer' => Setting::get('event_organizer', 'Wonderful'),
+            'event_date' => Setting::get('event_date', '27 Oktober 2026'),
+            'event_time' => Setting::get('event_time', '15.30 - 19.00 WIB'),
+            'event_venue_name' => Setting::get('event_venue_name', 'SCBD Area'),
+            'event_venue_address' => Setting::get('event_venue_address', 'SCBD Area, Jakarta Selatan'),
+            'event_maps_url' => Setting::get('event_maps_url', 'https://maps.google.com/?q=SCBD+Jakarta'),
             'event_maps_iframe' => Setting::get('event_maps_iframe', ''),
-            'event_dresscode' => Setting::get('event_dresscode', 'Batik Formal / Pakaian Bisnis Rapi'),
-            'event_description' => Setting::get('event_description', 'Pertemuan strategis para pelaku usaha, pimpinan asosiasi, dan pemangku kepentingan industri nasional dalam rangka akselerasi ekonomi dan kolaborasi bisnis berkelanjutan.'),
+            'event_dresscode' => Setting::get('event_dresscode', 'By invitation only. Kindly confirm your attendance with the GWI team'),
+            'event_description' => Setting::get('event_description', 'The Executive Roundtable — From AI Ambition to Enterprise Impact'),
             'event_flyer' => Setting::get('event_flyer', ''),
             'event_flyer_fit' => Setting::get('event_flyer_fit', 'contain'),
             'display_welcome_text' => Setting::get('display_welcome_text', 'Selamat Datang di'),
-            'display_event_title' => Setting::get('display_event_title', 'C LEVEL INDONESIA 2026'),
+            'display_event_title' => Setting::get('display_event_title', 'Wonderful 2026'),
             'display_instruction_text' => Setting::get('display_instruction_text', 'Silakan arahkan tiket QR Anda pada meja registrasi. Layar ini akan otomatis menampilkan verifikasi kehadiran secara real-time.'),
         ];
 
@@ -90,7 +90,7 @@ class EventSettingController extends Controller
         Setting::set('event_flyer_fit', $request->input('event_flyer_fit', 'contain'));
 
         Setting::set('event_title', $validated['event_title']);
-        Setting::set('event_organizer', $validated['event_organizer'] ?? 'C LEVEL Indonesia');
+        Setting::set('event_organizer', $validated['event_organizer'] ?? 'Wonderful');
         Setting::set('event_date', $validated['event_date']);
         Setting::set('event_time', $validated['event_time']);
         Setting::set('event_venue_name', $validated['event_venue_name']);
@@ -100,7 +100,7 @@ class EventSettingController extends Controller
         Setting::set('event_dresscode', $validated['event_dresscode']);
         Setting::set('event_description', $validated['event_description'] ?? null);
         Setting::set('display_welcome_text', $validated['display_welcome_text'] ?? 'Selamat Datang di');
-        Setting::set('display_event_title', $validated['display_event_title'] ?? 'C LEVEL INDONESIA 2026');
+        Setting::set('display_event_title', $validated['display_event_title'] ?? 'Wonderful 2026');
         Setting::set('display_instruction_text', $validated['display_instruction_text'] ?? 'Silakan arahkan tiket QR Anda pada meja registrasi. Layar ini akan otomatis menampilkan verifikasi kehadiran secara real-time.');
 
         return redirect()->route('admin.event-settings')->with('success', 'Pengaturan acara berhasil diperbarui!');

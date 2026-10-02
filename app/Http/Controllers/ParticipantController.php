@@ -225,7 +225,7 @@ class ParticipantController extends Controller
         if (!$participant) {
             return response()->json([
                 'success' => false,
-                'message' => "QR Code ({$token}) tidak terdaftar dalam sistem C LEVEL 2026.",
+                'message' => "QR Code ({$token}) tidak terdaftar dalam sistem Wonderful 2026.",
             ], 404);
         }
 
@@ -309,12 +309,12 @@ class ParticipantController extends Controller
         ]);
 
         $settings = [
-            'event_title' => Setting::get('event_title', 'Musyawarah & Temu Bisnis C LEVEL Indonesia 2026'),
-            'event_organizer' => Setting::get('event_organizer', 'C LEVEL Indonesia'),
-            'event_date' => Setting::get('event_date', '28 Oktober 2026'),
-            'event_time' => Setting::get('event_time', '08:30 - 16:30 WIB'),
-            'event_venue_name' => Setting::get('event_venue_name', 'Grand Ballroom Menara C LEVEL Indonesia'),
-            'event_dresscode' => Setting::get('event_dresscode', 'Batik Formal / Pakaian Bisnis Rapi'),
+            'event_title' => Setting::get('event_title', 'The Executive Roundtable — From AI Ambition to Enterprise Impact'),
+            'event_organizer' => Setting::get('event_organizer', 'Wonderful'),
+            'event_date' => Setting::get('event_date', '27 Oktober 2026'),
+            'event_time' => Setting::get('event_time', '15.30 - 19.00 WIB'),
+            'event_venue_name' => Setting::get('event_venue_name', 'SCBD Area'),
+            'event_dresscode' => Setting::get('event_dresscode', 'By invitation only. Kindly confirm your attendance with the GWI team'),
         ];
 
         return view('participants.rsvp', compact('participant', 'isAttending', 'settings'));

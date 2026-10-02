@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cetak ID Card Lanyard - C LEVEL 2026</title>
+    <title>Cetak ID Card Lanyard - Wonderful 2026</title>
     
     <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -170,11 +170,11 @@
 
                 <!-- Header Organisasi -->
                 <div class="px-5 pt-2 pb-2.5 text-center">
-                    <span class="text-[9px] font-black tracking-widest text-slate-400 uppercase block">C LEVEL EXECUTIVE INDONESIA</span>
-                    <h2 class="text-sm font-black tracking-tight text-slate-900 uppercase mt-0.5">C LEVEL INDONESIA 2026</h2>
+                    <span class="text-[9px] font-black tracking-widest text-slate-400 uppercase block">EXECUTIVE ROUNDTABLE</span>
+                    <h2 class="text-sm font-black tracking-tight text-slate-900 uppercase mt-0.5">WONDERFUL 2026</h2>
                 </div>
 
-                <!-- Pita Kategori Peserta (Solid Royal Blue C LEVEL) -->
+                <!-- Pita Kategori Peserta (Solid Royal Blue) -->
                 <div class="bg-blue-600 text-white text-center py-1.5 px-4 font-black text-xs tracking-wider uppercase">
                     {{ !empty($p->position) && str_contains(strtolower($p->position), 'ketua') ? 'TAMU KEHORMATAN' : 'PESERTA' }}
                 </div>
@@ -192,7 +192,7 @@
 
                     <!-- Instansi / Perusahaan (Badge Bersih) -->
                     <div class="inline-block px-3.5 py-1 bg-slate-100 border border-slate-200/80 rounded-lg text-xs font-bold text-slate-900 uppercase tracking-wider max-w-full truncate">
-                        {{ $p->company ?: 'C LEVEL Indonesia' }}
+                        {{ $p->company ?: 'Wonderful' }}
                     </div>
 
                     <!-- Jabatan -->
@@ -207,10 +207,10 @@
                 <!-- Footer ID Card Formal Solid Slate-900 -->
                 <div class="bg-slate-900 text-white px-4 py-2.5 text-center border-t border-slate-800">
                     <p class="text-[9px] font-bold text-slate-200 uppercase tracking-wider leading-tight">
-                        {{ $eventSettings['nama_acara'] ?? 'Musyawarah & Temu Bisnis C LEVEL Indonesia 2026' }}
+                        {{ $eventSettings['nama_acara'] ?? 'The Executive Roundtable — From AI Ambition to Enterprise Impact' }}
                     </p>
                     <p class="text-[8px] text-slate-400 mt-0.5 font-medium">
-                        {{ $eventSettings['tanggal'] ?? '28 Oktober 2026' }} &bull; {{ $eventSettings['venue'] ?? 'Grand Ballroom C LEVEL Indonesia' }}
+                        {{ $eventSettings['tanggal'] ?? '27 Oktober 2026' }} &bull; {{ $eventSettings['venue'] ?? 'SCBD Area' }}
                     </p>
                 </div>
 

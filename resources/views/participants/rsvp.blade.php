@@ -43,7 +43,7 @@
                 </div>
             @else
                 <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-sm text-slate-600 leading-relaxed">
-                    Terima kasih atas pemberitahuan Bapak/Ibu. Kami sangat memahami kesibukan Anda dan berharap dapat berjumpa di kesempatan agenda C LEVEL berikutnya.
+                    Terima kasih atas pemberitahuan Bapak/Ibu. Kami sangat memahami kesibukan Anda dan berharap dapat berjumpa di kesempatan agenda Wonderful berikutnya.
                 </div>
             @endif
 

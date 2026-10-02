@@ -1,6 +1,6 @@
 @extends('layouts.guest')
 
-@section('title', 'Login Administrator - C LEVEL 2026')
+@section('title', 'Login Administrator - Wonderful 2026')
 
 @push('styles')
 <style>

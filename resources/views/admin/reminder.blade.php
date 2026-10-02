@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Kirim Pengingat (Reminder & RSVP) - C Level 2026')
+@section('title', 'Kirim Pengingat (Reminder & RSVP) - Wonderful 2026')
 @section('page_title', 'Kirim Reminder Acara')
 
 @section('content')
@@ -323,12 +323,12 @@
                 <!-- Mockup Chat Header -->
                 <div class="bg-slate-900 text-white px-4 py-3 flex items-center justify-between">
                     <div class="flex items-center space-x-2.5">
-                        <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center font-bold text-xs text-white uppercase">
-                            CL
+                        <div class="w-8 h-8 rounded-full bg-neutral-900 border border-white/20 flex items-center justify-center p-1 font-bold text-xs text-white uppercase">
+                            <img src="{{ asset('images/wonderful-logo.png') }}" alt="Wonderful" class="w-5 h-5 object-contain">
                         </div>
                         <div>
                             <div class="text-xs font-bold leading-tight flex items-center gap-1">
-                                <span>C LEVEL Indonesia</span>
+                                <span>Wonderful</span>
                                 <svg class="w-3 h-3 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                                 </svg>
@@ -570,10 +570,10 @@
             + "Mohon konfirmasi kesediaan kehadiran Bapak/Ibu melalui tautan berikut:\n"
             + "✅ *Pasti Hadir:* {link_konfirmasi_hadir}\n"
             + "❌ *Berhalangan:* {link_konfirmasi_batal}\n\n"
-            + "Terima kasih atas perhatiannya.\n*Panitia C LEVEL Indonesia 2026*",
+            + "Terima kasih atas perhatiannya.\n*Panitia Wonderful 2026*",
 
         h1: "Halo Bapak/Ibu *{nama}*,\n\n"
-            + "Mengingatkan kembali bahwa agenda *{nama_acara}* akan berlangsung BESOK:\n"
+            + "Mengingatkan kembali bahwa agenda penting *{nama_acara}* akan berlangsung BESOK:\n"
             + "📅 Hari/Tgl: {tanggal}\n"
             + "⏰ Waktu: {waktu}\n"
             + "📍 Tempat: {venue}\n"
@@ -582,16 +582,16 @@
             + "Mohon konfirmasi kesediaan kehadiran Bapak/Ibu melalui tautan berikut:\n"
             + "✅ *Pasti Hadir:* {link_konfirmasi_hadir}\n"
             + "❌ *Berhalangan:* {link_konfirmasi_batal}\n\n"
-            + "Terima kasih atas kerja samanya.\n*Panitia C LEVEL Indonesia 2026*",
+            + "Terima kasih atas kerja samanya.\n*Panitia Wonderful 2026*",
 
         h0: "Halo Bapak/Ibu *{nama}*,\n\n"
-            + "Agenda *{nama_acara}* akan berlangsung HARI INI:\n"
+            + "Agenda penting *{nama_acara}* akan berlangsung HARI INI:\n"
             + "⏰ Waktu: {waktu}\n"
             + "📍 Tempat: {venue}\n"
             + "👔 Dresscode: {dresscode}\n\n"
             + "Tunjukkan E-Ticket QR ini kepada petugas registrasi saat tiba di lokasi:\n"
             + "🔗 {link_tiket}\n\n"
-            + "Sampai berjumpa di lokasi kegiatan!\n*Panitia C LEVEL Indonesia 2026*"
+            + "Sampai berjumpa di lokasi kegiatan!\n*Panitia Wonderful 2026*"
     };
 
     function loadPreset(type) {

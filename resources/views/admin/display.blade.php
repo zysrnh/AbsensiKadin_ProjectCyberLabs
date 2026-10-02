@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Layar Sambutan TV - Musyawarah & Temu Bisnis C LEVEL 2026</title>
+    <title>Layar Sambutan TV - Wonderful 2026</title>
 
     <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -209,11 +209,11 @@
 
     <!-- Top Bar: Header & Live Clock -->
     <header class="relative z-10 px-8 py-5 flex items-center justify-between border-b border-slate-200/80 backdrop-blur-md bg-white/80">
-        <!-- Logo C Level -->
-        <div class="flex items-center gap-4">
-            <div class="px-3.5 py-1.5 bg-blue-600 text-white font-bold text-sm tracking-wider rounded-lg flex items-center gap-2">
-                <span>C LEVEL</span>
-                <span class="w-1.5 h-1.5 rounded-full bg-white/80"></span>
+        <!-- Logo Wonderful -->
+        <div class="flex items-center gap-3">
+            <div class="px-3 py-1.5 bg-neutral-900 border border-white/20 text-white font-bold text-sm tracking-wider rounded-lg flex items-center gap-2 shadow-xs">
+                <img src="{{ asset('images/wonderful-logo.png') }}" alt="Wonderful" class="w-5 h-5 object-contain">
+                <span>Wonderful</span>
             </div>
         </div>
 
@@ -256,7 +256,7 @@
                 <h1 class="text-4xl sm:text-6xl lg:text-7xl font-bold text-slate-900 tracking-tight leading-tight">
                     <span class="reveal-line visible" style="transition-delay: 0ms;">{{ $displaySettings['welcome_text'] ?? 'Selamat Datang di' }}</span>
                     <span class="reveal-line visible" style="transition-delay: 80ms;">
-                        <span class="text-slate-900 font-extrabold uppercase">{{ $displaySettings['event_title'] ?? 'C LEVEL INDONESIA 2026' }}</span>
+                        <span class="text-slate-900 font-extrabold uppercase">{{ $displaySettings['event_title'] ?? 'Wonderful 2026' }}</span>
                     </span>
                 </h1>
 

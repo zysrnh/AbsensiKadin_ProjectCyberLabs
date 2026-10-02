@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Admin Panel - Absensi C Level 2026')</title>
+    <title>@yield('title', 'Admin Panel - Absensi Wonderful 2026')</title>
 
     <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -166,9 +166,9 @@
             <!-- Sidebar Header Brand -->
             <div class="h-16 flex items-center justify-between px-5 border-b border-slate-800/80">
                 <div class="flex items-center gap-3">
-                    <span class="px-2.5 py-1 bg-blue-600 text-white font-black text-xs tracking-wider rounded-lg shadow-sm flex items-center gap-1.5">
-                        <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
-                        <span>C LEVEL</span>
+                    <span class="px-2.5 py-1 bg-neutral-900 border border-white/20 text-white font-black text-xs tracking-wider rounded-lg shadow-sm flex items-center gap-1.5">
+                        <img src="{{ asset('images/wonderful-logo.png') }}" alt="Wonderful" class="w-4 h-4 object-contain">
+                        <span>Wonderful</span>
                     </span>
                     <div>
                         <h1 class="text-sm font-bold tracking-tight text-white leading-tight">Presensi 2026</h1>
@@ -350,7 +350,7 @@
                     </svg>
                 </button>
                 <div class="flex items-center gap-1.5 min-w-0">
-                    <span class="hidden sm:inline text-xs font-semibold text-slate-500 shrink-0">C Level Presensi</span>
+                    <span class="hidden sm:inline text-xs font-semibold text-slate-500 shrink-0">Wonderful Presensi</span>
                     <span class="hidden sm:inline text-slate-300">/</span>
                     <span class="text-xs font-bold text-slate-900 truncate">@yield('page_title', 'Admin Dashboard')</span>
                 </div>
@@ -443,7 +443,7 @@
 
         <!-- Footer -->
         <footer class="bg-white/80 border-t border-slate-200/80 py-3.5 px-6 text-xs text-slate-400 flex items-center justify-between">
-            <span>&copy; {{ date('Y') }} C LEVEL Indonesia</span>
+            <span>&copy; {{ date('Y') }} Wonderful</span>
             <span>Sistem Presensi Resmi</span>
         </footer>
 

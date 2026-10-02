@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Scanner Presensi QR - Admin C Level 2026')
+@section('title', 'Scanner Presensi QR - Admin Wonderful 2026')
 @section('page_title', 'Scanner Presensi')
 
 @push('styles')
@@ -162,7 +162,7 @@
                             </div>
                             <div class="truncate">
                                 <span class="font-bold text-slate-900 block text-xs truncate">{{ $attendee->name }}</span>
-                                <span class="text-[11px] text-slate-500 block truncate">{{ $attendee->company ?? 'C Level' }}</span>
+                                <span class="text-[11px] text-slate-500 block truncate">{{ $attendee->company ?? 'Wonderful' }}</span>
                             </div>
                         </div>
                         <div class="text-right shrink-0">
@@ -410,7 +410,7 @@
                 </div>
                 <div class="truncate">
                     <span class="font-bold text-slate-900 block text-xs truncate">${p.name}</span>
-                    <span class="text-[11px] text-emerald-700 font-semibold block truncate">${p.company || 'C Level'}</span>
+                    <span class="text-[11px] text-emerald-700 font-semibold block truncate">${p.company || 'Wonderful'}</span>
                 </div>
             </div>
             <div class="text-right shrink-0">

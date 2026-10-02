@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Pengaturan Acara - C Level 2026')
+@section('title', 'Pengaturan Acara - Wonderful 2026')
 @section('page_title', 'Pengaturan Acara')
 
 @section('content')
@@ -173,7 +173,7 @@
                                 name="event_organizer" 
                                 id="event_organizer" 
                                 value="{{ old('event_organizer', $settings['event_organizer']) }}" 
-                                placeholder="Contoh: C LEVEL Indonesia & Executive Board"
+                                placeholder="Contoh: Wonderful & Executive Board"
                                 class="input-3d w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
                             >
                             <span class="text-[10px] text-slate-400 mt-1 block">Tampil pada bagian "Diselenggarakan Oleh" di halaman depan pendaftaran.</span>
@@ -263,7 +263,7 @@
                         id="event_venue_name" 
                         value="{{ old('event_venue_name', $settings['event_venue_name']) }}" 
                         required 
-                        placeholder="Contoh: Grand Ballroom C LEVEL Indonesia" 
+                        placeholder="Contoh: SCBD Area" 
                         class="input-3d w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
                     >
                 </div>
@@ -293,7 +293,7 @@
                     rows="2" 
                     required 
                     class="input-3d w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white transition-all leading-relaxed" 
-                    placeholder="Contoh: Grand Ballroom C LEVEL Indonesia, Jakarta"
+                    placeholder="Contoh: SCBD Area, Jakarta Selatan"
                 >{{ old('event_venue_address', $settings['event_venue_address']) }}</textarea>
             </div>
 
@@ -352,8 +352,8 @@
                         type="text" 
                         name="display_event_title" 
                         id="display_event_title" 
-                        value="{{ old('display_event_title', $settings['display_event_title'] ?? 'C LEVEL INDONESIA 2026') }}" 
-                        placeholder="Contoh: C LEVEL INDONESIA 2026" 
+                        value="{{ old('display_event_title', $settings['display_event_title'] ?? 'Wonderful 2026') }}" 
+                        placeholder="Contoh: Wonderful 2026" 
                         class="input-3d w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white transition-all"
                     >
                 </div>

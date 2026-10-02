@@ -132,11 +132,11 @@ class WaSettingController extends Controller
         ]);
 
         $sample = Participant::first() ?? new Participant([
-            'name' => 'Tester C LEVEL',
-            'company' => 'C LEVEL Indonesia',
+            'name' => 'Tester Wonderful',
+            'company' => 'Wonderful',
             'position' => 'Peninjau Sistem',
             'phone' => $request->test_phone,
-            'qr_token' => 'CL26-TEST001',
+            'qr_token' => 'KD26-TEST001',
         ]);
 
         $result = TwilioService::sendTicket($sample, $request->test_phone);
@@ -168,7 +168,7 @@ class WaSettingController extends Controller
     public function invitationPage()
     {
         $defaultInvitationTemplate = "Yth. Bapak/Ibu *{nama}*,\n\n"
-            . "C LEVEL Indonesia dengan hormat mengundang Anda untuk hadir pada kegiatan eksklusif:\n\n"
+            . "Wonderful dengan hormat mengundang Anda untuk hadir pada kegiatan eksklusif:\n\n"
             . "📌 *{nama_acara}*\n"
             . "📅 Tanggal: {tanggal}\n"
             . "⏰ Waktu: {waktu}\n"
@@ -178,7 +178,7 @@ class WaSettingController extends Controller
             . "🔗 {link_form}\n\n"
             . "⏳ Batas Akhir Konfirmasi: {batas_waktu}\n\n"
             . "Terima kasih atas perhatian dan kerja sama Bapak/Ibu.\n\n"
-            . "Salam hormat,\n*Panitia C LEVEL Indonesia 2026*";
+            . "Salam hormat,\n*Panitia Wonderful 2026*";
 
         $invitationTemplate = Setting::get('wa_invitation_template', $defaultInvitationTemplate);
         $invitationTemplate = str_replace([
@@ -188,13 +188,21 @@ class WaSettingController extends Controller
             'KADIN Indonesia 2026',
             'KADIN Indonesia',
             'Menara Kadin Indonesia',
-        ], [
-            'C LEVEL Indonesia',
-            'Panitia C LEVEL Indonesia 2026',
             'Panitia C LEVEL Indonesia 2026',
             'C LEVEL Indonesia 2026',
             'C LEVEL Indonesia',
             'Grand Ballroom C LEVEL Indonesia',
+        ], [
+            'Wonderful',
+            'Panitia Wonderful 2026',
+            'Panitia Wonderful 2026',
+            'Wonderful 2026',
+            'Wonderful',
+            'SCBD Area',
+            'Panitia Wonderful 2026',
+            'Wonderful 2026',
+            'Wonderful',
+            'SCBD Area',
         ], $invitationTemplate);
         
         $deadlineEnabled = Setting::get('registration_deadline_enabled', '0') === '1';
@@ -208,11 +216,11 @@ class WaSettingController extends Controller
         ];
 
         $eventSettings = [
-            'nama_acara' => Setting::get('event_title', 'Musyawarah & Temu Bisnis C LEVEL Indonesia 2026'),
-            'tanggal' => Setting::get('event_date', '28 Oktober 2026'),
-            'waktu' => Setting::get('event_time', '08:30 - 16:30 WIB'),
-            'venue' => Setting::get('event_venue_name', 'Grand Ballroom C LEVEL Indonesia'),
-            'dresscode' => Setting::get('event_dresscode', 'Batik Formal / Pakaian Bisnis Rapi'),
+            'nama_acara' => Setting::get('event_title', 'The Executive Roundtable — From AI Ambition to Enterprise Impact'),
+            'tanggal' => Setting::get('event_date', '27 Oktober 2026'),
+            'waktu' => Setting::get('event_time', '15.30 - 19.00 WIB'),
+            'venue' => Setting::get('event_venue_name', 'SCBD Area'),
+            'dresscode' => Setting::get('event_dresscode', 'By invitation only. Kindly confirm your attendance with the GWI team'),
             'link_form' => route('participants.invitation'),
             'batas_waktu' => $deadlineEnabled ? $deadlineText : 'Sesuai kuota tersedia',
         ];
@@ -245,7 +253,7 @@ class WaSettingController extends Controller
         }
 
         $defaultInvitationTemplate = "Yth. Bapak/Ibu *{nama}*,\n\n"
-            . "C LEVEL Indonesia dengan hormat mengundang Anda untuk hadir pada kegiatan eksklusif:\n\n"
+            . "Wonderful dengan hormat mengundang Anda untuk hadir pada kegiatan eksklusif:\n\n"
             . "📌 *{nama_acara}*\n"
             . "📅 Tanggal: {tanggal}\n"
             . "⏰ Waktu: {waktu}\n"
@@ -255,17 +263,17 @@ class WaSettingController extends Controller
             . "🔗 {link_form}\n\n"
             . "⏳ Batas Akhir Konfirmasi: {batas_waktu}\n\n"
             . "Terima kasih atas perhatian dan kerja sama Bapak/Ibu.\n\n"
-            . "Salam hormat,\n*Panitia C LEVEL Indonesia 2026*";
+            . "Salam hormat,\n*Panitia Wonderful 2026*";
 
         $template = $request->filled('custom_message') 
             ? $request->custom_message 
             : Setting::get('wa_invitation_template', $defaultInvitationTemplate);
 
-        $eventTitle = Setting::get('event_title', 'Musyawarah & Temu Bisnis C LEVEL Indonesia 2026');
-        $eventDate = Setting::get('event_date', '28 Oktober 2026');
-        $eventTime = Setting::get('event_time', '08:30 - 16:30 WIB');
-        $eventVenue = Setting::get('event_venue_name', 'Grand Ballroom C LEVEL Indonesia');
-        $eventDresscode = Setting::get('event_dresscode', 'Batik Formal / Pakaian Bisnis Rapi');
+        $eventTitle = Setting::get('event_title', 'The Executive Roundtable — From AI Ambition to Enterprise Impact');
+        $eventDate = Setting::get('event_date', '27 Oktober 2026');
+        $eventTime = Setting::get('event_time', '15.30 - 19.00 WIB');
+        $eventVenue = Setting::get('event_venue_name', 'SCBD Area');
+        $eventDresscode = Setting::get('event_dresscode', 'By invitation only. Kindly confirm your attendance with the GWI team');
         $linkForm = route('home');
         
         $deadlineEnabled = Setting::get('registration_deadline_enabled', '0') === '1';
@@ -326,14 +334,14 @@ class WaSettingController extends Controller
     public function ticketPage()
     {
         $defaultTemplate = "Halo Bapak/Ibu *{nama}*,\n\n"
-            . "Terima kasih telah melakukan registrasi kegiatan C LEVEL Indonesia 2026.\n\n"
+            . "Terima kasih telah melakukan registrasi kegiatan Wonderful 2026.\n\n"
             . "Berikut adalah tiket presensi QR Code Anda:\n"
             . "🔗 {link_tiket}\n\n"
             . "Kode Tiket: *{kode_tiket}*\n"
             . "Instansi: {instansi}\n"
             . "Jabatan: {jabatan}\n\n"
             . "Silakan tunjukkan QR Code pada gambar/tautan terlampir kepada petugas saat tiba di lokasi acara.\n\n"
-            . "Salam hangat,\n*Panitia C LEVEL Indonesia 2026*";
+            . "Salam hangat,\n*Panitia Wonderful 2026*";
 
         $template = Setting::get('wa_template', $defaultTemplate);
         $template = str_replace([
@@ -343,13 +351,21 @@ class WaSettingController extends Controller
             'KADIN Indonesia 2026',
             'KADIN 2026',
             'KADIN Indonesia',
-        ], [
             'kegiatan C LEVEL Indonesia 2026',
             'Panitia C LEVEL Indonesia 2026',
-            'Panitia C LEVEL Indonesia 2026',
-            'C LEVEL Indonesia 2026',
             'C LEVEL Indonesia 2026',
             'C LEVEL Indonesia',
+        ], [
+            'kegiatan Wonderful 2026',
+            'Panitia Wonderful 2026',
+            'Panitia Wonderful 2026',
+            'Wonderful 2026',
+            'Wonderful 2026',
+            'Wonderful',
+            'kegiatan Wonderful 2026',
+            'Panitia Wonderful 2026',
+            'Wonderful 2026',
+            'Wonderful',
         ], $template);
 
         $participants = Participant::latest()->get();
@@ -357,7 +373,7 @@ class WaSettingController extends Controller
         // Sample peserta untuk live preview di samping kanan
         $sample = $participants->first() ?? new Participant([
             'name' => 'Bpk. Ir. Hendro Wibowo',
-            'company' => 'C LEVEL Indonesia',
+            'company' => 'Wonderful',
             'position' => 'Executive Director',
             'phone' => '081234567890',
             'qr_token' => 'CL26-EXMPL01',
@@ -382,10 +398,10 @@ class WaSettingController extends Controller
         } else {
             $participant = Participant::first() ?? new Participant([
                 'name' => 'Tamu Kehormatan',
-                'company' => 'C LEVEL Indonesia',
+                'company' => 'Wonderful',
                 'position' => 'Peserta',
                 'phone' => $request->phone,
-                'qr_token' => 'CL26-' . strtoupper(\Illuminate\Support\Str::random(8)),
+                'qr_token' => 'KD26-' . strtoupper(\Illuminate\Support\Str::random(8)),
             ]);
         }
 
@@ -448,7 +464,7 @@ class WaSettingController extends Controller
     public function reminderPage()
     {
         $defaultReminderTemplate = "Halo Bapak/Ibu *{nama}*,\n\n"
-            . "Mengingatkan kembali bahwa agenda *{nama_acara}* akan berlangsung pada:\n"
+            . "Mengingatkan kembali bahwa agenda penting *{nama_acara}* akan berlangsung pada:\n"
             . "📅 Hari/Tgl: {tanggal}\n"
             . "⏰ Waktu: {waktu}\n"
             . "📍 Tempat: {venue}\n"
@@ -457,10 +473,10 @@ class WaSettingController extends Controller
             . "Mohon konfirmasi kesediaan kehadiran Bapak/Ibu melalui tautan berikut:\n"
             . "✅ *Pasti Hadir:* {link_konfirmasi_hadir}\n"
             . "❌ *Berhalangan:* {link_konfirmasi_batal}\n\n"
-            . "Terima kasih atas kerja samanya.\n*Panitia C LEVEL Indonesia 2026*";
+            . "Terima kasih atas kerja samanya.\n*Panitia Wonderful 2026*";
 
         $reminderTemplate = Setting::get('wa_reminder_template', $defaultReminderTemplate);
-        // Replace any lingering KADIN text if template still has old default
+        // Replace any lingering KADIN / C LEVEL text if template still has old default
         $reminderTemplate = str_replace([
             'Panitia KADIN Indonesia 2026',
             'Panitia KADIN 2026',
@@ -469,30 +485,38 @@ class WaSettingController extends Controller
             'Menara Kadin Indonesia',
             'Kadin Indonesia',
             'KADIN Indonesia',
-        ], [
-            'Panitia C LEVEL Indonesia 2026',
             'Panitia C LEVEL Indonesia 2026',
             'C LEVEL Indonesia 2026',
-            'C LEVEL Indonesia 2026',
+            'C LEVEL Indonesia',
             'Grand Ballroom C LEVEL Indonesia',
-            'C LEVEL Indonesia',
-            'C LEVEL Indonesia',
+        ], [
+            'Panitia Wonderful 2026',
+            'Panitia Wonderful 2026',
+            'Wonderful 2026',
+            'Wonderful 2026',
+            'SCBD Area',
+            'Wonderful',
+            'Wonderful',
+            'Panitia Wonderful 2026',
+            'Wonderful 2026',
+            'Wonderful',
+            'SCBD Area',
         ], $reminderTemplate);
 
         $contentSidReminder = Setting::get('twilio_reminder_template_id', '');
         $participants = Participant::latest()->get();
 
         $eventSettings = [
-            'nama_acara' => Setting::get('event_title', 'Musyawarah & Temu Bisnis C LEVEL Indonesia 2026'),
-            'tanggal' => Setting::get('event_date', '28 Oktober 2026'),
-            'waktu' => Setting::get('event_time', '08:30 - 16:30 WIB'),
-            'venue' => Setting::get('event_venue_name', 'Grand Ballroom C LEVEL Indonesia'),
-            'dresscode' => Setting::get('event_dresscode', 'Batik Formal / Pakaian Bisnis Rapi'),
+            'nama_acara' => Setting::get('event_title', 'The Executive Roundtable — From AI Ambition to Enterprise Impact'),
+            'tanggal' => Setting::get('event_date', '27 Oktober 2026'),
+            'waktu' => Setting::get('event_time', '15.30 - 19.00 WIB'),
+            'venue' => Setting::get('event_venue_name', 'SCBD Area'),
+            'dresscode' => Setting::get('event_dresscode', 'By invitation only. Kindly confirm your attendance with the GWI team'),
         ];
 
         $sample = $participants->first() ?? new Participant([
             'name' => 'Bpk. Ir. Hendro Wibowo',
-            'company' => 'C LEVEL Indonesia',
+            'company' => 'Wonderful',
             'position' => 'Executive Director',
             'phone' => '081234567890',
             'qr_token' => 'CL26-EXMPL01',
@@ -543,10 +567,10 @@ class WaSettingController extends Controller
         } else {
             $participant = Participant::first() ?? new Participant([
                 'name' => 'Tamu Kehormatan',
-                'company' => 'C LEVEL Indonesia',
+                'company' => 'Wonderful',
                 'position' => 'Peserta',
                 'phone' => $request->phone,
-                'qr_token' => 'CL26-TEST001',
+                'qr_token' => 'KD26-TEST001',
             ]);
         }
 
