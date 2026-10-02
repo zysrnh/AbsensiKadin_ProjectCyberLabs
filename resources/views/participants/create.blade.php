@@ -430,41 +430,53 @@
     <!-- ==========================================================================
          1. HERO SECTION ATAS (HEADLINE + FLYER ATAS DENGAN 3D PARALLAX TILT)
          ========================================================================== -->
-    <section class="scroll-reveal grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center pt-2 sm:pt-6">
+    <section class="scroll-reveal grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start pt-4 sm:pt-8">
         
         <!-- Sisi Kiri Hero: Teks & Action Ala Luma Event Landing -->
         <div class="lg:col-span-7 space-y-6 anim-hero-text">
             
-            <div class="space-y-3 relative">
+            <div class="space-y-4 relative">
                 <!-- Headline Acara -->
-                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-[1.15] tracking-tight">
+                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-[1.2] tracking-tight">
                     {{ $settings['event_title'] }}
                 </h1>
 
                 <!-- Self-Drawing SVG Curved Line (Silver/White Stroke) -->
-                <div class="w-48 sm:w-64 pt-1">
+                <div class="w-48 sm:w-64 pt-0.5">
                     <svg viewBox="0 0 260 20" fill="none" class="w-full h-auto" xmlns="http://www.w3.org/2000/svg">
                         <path d="M4 12C60 4 140 18 256 6" stroke="rgba(255, 255, 255, 0.35)" stroke-width="4" stroke-linecap="round" class="svg-draw-line" />
                     </svg>
                 </div>
                 
-                <!-- Quick Date & Venue Indicator Card (Monochromatic Glass) -->
+                @php
+                    $dateStr = $settings['event_date'] ?? '';
+                    $dayNumber = '27';
+                    $monthAbbr = 'OKT';
+                    if (preg_match('/(\d{1,2})\s+([A-Za-z]+)/', $dateStr, $matches)) {
+                        $dayNumber = $matches[1];
+                        $monthAbbr = strtoupper(substr($matches[2], 0, 3));
+                    } elseif (preg_match('/\d{1,2}/', $dateStr, $matches)) {
+                        $dayNumber = $matches[0];
+                    }
+                @endphp
+
+                <!-- Quick Date & Venue Indicator Card (Monochromatic Glass ala Luma) -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                     <!-- Date Quick Badge -->
-                    <div class="flex items-center gap-3 p-3 rounded-xl card-glass-subtle">
-                        <div class="w-10 h-10 rounded-lg bg-white/10 border border-white/15 text-white flex flex-col items-center justify-center font-bold shrink-0">
-                            <span class="text-[9px] uppercase tracking-wider text-neutral-400 leading-none">TGL</span>
-                            <span class="text-sm font-black leading-none mt-0.5">{{ explode(' ', $settings['event_date'])[0] ?? '2026' }}</span>
+                    <div class="flex items-center gap-3.5 p-3.5 rounded-xl card-glass-subtle">
+                        <div class="w-11 h-11 rounded-lg bg-white/10 border border-white/15 text-white flex flex-col items-center justify-center font-bold shrink-0">
+                            <span class="text-[9px] uppercase font-bold tracking-wider text-neutral-400 leading-none">{{ $monthAbbr }}</span>
+                            <span class="text-base font-black leading-none mt-1">{{ $dayNumber }}</span>
                         </div>
                         <div class="min-w-0">
                             <div class="text-xs font-bold text-white truncate">{{ $settings['event_date'] }}</div>
-                            <div class="text-[11px] text-neutral-400 truncate">{{ $settings['event_time'] }}</div>
+                            <div class="text-[11px] text-neutral-400 truncate mt-0.5">{{ $settings['event_time'] }}</div>
                         </div>
                     </div>
 
                     <!-- Venue Quick Badge -->
-                    <div class="flex items-center gap-3 p-3 rounded-xl card-glass-subtle">
-                        <div class="w-10 h-10 rounded-lg bg-white/10 border border-white/15 text-neutral-300 flex items-center justify-center shrink-0">
+                    <div class="flex items-center gap-3.5 p-3.5 rounded-xl card-glass-subtle">
+                        <div class="w-11 h-11 rounded-lg bg-white/10 border border-white/15 text-neutral-300 flex items-center justify-center shrink-0">
                             <svg class="w-5 h-5 text-neutral-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -472,15 +484,19 @@
                         </div>
                         <div class="min-w-0">
                             <div class="text-xs font-bold text-white truncate">{{ $settings['event_venue_name'] }}</div>
-                            <div class="text-[11px] text-neutral-400 truncate">{{ $settings['event_venue_address'] }}</div>
+                            <div class="text-[11px] text-neutral-400 truncate mt-0.5">{{ $settings['event_venue_address'] }}</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Deskripsi Acara -->
-                <p class="text-sm sm:text-base text-neutral-300 leading-relaxed max-w-2xl font-normal pt-2">
-                    {{ $settings['event_description'] }}
-                </p>
+                <!-- Deskripsi Acara (Paragraf Rapi ala Luma) -->
+                <div class="text-sm sm:text-base text-neutral-300 leading-relaxed max-w-2xl font-normal pt-2 space-y-3.5">
+                    @foreach(array_filter(explode("\n", str_replace("\r", "", $settings['event_description'] ?? ''))) as $paragraph)
+                        @if(trim($paragraph) !== '')
+                            <p>{{ trim($paragraph) }}</p>
+                        @endif
+                    @endforeach
+                </div>
             </div>
 
             <!-- Tombol Aksi Cepat (White Glow Button + Glass Outline) -->
