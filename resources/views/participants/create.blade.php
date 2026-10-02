@@ -268,7 +268,7 @@
                         type="submit" 
                         class="btn-glow-white w-full py-4 px-6 font-black text-xs sm:text-sm tracking-wide rounded-xl cursor-pointer flex items-center justify-center gap-2 text-neutral-950 hover:scale-[1.01] active:scale-[0.99] transition-all shadow-xl"
                     >
-                        <span data-i18n="btn_submit">Request to Join / Kirim Pendaftaran</span>
+                        <span data-i18n="btn_submit">Request to Join</span>
                         <svg class="w-4 h-4 text-neutral-950" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
                         </svg>

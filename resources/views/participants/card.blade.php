@@ -67,7 +67,7 @@
         <div class="bg-slate-900 text-white px-5 sm:px-6 py-4 flex items-center justify-between border-b border-slate-800">
             <div>
                 <h1 class="text-sm font-bold tracking-tight text-white uppercase">
-                    {{ $eventSettings['title'] ?? 'C LEVEL INDONESIA 2026' }}
+                    {{ $eventSettings['title'] ?? 'The Executive Roundtable — Wonderful' }}
                 </h1>
                 <span class="text-[11px] text-slate-400 block mt-0.5">E-Tiket Presensi</span>
             </div>

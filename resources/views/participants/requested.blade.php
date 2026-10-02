@@ -1,6 +1,5 @@
 @extends('layouts.guest')
-
-@section('title', 'Permintaan Bergabung Berhasil Diajukan - C LEVEL')
+@section('title', 'Permintaan Bergabung Berhasil Diajukan - Wonderful')
 
 @push('styles')
 <style>

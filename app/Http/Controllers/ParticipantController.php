@@ -39,12 +39,12 @@ class ParticipantController extends Controller
     private function getEventSettings(): array
     {
         return [
-            'event_title' => Setting::get('event_title', 'Musyawarah & Temu Bisnis C LEVEL Indonesia 2026'),
-            'event_organizer' => Setting::get('event_organizer', 'C LEVEL Indonesia'),
-            'event_date' => Setting::get('event_date', '28 Oktober 2026'),
-            'event_time' => Setting::get('event_time', '08:30 - 16:30 WIB'),
-            'event_venue_name' => Setting::get('event_venue_name', 'Grand Ballroom C LEVEL Indonesia'),
-            'event_venue_address' => Setting::get('event_venue_address', 'Grand Ballroom C LEVEL Indonesia, Jakarta'),
+            'event_title' => Setting::get('event_title', 'The Executive Roundtable — From AI Ambition to Enterprise Impact'),
+            'event_organizer' => Setting::get('event_organizer', 'Wonderful'),
+            'event_date' => Setting::get('event_date', '27 Oktober 2026'),
+            'event_time' => Setting::get('event_time', '15:30 - 19:00 WIB'),
+            'event_venue_name' => Setting::get('event_venue_name', 'SCBD Area'),
+            'event_venue_address' => Setting::get('event_venue_address', 'SCBD Area, Jakarta'),
             'event_maps_url' => Setting::get('event_maps_url', 'https://maps.google.com/?q=Jakarta'),
             'event_maps_iframe' => Setting::get('event_maps_iframe', ''),
             'event_dresscode' => Setting::get('event_dresscode', 'Batik Formal / Pakaian Bisnis Rapi'),
@@ -130,7 +130,7 @@ class ParticipantController extends Controller
     public function requested(string $token)
     {
         $participant = Participant::where('qr_token', $token)->firstOrFail();
-        $eventTitle = Setting::get('event_title', 'Musyawarah & Temu Bisnis C LEVEL Indonesia 2026');
+        $eventTitle = Setting::get('event_title', 'The Executive Roundtable — From AI Ambition to Enterprise Impact');
 
         return view('participants.requested', compact('participant', 'eventTitle'));
     }
@@ -142,11 +142,11 @@ class ParticipantController extends Controller
     {
         $participant = Participant::where('qr_token', $token)->firstOrFail();
         $eventSettings = [
-            'title' => Setting::get('event_title', 'Musyawarah & Temu Bisnis C LEVEL Indonesia 2026'),
-            'date' => Setting::get('event_date', '28 Oktober 2026'),
-            'time' => Setting::get('event_time', '08:30 - 16:30 WIB'),
-            'venue' => Setting::get('event_venue_name', 'Grand Ballroom C LEVEL Indonesia'),
-            'dresscode' => Setting::get('event_dresscode', 'Batik Formal / Pakaian Bisnis Rapi'),
+            'title' => Setting::get('event_title', 'The Executive Roundtable — From AI Ambition to Enterprise Impact'),
+            'date' => Setting::get('event_date', '27 Oktober 2026'),
+            'time' => Setting::get('event_time', '15:30 - 19:00 WIB'),
+            'venue' => Setting::get('event_venue_name', 'SCBD Area'),
+            'dresscode' => Setting::get('event_dresscode', 'By invitation only'),
         ];
 
         return view('participants.card', compact('participant', 'eventSettings'));

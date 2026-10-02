@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Pendaftaran Peserta - C LEVEL')</title>
+    <title>@yield('title', 'Pendaftaran Peserta - Wonderful')</title>
 
     <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -162,19 +162,17 @@
                    box-shadow: 0 1px 0 rgba(255,255,255,0.06), 0 4px 20px rgba(0,0,0,0.5);">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between relative z-10">
 
-            <a href="{{ route('home') }}" class="flex items-center gap-3 group">
-                <!-- Logo pill — subtle white glass -->
-                <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg
-                             text-white font-black text-xs tracking-[0.18em] uppercase
-                             transition-all duration-200 group-hover:bg-white/10"
-                      style="background: rgba(255,255,255,0.07);
-                             border: 1px solid rgba(255,255,255,0.12);
-                             box-shadow: inset 0 1px 0 rgba(255,255,255,0.14);">
-                    <span class="w-1.5 h-1.5 rounded-full bg-white opacity-70 group-hover:opacity-100 transition-opacity"></span>
-                    C LEVEL
-                </span>
-                <span class="text-[11px] font-medium text-white/35 tracking-widest uppercase hidden sm:block" data-i18n="header_subtitle">
-                    Executive Forum
+            <a href="{{ route('home') }}" class="flex items-center gap-2.5 sm:gap-3 group">
+                <!-- Wonderful Logo (Sphere Icon + Wordmark) -->
+                <div class="flex items-center gap-2 px-2.5 py-1.5 rounded-xl transition-all duration-200 group-hover:bg-white/10"
+                     style="background: rgba(255,255,255,0.06);
+                            border: 1px solid rgba(255,255,255,0.12);
+                            box-shadow: inset 0 1px 0 rgba(255,255,255,0.14);">
+                    <img src="{{ asset('images/wonderful-logo.png') }}" alt="Wonderful Logo" class="w-6 h-6 sm:w-6.5 sm:h-6.5 object-contain drop-shadow">
+                    <img src="{{ asset('images/won.png') }}" alt="Wonderful" class="h-4 sm:h-4.5 w-auto object-contain filter invert brightness-200 contrast-200">
+                </div>
+                <span class="text-[11px] font-medium text-white/40 tracking-widest uppercase hidden sm:block" data-i18n="header_subtitle">
+                    Executive Roundtable
                 </span>
             </a>
 
@@ -214,7 +212,7 @@
                    border-top: 1px solid rgba(255,255,255,0.06);">
         <div class="max-w-6xl mx-auto px-4 py-6 text-center space-y-1">
             <p class="text-xs text-white/35 font-medium" data-i18n="footer_copy">
-                &copy; {{ date('Y') }} C LEVEL Indonesia &mdash; Sistem Presensi &amp; Pendaftaran Resmi
+                &copy; {{ date('Y') }} Wonderful &mdash; Sistem Presensi &amp; Pendaftaran Resmi
             </p>
             <p class="text-[10px] text-white/20 font-light tracking-wide" data-i18n="footer_sub">
                 All rights reserved. Executive Event Management System.
@@ -226,11 +224,11 @@
     <script>
         const i18nTranslations = {
             id: {
-                header_subtitle: "Executive Forum",
-                footer_copy: "© " + new Date().getFullYear() + " C LEVEL Indonesia — Sistem Presensi & Pendaftaran Resmi",
+                header_subtitle: "Executive Roundtable",
+                footer_copy: "© " + new Date().getFullYear() + " Wonderful — Sistem Presensi & Pendaftaran Resmi",
                 footer_sub: "All rights reserved. Executive Event Management System.",
                 you_are_invited: "You Are Invited",
-                envelope_badge: "C LEVEL",
+                envelope_badge: "Wonderful",
                 envelope_action: "Buka Formulir Pendaftaran",
                 envelope_hint: "Ketuk amplop untuk membuka",
                 quick_date_label: "Tanggal Pelaksanaan",
@@ -257,7 +255,7 @@
                 placeholder_position: "CEO, Direktur, Manager, dll",
                 label_email: "Alamat Email",
                 placeholder_email: "nama@perusahaan.com",
-                btn_submit: "Kirim Pendaftaran / Request to Join",
+                btn_submit: "Request to Join",
                 closed_alert_title: "Pendaftaran Telah Ditutup",
                 btn_closed: "Pendaftaran Telah Ditutup",
                 zoom_badge: "Lihat Ukuran Penuh",
@@ -265,11 +263,11 @@
                 back_to_event: "Kembali ke Detail Acara"
             },
             en: {
-                header_subtitle: "Executive Forum",
-                footer_copy: "© " + new Date().getFullYear() + " C LEVEL Indonesia — Official Attendance & Registration System",
+                header_subtitle: "Executive Roundtable",
+                footer_copy: "© " + new Date().getFullYear() + " Wonderful — Official Attendance & Registration System",
                 footer_sub: "All rights reserved. Executive Event Management System.",
                 you_are_invited: "You Are Invited",
-                envelope_badge: "C LEVEL",
+                envelope_badge: "Wonderful",
                 envelope_action: "Open Registration Form",
                 envelope_hint: "Tap envelope to open",
                 quick_date_label: "Event Date",
@@ -296,7 +294,7 @@
                 placeholder_position: "CEO, Director, VP, Manager, etc.",
                 label_email: "Email Address",
                 placeholder_email: "name@company.com",
-                btn_submit: "Submit Registration / Request to Join",
+                btn_submit: "Request to Join",
                 closed_alert_title: "Registration Is Closed",
                 btn_closed: "Registration Is Closed",
                 zoom_badge: "View Fullscreen",

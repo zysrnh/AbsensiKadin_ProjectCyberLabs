@@ -1,6 +1,5 @@
 @extends('layouts.guest')
-
-@section('title', $settings['event_title'] . ' - C LEVEL Indonesia')
+@section('title', $settings['event_title'] . ' - Wonderful')
 
 @push('styles')
 <style>
@@ -311,9 +310,10 @@
                     <div class="envelope-card">
                         <div class="h-full flex flex-col justify-between text-left">
                             <div class="flex items-center justify-between border-b border-neutral-200 pb-2.5">
-                                <span class="px-2.5 py-0.5 bg-neutral-900 text-white font-extrabold text-[10px] tracking-wider uppercase rounded-md shadow-xs" data-i18n="envelope_badge">
-                                    C LEVEL
-                                </span>
+                                <div class="flex items-center gap-1.5 px-2 py-0.5 bg-neutral-900 rounded-md shadow-xs">
+                                    <img src="{{ asset('images/wonderful-logo.png') }}" alt="Wonderful" class="w-4 h-4 object-contain">
+                                    <img src="{{ asset('images/won.png') }}" alt="Wonderful" class="h-3 w-auto object-contain filter invert brightness-200">
+                                </div>
                                 <span class="text-xs text-neutral-500 font-semibold">{{ $settings['event_date'] }}</span>
                             </div>
                             <div class="py-2 space-y-1.5">
@@ -341,10 +341,8 @@
                     <div class="envelope-flap"></div>
 
                     <div class="envelope-seal">
-                        <button type="button" class="rounded-full bg-gradient-to-br from-neutral-100 via-neutral-300 to-neutral-500 border-2 border-white text-neutral-950 flex items-center justify-center shadow-xl hover:scale-105 active:scale-95 transition-transform cursor-pointer" style="width: 52px; height: 52px;" title="Buka Undangan">
-                            <svg class="w-6 h-6 text-neutral-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 19v-8.93a2 2 0 01.89-1.664l7-4.666a2 2 0 012.22 0l7 4.666A2 2 0 0121 10.07V19M3 19a2 2 0 002 2h14a2 2 0 002-2M3 19l6.75-4.5M21 19l-6.75-4.5M3 10l6.75 4.5M21 10l-6.75 4.5"/>
-                            </svg>
+                        <button type="button" class="rounded-full bg-gradient-to-br from-neutral-900 to-black border-2 border-white/60 p-1.5 flex items-center justify-center shadow-2xl hover:scale-105 active:scale-95 transition-transform cursor-pointer" style="width: 54px; height: 54px;" title="Buka Undangan">
+                            <img src="{{ asset('images/wonderful-logo.png') }}" alt="Wonderful" class="w-10 h-10 object-contain drop-shadow-md">
                         </button>
                     </div>
 
@@ -465,10 +463,8 @@
                         </div>
                     @else
                         <div class="flex items-center gap-2">
-                            <div class="w-7 h-7 rounded-full bg-white/20 text-white border border-white/20 flex items-center justify-center font-bold text-[11px] shadow-xs shrink-0">
-                                C
-                            </div>
-                            <span class="text-xs font-bold text-neutral-200">C LEVEL Indonesia</span>
+                            <img src="{{ asset('images/wonderful-logo.png') }}" alt="Wonderful" class="w-7 h-7 object-contain">
+                            <span class="text-xs font-bold text-neutral-200">Wonderful</span>
                         </div>
                     @endif
                 </div>
@@ -529,9 +525,10 @@
                     @else
                         <div class="bg-gradient-to-b from-neutral-900 to-black text-white p-6 sm:p-7 flex flex-col justify-between rounded-xl border border-white/10" style="aspect-ratio: 1/1; min-height: 290px;">
                             <div class="flex items-center justify-between">
-                                <span class="px-2.5 py-1 bg-white/10 text-neutral-200 border border-white/15 font-black text-xs tracking-widest uppercase rounded-lg">
-                                    C LEVEL
-                                </span>
+                                <div class="flex items-center gap-1.5 px-2.5 py-1 bg-white/10 rounded-lg border border-white/15">
+                                    <img src="{{ asset('images/wonderful-logo.png') }}" alt="Wonderful" class="w-4 h-4 object-contain">
+                                    <img src="{{ asset('images/won.png') }}" alt="Wonderful" class="h-3 w-auto object-contain filter invert brightness-200">
+                                </div>
                                 <span class="w-2.5 h-2.5 rounded-full bg-white animate-ping"></span>
                             </div>
 
@@ -654,7 +651,7 @@
                     {!! $settings['event_maps_iframe'] !!}
                 @else
                     <iframe 
-                        src="https://maps.google.com/maps?q={{ urlencode(($settings['event_venue_name'] ?? '') . ' ' . ($settings['event_venue_address'] ?? 'Grand Ballroom C LEVEL Indonesia, Jakarta')) }}&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                        src="https://maps.google.com/maps?q={{ urlencode(($settings['event_venue_name'] ?? '') . ' ' . ($settings['event_venue_address'] ?? 'SCBD Area, Jakarta')) }}&t=&z=15&ie=UTF8&iwloc=&output=embed"
                         class="w-full h-full border-0"
                         allowfullscreen="" 
                         loading="lazy" 
