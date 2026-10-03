@@ -165,19 +165,10 @@
         <div>
             <!-- Sidebar Header Brand -->
             <div class="h-16 flex items-center justify-between px-5 border-b border-slate-800/80">
-                <div class="flex items-center gap-3">
-                    <span class="px-2.5 py-1 bg-neutral-900 border border-white/20 text-white font-black text-xs tracking-wider rounded-lg shadow-sm flex items-center gap-1.5">
-                        <img src="{{ asset('images/wonderful-logo.png') }}" alt="Wonderful" class="w-4 h-4 object-contain">
-                        <span>Wonderful</span>
-                    </span>
-                    <div>
-                        <h1 class="text-sm font-bold tracking-tight text-white leading-tight">Presensi 2026</h1>
-                        <span class="text-[10px] text-slate-400 font-medium flex items-center gap-1">
-                            <span class="w-1 h-1 rounded-full bg-emerald-400"></span>
-                            <span>Panel Administrator</span>
-                        </span>
-                    </div>
-                </div>
+                <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2.5 group">
+                    <img src="{{ asset('images/wonderful-logo.png') }}" alt="Wonderful" class="w-7 h-7 object-contain transition-transform duration-200 group-hover:scale-105">
+                    <span class="text-base font-bold tracking-tight text-white leading-tight">Wonderful</span>
+                </a>
                 <!-- Tombol Close Drawer Khusus Mobile -->
                 <button type="button" onclick="toggleSidebar()" class="lg:hidden p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors" title="Tutup Menu">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
