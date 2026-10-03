@@ -10,40 +10,28 @@
     <!-- Top Header & Action Buttons -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-slate-200">
         <div>
-            <h1 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">Dashboard Pendaftar</h1>
+            <h1 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight" data-i18n="page_dashboard">Dashboard Pendaftar</h1>
         </div>
 
         <div class="flex items-center gap-2.5 overflow-x-auto sm:overflow-visible no-scrollbar py-2 -my-2 px-1 sm:px-0 sm:flex-wrap">
             <!-- Cetak ID Card Massal -->
             <a href="{{ route('admin.participants.id-cards.bulk', request()->query()) }}" target="_blank" class="btn-3d-white px-3.5 py-2 bg-white hover:bg-slate-50 text-indigo-900 font-bold text-xs rounded-xl border border-indigo-200/90 flex items-center gap-1.5 cursor-pointer shadow-2xs shrink-0 whitespace-nowrap">
-                <svg class="w-3.5 h-3.5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
-                </svg>
-                <span>Cetak ID Card</span>
+                <span data-i18n="btn_print_id_card">Cetak ID Card</span>
             </a>
 
             <!-- Export Excel (XLS) Ber-styling -->
             <a href="{{ route('admin.export.excel', request()->query()) }}" class="btn-3d-white px-3.5 py-2 bg-white hover:bg-emerald-50 text-emerald-800 font-bold text-xs rounded-xl border border-emerald-200/90 flex items-center gap-1.5 cursor-pointer shadow-2xs shrink-0 whitespace-nowrap">
-                <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                <span>Export Excel</span>
+                <span data-i18n="btn_export_excel">Export Excel</span>
             </a>
 
             <!-- Buka Scanner QR -->
             <a href="{{ route('admin.scan') }}" class="btn-3d-dark px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 border border-slate-900 cursor-pointer shadow-2xs shrink-0 whitespace-nowrap">
-                <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
-                </svg>
-                <span>Scanner QR</span>
+                <span data-i18n="btn_scanner_qr">Scanner QR</span>
             </a>
 
             <!-- Tambah Peserta Manual -->
             <a href="{{ route('participants.create') }}" target="_blank" class="btn-3d-blue px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 border border-blue-600 cursor-pointer shadow-2xs shrink-0 whitespace-nowrap">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
-                </svg>
-                <span>Pendaftar Baru</span>
+                <span data-i18n="btn_new_participant">Pendaftar Baru</span>
             </a>
         </div>
     </div>
@@ -55,25 +43,20 @@
         <div class="card-3d p-3.5 sm:p-5 flex flex-col justify-between relative overflow-hidden">
             <div class="flex items-start justify-between gap-1">
                 <div>
-                    <span class="text-[10px] sm:text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Total Pendaftar</span>
+                    <span class="text-[10px] sm:text-[11px] font-bold text-slate-500 uppercase tracking-wider block" data-i18n="stat_total_registered">Total Pendaftar</span>
                     <div class="flex flex-wrap items-baseline gap-1.5 mt-1 sm:mt-1.5">
                         <span class="text-2xl sm:text-3xl font-black text-slate-900 leading-none">{{ number_format($stats['total']) }}</span>
                         <span class="px-1.5 py-0.5 bg-blue-50 text-blue-700 border border-blue-200/80 rounded-full text-[9px] sm:text-[10px] font-bold shrink-0">
-                            +{{ $stats['today_registered'] }} hari ini
+                            {{ $stats['today_registered'] }} <span data-i18n="stat_today">hari ini</span>
                         </span>
                     </div>
-                </div>
-                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 shrink-0">
-                    <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
                 </div>
             </div>
             <div class="mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-slate-100">
                 <div class="w-full bg-slate-100 h-1.5 sm:h-2 rounded-full overflow-hidden">
                     <div class="bg-blue-600 h-1.5 sm:h-2 rounded-full" style="width: 100%"></div>
                 </div>
-                <span class="text-[9px] sm:text-[10px] text-slate-400 mt-1 sm:mt-1.5 block truncate">Basis pendaftar resmi</span>
+                <span class="text-[9px] sm:text-[10px] text-slate-400 mt-1 sm:mt-1.5 block truncate" data-i18n="stat_official_basis">Basis pendaftar resmi</span>
             </div>
         </div>
 
@@ -81,18 +64,13 @@
         <div class="card-3d p-3.5 sm:p-5 flex flex-col justify-between relative overflow-hidden">
             <div class="flex items-start justify-between gap-1">
                 <div>
-                    <span class="text-[10px] sm:text-[11px] font-bold text-emerald-700 uppercase tracking-wider block">Hadir di Lokasi</span>
+                    <span class="text-[10px] sm:text-[11px] font-bold text-emerald-700 uppercase tracking-wider block" data-i18n="stat_attended_location">Hadir di Lokasi</span>
                     <div class="flex flex-wrap items-baseline gap-1.5 mt-1 sm:mt-1.5">
                         <span class="text-2xl sm:text-3xl font-black text-emerald-600 leading-none">{{ number_format($stats['attended']) }}</span>
                         <span class="text-[10px] sm:text-xs font-semibold text-slate-400">
-                            dari {{ number_format($stats['total']) }}
+                            <span data-i18n="stat_of">dari</span> {{ number_format($stats['total']) }}
                         </span>
                     </div>
-                </div>
-                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 shrink-0">
-                    <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
                 </div>
             </div>
             <div class="mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-slate-100">
@@ -100,7 +78,7 @@
                     <div class="bg-emerald-500 h-1.5 sm:h-2 rounded-full transition-all duration-500" style="width: {{ $stats['attendance_rate'] }}%"></div>
                 </div>
                 <span class="text-[9px] sm:text-[10px] text-slate-500 mt-1 sm:mt-1.5 block truncate">
-                    <strong class="text-slate-700">{{ $stats['registered'] }}</strong> belum hadir
+                    <strong class="text-slate-700">{{ $stats['registered'] }}</strong> <span data-i18n="stat_not_attended_yet">belum hadir</span>
                 </span>
             </div>
         </div>
@@ -109,32 +87,32 @@
         <div class="card-3d p-3.5 sm:p-5 flex flex-col justify-between relative overflow-hidden">
             <div>
                 <div class="flex items-center justify-between mb-1.5 sm:mb-2">
-                    <span class="text-[10px] sm:text-[11px] font-bold text-slate-700 uppercase tracking-wider block">Status RSVP</span>
+                    <span class="text-[10px] sm:text-[11px] font-bold text-slate-700 uppercase tracking-wider block" data-i18n="stat_rsvp_status">Status RSVP</span>
                     <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-500"></span>
                 </div>
                 <div class="grid grid-cols-3 gap-1 sm:gap-2 text-center mt-1">
                     <div class="bg-emerald-50/70 border border-emerald-200/80 px-0.5 sm:px-1 py-1 sm:py-1.5 rounded-lg sm:rounded-xl">
                         <span class="text-xs sm:text-sm font-black text-emerald-700 block leading-tight">{{ $stats['rsvp_attending'] }}</span>
-                        <span class="text-[8px] sm:text-[9px] font-extrabold text-emerald-600 uppercase block mt-0.5">Hadir</span>
+                        <span class="text-[8px] sm:text-[9px] font-extrabold text-emerald-600 uppercase block mt-0.5" data-i18n="stat_rsvp_attending">Hadir</span>
                     </div>
                     <div class="bg-rose-50/70 border border-rose-200/80 px-0.5 sm:px-1 py-1 sm:py-1.5 rounded-lg sm:rounded-xl">
                         <span class="text-xs sm:text-sm font-black text-rose-700 block leading-tight">{{ $stats['rsvp_declined'] }}</span>
-                        <span class="text-[8px] sm:text-[9px] font-extrabold text-rose-600 uppercase block mt-0.5">Batal</span>
+                        <span class="text-[8px] sm:text-[9px] font-extrabold text-rose-600 uppercase block mt-0.5" data-i18n="stat_rsvp_declined">Batal</span>
                     </div>
                     <div class="bg-slate-100/70 border border-slate-200/80 px-0.5 sm:px-1 py-1 sm:py-1.5 rounded-lg sm:rounded-xl">
                         <span class="text-xs sm:text-sm font-black text-slate-700 block leading-tight">{{ $stats['rsvp_pending'] }}</span>
-                        <span class="text-[8px] sm:text-[9px] font-extrabold text-slate-500 uppercase block mt-0.5">Nunggu</span>
+                        <span class="text-[8px] sm:text-[9px] font-extrabold text-slate-500 uppercase block mt-0.5" data-i18n="stat_rsvp_pending">Nunggu</span>
                     </div>
                 </div>
             </div>
-            <span class="text-[9px] sm:text-[10px] text-slate-400 mt-2 sm:mt-3 pt-2 sm:pt-2.5 border-t border-slate-100 block truncate">Dari RSVP WhatsApp</span>
+            <span class="text-[9px] sm:text-[10px] text-slate-400 mt-2 sm:mt-3 pt-2 sm:pt-2.5 border-t border-slate-100 block truncate" data-i18n="stat_from_whatsapp">Dari RSVP WhatsApp</span>
         </div>
 
         <!-- 4. Persentase Kehadiran -->
         <div class="card-3d p-3.5 sm:p-5 flex flex-col justify-between relative overflow-hidden">
             <div class="flex items-start justify-between gap-1">
                 <div>
-                    <span class="text-[10px] sm:text-[11px] font-bold text-slate-500 uppercase tracking-wider block">Tingkat Hadir</span>
+                    <span class="text-[10px] sm:text-[11px] font-bold text-slate-500 uppercase tracking-wider block" data-i18n="stat_attendance_rate">Tingkat Hadir</span>
                     <div class="flex flex-wrap items-baseline gap-1.5 mt-1 sm:mt-1.5">
                         <span class="text-2xl sm:text-3xl font-black text-slate-900 leading-none">{{ $stats['attendance_rate'] }}%</span>
                         <span class="text-[10px] sm:text-xs font-semibold text-slate-400">
@@ -142,17 +120,12 @@
                         </span>
                     </div>
                 </div>
-                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600 shrink-0">
-                    <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                    </svg>
-                </div>
             </div>
             <div class="mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-slate-100">
                 <div class="w-full bg-slate-100 h-1.5 sm:h-2 rounded-full overflow-hidden">
                     <div class="bg-slate-900 h-1.5 sm:h-2 rounded-full transition-all duration-500" style="width: {{ $stats['attendance_rate'] }}%"></div>
                 </div>
-                <span class="text-[9px] sm:text-[10px] text-slate-400 mt-1 sm:mt-1.5 block truncate">Rasio kehadiran total</span>
+                <span class="text-[9px] sm:text-[10px] text-slate-400 mt-1 sm:mt-1.5 block truncate" data-i18n="stat_total_ratio">Rasio kehadiran total</span>
             </div>
         </div>
 
@@ -174,6 +147,7 @@
                     name="search" 
                     value="{{ request('search') }}" 
                     placeholder="Cari nama, instansi, WhatsApp..." 
+                    data-i18n-placeholder="filter_search_placeholder"
                     class="input-3d w-full pl-10 pr-3.5 py-2.5 bg-slate-50/60 hover:bg-white focus:bg-white border border-slate-300 focus:border-slate-900 text-xs text-slate-900 rounded-xl focus:outline-none transition-all"
                 >
             </div>
@@ -188,11 +162,11 @@
                 >
                     <span id="filter-status-label" class="truncate font-medium">
                         @if(request('status') === 'registered')
-                            Belum Hadir
+                            <span data-i18n="filter_status_not_attended">Belum Hadir</span>
                         @elseif(request('status') === 'attended')
-                            Sudah Hadir
+                            <span data-i18n="filter_status_attended">Sudah Hadir</span>
                         @else
-                            Semua Presensi di Lokasi
+                            <span data-i18n="filter_status_all">Semua Presensi di Lokasi</span>
                         @endif
                     </span>
                     <svg class="w-3.5 h-3.5 text-slate-400 shrink-0 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -200,13 +174,13 @@
                     </svg>
                 </button>
                 <div id="filter-status-menu" class="filter-custom-menu hidden absolute left-0 right-0 top-full mt-1.5 bg-white border border-slate-200 rounded-xl shadow-xl z-50 p-1 text-xs space-y-0.5 text-slate-700 text-left">
-                    <div onclick="selectFilterOption('status', '', 'Semua Presensi di Lokasi')" class="px-3 py-2 rounded-lg hover:bg-slate-100 cursor-pointer font-medium {{ !request('status') ? 'bg-slate-100 text-slate-900 font-bold' : '' }}">
+                    <div onclick="selectFilterOption('status', '', 'Semua Presensi di Lokasi')" class="px-3 py-2 rounded-lg hover:bg-slate-100 cursor-pointer font-medium {{ !request('status') ? 'bg-slate-100 text-slate-900 font-bold' : '' }}" data-i18n="filter_status_all">
                         Semua Presensi di Lokasi
                     </div>
-                    <div onclick="selectFilterOption('status', 'registered', 'Belum Hadir')" class="px-3 py-2 rounded-lg hover:bg-slate-100 cursor-pointer font-medium {{ request('status') === 'registered' ? 'bg-slate-100 text-slate-900 font-bold' : '' }}">
+                    <div onclick="selectFilterOption('status', 'registered', 'Belum Hadir')" class="px-3 py-2 rounded-lg hover:bg-slate-100 cursor-pointer font-medium {{ request('status') === 'registered' ? 'bg-slate-100 text-slate-900 font-bold' : '' }}" data-i18n="filter_status_not_attended">
                         Belum Hadir
                     </div>
-                    <div onclick="selectFilterOption('status', 'attended', 'Sudah Hadir')" class="px-3 py-2 rounded-lg hover:bg-slate-100 cursor-pointer font-medium {{ request('status') === 'attended' ? 'bg-slate-100 text-slate-900 font-bold' : '' }}">
+                    <div onclick="selectFilterOption('status', 'attended', 'Sudah Hadir')" class="px-3 py-2 rounded-lg hover:bg-slate-100 cursor-pointer font-medium {{ request('status') === 'attended' ? 'bg-slate-100 text-slate-900 font-bold' : '' }}" data-i18n="filter_status_attended">
                         Sudah Hadir
                     </div>
                 </div>
@@ -222,13 +196,13 @@
                 >
                     <span id="filter-rsvp-label" class="truncate font-medium">
                         @if(request('rsvp') === 'attending')
-                            Pasti Hadir
+                            <span data-i18n="filter_rsvp_attending">Pasti Hadir</span>
                         @elseif(request('rsvp') === 'declined')
-                            Berhalangan
+                            <span data-i18n="filter_rsvp_declined">Berhalangan</span>
                         @elseif(request('rsvp') === 'pending')
-                            Belum Respon
+                            <span data-i18n="filter_rsvp_pending">Belum Respon</span>
                         @else
-                            Semua Status RSVP
+                            <span data-i18n="filter_rsvp_all">Semua Status RSVP</span>
                         @endif
                     </span>
                     <svg class="w-3.5 h-3.5 text-slate-400 shrink-0 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -236,16 +210,16 @@
                     </svg>
                 </button>
                 <div id="filter-rsvp-menu" class="filter-custom-menu hidden absolute left-0 right-0 top-full mt-1.5 bg-white border border-slate-200 rounded-xl shadow-xl z-50 p-1 text-xs space-y-0.5 text-slate-700 text-left">
-                    <div onclick="selectFilterOption('rsvp', '', 'Semua Status RSVP')" class="px-3 py-2 rounded-lg hover:bg-slate-100 cursor-pointer font-medium {{ !request('rsvp') ? 'bg-slate-100 text-slate-900 font-bold' : '' }}">
+                    <div onclick="selectFilterOption('rsvp', '', 'Semua Status RSVP')" class="px-3 py-2 rounded-lg hover:bg-slate-100 cursor-pointer font-medium {{ !request('rsvp') ? 'bg-slate-100 text-slate-900 font-bold' : '' }}" data-i18n="filter_rsvp_all">
                         Semua Status RSVP
                     </div>
-                    <div onclick="selectFilterOption('rsvp', 'attending', 'Pasti Hadir')" class="px-3 py-2 rounded-lg hover:bg-slate-100 cursor-pointer font-medium {{ request('rsvp') === 'attending' ? 'bg-slate-100 text-slate-900 font-bold' : '' }}">
+                    <div onclick="selectFilterOption('rsvp', 'attending', 'Pasti Hadir')" class="px-3 py-2 rounded-lg hover:bg-slate-100 cursor-pointer font-medium {{ request('rsvp') === 'attending' ? 'bg-slate-100 text-slate-900 font-bold' : '' }}" data-i18n="filter_rsvp_attending">
                         Pasti Hadir
                     </div>
-                    <div onclick="selectFilterOption('rsvp', 'declined', 'Berhalangan')" class="px-3 py-2 rounded-lg hover:bg-slate-100 cursor-pointer font-medium {{ request('rsvp') === 'declined' ? 'bg-slate-100 text-slate-900 font-bold' : '' }}">
+                    <div onclick="selectFilterOption('rsvp', 'declined', 'Berhalangan')" class="px-3 py-2 rounded-lg hover:bg-slate-100 cursor-pointer font-medium {{ request('rsvp') === 'declined' ? 'bg-slate-100 text-slate-900 font-bold' : '' }}" data-i18n="filter_rsvp_declined">
                         Berhalangan
                     </div>
-                    <div onclick="selectFilterOption('rsvp', 'pending', 'Belum Respon')" class="px-3 py-2 rounded-lg hover:bg-slate-100 cursor-pointer font-medium {{ request('rsvp') === 'pending' ? 'bg-slate-100 text-slate-900 font-bold' : '' }}">
+                    <div onclick="selectFilterOption('rsvp', 'pending', 'Belum Respon')" class="px-3 py-2 rounded-lg hover:bg-slate-100 cursor-pointer font-medium {{ request('rsvp') === 'pending' ? 'bg-slate-100 text-slate-900 font-bold' : '' }}" data-i18n="filter_rsvp_pending">
                         Belum Respon
                     </div>
                 </div>
@@ -261,9 +235,9 @@
                 >
                     <span id="filter-date-label" class="truncate font-medium">
                         @if(request('date') === 'today')
-                            Daftar Hari Ini
+                            <span data-i18n="filter_date_today">Daftar Hari Ini</span>
                         @else
-                            Semua Tanggal
+                            <span data-i18n="filter_date_all">Semua Tanggal</span>
                         @endif
                     </span>
                     <svg class="w-3.5 h-3.5 text-slate-400 shrink-0 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -271,10 +245,10 @@
                     </svg>
                 </button>
                 <div id="filter-date-menu" class="filter-custom-menu hidden absolute left-0 right-0 top-full mt-1.5 bg-white border border-slate-200 rounded-xl shadow-xl z-50 p-1 text-xs space-y-0.5 text-slate-700 text-left">
-                    <div onclick="selectFilterOption('date', '', 'Semua Tanggal')" class="px-3 py-2 rounded-lg hover:bg-slate-100 cursor-pointer font-medium {{ !request('date') ? 'bg-slate-100 text-slate-900 font-bold' : '' }}">
+                    <div onclick="selectFilterOption('date', '', 'Semua Tanggal')" class="px-3 py-2 rounded-lg hover:bg-slate-100 cursor-pointer font-medium {{ !request('date') ? 'bg-slate-100 text-slate-900 font-bold' : '' }}" data-i18n="filter_date_all">
                         Semua Tanggal
                     </div>
-                    <div onclick="selectFilterOption('date', 'today', 'Daftar Hari Ini')" class="px-3 py-2 rounded-lg hover:bg-slate-100 cursor-pointer font-medium {{ request('date') === 'today' ? 'bg-slate-100 text-slate-900 font-bold' : '' }}">
+                    <div onclick="selectFilterOption('date', 'today', 'Daftar Hari Ini')" class="px-3 py-2 rounded-lg hover:bg-slate-100 cursor-pointer font-medium {{ request('date') === 'today' ? 'bg-slate-100 text-slate-900 font-bold' : '' }}" data-i18n="filter_date_today">
                         Daftar Hari Ini
                     </div>
                 </div>
@@ -286,7 +260,7 @@
                     type="submit" 
                     class="btn-3d-dark w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition-all cursor-pointer text-center border border-slate-900 shadow-2xs"
                 >
-                    Cari
+                    <span data-i18n="btn_search">Cari</span>
                 </button>
                 @if(request('search') || request('status') || request('rsvp') || request('date'))
                     <a href="{{ route('admin.dashboard') }}" class="btn-3d-white p-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold rounded-xl border border-slate-200 transition-all flex items-center justify-center shrink-0" title="Reset filter">
@@ -332,12 +306,12 @@
                                 onchange="toggleSelectAllDashboard(this)"
                             >
                         </th>
-                        <th class="py-3.5 px-4 w-12 text-center text-slate-400">No</th>
-                        <th class="py-3.5 px-5">Nama Lengkap</th>
-                        <th class="py-3.5 px-5">Instansi & Jabatan</th>
-                        <th class="py-3.5 px-5 whitespace-nowrap">WhatsApp</th>
-                        <th class="py-3.5 px-5 whitespace-nowrap">Presensi & RSVP</th>
-                        <th class="py-3.5 px-5 text-center whitespace-nowrap w-28">Aksi</th>
+                        <th class="py-3.5 px-4 w-12 text-center text-slate-400" data-i18n="th_no">No</th>
+                        <th class="py-3.5 px-5" data-i18n="th_name">Nama Lengkap</th>
+                        <th class="py-3.5 px-5" data-i18n="th_company_pos">Instansi & Jabatan</th>
+                        <th class="py-3.5 px-5 whitespace-nowrap" data-i18n="th_whatsapp">WhatsApp</th>
+                        <th class="py-3.5 px-5 whitespace-nowrap" data-i18n="th_attendance_rsvp">Presensi & RSVP</th>
+                        <th class="py-3.5 px-5 text-center whitespace-nowrap w-28" data-i18n="th_action">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 text-slate-800">
@@ -430,7 +404,7 @@
                                     class="btn-3d-white px-3 py-1.5 bg-white hover:bg-slate-50 text-slate-800 font-bold text-xs rounded-xl border border-slate-200 flex items-center gap-1.5 cursor-pointer shadow-xs"
                                     title="Pilihan Aksi"
                                 >
-                                    <span>Aksi</span>
+                                    <span data-i18n="th_action">Aksi</span>
                                     <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                                     </svg>
@@ -452,7 +426,7 @@
                                                 <svg class="w-3.5 h-3.5 text-rose-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                                                 </svg>
-                                                <span>Batalkan Hadir</span>
+                                                <span data-i18n="action_cancel_attendance">Batalkan Hadir</span>
                                             </button>
                                         @else
                                             <button 
@@ -463,7 +437,7 @@
                                                 <svg class="w-3.5 h-3.5 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
                                                 </svg>
-                                                <span>Tandai Hadir</span>
+                                                <span data-i18n="action_mark_attendance">Tandai Hadir</span>
                                             </button>
                                         @endif
                                     </div>
@@ -474,14 +448,14 @@
                                             <svg class="w-3.5 h-3.5 text-indigo-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
                                             </svg>
-                                            <span>Cetak ID Card</span>
+                                            <span data-i18n="btn_print_id_card">Cetak ID Card</span>
                                         </a>
                                         <a href="{{ route('participants.card', $item->qr_token) }}" target="_blank" class="flex items-center gap-2 px-3 py-1.5 hover:bg-slate-50 hover:text-slate-900 transition-colors font-medium">
                                             <svg class="w-3.5 h-3.5 text-slate-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                                             </svg>
-                                            <span>Lihat Tiket QR</span>
+                                            <span data-i18n="action_view_ticket">Lihat Tiket QR</span>
                                         </a>
                                     </div>
 
@@ -493,14 +467,14 @@
                                                 <svg class="w-3.5 h-3.5 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                                                 </svg>
-                                                <span>Kirim WA Blast</span>
+                                                <span data-i18n="action_send_wa_blast">Kirim WA Blast</span>
                                             </button>
                                         </form>
                                         <a href="{{ $item->whatsapp_blast_url }}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-3 py-1.5 hover:bg-emerald-50 hover:text-emerald-900 transition-colors font-medium">
                                             <svg class="w-3.5 h-3.5 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
                                             </svg>
-                                            <span>Kirim WA Web</span>
+                                            <span data-i18n="action_send_wa_web">Kirim WA Web</span>
                                         </a>
                                     </div>
 
@@ -513,7 +487,7 @@
                                                 <svg class="w-3.5 h-3.5 text-rose-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                                                 </svg>
-                                                <span>Hapus Peserta</span>
+                                                <span data-i18n="action_delete">Hapus Peserta</span>
                                             </button>
                                         </form>
                                     </div>
@@ -528,7 +502,7 @@
                                 <svg class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
                                 </svg>
-                                <span class="text-sm font-medium">Tidak ada data peserta yang cocok dengan filter pencarian.</span>
+                                <span class="text-sm font-medium" data-i18n="empty_attendees">Tidak ada data peserta yang cocok dengan filter pencarian.</span>
                             </div>
                         </td>
                     </tr>
@@ -661,7 +635,7 @@
                                 <svg class="w-3.5 h-3.5 text-rose-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                                 </svg>
-                                <span>Batalkan Hadir</span>
+                                <span data-i18n="action_cancel_attendance">Batalkan Hadir</span>
                             </button>
                         `;
                     }
@@ -713,7 +687,7 @@
                                 <svg class="w-3.5 h-3.5 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
                                 </svg>
-                                <span>Tandai Hadir</span>
+                                <span data-i18n="action_mark_attendance">Tandai Hadir</span>
                             </button>
                         `;
                     }
@@ -811,7 +785,8 @@
 
         if (count > 0) {
             bar.classList.remove('hidden');
-            countText.textContent = `${count} peserta dipilih`;
+            const unitText = (window.currentAdminLang === 'en') ? 'participants selected' : 'peserta dipilih';
+            countText.textContent = `${count} ${unitText}`;
             countBadge.textContent = count;
         } else {
             bar.classList.add('hidden');

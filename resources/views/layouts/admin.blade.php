@@ -355,12 +355,15 @@
                     </svg>
                     <span>{{ date('d F Y') }}</span>
                 </div>
-                <a href="{{ route('participants.create') }}" target="_blank" class="btn-3d-dark px-2.5 sm:px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition-all flex items-center gap-1 sm:gap-1.5 border border-slate-900">
-                    <span class="hidden sm:inline">+ Form Publik</span>
-                    <span class="sm:hidden text-[11px]">+ Form</span>
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                    </svg>
+                <!-- Language Switcher (ID | EN) -->
+                <div class="flex items-center p-0.5 bg-slate-100 border border-slate-200 rounded-xl shrink-0">
+                    <button type="button" onclick="setAdminLanguage('id')" id="adminLangBtnId" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer text-white bg-slate-900 shadow-xs">ID</button>
+                    <button type="button" onclick="setAdminLanguage('en')" id="adminLangBtnEn" class="px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer text-slate-500 hover:text-slate-900">EN</button>
+                </div>
+
+                <a href="{{ route('participants.create') }}" target="_blank" class="btn-3d-dark px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition-all flex items-center gap-1.5 border border-slate-900">
+                    <span class="hidden sm:inline" data-i18n="top_form_public">Form Publik</span>
+                    <span class="sm:hidden text-[11px]" data-i18n="top_form_public">Form</span>
                 </a>
                 <form action="{{ route('logout') }}" method="POST" class="inline">
                     @csrf
@@ -518,6 +521,162 @@
         if (window.innerWidth >= 1024 && localStorage.getItem('admin_sidebar_closed') === 'true') {
             document.body.classList.add('sidebar-closed');
         }
+    </script>
+
+    <!-- Admin i18n Translation Dictionary & Switcher -->
+    <script>
+        window.adminTranslations = {
+            id: {
+                top_form_public: "Form Publik",
+                page_dashboard: "Dashboard Pendaftar",
+                btn_print_id_card: "Cetak ID Card",
+                btn_export_excel: "Export Excel",
+                btn_scanner_qr: "Scanner QR",
+                btn_new_participant: "Pendaftar Baru",
+                
+                stat_total_registered: "Total Pendaftar",
+                stat_today: "hari ini",
+                stat_official_basis: "Basis pendaftar resmi",
+                stat_attended_location: "Hadir di Lokasi",
+                stat_of: "dari",
+                stat_not_attended_yet: "belum hadir",
+                stat_rsvp_status: "Status RSVP",
+                stat_rsvp_attending: "Hadir",
+                stat_rsvp_declined: "Batal",
+                stat_rsvp_pending: "Nunggu",
+                stat_from_whatsapp: "Dari RSVP WhatsApp",
+                stat_attendance_rate: "Tingkat Hadir",
+                stat_total_ratio: "Rasio kehadiran total",
+                
+                filter_search_placeholder: "Cari nama, instansi, WhatsApp...",
+                filter_status_all: "Semua Presensi di Lokasi",
+                filter_status_not_attended: "Belum Hadir",
+                filter_status_attended: "Sudah Hadir",
+                filter_rsvp_all: "Semua Status RSVP",
+                filter_rsvp_attending: "Pasti Hadir",
+                filter_rsvp_declined: "Berhalangan",
+                filter_rsvp_pending: "Belum Respon",
+                filter_date_all: "Semua Tanggal",
+                filter_date_today: "Daftar Hari Ini",
+                btn_search: "Cari",
+                
+                bulk_selected: "peserta dipilih",
+                bulk_delete_btn: "Hapus Terpilih",
+                
+                th_no: "No",
+                th_name: "Nama Lengkap",
+                th_company_pos: "Instansi & Jabatan",
+                th_whatsapp: "WhatsApp",
+                th_attendance_rsvp: "Presensi & RSVP",
+                th_action: "Aksi",
+                
+                action_mark_attendance: "Tandai Hadir",
+                action_cancel_attendance: "Batalkan Hadir",
+                action_view_ticket: "Lihat Tiket QR",
+                action_send_wa_blast: "Kirim WA Blast",
+                action_send_wa_web: "Kirim WA Web",
+                action_delete: "Hapus Peserta",
+                empty_attendees: "Tidak ada data peserta yang cocok dengan filter pencarian."
+            },
+            en: {
+                top_form_public: "Public Form",
+                page_dashboard: "Registrant Dashboard",
+                btn_print_id_card: "Print ID Cards",
+                btn_export_excel: "Export Excel",
+                btn_scanner_qr: "QR Scanner",
+                btn_new_participant: "New Registrant",
+                
+                stat_total_registered: "Total Registrants",
+                stat_today: "today",
+                stat_official_basis: "Official registration base",
+                stat_attended_location: "Present On-Site",
+                stat_of: "of",
+                stat_not_attended_yet: "not attended yet",
+                stat_rsvp_status: "RSVP Status",
+                stat_rsvp_attending: "Attending",
+                stat_rsvp_declined: "Declined",
+                stat_rsvp_pending: "Pending",
+                stat_from_whatsapp: "From WhatsApp RSVP",
+                stat_attendance_rate: "Attendance Rate",
+                stat_total_ratio: "Total attendance ratio",
+                
+                filter_search_placeholder: "Search name, institution, WhatsApp...",
+                filter_status_all: "All On-Site Attendance",
+                filter_status_not_attended: "Not Attended Yet",
+                filter_status_attended: "Attended",
+                filter_rsvp_all: "All RSVP Statuses",
+                filter_rsvp_attending: "Will Attend",
+                filter_rsvp_declined: "Cannot Attend",
+                filter_rsvp_pending: "Awaiting Response",
+                filter_date_all: "All Dates",
+                filter_date_today: "Registered Today",
+                btn_search: "Search",
+                
+                bulk_selected: "participants selected",
+                bulk_delete_btn: "Delete Selected",
+                
+                th_no: "No",
+                th_name: "Full Name",
+                th_company_pos: "Company & Position",
+                th_whatsapp: "WhatsApp",
+                th_attendance_rsvp: "Attendance & RSVP",
+                th_action: "Action",
+                
+                action_mark_attendance: "Mark Present",
+                action_cancel_attendance: "Cancel Attendance",
+                action_view_ticket: "View QR Ticket",
+                action_send_wa_blast: "Send WA Blast",
+                action_send_wa_web: "Send WA Web",
+                action_delete: "Delete Participant",
+                empty_attendees: "No participant data matches the search filter."
+            }
+        };
+
+        window.currentAdminLang = localStorage.getItem('admin_lang') || localStorage.getItem('app_lang') || 'id';
+
+        function setAdminLanguage(lang) {
+            window.currentAdminLang = lang;
+            localStorage.setItem('admin_lang', lang);
+            localStorage.setItem('app_lang', lang);
+            applyAdminLanguage(lang);
+        }
+
+        function applyAdminLanguage(lang) {
+            const dict = window.adminTranslations[lang] || window.adminTranslations.id;
+            
+            // Update button styles
+            const btnId = document.getElementById('adminLangBtnId');
+            const btnEn = document.getElementById('adminLangBtnEn');
+            if (btnId && btnEn) {
+                if (lang === 'en') {
+                    btnEn.className = "px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer text-white bg-slate-900 shadow-xs";
+                    btnId.className = "px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer text-slate-500 hover:text-slate-900";
+                } else {
+                    btnId.className = "px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer text-white bg-slate-900 shadow-xs";
+                    btnEn.className = "px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer text-slate-500 hover:text-slate-900";
+                }
+            }
+
+            // Translate elements with data-i18n
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (dict[key]) {
+                    el.innerText = dict[key];
+                }
+            });
+
+            // Translate placeholders
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (dict[key]) {
+                    el.setAttribute('placeholder', dict[key]);
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            applyAdminLanguage(window.currentAdminLang);
+        });
     </script>
 
     @stack('scripts')
