@@ -39,3 +39,4 @@ Thumbs.db
 /kadin_scanner/ios/.symlinks/
 /kadin_scanner/.pub/
 /kadin_scanner/pubspec.lock
+*.apk
