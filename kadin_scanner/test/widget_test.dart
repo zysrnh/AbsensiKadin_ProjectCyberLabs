@@ -5,7 +5,7 @@ void main() {
   testWidgets('App renders login screen', (WidgetTester tester) async {
     await tester.pumpWidget(const KadinScannerApp());
     // Verify login screen loads
-    expect(find.text('KADIN Scanner'), findsOneWidget);
+    expect(find.text('Wonderful Scanner'), findsOneWidget);
     expect(find.text('MASUK'), findsOneWidget);
   });
 }
