@@ -23,6 +23,8 @@
 
     <style>
         :root {
+            --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
             --id-card-bg-color: {{ $idCardConfig['bg_color'] ?? '#ffffff' }};
             --id-card-bg-image: {{ !empty($idCardConfig['background_image']) ? 'url("' . $idCardConfig['background_image'] . '")' : 'none' }};
             --id-card-bg-opacity: {{ isset($idCardConfig['bg_opacity']) ? ($idCardConfig['bg_opacity'] / 100) : '1' }};
@@ -41,7 +43,7 @@
             --id-company-color: {{ $idCardConfig['company_color'] ?? '#0f172a' }};
             --id-company-display: {{ (isset($idCardConfig['show_company']) && !$idCardConfig['show_company']) ? 'none' : 'inline-block' }};
             --id-company-style: {{ $idCardConfig['company_style'] ?? 'badge' }};
-            --id-company-bg: {{ $idCardConfig['company_bg'] ?? '#ffffff' }};
+            --id-company-bg: {{ $idCardConfig['company_bg'] ?? '#f1f5f9' }};
 
             --id-position-size: {{ $idCardConfig['position_size'] ?? '11' }}px;
             --id-position-color: {{ $idCardConfig['position_color'] ?? '#64748b' }};
@@ -59,15 +61,66 @@
             --id-content-y-offset: {{ $idCardConfig['content_y_offset'] ?? '0' }}px;
             --id-text-align: {{ $idCardConfig['text_align'] ?? 'center' }};
 
-            /* Backdrop Plate to guarantee readability over bright/busy backgrounds */
             --id-text-backdrop: {{ $idCardConfig['text_backdrop'] ?? 'none' }};
             --id-text-shadow: {{ (isset($idCardConfig['text_shadow']) && $idCardConfig['text_shadow']) ? '0 1px 3px rgba(0,0,0,0.45)' : 'none' }};
         }
 
         body {
-            font-family: var(--id-card-font-family);
-            background-color: #cbd5e1;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f8fafc;
             color: #0f172a;
+        }
+
+        /* 3D Depth Card (Sesuai Dashboard Luar) */
+        .card-3d {
+            background: #ffffff;
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            box-shadow: 
+                0 1px 3px rgba(15, 23, 42, 0.03),
+                0 8px 20px -4px rgba(15, 23, 42, 0.06),
+                0 20px 40px -10px rgba(15, 23, 42, 0.08);
+            border-radius: 1.25rem;
+            transition: transform 0.25s var(--ease-expo), box-shadow 0.25s var(--ease-expo);
+        }
+
+        /* Tactile Physical Push Buttons (Sesuai Dashboard Luar) */
+        .btn-3d-dark {
+            box-shadow: 0 3px 0 #020617, 0 8px 16px -3px rgba(15, 23, 42, 0.3);
+            transition: all 0.15s var(--ease-expo);
+        }
+        .btn-3d-dark:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 0 #020617, 0 12px 22px -3px rgba(15, 23, 42, 0.35);
+        }
+        .btn-3d-dark:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #020617, 0 4px 8px -2px rgba(15, 23, 42, 0.25);
+        }
+
+        .btn-3d-blue {
+            box-shadow: 0 3px 0 #1d4ed8, 0 8px 16px -3px rgba(37, 99, 235, 0.35);
+            transition: all 0.15s var(--ease-expo);
+        }
+        .btn-3d-blue:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 0 #1d4ed8, 0 12px 22px -3px rgba(37, 99, 235, 0.4);
+        }
+        .btn-3d-blue:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #1d4ed8, 0 4px 8px -2px rgba(37, 99, 235, 0.25);
+        }
+
+        .btn-3d-white {
+            box-shadow: 0 2px 0 #cbd5e1, 0 4px 10px -2px rgba(15, 23, 42, 0.06);
+            transition: all 0.15s var(--ease-expo);
+        }
+        .btn-3d-white:hover {
+            transform: translateY(-1.5px);
+            box-shadow: 0 4px 0 #cbd5e1, 0 8px 16px -3px rgba(15, 23, 42, 0.1);
+        }
+        .btn-3d-white:active {
+            transform: translateY(1.5px);
+            box-shadow: 0 1px 0 #cbd5e1, 0 2px 5px -1px rgba(15, 23, 42, 0.05);
         }
 
         /* Ukuran standar ID Card Lanyard Plastik B3/B4 (95mm x 135mm) */
@@ -76,14 +129,16 @@
             height: 135mm;
             box-sizing: border-box;
             background-color: var(--id-card-bg-color);
-            border: 1px solid #94a3b8;
+            border: 1px solid #cbd5e1;
+            border-radius: 1rem;
             position: relative;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             font-family: var(--id-card-font-family);
-            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.15), 0 8px 10px -6px rgba(15, 23, 42, 0.1);
+            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+            transition: box-shadow 0.2s ease;
         }
 
         /* Layer Background Image Kustom */
@@ -109,14 +164,14 @@
             justify-content: space-between;
         }
 
-        /* Middle Content Wrapper (Bisa digeser vertikal dengan slider) */
+        /* Middle Content Wrapper */
         .id-card-middle-content {
             transform: translateY(var(--id-content-y-offset));
             text-align: var(--id-text-align);
             transition: transform 0.1s ease;
         }
 
-        /* Plat Pelindung Keterbacaan Teks (Text Card Backdrop) */
+        /* Plat Pelindung Keterbacaan Teks */
         .text-backdrop-plate {
             transition: all 0.15s ease;
         }
@@ -131,18 +186,18 @@
             background: rgba(255, 255, 255, 0.88);
             backdrop-filter: blur(8px);
             padding: 12px 14px;
-            border-radius: 6px;
+            border-radius: 0.75rem;
             border: 1px solid rgba(255, 255, 255, 0.95);
-            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
             width: 100%;
         }
         .text-backdrop-plate.plate-frosted-dark {
             background: rgba(15, 23, 42, 0.88);
             backdrop-filter: blur(8px);
             padding: 12px 14px;
-            border-radius: 6px;
+            border-radius: 0.75rem;
             border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             width: 100%;
         }
         .text-backdrop-plate.plate-frosted-dark .id-card-name {
@@ -184,10 +239,9 @@
         }
         .id-card-company.style-badge {
             background-color: var(--id-company-bg) !important;
-            border: 1px solid rgba(148, 163, 184, 0.6);
+            border: 1px solid rgba(203, 213, 225, 0.8);
             padding: 3px 10px;
-            border-radius: 4px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border-radius: 0.5rem;
         }
         .id-card-company.style-plain {
             background-color: transparent !important;
@@ -213,12 +267,13 @@
             background: #f8fafc;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #94a3b8;
+            background: #cbd5e1;
+            border-radius: 4px;
         }
 
         /* Modal Backdrop */
         .crop-modal-backdrop {
-            background-color: rgba(15, 23, 42, 0.8);
+            background-color: rgba(15, 23, 42, 0.7);
             backdrop-filter: blur(4px);
         }
 
@@ -229,7 +284,7 @@
                 margin: 0;
             }
             html, body {
-                background: #ffffff !important;
+                background: transparent !important;
                 padding: 0 !important;
                 margin: 0 !important;
                 -webkit-print-color-adjust: exact !important;
@@ -268,6 +323,7 @@
             .id-card-box {
                 box-shadow: none !important;
                 border: 1px dashed #94a3b8 !important; /* Garis panduan potong gunting */
+                border-radius: 0 !important;
                 margin: 0 auto !important;
                 background-color: var(--id-card-bg-color) !important;
             }
@@ -277,108 +333,107 @@
         }
     </style>
 </head>
-<body class="min-h-screen">
+<body class="p-4 sm:p-6 lg:p-8 min-h-screen">
 
-    <!-- Top Action Toolbar (No-Print) -->
-    <header class="no-print bg-slate-900 border-b border-slate-800 text-white sticky top-0 z-40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-col md:flex-row items-center justify-between gap-3">
-            <div class="flex items-center gap-3 w-full md:w-auto">
-                <a href="{{ route('admin.dashboard') }}" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white text-xs font-semibold border border-slate-700 transition-colors flex items-center gap-1.5">
-                    &larr; Dashboard
-                </a>
-                <div>
-                    <h1 class="text-sm font-bold text-white tracking-wide">Format Cetak & Kustomisasi ID Card</h1>
-                    <p class="text-[11px] text-slate-400">Total: <strong class="text-white">{{ count($participants) }} Peserta</strong> &bull; Standar Lanyard B3/B4 (95mm × 135mm)</p>
-                </div>
-            </div>
-
-            <div class="flex items-center gap-2 w-full md:w-auto justify-end flex-wrap">
-                <!-- Toggle Editor Panel Button -->
-                <button 
-                    type="button" 
-                    id="btnToggleEditor"
-                    onclick="toggleEditorPanel()"
-                    class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white font-medium text-xs border border-slate-700 transition-colors cursor-pointer"
-                >
-                    <span id="editorToggleText">Sembunyikan Editor</span>
-                </button>
-
-                <!-- Tombol Reset Default -->
-                <button 
-                    type="button" 
-                    onclick="resetSettings()" 
-                    class="px-3 py-1.5 bg-slate-800 hover:bg-red-950 text-slate-300 hover:text-red-400 font-medium text-xs border border-slate-700 hover:border-red-900 transition-colors cursor-pointer"
-                >
-                    Reset Default
-                </button>
-
-                <!-- Tombol Simpan Pengaturan -->
-                <button 
-                    type="button" 
-                    id="btnSaveSettings"
-                    onclick="saveSettings()" 
-                    class="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs border border-blue-600 transition-colors cursor-pointer flex items-center gap-1.5"
-                >
-                    <span id="saveBtnText">Simpan Pengaturan</span>
-                </button>
-
-                <!-- Tombol Cetak Semua ID Card -->
-                <button 
-                    type="button" 
-                    onclick="window.print()" 
-                    class="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs border border-emerald-600 transition-colors cursor-pointer flex items-center gap-1.5"
-                >
-                    Cetak Semua ID Card
-                </button>
+    <!-- Top Action Toolbar (No-Print: Gaya Card-3D Dashboard Luar) -->
+    <div class="no-print card-3d max-w-7xl mx-auto mb-6 p-4 sm:p-5 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-3.5 w-full md:w-auto">
+            <!-- Tombol Kembali ke Dashboard -->
+            <a href="{{ route('admin.dashboard') }}" class="btn-3d-white px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl border border-slate-200 transition-all flex items-center gap-1.5 flex-shrink-0">
+                &larr; Dashboard
+            </a>
+            <div>
+                <h1 class="text-lg sm:text-xl font-black text-slate-900 tracking-tight">Format Cetak & Kustomisasi ID Card</h1>
+                <p class="text-xs text-slate-500 mt-0.5">Total: <strong class="text-slate-800">{{ count($participants) }} ID Card</strong> &bull; Format cetak: <strong>1 Kartu per Halaman</strong> (Ukuran Lanyard B3/B4 95mm &times; 135mm)</p>
             </div>
         </div>
-    </header>
 
-    <!-- Main Workspace -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex flex-col lg:flex-row gap-6 items-start">
+        <div class="flex items-center gap-2.5 w-full md:w-auto justify-end flex-wrap">
+            <!-- Toggle Editor Panel Button -->
+            <button 
+                type="button" 
+                id="btnToggleEditor"
+                onclick="toggleEditorPanel()"
+                class="btn-3d-white px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl border border-slate-200 transition-all cursor-pointer"
+            >
+                <span id="editorToggleText">Sembunyikan Editor</span>
+            </button>
+
+            <!-- Tombol Reset Default -->
+            <button 
+                type="button" 
+                onclick="resetSettings()" 
+                class="btn-3d-white px-3.5 py-2 bg-white hover:bg-red-50 text-slate-600 hover:text-red-600 font-bold text-xs rounded-xl border border-slate-200 transition-all cursor-pointer"
+            >
+                Reset Default
+            </button>
+
+            <!-- Tombol Simpan Pengaturan -->
+            <button 
+                type="button" 
+                id="btnSaveSettings"
+                onclick="saveSettings()" 
+                class="btn-3d-blue px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl border border-blue-600 transition-all cursor-pointer flex items-center gap-1.5"
+            >
+                <span id="saveBtnText">Simpan Pengaturan</span>
+            </button>
+
+            <!-- Tombol Cetak Semua ID Card -->
+            <button 
+                type="button" 
+                onclick="window.print()" 
+                class="btn-3d-dark px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl border border-slate-900 transition-all cursor-pointer flex items-center gap-1.5"
+            >
+                Cetak Semua ID Card
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Workspace: Editor Panel (Left) & Preview/Print Cards (Right) -->
+    <div class="max-w-7xl mx-auto flex flex-col lg:flex-row gap-6 items-start">
 
         <!-- ========================================== -->
         <!-- LIVE CUSTOMIZER PANEL (No-Print)          -->
         <!-- ========================================== -->
-        <aside id="editorPanel" class="no-print w-full lg:w-96 flex-shrink-0 bg-white border border-slate-300 shadow-md sticky top-16 max-h-[calc(100vh-5rem)] flex flex-col overflow-hidden">
+        <aside id="editorPanel" class="no-print w-full lg:w-96 flex-shrink-0 card-3d p-0 overflow-hidden sticky top-6 max-h-[calc(100vh-3rem)] flex flex-col">
             <!-- Header Panel -->
-            <div class="bg-slate-100 border-b border-slate-200 px-4 py-3 flex items-center justify-between">
+            <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
                 <div>
                     <h2 class="text-xs font-black text-slate-900 uppercase tracking-wider">Editor Desain ID Card</h2>
-                    <p class="text-[10px] text-slate-500">Live preview langsung terupdate</p>
+                    <p class="text-[10px] text-slate-500 mt-0.5">Live update serentak ke semua kartu</p>
                 </div>
-                <span class="text-[10px] bg-blue-100 text-blue-800 font-bold px-2 py-0.5 border border-blue-200">Kustomisasi</span>
+                <span class="text-[10px] bg-blue-50 text-blue-700 font-bold px-2.5 py-1 rounded-full border border-blue-200/60">Live Editor</span>
             </div>
 
-            <!-- Tab Buttons -->
-            <div class="flex border-b border-slate-200 bg-slate-50 text-[11px] font-bold">
-                <button type="button" onclick="switchTab('tab-bg')" id="btn-tab-bg" class="flex-1 py-2.5 text-center border-b-2 border-blue-600 text-blue-600 bg-white">
+            <!-- Tab Buttons (Gaya Dashboard Luar) -->
+            <div class="flex border-b border-slate-100 bg-slate-50/70 p-1.5 gap-1 text-[11px] font-bold">
+                <button type="button" onclick="switchTab('tab-bg')" id="btn-tab-bg" class="flex-1 py-2 text-center rounded-xl bg-white text-blue-600 shadow-sm border border-slate-200/80 transition-all">
                     Background
                 </button>
-                <button type="button" onclick="switchTab('tab-text')" id="btn-tab-text" class="flex-1 py-2.5 text-center border-b-2 border-transparent text-slate-600 hover:text-slate-900">
+                <button type="button" onclick="switchTab('tab-text')" id="btn-tab-text" class="flex-1 py-2 text-center rounded-xl text-slate-600 hover:text-slate-900 border border-transparent transition-all">
                     Font & Teks
                 </button>
-                <button type="button" onclick="switchTab('tab-layout')" id="btn-tab-layout" class="flex-1 py-2.5 text-center border-b-2 border-transparent text-slate-600 hover:text-slate-900">
+                <button type="button" onclick="switchTab('tab-layout')" id="btn-tab-layout" class="flex-1 py-2 text-center rounded-xl text-slate-600 hover:text-slate-900 border border-transparent transition-all">
                     Posisi & Layout
                 </button>
             </div>
 
             <!-- Tab Contents (Scrollable) -->
-            <div class="p-4 overflow-y-auto custom-scrollbar flex-grow space-y-4 text-xs">
+            <div class="p-5 overflow-y-auto custom-scrollbar flex-grow space-y-4 text-xs">
 
                 <!-- ================= TAB 1: BACKGROUND & CROP ================= -->
                 <div id="tab-bg" class="space-y-4">
                     <!-- Upload & Crop Custom Background Image -->
-                    <div class="border border-slate-300 p-3 bg-slate-50 space-y-2.5">
+                    <div class="border border-slate-200/90 rounded-xl p-3.5 bg-slate-50/70 space-y-2.5">
                         <div class="flex items-center justify-between">
                             <label class="font-bold text-slate-900 text-xs">Gambar Background Lanyard</label>
-                            <span class="text-[10px] font-semibold text-blue-600">Rasio 95 : 135</span>
+                            <span class="text-[10px] font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded border border-blue-200/60">Rasio 95 : 135</span>
                         </div>
                         <p class="text-[10px] text-slate-500 leading-relaxed">
-                            Upload gambar lalu potong / crop bagian yang pas untuk background kartu.
+                            Upload desain background sendiri (Canva/Photoshop), lalu potong / crop bagian yang pas.
                         </p>
                         
-                        <div class="flex items-center gap-2 flex-wrap">
+                        <div class="flex items-center gap-2 flex-wrap pt-1">
                             <input 
                                 type="file" 
                                 id="inputBgImage" 
@@ -390,18 +445,18 @@
                             <button 
                                 type="button" 
                                 onclick="document.getElementById('inputBgImage').click()" 
-                                class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs border border-slate-900 flex items-center gap-1"
+                                class="btn-3d-dark px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl border border-slate-900 flex items-center gap-1.5"
                             >
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
                                 Pilih Gambar
                             </button>
 
-                            <!-- Tombol Crop / Potong Ulang (Muncul jika ada gambar) -->
+                            <!-- Tombol Crop / Potong Ulang -->
                             <button 
                                 type="button" 
                                 id="btnReCrop"
                                 onclick="openCropModalWithCurrent()" 
-                                class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs border border-blue-600 flex items-center gap-1 {{ !empty($idCardConfig['background_image']) ? '' : 'hidden' }}"
+                                class="btn-3d-blue px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl border border-blue-600 flex items-center gap-1.5 {{ !empty($idCardConfig['background_image']) ? '' : 'hidden' }}"
                             >
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.242-4.243 3 3 0 004.242 4.243z"/></svg>
                                 Potong / Crop
@@ -412,26 +467,26 @@
                                 type="button" 
                                 id="btnRemoveBg" 
                                 onclick="removeBgImage()" 
-                                class="px-3 py-1.5 bg-white hover:bg-red-50 text-red-600 font-semibold text-xs border border-red-300 {{ !empty($idCardConfig['background_image']) ? '' : 'hidden' }}"
+                                class="btn-3d-white px-3 py-1.5 bg-white hover:bg-red-50 text-red-600 font-bold text-xs rounded-xl border border-slate-200 {{ !empty($idCardConfig['background_image']) ? '' : 'hidden' }}"
                             >
                                 Hapus
                             </button>
                         </div>
 
                         <!-- Image Preview Status -->
-                        <div id="bgPreviewContainer" class="mt-2 {{ !empty($idCardConfig['background_image']) ? '' : 'hidden' }}">
-                            <div class="flex items-center gap-2 text-[11px] text-slate-700 bg-white border border-slate-200 p-1.5">
-                                <img id="bgPreviewThumb" src="{{ $idCardConfig['background_image'] ?? '' }}" alt="Thumb" class="w-8 h-10 object-cover border border-slate-200">
-                                <span class="truncate flex-1 font-medium" id="bgFileName">Gambar background aktif</span>
+                        <div id="bgPreviewContainer" class="mt-2.5 {{ !empty($idCardConfig['background_image']) ? '' : 'hidden' }}">
+                            <div class="flex items-center gap-2.5 text-[11px] text-slate-700 bg-white border border-slate-200/80 rounded-xl p-2 shadow-xs">
+                                <img id="bgPreviewThumb" src="{{ $idCardConfig['background_image'] ?? '' }}" alt="Thumb" class="w-8 h-10 object-cover rounded-lg border border-slate-200">
+                                <span class="truncate flex-1 font-semibold text-slate-700" id="bgFileName">Gambar background aktif</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Background Opacity Slider -->
                     <div>
-                        <div class="flex justify-between items-center mb-1">
+                        <div class="flex justify-between items-center mb-1.5">
                             <label for="sliderBgOpacity" class="font-bold text-slate-700">Transparansi / Opacity Gambar</label>
-                            <span id="labelBgOpacity" class="font-mono text-slate-500 text-[11px]">{{ $idCardConfig['bg_opacity'] ?? 100 }}%</span>
+                            <span id="labelBgOpacity" class="font-mono text-slate-500 text-[11px] font-bold">{{ $idCardConfig['bg_opacity'] ?? 100 }}%</span>
                         </div>
                         <input 
                             type="range" 
@@ -440,14 +495,14 @@
                             max="100" 
                             value="{{ $idCardConfig['bg_opacity'] ?? 100 }}" 
                             oninput="updateBgOpacity(this.value)"
-                            class="w-full h-1.5 bg-slate-200 accent-blue-600 cursor-pointer"
+                            class="w-full h-2 bg-slate-200 rounded-lg accent-blue-600 cursor-pointer"
                         >
                     </div>
 
                     <!-- Background Display Mode -->
                     <div>
-                        <label class="block font-bold text-slate-700 mb-1">Mode Ukuran Gambar</label>
-                        <select id="selectBgSize" onchange="updateBgSize(this.value)" class="w-full border border-slate-300 p-2 bg-white text-xs font-medium focus:border-blue-600 focus:outline-none">
+                        <label class="block font-bold text-slate-700 mb-1.5">Mode Ukuran Gambar</label>
+                        <select id="selectBgSize" onchange="updateBgSize(this.value)" class="w-full border border-slate-200 rounded-xl p-2.5 bg-white text-xs font-semibold focus:border-blue-600 focus:outline-none shadow-xs">
                             <option value="cover" {{ ($idCardConfig['bg_size'] ?? 'cover') === 'cover' ? 'selected' : '' }}>Cover (Penuhi seluruh kartu)</option>
                             <option value="contain" {{ ($idCardConfig['bg_size'] ?? '') === 'contain' ? 'selected' : '' }}>Contain (Sesuai rasio gambar)</option>
                             <option value="100% 100%" {{ ($idCardConfig['bg_size'] ?? '') === '100% 100%' ? 'selected' : '' }}>Stretch (Peregangan 100% 100%)</option>
@@ -456,30 +511,30 @@
 
                     <!-- Background Solid Color -->
                     <div>
-                        <label class="block font-bold text-slate-700 mb-1">Warna Dasar Kartu</label>
+                        <label class="block font-bold text-slate-700 mb-1.5">Warna Dasar Kartu</label>
                         <div class="flex items-center gap-2">
                             <input 
                                 type="color" 
                                 id="pickerBgColor" 
                                 value="{{ $idCardConfig['bg_color'] ?? '#ffffff' }}" 
                                 oninput="updateBgColor(this.value)"
-                                class="w-8 h-8 p-0 border border-slate-300 cursor-pointer"
+                                class="w-9 h-9 p-0.5 border border-slate-200 rounded-xl cursor-pointer shadow-xs"
                             >
                             <input 
                                 type="text" 
                                 id="textBgColor" 
                                 value="{{ $idCardConfig['bg_color'] ?? '#ffffff' }}" 
                                 onchange="updateBgColor(this.value)"
-                                class="flex-1 border border-slate-300 p-1.5 font-mono text-xs uppercase"
+                                class="flex-1 border border-slate-200 rounded-xl p-2 font-mono text-xs uppercase shadow-xs focus:border-blue-600 focus:outline-none"
                             >
                         </div>
                         <!-- Quick Color Swatches -->
-                        <div class="flex gap-1.5 mt-2">
-                            <button type="button" onclick="updateBgColor('#ffffff')" class="w-5 h-5 bg-white border border-slate-400" title="Putih"></button>
-                            <button type="button" onclick="updateBgColor('#0f172a')" class="w-5 h-5 bg-slate-900 border border-slate-700" title="Slate 900"></button>
-                            <button type="button" onclick="updateBgColor('#1e3a8a')" class="w-5 h-5 bg-blue-900 border border-blue-950" title="Navy"></button>
-                            <button type="button" onclick="updateBgColor('#fef3c7')" class="w-5 h-5 bg-amber-100 border border-amber-300" title="Krem"></button>
-                            <button type="button" onclick="updateBgColor('#000000')" class="w-5 h-5 bg-black border border-slate-800" title="Hitam"></button>
+                        <div class="flex gap-2 mt-2">
+                            <button type="button" onclick="updateBgColor('#ffffff')" class="w-6 h-6 bg-white border border-slate-300 rounded-lg shadow-xs" title="Putih"></button>
+                            <button type="button" onclick="updateBgColor('#0f172a')" class="w-6 h-6 bg-slate-900 border border-slate-700 rounded-lg shadow-xs" title="Slate 900"></button>
+                            <button type="button" onclick="updateBgColor('#1e3a8a')" class="w-6 h-6 bg-blue-900 border border-blue-950 rounded-lg shadow-xs" title="Navy"></button>
+                            <button type="button" onclick="updateBgColor('#fef3c7')" class="w-6 h-6 bg-amber-100 border border-amber-300 rounded-lg shadow-xs" title="Krem"></button>
+                            <button type="button" onclick="updateBgColor('#000000')" class="w-6 h-6 bg-black border border-slate-800 rounded-lg shadow-xs" title="Hitam"></button>
                         </div>
                     </div>
                 </div>
@@ -488,8 +543,8 @@
                 <div id="tab-text" class="space-y-4 hidden">
                     <!-- Global Font Family -->
                     <div>
-                        <label class="block font-bold text-slate-700 mb-1">Jenis Font (Font Family)</label>
-                        <select id="selectFontFamily" onchange="updateFontFamily(this.value)" class="w-full border border-slate-300 p-2 bg-white text-xs font-semibold focus:border-blue-600 focus:outline-none">
+                        <label class="block font-bold text-slate-700 mb-1.5">Jenis Font (Font Family)</label>
+                        <select id="selectFontFamily" onchange="updateFontFamily(this.value)" class="w-full border border-slate-200 rounded-xl p-2.5 bg-white text-xs font-semibold focus:border-blue-600 focus:outline-none shadow-xs">
                             <option value="Plus Jakarta Sans" {{ ($idCardConfig['font_family'] ?? 'Plus Jakarta Sans') === 'Plus Jakarta Sans' ? 'selected' : '' }}>Plus Jakarta Sans (Default)</option>
                             <option value="Montserrat" {{ ($idCardConfig['font_family'] ?? '') === 'Montserrat' ? 'selected' : '' }}>Montserrat (Tegas / Modern)</option>
                             <option value="Inter" {{ ($idCardConfig['font_family'] ?? '') === 'Inter' ? 'selected' : '' }}>Inter (Clean / Netral)</option>
@@ -501,18 +556,18 @@
                     </div>
 
                     <!-- Keterbacaan Teks di atas Gambar (Backdrop Plate & Shadow) -->
-                    <div class="border border-blue-200 bg-blue-50/40 p-3 space-y-2.5">
-                        <span class="block font-black text-slate-900 text-[11px] uppercase tracking-wider border-b border-blue-200 pb-1">
+                    <div class="border border-blue-200/80 bg-blue-50/40 rounded-xl p-3.5 space-y-2.5">
+                        <span class="block font-black text-slate-900 text-[11px] uppercase tracking-wider border-b border-blue-200/60 pb-1">
                             Proteksi Keterbacaan Teks
                         </span>
                         <p class="text-[10px] text-slate-600 leading-normal">
-                            Gunakan plat pelindung agar teks tetap jelas terbaca di atas gambar background apa pun:
+                            Gunakan plat pelindung agar teks nama tetap kontras dan terbaca jelas di atas gambar latar apa pun:
                         </p>
 
                         <!-- Pilihan Plat Pelindung Teks -->
                         <div>
                             <label class="block font-bold text-slate-700 mb-1">Lapisan Plat Teks (Backdrop)</label>
-                            <select id="selectTextBackdrop" onchange="updateTextBackdrop(this.value)" class="w-full border border-slate-300 p-1.5 bg-white text-[11px] font-medium">
+                            <select id="selectTextBackdrop" onchange="updateTextBackdrop(this.value)" class="w-full border border-slate-200 rounded-xl p-2 bg-white text-[11px] font-semibold focus:border-blue-600 focus:outline-none shadow-xs">
                                 <option value="none" {{ ($idCardConfig['text_backdrop'] ?? 'none') === 'none' ? 'selected' : '' }}>Transparan Polos (Tanpa Plat)</option>
                                 <option value="frosted-light" {{ ($idCardConfig['text_backdrop'] ?? '') === 'frosted-light' ? 'selected' : '' }}>Kaca Putih Semi-Transparan (Rekomendasi)</option>
                                 <option value="frosted-dark" {{ ($idCardConfig['text_backdrop'] ?? '') === 'frosted-dark' ? 'selected' : '' }}>Kaca Gelap Semi-Transparan (Dark Plate)</option>
@@ -521,26 +576,26 @@
 
                         <!-- Toggle Text Shadow -->
                         <label class="flex items-center justify-between cursor-pointer pt-1">
-                            <span class="text-[11px] font-semibold text-slate-700">Bayangan Teks (Text Shadow)</span>
+                            <span class="text-[11px] font-bold text-slate-700">Bayangan Teks (Text Shadow)</span>
                             <input 
                                 type="checkbox" 
                                 id="toggleTextShadow" 
                                 {{ (!empty($idCardConfig['text_shadow'])) ? 'checked' : '' }} 
                                 onchange="updateTextShadow(this.checked)"
-                                class="accent-blue-600"
+                                class="w-4 h-4 rounded accent-blue-600 cursor-pointer"
                             >
                         </label>
                     </div>
 
                     <!-- Pengaturan Nama Peserta -->
-                    <div class="border border-slate-200 p-3 bg-slate-50 space-y-3">
+                    <div class="border border-slate-200/90 rounded-xl p-3.5 bg-slate-50/70 space-y-3">
                         <span class="block font-black text-slate-900 text-[11px] uppercase tracking-wider border-b border-slate-200 pb-1">Nama Peserta</span>
                         
                         <!-- Slider Ukuran Font Nama -->
                         <div>
                             <div class="flex justify-between items-center mb-1">
                                 <label for="sliderNameSize" class="font-bold text-slate-700">Ukuran Font Nama</label>
-                                <span id="labelNameSize" class="font-mono text-slate-500 text-[11px]">{{ $idCardConfig['name_size'] ?? 22 }}px</span>
+                                <span id="labelNameSize" class="font-mono text-slate-600 text-[11px] font-bold">{{ $idCardConfig['name_size'] ?? 22 }}px</span>
                             </div>
                             <input 
                                 type="range" 
@@ -549,22 +604,22 @@
                                 max="36" 
                                 value="{{ $idCardConfig['name_size'] ?? 22 }}" 
                                 oninput="updateNameSize(this.value)"
-                                class="w-full h-1.5 bg-slate-200 accent-blue-600 cursor-pointer"
+                                class="w-full h-2 bg-slate-200 rounded-lg accent-blue-600 cursor-pointer"
                             >
                         </div>
 
                         <!-- Warna Teks Nama -->
                         <div class="flex items-center justify-between">
                             <label class="font-bold text-slate-700">Warna Teks Nama</label>
-                            <div class="flex items-center gap-1.5">
+                            <div class="flex items-center gap-2">
                                 <input 
                                     type="color" 
                                     id="pickerNameColor" 
                                     value="{{ $idCardConfig['name_color'] ?? '#020617' }}" 
                                     oninput="updateNameColor(this.value)"
-                                    class="w-6 h-6 p-0 border border-slate-300 cursor-pointer"
+                                    class="w-7 h-7 p-0.5 border border-slate-200 rounded-lg cursor-pointer shadow-xs"
                                 >
-                                <span id="labelNameColorHex" class="font-mono text-[10px] text-slate-600 uppercase">{{ $idCardConfig['name_color'] ?? '#020617' }}</span>
+                                <span id="labelNameColorHex" class="font-mono text-[10px] text-slate-600 uppercase font-semibold">{{ $idCardConfig['name_color'] ?? '#020617' }}</span>
                             </div>
                         </div>
 
@@ -572,7 +627,7 @@
                         <div class="grid grid-cols-2 gap-2">
                             <div>
                                 <label class="block font-bold text-slate-700 mb-1">Ketebalan</label>
-                                <select id="selectNameWeight" onchange="updateNameWeight(this.value)" class="w-full border border-slate-300 p-1.5 bg-white text-[11px] font-medium">
+                                <select id="selectNameWeight" onchange="updateNameWeight(this.value)" class="w-full border border-slate-200 rounded-xl p-2 bg-white text-[11px] font-semibold focus:border-blue-600 focus:outline-none shadow-xs">
                                     <option value="600" {{ ($idCardConfig['name_weight'] ?? '') === '600' ? 'selected' : '' }}>Semi-Bold (600)</option>
                                     <option value="700" {{ ($idCardConfig['name_weight'] ?? '') === '700' ? 'selected' : '' }}>Bold (700)</option>
                                     <option value="800" {{ ($idCardConfig['name_weight'] ?? '') === '800' ? 'selected' : '' }}>Extra Bold (800)</option>
@@ -581,7 +636,7 @@
                             </div>
                             <div>
                                 <label class="block font-bold text-slate-700 mb-1">Kapitalisasi</label>
-                                <select id="selectNameTransform" onchange="updateNameTransform(this.value)" class="w-full border border-slate-300 p-1.5 bg-white text-[11px] font-medium">
+                                <select id="selectNameTransform" onchange="updateNameTransform(this.value)" class="w-full border border-slate-200 rounded-xl p-2 bg-white text-[11px] font-semibold focus:border-blue-600 focus:outline-none shadow-xs">
                                     <option value="uppercase" {{ ($idCardConfig['name_transform'] ?? 'uppercase') === 'uppercase' ? 'selected' : '' }}>HURUF BESAR</option>
                                     <option value="capitalize" {{ ($idCardConfig['name_transform'] ?? '') === 'capitalize' ? 'selected' : '' }}>Huruf Kapital Depan</option>
                                     <option value="none" {{ ($idCardConfig['name_transform'] ?? '') === 'none' ? 'selected' : '' }}>Sesuai Input Asli</option>
@@ -593,7 +648,7 @@
                         <div>
                             <div class="flex justify-between items-center mb-1">
                                 <label for="sliderNameMargin" class="font-bold text-slate-700">Margin Atas Nama</label>
-                                <span id="labelNameMargin" class="font-mono text-slate-500 text-[11px]">{{ $idCardConfig['name_margin_top'] ?? 0 }}px</span>
+                                <span id="labelNameMargin" class="font-mono text-slate-600 text-[11px] font-bold">{{ $idCardConfig['name_margin_top'] ?? 0 }}px</span>
                             </div>
                             <input 
                                 type="range" 
@@ -602,13 +657,13 @@
                                 max="40" 
                                 value="{{ $idCardConfig['name_margin_top'] ?? 0 }}" 
                                 oninput="updateNameMargin(this.value)"
-                                class="w-full h-1.5 bg-slate-200 accent-blue-600 cursor-pointer"
+                                class="w-full h-2 bg-slate-200 rounded-lg accent-blue-600 cursor-pointer"
                             >
                         </div>
                     </div>
 
                     <!-- Pengaturan Instansi / Perusahaan -->
-                    <div class="border border-slate-200 p-3 bg-slate-50 space-y-3">
+                    <div class="border border-slate-200/90 rounded-xl p-3.5 bg-slate-50/70 space-y-3">
                         <div class="flex items-center justify-between border-b border-slate-200 pb-1">
                             <span class="font-black text-slate-900 text-[11px] uppercase tracking-wider">Instansi / Perusahaan</span>
                             <label class="flex items-center gap-1.5 cursor-pointer">
@@ -617,16 +672,16 @@
                                     id="toggleShowCompany" 
                                     {{ (!isset($idCardConfig['show_company']) || $idCardConfig['show_company']) ? 'checked' : '' }} 
                                     onchange="updateToggleShowCompany(this.checked)"
-                                    class="accent-blue-600"
+                                    class="w-4 h-4 rounded accent-blue-600 cursor-pointer"
                                 >
-                                <span class="text-[10px] font-semibold text-slate-600">Tampilkan</span>
+                                <span class="text-[10px] font-bold text-slate-700">Tampilkan</span>
                             </label>
                         </div>
 
                         <div id="companyControls" class="space-y-2.5 {{ (!isset($idCardConfig['show_company']) || $idCardConfig['show_company']) ? '' : 'opacity-40 pointer-events-none' }}">
                             <div class="flex justify-between items-center">
                                 <label for="sliderCompanySize" class="font-bold text-slate-700">Ukuran Font</label>
-                                <span id="labelCompanySize" class="font-mono text-slate-500 text-[11px]">{{ $idCardConfig['company_size'] ?? 11 }}px</span>
+                                <span id="labelCompanySize" class="font-mono text-slate-600 text-[11px] font-bold">{{ $idCardConfig['company_size'] ?? 11 }}px</span>
                             </div>
                             <input 
                                 type="range" 
@@ -635,13 +690,13 @@
                                 max="18" 
                                 value="{{ $idCardConfig['company_size'] ?? 11 }}" 
                                 oninput="updateCompanySize(this.value)"
-                                class="w-full h-1.5 bg-slate-200 accent-blue-600 cursor-pointer"
+                                class="w-full h-2 bg-slate-200 rounded-lg accent-blue-600 cursor-pointer"
                             >
 
                             <div class="grid grid-cols-2 gap-2 pt-1">
                                 <div>
                                     <label class="block font-bold text-slate-700 mb-1">Tampilan</label>
-                                    <select id="selectCompanyStyle" onchange="updateCompanyStyle(this.value)" class="w-full border border-slate-300 p-1.5 bg-white text-[11px] font-medium">
+                                    <select id="selectCompanyStyle" onchange="updateCompanyStyle(this.value)" class="w-full border border-slate-200 rounded-xl p-2 bg-white text-[11px] font-semibold focus:border-blue-600 focus:outline-none shadow-xs">
                                         <option value="badge" {{ ($idCardConfig['company_style'] ?? 'badge') === 'badge' ? 'selected' : '' }}>Badge Kotak</option>
                                         <option value="plain" {{ ($idCardConfig['company_style'] ?? '') === 'plain' ? 'selected' : '' }}>Teks Polos</option>
                                     </select>
@@ -654,7 +709,7 @@
                                             id="pickerCompanyColor" 
                                             value="{{ $idCardConfig['company_color'] ?? '#0f172a' }}" 
                                             oninput="updateCompanyColor(this.value)"
-                                            class="w-full h-7 p-0 border border-slate-300 cursor-pointer"
+                                            class="w-full h-8 p-0.5 border border-slate-200 rounded-xl cursor-pointer shadow-xs"
                                         >
                                     </div>
                                 </div>
@@ -663,7 +718,7 @@
                     </div>
 
                     <!-- Pengaturan Jabatan -->
-                    <div class="border border-slate-200 p-3 bg-slate-50 space-y-3">
+                    <div class="border border-slate-200/90 rounded-xl p-3.5 bg-slate-50/70 space-y-3">
                         <div class="flex items-center justify-between border-b border-slate-200 pb-1">
                             <span class="font-black text-slate-900 text-[11px] uppercase tracking-wider">Jabatan Peserta</span>
                             <label class="flex items-center gap-1.5 cursor-pointer">
@@ -672,16 +727,16 @@
                                     id="toggleShowPosition" 
                                     {{ (!isset($idCardConfig['show_position']) || $idCardConfig['show_position']) ? 'checked' : '' }} 
                                     onchange="updateToggleShowPosition(this.checked)"
-                                    class="accent-blue-600"
+                                    class="w-4 h-4 rounded accent-blue-600 cursor-pointer"
                                 >
-                                <span class="text-[10px] font-semibold text-slate-600">Tampilkan</span>
+                                <span class="text-[10px] font-bold text-slate-700">Tampilkan</span>
                             </label>
                         </div>
 
                         <div id="positionControls" class="space-y-2.5 {{ (!isset($idCardConfig['show_position']) || $idCardConfig['show_position']) ? '' : 'opacity-40 pointer-events-none' }}">
                             <div class="flex justify-between items-center">
                                 <label for="sliderPositionSize" class="font-bold text-slate-700">Ukuran Font</label>
-                                <span id="labelPositionSize" class="font-mono text-slate-500 text-[11px]">{{ $idCardConfig['position_size'] ?? 11 }}px</span>
+                                <span id="labelPositionSize" class="font-mono text-slate-600 text-[11px] font-bold">{{ $idCardConfig['position_size'] ?? 11 }}px</span>
                             </div>
                             <input 
                                 type="range" 
@@ -690,7 +745,7 @@
                                 max="18" 
                                 value="{{ $idCardConfig['position_size'] ?? 11 }}" 
                                 oninput="updatePositionSize(this.value)"
-                                class="w-full h-1.5 bg-slate-200 accent-blue-600 cursor-pointer"
+                                class="w-full h-2 bg-slate-200 rounded-lg accent-blue-600 cursor-pointer"
                             >
 
                             <div class="flex items-center justify-between pt-1">
@@ -700,7 +755,7 @@
                                     id="pickerPositionColor" 
                                     value="{{ $idCardConfig['position_color'] ?? '#64748b' }}" 
                                     oninput="updatePositionColor(this.value)"
-                                    class="w-6 h-6 p-0 border border-slate-300 cursor-pointer"
+                                    class="w-7 h-7 p-0.5 border border-slate-200 rounded-lg cursor-pointer shadow-xs"
                                 >
                             </div>
                         </div>
@@ -711,13 +766,13 @@
                 <div id="tab-layout" class="space-y-4 hidden">
                     
                     <!-- Vertical Offset Slider -->
-                    <div class="border border-blue-200 bg-blue-50/50 p-3">
-                        <div class="flex justify-between items-center mb-1">
+                    <div class="border border-blue-200/90 bg-blue-50/40 rounded-xl p-3.5 space-y-2">
+                        <div class="flex justify-between items-center">
                             <label for="sliderContentY" class="font-black text-slate-900 text-xs">Geser Posisi Teks Naik/Turun</label>
-                            <span id="labelContentY" class="font-mono font-bold text-blue-700 text-xs">{{ $idCardConfig['content_y_offset'] ?? 0 }}px</span>
+                            <span id="labelContentY" class="font-mono font-bold text-blue-700 text-xs bg-white px-2 py-0.5 rounded-md border border-blue-200 shadow-xs">{{ $idCardConfig['content_y_offset'] ?? 0 }}px</span>
                         </div>
-                        <p class="text-[10px] text-slate-500 mb-2">
-                            Paskan posisi nama & jabatan dengan area kosong gambar background template Anda.
+                        <p class="text-[10px] text-slate-500 leading-relaxed">
+                            Paskan posisi nama & jabatan dengan area kosong template gambar Anda.
                         </p>
                         <input 
                             type="range" 
@@ -726,9 +781,9 @@
                             max="100" 
                             value="{{ $idCardConfig['content_y_offset'] ?? 0 }}" 
                             oninput="updateContentY(this.value)"
-                            class="w-full h-2 bg-slate-200 accent-blue-600 cursor-pointer"
+                            class="w-full h-2.5 bg-slate-200 rounded-lg accent-blue-600 cursor-pointer"
                         >
-                        <div class="flex justify-between text-[9px] text-slate-400 mt-1 font-mono">
+                        <div class="flex justify-between text-[9px] text-slate-400 font-mono font-semibold">
                             <span>-100px (Naik)</span>
                             <span>0px (Netral)</span>
                             <span>+100px (Turun)</span>
@@ -737,13 +792,13 @@
 
                     <!-- Text Alignment -->
                     <div>
-                        <label class="block font-bold text-slate-700 mb-1">Perataan Teks Konten</label>
+                        <label class="block font-bold text-slate-700 mb-1.5">Perataan Teks Konten</label>
                         <div class="grid grid-cols-3 gap-1.5">
                             <button 
                                 type="button" 
                                 onclick="updateTextAlign('left')" 
                                 id="btnAlignLeft"
-                                class="py-1.5 border border-slate-300 font-semibold text-xs {{ ($idCardConfig['text_align'] ?? 'center') === 'left' ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-700' }}"
+                                class="py-2 border rounded-xl font-bold text-xs transition-all {{ ($idCardConfig['text_align'] ?? 'center') === 'left' ? 'btn-3d-dark bg-slate-900 text-white border-slate-900' : 'btn-3d-white bg-white text-slate-700 border-slate-200' }}"
                             >
                                 Rata Kiri
                             </button>
@@ -751,7 +806,7 @@
                                 type="button" 
                                 onclick="updateTextAlign('center')" 
                                 id="btnAlignCenter"
-                                class="py-1.5 border border-slate-300 font-semibold text-xs {{ ($idCardConfig['text_align'] ?? 'center') === 'center' ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-700' }}"
+                                class="py-2 border rounded-xl font-bold text-xs transition-all {{ ($idCardConfig['text_align'] ?? 'center') === 'center' ? 'btn-3d-dark bg-slate-900 text-white border-slate-900' : 'btn-3d-white bg-white text-slate-700 border-slate-200' }}"
                             >
                                 Rata Tengah
                             </button>
@@ -759,7 +814,7 @@
                                 type="button" 
                                 onclick="updateTextAlign('right')" 
                                 id="btnAlignRight"
-                                class="py-1.5 border border-slate-300 font-semibold text-xs {{ ($idCardConfig['text_align'] ?? 'center') === 'right' ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-700' }}"
+                                class="py-2 border rounded-xl font-bold text-xs transition-all {{ ($idCardConfig['text_align'] ?? 'center') === 'right' ? 'btn-3d-dark bg-slate-900 text-white border-slate-900' : 'btn-3d-white bg-white text-slate-700 border-slate-200' }}"
                             >
                                 Rata Kanan
                             </button>
@@ -767,40 +822,40 @@
                     </div>
 
                     <!-- Toggle Komponen Bawaan -->
-                    <div class="border border-slate-200 p-3 bg-slate-50 space-y-2.5">
+                    <div class="border border-slate-200/90 rounded-xl p-3.5 bg-slate-50/70 space-y-2.5">
                         <span class="block font-black text-slate-900 text-[11px] uppercase tracking-wider border-b border-slate-200 pb-1">
                             Toggle Elemen Bawaan
                         </span>
                         <p class="text-[10px] text-slate-500 leading-normal">
-                            Bila menggunakan background bergambar lengkap dari canva, sembunyikan elemen bawaan di bawah ini:
+                            Bila menggunakan background gambar lengkap dari Canva, sembunyikan elemen bawaan ini:
                         </p>
 
                         <!-- Toggle Lubang Lanyard -->
-                        <label class="flex items-center justify-between cursor-pointer py-1 border-b border-slate-200/60">
+                        <label class="flex items-center justify-between cursor-pointer py-1.5 border-b border-slate-200/60">
                             <span class="text-xs font-semibold text-slate-700">Lubang Tali Lanyard</span>
                             <input 
                                 type="checkbox" 
                                 id="toggleLanyard" 
                                 {{ (!isset($idCardConfig['show_lanyard_hole']) || $idCardConfig['show_lanyard_hole']) ? 'checked' : '' }} 
                                 onchange="updateToggleElement('lanyard', this.checked)"
-                                class="accent-blue-600"
+                                class="w-4 h-4 rounded accent-blue-600 cursor-pointer"
                             >
                         </label>
 
                         <!-- Toggle Header Acara -->
-                        <label class="flex items-center justify-between cursor-pointer py-1 border-b border-slate-200/60">
+                        <label class="flex items-center justify-between cursor-pointer py-1.5 border-b border-slate-200/60">
                             <span class="text-xs font-semibold text-slate-700">Header Atas Acara</span>
                             <input 
                                 type="checkbox" 
                                 id="toggleHeader" 
                                 {{ (!isset($idCardConfig['show_header']) || $idCardConfig['show_header']) ? 'checked' : '' }} 
                                 onchange="updateToggleElement('header', this.checked)"
-                                class="accent-blue-600"
+                                class="w-4 h-4 rounded accent-blue-600 cursor-pointer"
                             >
                         </label>
 
                         <!-- Toggle Pita Kategori -->
-                        <div class="py-1 border-b border-slate-200/60 space-y-2">
+                        <div class="py-1.5 border-b border-slate-200/60 space-y-2">
                             <label class="flex items-center justify-between cursor-pointer">
                                 <span class="text-xs font-semibold text-slate-700">Pita Kategori Peserta</span>
                                 <input 
@@ -808,50 +863,50 @@
                                     id="toggleRibbon" 
                                     {{ (!isset($idCardConfig['show_ribbon']) || $idCardConfig['show_ribbon']) ? 'checked' : '' }} 
                                     onchange="updateToggleElement('ribbon', this.checked)"
-                                    class="accent-blue-600"
+                                    class="w-4 h-4 rounded accent-blue-600 cursor-pointer"
                                 >
                             </label>
                             
                             <!-- Ribbon Color Picker -->
                             <div id="ribbonColorControl" class="flex items-center justify-between pl-2 {{ (!isset($idCardConfig['show_ribbon']) || $idCardConfig['show_ribbon']) ? '' : 'hidden' }}">
-                                <span class="text-[11px] text-slate-500">Warna Pita:</span>
+                                <span class="text-[11px] text-slate-500 font-medium">Warna Pita:</span>
                                 <div class="flex items-center gap-1.5">
                                     <input 
                                         type="color" 
                                         id="pickerRibbonBg" 
                                         value="{{ $idCardConfig['ribbon_bg'] ?? '#2563eb' }}" 
                                         oninput="updateRibbonBg(this.value)"
-                                        class="w-5 h-5 p-0 border border-slate-300 cursor-pointer"
+                                        class="w-6 h-6 p-0.5 border border-slate-200 rounded cursor-pointer"
                                     >
-                                    <button type="button" onclick="updateRibbonBg('#2563eb')" class="w-4 h-4 bg-blue-600" title="Biru"></button>
-                                    <button type="button" onclick="updateRibbonBg('#dc2626')" class="w-4 h-4 bg-red-600" title="Merah"></button>
-                                    <button type="button" onclick="updateRibbonBg('#d97706')" class="w-4 h-4 bg-amber-600" title="Emas"></button>
-                                    <button type="button" onclick="updateRibbonBg('#0f172a')" class="w-4 h-4 bg-slate-900" title="Hitam"></button>
+                                    <button type="button" onclick="updateRibbonBg('#2563eb')" class="w-5 h-5 bg-blue-600 rounded" title="Biru"></button>
+                                    <button type="button" onclick="updateRibbonBg('#dc2626')" class="w-5 h-5 bg-red-600 rounded" title="Merah"></button>
+                                    <button type="button" onclick="updateRibbonBg('#d97706')" class="w-5 h-5 bg-amber-600 rounded" title="Emas"></button>
+                                    <button type="button" onclick="updateRibbonBg('#0f172a')" class="w-5 h-5 bg-slate-900 rounded" title="Hitam"></button>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Toggle Garis Pemisah -->
-                        <label class="flex items-center justify-between cursor-pointer py-1 border-b border-slate-200/60">
+                        <label class="flex items-center justify-between cursor-pointer py-1.5 border-b border-slate-200/60">
                             <span class="text-xs font-semibold text-slate-700">Garis Pemisah (Divider)</span>
                             <input 
                                 type="checkbox" 
                                 id="toggleDivider" 
                                 {{ (!isset($idCardConfig['show_divider']) || $idCardConfig['show_divider']) ? 'checked' : '' }} 
                                 onchange="updateToggleElement('divider', this.checked)"
-                                class="accent-blue-600"
+                                class="w-4 h-4 rounded accent-blue-600 cursor-pointer"
                             >
                         </label>
 
                         <!-- Toggle Footer Bawah -->
-                        <label class="flex items-center justify-between cursor-pointer py-1">
+                        <label class="flex items-center justify-between cursor-pointer py-1.5">
                             <span class="text-xs font-semibold text-slate-700">Footer Bawah Acara</span>
                             <input 
                                 type="checkbox" 
                                 id="toggleFooter" 
                                 {{ (!isset($idCardConfig['show_footer']) || $idCardConfig['show_footer']) ? 'checked' : '' }} 
                                 onchange="updateToggleElement('footer', this.checked)"
-                                class="accent-blue-600"
+                                class="w-4 h-4 rounded accent-blue-600 cursor-pointer"
                             >
                         </label>
                     </div>
@@ -861,12 +916,12 @@
             </div>
 
             <!-- Footer Panel: Status & Actions -->
-            <div class="p-3 bg-slate-100 border-t border-slate-200 flex items-center justify-between text-[11px]">
-                <span id="saveStatusIndicator" class="text-slate-500 font-medium">Siap dicetak</span>
+            <div class="p-3.5 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-[11px]">
+                <span id="saveStatusIndicator" class="text-slate-500 font-semibold">Siap dicetak</span>
                 <button 
                     type="button" 
                     onclick="saveSettings()" 
-                    class="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold"
+                    class="btn-3d-blue px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl border border-blue-600"
                 >
                     Simpan
                 </button>
@@ -884,7 +939,7 @@
                 <div class="id-card-page-wrapper">
                     <div class="id-card-box">
                         
-                        <!-- Layer Background Image Kustom (Opacity terisolasi di layer ini) -->
+                        <!-- Layer Background Image Kustom -->
                         <div class="id-card-bg-layer"></div>
 
                         <!-- Layer Konten Teks & Elemen Kartu -->
@@ -953,7 +1008,7 @@
                     </div>
                 </div>
                 @empty
-                <div class="w-full text-center py-16 text-slate-500 bg-white border border-slate-200 p-8 shadow-sm">
+                <div class="w-full text-center py-16 text-slate-500 card-3d p-8">
                     Tidak ada data peserta untuk dicetak.
                 </div>
                 @endforelse
@@ -963,49 +1018,49 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- MODAL CROPPER.JS (POTONG GAMBAR BACKGROUND)-->
+    <!-- MODAL CROPPER.JS (GAYA CARD-3D DASHBOARD) -->
     <!-- ========================================== -->
     <div id="cropModal" class="no-print fixed inset-0 z-50 flex items-center justify-center p-4 crop-modal-backdrop hidden">
-        <div class="bg-white border border-slate-300 w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+        <div class="card-3d w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden p-0 border border-slate-200 shadow-2xl">
             <!-- Modal Header -->
-            <div class="bg-slate-900 text-white px-4 py-3 flex items-center justify-between">
+            <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-white">
                 <div>
-                    <h3 class="text-sm font-bold">Potong / Crop Gambar Background</h3>
-                    <p class="text-[11px] text-slate-300">Rasio otomatis disesuaikan dengan kartu lanyard (95 × 135 mm)</p>
+                    <h3 class="text-sm font-black text-slate-900">Potong / Crop Gambar Background</h3>
+                    <p class="text-[11px] text-slate-500 mt-0.5">Rasio otomatis disesuaikan dengan kartu lanyard B3/B4 (95 × 135 mm)</p>
                 </div>
-                <button type="button" onclick="closeCropModal()" class="text-slate-400 hover:text-white font-bold text-lg px-2 cursor-pointer">&times;</button>
+                <button type="button" onclick="closeCropModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center font-bold text-base transition-colors cursor-pointer">&times;</button>
             </div>
 
             <!-- Modal Body (Cropper Viewport) -->
             <div class="p-4 flex-grow overflow-hidden flex flex-col items-center justify-center bg-slate-950">
-                <div class="w-full max-h-[55vh] flex items-center justify-center overflow-hidden">
+                <div class="w-full max-h-[52vh] flex items-center justify-center overflow-hidden rounded-xl">
                     <img id="cropperImage" src="" alt="Crop Source" class="max-w-full block">
                 </div>
             </div>
 
             <!-- Modal Toolbar Controls -->
-            <div class="bg-slate-100 border-t border-slate-200 px-4 py-2.5 flex items-center justify-between flex-wrap gap-2 text-xs">
+            <div class="bg-white border-t border-slate-100 px-5 py-3.5 flex items-center justify-between flex-wrap gap-3 text-xs">
                 <!-- Ratio Selection -->
                 <div class="flex items-center gap-1.5">
-                    <span class="font-bold text-slate-700">Rasio:</span>
-                    <button type="button" id="btnRatioLanyard" onclick="setCropRatio(95/135)" class="px-2.5 py-1 bg-slate-900 text-white font-semibold">95:135 (Lanyard)</button>
-                    <button type="button" id="btnRatioFree" onclick="setCropRatio(NaN)" class="px-2.5 py-1 bg-white border border-slate-300 text-slate-700 font-semibold">Bebas (Free)</button>
+                    <span class="font-bold text-slate-600">Rasio:</span>
+                    <button type="button" id="btnRatioLanyard" onclick="setCropRatio(95/135)" class="btn-3d-dark px-3 py-1.5 bg-slate-900 text-white font-bold rounded-xl border border-slate-900">95:135 (Lanyard)</button>
+                    <button type="button" id="btnRatioFree" onclick="setCropRatio(NaN)" class="btn-3d-white px-3 py-1.5 bg-white border border-slate-200 text-slate-700 font-bold rounded-xl">Bebas</button>
                 </div>
 
                 <!-- Zoom & Rotate Actions -->
-                <div class="flex items-center gap-1">
-                    <button type="button" onclick="cropper && cropper.zoom(0.1)" class="px-2 py-1 bg-white border border-slate-300 hover:bg-slate-50 font-bold" title="Zoom In">+</button>
-                    <button type="button" onclick="cropper && cropper.zoom(-0.1)" class="px-2 py-1 bg-white border border-slate-300 hover:bg-slate-50 font-bold" title="Zoom Out">-</button>
-                    <button type="button" onclick="cropper && cropper.rotate(90)" class="px-2 py-1 bg-white border border-slate-300 hover:bg-slate-50 font-bold" title="Putar 90&deg;">&#8635; 90&deg;</button>
-                    <button type="button" onclick="cropper && cropper.reset()" class="px-2 py-1 bg-white border border-slate-300 hover:bg-slate-50 text-[11px] font-semibold">Reset</button>
+                <div class="flex items-center gap-1.5">
+                    <button type="button" onclick="cropper && cropper.zoom(0.1)" class="btn-3d-white w-8 h-8 bg-white border border-slate-200 text-slate-700 font-bold rounded-xl flex items-center justify-center" title="Zoom In">+</button>
+                    <button type="button" onclick="cropper && cropper.zoom(-0.1)" class="btn-3d-white w-8 h-8 bg-white border border-slate-200 text-slate-700 font-bold rounded-xl flex items-center justify-center" title="Zoom Out">-</button>
+                    <button type="button" onclick="cropper && cropper.rotate(90)" class="btn-3d-white px-2.5 h-8 bg-white border border-slate-200 text-slate-700 font-bold rounded-xl flex items-center justify-center" title="Putar 90&deg;">&#8635; 90&deg;</button>
+                    <button type="button" onclick="cropper && cropper.reset()" class="btn-3d-white px-2.5 h-8 bg-white border border-slate-200 text-slate-600 font-bold rounded-xl text-[11px]">Reset</button>
                 </div>
 
                 <!-- Apply Actions -->
                 <div class="flex items-center gap-2">
-                    <button type="button" onclick="closeCropModal()" class="px-3 py-1.5 bg-white border border-slate-300 text-slate-700 font-semibold hover:bg-slate-50">
+                    <button type="button" onclick="closeCropModal()" class="btn-3d-white px-4 py-2 bg-white border border-slate-200 text-slate-700 font-bold rounded-xl">
                         Batal
                     </button>
-                    <button type="button" onclick="applyCroppedImage()" class="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold flex items-center gap-1.5">
+                    <button type="button" onclick="applyCroppedImage()" class="btn-3d-blue px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl border border-blue-600 flex items-center gap-1.5">
                         <span>Terapkan Hasil Crop</span>
                     </button>
                 </div>
@@ -1032,7 +1087,7 @@
             company_size: {{ $idCardConfig['company_size'] ?? 11 }},
             company_color: "{{ $idCardConfig['company_color'] ?? '#0f172a' }}",
             company_style: "{{ $idCardConfig['company_style'] ?? 'badge' }}",
-            company_bg: "{{ $idCardConfig['company_bg'] ?? '#ffffff' }}",
+            company_bg: "{{ $idCardConfig['company_bg'] ?? '#f1f5f9' }}",
             show_position: {{ (!isset($idCardConfig['show_position']) || $idCardConfig['show_position']) ? 'true' : 'false' }},
             position_size: {{ $idCardConfig['position_size'] ?? 11 }},
             position_color: "{{ $idCardConfig['position_color'] ?? '#64748b' }}",
@@ -1061,12 +1116,12 @@
                 const btn = document.getElementById('btn-' + id);
                 if (id === tabId) {
                     el.classList.remove('hidden');
-                    btn.classList.add('border-blue-600', 'text-blue-600', 'bg-white');
-                    btn.classList.remove('border-transparent', 'text-slate-600');
+                    btn.classList.add('bg-white', 'text-blue-600', 'shadow-sm', 'border-slate-200/80');
+                    btn.classList.remove('text-slate-600', 'border-transparent');
                 } else {
                     el.classList.add('hidden');
-                    btn.classList.remove('border-blue-600', 'text-blue-600', 'bg-white');
-                    btn.classList.add('border-transparent', 'text-slate-600');
+                    btn.classList.remove('bg-white', 'text-blue-600', 'shadow-sm', 'border-slate-200/80');
+                    btn.classList.add('text-slate-600', 'border-transparent');
                 }
             });
         }
@@ -1199,15 +1254,11 @@
             const btnLanyard = document.getElementById('btnRatioLanyard');
             const btnFree = document.getElementById('btnRatioFree');
             if (isNaN(ratio)) {
-                btnFree.classList.add('bg-slate-900', 'text-white');
-                btnFree.classList.remove('bg-white', 'text-slate-700');
-                btnLanyard.classList.remove('bg-slate-900', 'text-white');
-                btnLanyard.classList.add('bg-white', 'text-slate-700');
+                btnFree.className = 'btn-3d-dark px-3 py-1.5 bg-slate-900 text-white font-bold rounded-xl border border-slate-900';
+                btnLanyard.className = 'btn-3d-white px-3 py-1.5 bg-white border border-slate-200 text-slate-700 font-bold rounded-xl';
             } else {
-                btnLanyard.classList.add('bg-slate-900', 'text-white');
-                btnLanyard.classList.remove('bg-white', 'text-slate-700');
-                btnFree.classList.remove('bg-slate-900', 'text-white');
-                btnFree.classList.add('bg-white', 'text-slate-700');
+                btnLanyard.className = 'btn-3d-dark px-3 py-1.5 bg-slate-900 text-white font-bold rounded-xl border border-slate-900';
+                btnFree.className = 'btn-3d-white px-3 py-1.5 bg-white border border-slate-200 text-slate-700 font-bold rounded-xl';
             }
         }
 
@@ -1398,11 +1449,9 @@
             ['left', 'center', 'right'].forEach(align => {
                 const btn = document.getElementById('btnAlign' + align.charAt(0).toUpperCase() + align.slice(1));
                 if (align === val) {
-                    btn.classList.add('bg-slate-900', 'text-white', 'border-slate-900');
-                    btn.classList.remove('bg-white', 'text-slate-700');
+                    btn.className = 'py-2 border rounded-xl font-bold text-xs transition-all btn-3d-dark bg-slate-900 text-white border-slate-900';
                 } else {
-                    btn.classList.remove('bg-slate-900', 'text-white', 'border-slate-900');
-                    btn.classList.add('bg-white', 'text-slate-700');
+                    btn.className = 'py-2 border rounded-xl font-bold text-xs transition-all btn-3d-white bg-white text-slate-700 border-slate-200';
                 }
             });
             applyStyles();
