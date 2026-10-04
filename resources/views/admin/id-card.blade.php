@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Cetak ID Card Lanyard - Wonderful 2026</title>
     
-    <!-- Google Fonts Multi-Family: Plus Jakarta Sans, Inter, Montserrat, Poppins, Roboto, Outfit, Playfair Display -->
+    <!-- Google Fonts: Multi-Family -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Montserrat:wght@400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&family=Playfair+Display:wght@400;600;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800;900&family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -14,8 +14,12 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- SweetAlert2 for Toast & Alert -->
+    <!-- SweetAlert2 for Toast & Confirmation -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Cropper.js for Precise Image Cropping -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
 
     <style>
         :root {
@@ -37,6 +41,7 @@
             --id-company-color: {{ $idCardConfig['company_color'] ?? '#0f172a' }};
             --id-company-display: {{ (isset($idCardConfig['show_company']) && !$idCardConfig['show_company']) ? 'none' : 'inline-block' }};
             --id-company-style: {{ $idCardConfig['company_style'] ?? 'badge' }};
+            --id-company-bg: {{ $idCardConfig['company_bg'] ?? '#ffffff' }};
 
             --id-position-size: {{ $idCardConfig['position_size'] ?? '11' }}px;
             --id-position-color: {{ $idCardConfig['position_color'] ?? '#64748b' }};
@@ -53,11 +58,15 @@
 
             --id-content-y-offset: {{ $idCardConfig['content_y_offset'] ?? '0' }}px;
             --id-text-align: {{ $idCardConfig['text_align'] ?? 'center' }};
+
+            /* Backdrop Plate to guarantee readability over bright/busy backgrounds */
+            --id-text-backdrop: {{ $idCardConfig['text_backdrop'] ?? 'none' }};
+            --id-text-shadow: {{ (isset($idCardConfig['text_shadow']) && $idCardConfig['text_shadow']) ? '0 1px 3px rgba(0,0,0,0.45)' : 'none' }};
         }
 
         body {
             font-family: var(--id-card-font-family);
-            background-color: #f1f5f9;
+            background-color: #cbd5e1;
             color: #0f172a;
         }
 
@@ -67,17 +76,17 @@
             height: 135mm;
             box-sizing: border-box;
             background-color: var(--id-card-bg-color);
-            border: 1px solid #cbd5e1;
+            border: 1px solid #94a3b8;
             position: relative;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             font-family: var(--id-card-font-family);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.15), 0 8px 10px -6px rgba(15, 23, 42, 0.1);
         }
 
-        /* Background image overlay layer */
+        /* Layer Background Image Kustom */
         .id-card-bg-layer {
             position: absolute;
             inset: 0;
@@ -90,7 +99,7 @@
             z-index: 1;
         }
 
-        /* Content layer */
+        /* Layer Konten Teks */
         .id-card-content-layer {
             position: relative;
             z-index: 2;
@@ -100,14 +109,50 @@
             justify-content: space-between;
         }
 
-        /* Content Wrapper */
+        /* Middle Content Wrapper (Bisa digeser vertikal dengan slider) */
         .id-card-middle-content {
             transform: translateY(var(--id-content-y-offset));
             text-align: var(--id-text-align);
             transition: transform 0.1s ease;
         }
 
-        /* Dynamic styles applied from CSS variables */
+        /* Plat Pelindung Keterbacaan Teks (Text Card Backdrop) */
+        .text-backdrop-plate {
+            transition: all 0.15s ease;
+        }
+        .text-backdrop-plate.plate-none {
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+            box-shadow: none;
+            border: none;
+        }
+        .text-backdrop-plate.plate-frosted-light {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(8px);
+            padding: 12px 14px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+            width: 100%;
+        }
+        .text-backdrop-plate.plate-frosted-dark {
+            background: rgba(15, 23, 42, 0.88);
+            backdrop-filter: blur(8px);
+            padding: 12px 14px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            width: 100%;
+        }
+        .text-backdrop-plate.plate-frosted-dark .id-card-name {
+            color: #ffffff !important;
+        }
+        .text-backdrop-plate.plate-frosted-dark .id-card-position {
+            color: #cbd5e1 !important;
+        }
+
+        /* Dynamic styles */
         .id-card-lanyard-hole {
             display: var(--id-lanyard-display) !important;
         }
@@ -125,6 +170,7 @@
             font-weight: var(--id-name-weight) !important;
             text-transform: var(--id-name-transform) !important;
             margin-top: var(--id-name-margin-top) !important;
+            text-shadow: var(--id-text-shadow) !important;
             line-height: 1.25;
         }
         .id-card-divider {
@@ -137,20 +183,23 @@
             color: var(--id-company-color) !important;
         }
         .id-card-company.style-badge {
-            background-color: #f1f5f9;
-            border: 1px solid #cbd5e1;
+            background-color: var(--id-company-bg) !important;
+            border: 1px solid rgba(148, 163, 184, 0.6);
             padding: 3px 10px;
             border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
         .id-card-company.style-plain {
             background-color: transparent !important;
             border: none !important;
             padding: 0 !important;
+            box-shadow: none !important;
         }
         .id-card-position {
             display: var(--id-position-display) !important;
             font-size: var(--id-position-size) !important;
             color: var(--id-position-color) !important;
+            text-shadow: var(--id-text-shadow) !important;
         }
         .id-card-footer-block {
             display: var(--id-footer-display) !important;
@@ -161,10 +210,16 @@
             width: 5px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f5f9;
+            background: #f8fafc;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
             background: #94a3b8;
+        }
+
+        /* Modal Backdrop */
+        .crop-modal-backdrop {
+            background-color: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(4px);
         }
 
         /* Print Settings: 1 Kartu per Halaman (Page Break per Card) */
@@ -225,15 +280,15 @@
 <body class="min-h-screen">
 
     <!-- Top Action Toolbar (No-Print) -->
-    <header class="no-print bg-slate-900 border-b border-slate-800 text-white sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex flex-col md:flex-row items-center justify-between gap-3">
+    <header class="no-print bg-slate-900 border-b border-slate-800 text-white sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-col md:flex-row items-center justify-between gap-3">
             <div class="flex items-center gap-3 w-full md:w-auto">
-                <a href="{{ route('admin.dashboard') }}" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white text-xs font-semibold rounded-none border border-slate-700 transition-colors flex items-center gap-1.5">
+                <a href="{{ route('admin.dashboard') }}" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white text-xs font-semibold border border-slate-700 transition-colors flex items-center gap-1.5">
                     &larr; Dashboard
                 </a>
                 <div>
                     <h1 class="text-sm font-bold text-white tracking-wide">Format Cetak & Kustomisasi ID Card</h1>
-                    <p class="text-[11px] text-slate-400">Total: <strong class="text-white">{{ count($participants) }} Peserta</strong> | Standar Lanyard B3/B4 (95mm × 135mm)</p>
+                    <p class="text-[11px] text-slate-400">Total: <strong class="text-white">{{ count($participants) }} Peserta</strong> &bull; Standar Lanyard B3/B4 (95mm × 135mm)</p>
                 </div>
             </div>
 
@@ -243,16 +298,16 @@
                     type="button" 
                     id="btnToggleEditor"
                     onclick="toggleEditorPanel()"
-                    class="px-3.5 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white font-medium text-xs rounded-none border border-slate-700 transition-colors cursor-pointer"
+                    class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white font-medium text-xs border border-slate-700 transition-colors cursor-pointer"
                 >
-                    <span id="editorToggleText">Sembunyikan Panel Editor</span>
+                    <span id="editorToggleText">Sembunyikan Editor</span>
                 </button>
 
                 <!-- Tombol Reset Default -->
                 <button 
                     type="button" 
                     onclick="resetSettings()" 
-                    class="px-3.5 py-1.5 bg-slate-800 hover:bg-red-950 text-slate-300 hover:text-red-400 font-medium text-xs rounded-none border border-slate-700 hover:border-red-900 transition-colors cursor-pointer"
+                    class="px-3 py-1.5 bg-slate-800 hover:bg-red-950 text-slate-300 hover:text-red-400 font-medium text-xs border border-slate-700 hover:border-red-900 transition-colors cursor-pointer"
                 >
                     Reset Default
                 </button>
@@ -262,7 +317,7 @@
                     type="button" 
                     id="btnSaveSettings"
                     onclick="saveSettings()" 
-                    class="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-none border border-blue-600 transition-colors cursor-pointer flex items-center gap-1.5"
+                    class="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs border border-blue-600 transition-colors cursor-pointer flex items-center gap-1.5"
                 >
                     <span id="saveBtnText">Simpan Pengaturan</span>
                 </button>
@@ -271,7 +326,7 @@
                 <button 
                     type="button" 
                     onclick="window.print()" 
-                    class="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-none border border-emerald-600 transition-colors cursor-pointer flex items-center gap-1.5"
+                    class="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs border border-emerald-600 transition-colors cursor-pointer flex items-center gap-1.5"
                 >
                     Cetak Semua ID Card
                 </button>
@@ -279,13 +334,13 @@
         </div>
     </header>
 
-    <!-- Main Workspace: Editor Panel (Left) & Preview/Print Cards (Right) -->
+    <!-- Main Workspace -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex flex-col lg:flex-row gap-6 items-start">
 
         <!-- ========================================== -->
         <!-- LIVE CUSTOMIZER PANEL (No-Print)          -->
         <!-- ========================================== -->
-        <aside id="editorPanel" class="no-print w-full lg:w-96 flex-shrink-0 bg-white border border-slate-300 shadow-sm rounded-none sticky top-20 max-h-[calc(100vh-6rem)] flex flex-col overflow-hidden">
+        <aside id="editorPanel" class="no-print w-full lg:w-96 flex-shrink-0 bg-white border border-slate-300 shadow-md sticky top-16 max-h-[calc(100vh-5rem)] flex flex-col overflow-hidden">
             <!-- Header Panel -->
             <div class="bg-slate-100 border-b border-slate-200 px-4 py-3 flex items-center justify-between">
                 <div>
@@ -311,42 +366,60 @@
             <!-- Tab Contents (Scrollable) -->
             <div class="p-4 overflow-y-auto custom-scrollbar flex-grow space-y-4 text-xs">
 
-                <!-- ================= TAB 1: BACKGROUND ================= -->
+                <!-- ================= TAB 1: BACKGROUND & CROP ================= -->
                 <div id="tab-bg" class="space-y-4">
-                    <!-- Upload Custom Background Image -->
-                    <div class="border border-slate-200 p-3 bg-slate-50">
-                        <label class="block font-bold text-slate-800 mb-1">Gambar Background Kustom</label>
-                        <p class="text-[10px] text-slate-500 mb-2 leading-relaxed">
-                            Upload file desain ID card sendiri (dari Canva/Photoshop, rasio 95x135 mm).
+                    <!-- Upload & Crop Custom Background Image -->
+                    <div class="border border-slate-300 p-3 bg-slate-50 space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <label class="font-bold text-slate-900 text-xs">Gambar Background Lanyard</label>
+                            <span class="text-[10px] font-semibold text-blue-600">Rasio 95 : 135</span>
+                        </div>
+                        <p class="text-[10px] text-slate-500 leading-relaxed">
+                            Upload gambar lalu potong / crop bagian yang pas untuk background kartu.
                         </p>
                         
-                        <div class="flex items-center gap-2">
+                        <div class="flex items-center gap-2 flex-wrap">
                             <input 
                                 type="file" 
                                 id="inputBgImage" 
-                                accept="image/png, image/jpeg, image/jpg" 
+                                accept="image/png, image/jpeg, image/jpg, image/webp" 
                                 class="hidden" 
-                                onchange="handleBgImageUpload(event)"
+                                onchange="handleFileSelectForCrop(event)"
                             >
+                            <!-- Tombol Pilih Gambar -->
                             <button 
                                 type="button" 
                                 onclick="document.getElementById('inputBgImage').click()" 
-                                class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs border border-slate-900"
+                                class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs border border-slate-900 flex items-center gap-1"
                             >
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
                                 Pilih Gambar
                             </button>
+
+                            <!-- Tombol Crop / Potong Ulang (Muncul jika ada gambar) -->
+                            <button 
+                                type="button" 
+                                id="btnReCrop"
+                                onclick="openCropModalWithCurrent()" 
+                                class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs border border-blue-600 flex items-center gap-1 {{ !empty($idCardConfig['background_image']) ? '' : 'hidden' }}"
+                            >
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.242-4.243 3 3 0 004.242 4.243z"/></svg>
+                                Potong / Crop
+                            </button>
+
+                            <!-- Tombol Hapus Gambar -->
                             <button 
                                 type="button" 
                                 id="btnRemoveBg" 
                                 onclick="removeBgImage()" 
-                                class="px-3 py-1.5 bg-white hover:bg-red-50 text-red-600 font-semibold text-xs border border-red-200 {{ !empty($idCardConfig['background_image']) ? '' : 'hidden' }}"
+                                class="px-3 py-1.5 bg-white hover:bg-red-50 text-red-600 font-semibold text-xs border border-red-300 {{ !empty($idCardConfig['background_image']) ? '' : 'hidden' }}"
                             >
-                                Hapus Gambar
+                                Hapus
                             </button>
                         </div>
 
                         <!-- Image Preview Status -->
-                        <div id="bgPreviewContainer" class="mt-2.5 {{ !empty($idCardConfig['background_image']) ? '' : 'hidden' }}">
+                        <div id="bgPreviewContainer" class="mt-2 {{ !empty($idCardConfig['background_image']) ? '' : 'hidden' }}">
                             <div class="flex items-center gap-2 text-[11px] text-slate-700 bg-white border border-slate-200 p-1.5">
                                 <img id="bgPreviewThumb" src="{{ $idCardConfig['background_image'] ?? '' }}" alt="Thumb" class="w-8 h-10 object-cover border border-slate-200">
                                 <span class="truncate flex-1 font-medium" id="bgFileName">Gambar background aktif</span>
@@ -373,10 +446,10 @@
 
                     <!-- Background Display Mode -->
                     <div>
-                        <label class="block font-bold text-slate-700 mb-1">Mode Pemasangan Gambar</label>
+                        <label class="block font-bold text-slate-700 mb-1">Mode Ukuran Gambar</label>
                         <select id="selectBgSize" onchange="updateBgSize(this.value)" class="w-full border border-slate-300 p-2 bg-white text-xs font-medium focus:border-blue-600 focus:outline-none">
                             <option value="cover" {{ ($idCardConfig['bg_size'] ?? 'cover') === 'cover' ? 'selected' : '' }}>Cover (Penuhi seluruh kartu)</option>
-                            <option value="contain" {{ ($idCardConfig['bg_size'] ?? '') === 'contain' ? 'selected' : '' }}>Contain (Sesuai rasio asli)</option>
+                            <option value="contain" {{ ($idCardConfig['bg_size'] ?? '') === 'contain' ? 'selected' : '' }}>Contain (Sesuai rasio gambar)</option>
                             <option value="100% 100%" {{ ($idCardConfig['bg_size'] ?? '') === '100% 100%' ? 'selected' : '' }}>Stretch (Peregangan 100% 100%)</option>
                         </select>
                     </div>
@@ -411,7 +484,7 @@
                     </div>
                 </div>
 
-                <!-- ================= TAB 2: FONT & TEKS ================= -->
+                <!-- ================= TAB 2: FONT, TEKS & KONTRAS ================= -->
                 <div id="tab-text" class="space-y-4 hidden">
                     <!-- Global Font Family -->
                     <div>
@@ -425,6 +498,38 @@
                             <option value="Outfit" {{ ($idCardConfig['font_family'] ?? '') === 'Outfit' ? 'selected' : '' }}>Outfit (Futuristik)</option>
                             <option value="Playfair Display" {{ ($idCardConfig['font_family'] ?? '') === 'Playfair Display' ? 'selected' : '' }}>Playfair Display (Serif / Formal)</option>
                         </select>
+                    </div>
+
+                    <!-- Keterbacaan Teks di atas Gambar (Backdrop Plate & Shadow) -->
+                    <div class="border border-blue-200 bg-blue-50/40 p-3 space-y-2.5">
+                        <span class="block font-black text-slate-900 text-[11px] uppercase tracking-wider border-b border-blue-200 pb-1">
+                            Proteksi Keterbacaan Teks
+                        </span>
+                        <p class="text-[10px] text-slate-600 leading-normal">
+                            Gunakan plat pelindung agar teks tetap jelas terbaca di atas gambar background apa pun:
+                        </p>
+
+                        <!-- Pilihan Plat Pelindung Teks -->
+                        <div>
+                            <label class="block font-bold text-slate-700 mb-1">Lapisan Plat Teks (Backdrop)</label>
+                            <select id="selectTextBackdrop" onchange="updateTextBackdrop(this.value)" class="w-full border border-slate-300 p-1.5 bg-white text-[11px] font-medium">
+                                <option value="none" {{ ($idCardConfig['text_backdrop'] ?? 'none') === 'none' ? 'selected' : '' }}>Transparan Polos (Tanpa Plat)</option>
+                                <option value="frosted-light" {{ ($idCardConfig['text_backdrop'] ?? '') === 'frosted-light' ? 'selected' : '' }}>Kaca Putih Semi-Transparan (Rekomendasi)</option>
+                                <option value="frosted-dark" {{ ($idCardConfig['text_backdrop'] ?? '') === 'frosted-dark' ? 'selected' : '' }}>Kaca Gelap Semi-Transparan (Dark Plate)</option>
+                            </select>
+                        </div>
+
+                        <!-- Toggle Text Shadow -->
+                        <label class="flex items-center justify-between cursor-pointer pt-1">
+                            <span class="text-[11px] font-semibold text-slate-700">Bayangan Teks (Text Shadow)</span>
+                            <input 
+                                type="checkbox" 
+                                id="toggleTextShadow" 
+                                {{ (!empty($idCardConfig['text_shadow'])) ? 'checked' : '' }} 
+                                onchange="updateTextShadow(this.checked)"
+                                class="accent-blue-600"
+                            >
+                        </label>
                     </div>
 
                     <!-- Pengaturan Nama Peserta -->
@@ -605,7 +710,7 @@
                 <!-- ================= TAB 3: POSISI & LAYOUT ================= -->
                 <div id="tab-layout" class="space-y-4 hidden">
                     
-                    <!-- Vertical Offset Slider (Paling penting untuk align dengan template custom!) -->
+                    <!-- Vertical Offset Slider -->
                     <div class="border border-blue-200 bg-blue-50/50 p-3">
                         <div class="flex justify-between items-center mb-1">
                             <label for="sliderContentY" class="font-black text-slate-900 text-xs">Geser Posisi Teks Naik/Turun</label>
@@ -617,16 +722,16 @@
                         <input 
                             type="range" 
                             id="sliderContentY" 
-                            min="-80" 
-                            max="80" 
+                            min="-100" 
+                            max="100" 
                             value="{{ $idCardConfig['content_y_offset'] ?? 0 }}" 
                             oninput="updateContentY(this.value)"
                             class="w-full h-2 bg-slate-200 accent-blue-600 cursor-pointer"
                         >
                         <div class="flex justify-between text-[9px] text-slate-400 mt-1 font-mono">
-                            <span>-80px (Naik)</span>
+                            <span>-100px (Naik)</span>
                             <span>0px (Netral)</span>
-                            <span>+80px (Turun)</span>
+                            <span>+100px (Turun)</span>
                         </div>
                     </div>
 
@@ -661,13 +766,13 @@
                         </div>
                     </div>
 
-                    <!-- Toggle Komponen Bawaan (Matikan jika template background sudah punya desain sendiri) -->
+                    <!-- Toggle Komponen Bawaan -->
                     <div class="border border-slate-200 p-3 bg-slate-50 space-y-2.5">
                         <span class="block font-black text-slate-900 text-[11px] uppercase tracking-wider border-b border-slate-200 pb-1">
                             Toggle Elemen Bawaan
                         </span>
                         <p class="text-[10px] text-slate-500 leading-normal">
-                            Bila menggunakan template background lengkap dari canva, sembunyikan elemen bawaan di bawah ini:
+                            Bila menggunakan background bergambar lengkap dari canva, sembunyikan elemen bawaan di bawah ini:
                         </p>
 
                         <!-- Toggle Lubang Lanyard -->
@@ -761,7 +866,7 @@
                 <button 
                     type="button" 
                     onclick="saveSettings()" 
-                    class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white font-bold"
+                    class="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold"
                 >
                     Simpan
                 </button>
@@ -795,7 +900,7 @@
                                 </div>
 
                                 <!-- Header Organisasi -->
-                                <div class="id-card-header-block px-5 pt-2 pb-2.5 text-center">
+                                <div class="id-card-header-block px-5 pt-2 pb-2 text-center">
                                     <span class="text-[9px] font-black tracking-widest text-slate-400 uppercase block">EXECUTIVE ROUNDTABLE</span>
                                     <h2 class="text-sm font-black tracking-tight text-slate-900 uppercase mt-0.5">WONDERFUL 2026</h2>
                                 </div>
@@ -806,28 +911,30 @@
                                 </div>
                             </div>
 
-                            <!-- 2. Middle Section: Nama, Instansi, Jabatan (Konten Utama) -->
-                            <div class="id-card-middle-content px-6 py-4 flex-grow flex flex-col justify-center items-center">
+                            <!-- 2. Middle Section: Nama, Instansi, Jabatan (Konten Utama dengan Pelindung Keterbacaan) -->
+                            <div class="id-card-middle-content px-5 py-4 flex-grow flex flex-col justify-center items-center">
                                 
-                                <!-- Nama Peserta -->
-                                <h3 class="id-card-name max-w-full break-words">
-                                    {{ $p->name }}
-                                </h3>
+                                <div class="text-backdrop-plate {{ ($idCardConfig['text_backdrop'] ?? 'none') === 'frosted-light' ? 'plate-frosted-light' : (($idCardConfig['text_backdrop'] ?? '') === 'frosted-dark' ? 'plate-frosted-dark' : 'plate-none') }} flex flex-col items-center justify-center">
+                                    <!-- Nama Peserta -->
+                                    <h3 class="id-card-name max-w-full break-words">
+                                        {{ $p->name }}
+                                    </h3>
 
-                                <!-- Garis Pemisah Elegan -->
-                                <div class="id-card-divider w-10 h-0.5 my-3 rounded-full"></div>
+                                    <!-- Garis Pemisah Elegan -->
+                                    <div class="id-card-divider w-10 h-0.5 my-3 rounded-full"></div>
 
-                                <!-- Instansi / Perusahaan -->
-                                <div class="id-card-company {{ ($idCardConfig['company_style'] ?? 'badge') === 'plain' ? 'style-plain' : 'style-badge' }} max-w-full truncate font-bold uppercase tracking-wider">
-                                    {{ $p->company ?: 'Wonderful' }}
+                                    <!-- Instansi / Perusahaan -->
+                                    <div class="id-card-company {{ ($idCardConfig['company_style'] ?? 'badge') === 'plain' ? 'style-plain' : 'style-badge' }} max-w-full truncate font-bold uppercase tracking-wider">
+                                        {{ $p->company ?: 'Wonderful' }}
+                                    </div>
+
+                                    <!-- Jabatan -->
+                                    @if($p->position && $p->position !== '-')
+                                    <p class="id-card-position font-semibold uppercase tracking-wide mt-2">
+                                        {{ $p->position }}
+                                    </p>
+                                    @endif
                                 </div>
-
-                                <!-- Jabatan -->
-                                @if($p->position && $p->position !== '-')
-                                <p class="id-card-position font-semibold uppercase tracking-wide mt-2">
-                                    {{ $p->position }}
-                                </p>
-                                @endif
 
                             </div>
 
@@ -846,7 +953,7 @@
                     </div>
                 </div>
                 @empty
-                <div class="w-full text-center py-16 text-slate-500 bg-white border border-slate-200 p-8">
+                <div class="w-full text-center py-16 text-slate-500 bg-white border border-slate-200 p-8 shadow-sm">
                     Tidak ada data peserta untuk dicetak.
                 </div>
                 @endforelse
@@ -855,7 +962,58 @@
         </main>
     </div>
 
-    <!-- Live Customization Script -->
+    <!-- ========================================== -->
+    <!-- MODAL CROPPER.JS (POTONG GAMBAR BACKGROUND)-->
+    <!-- ========================================== -->
+    <div id="cropModal" class="no-print fixed inset-0 z-50 flex items-center justify-center p-4 crop-modal-backdrop hidden">
+        <div class="bg-white border border-slate-300 w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+            <!-- Modal Header -->
+            <div class="bg-slate-900 text-white px-4 py-3 flex items-center justify-between">
+                <div>
+                    <h3 class="text-sm font-bold">Potong / Crop Gambar Background</h3>
+                    <p class="text-[11px] text-slate-300">Rasio otomatis disesuaikan dengan kartu lanyard (95 × 135 mm)</p>
+                </div>
+                <button type="button" onclick="closeCropModal()" class="text-slate-400 hover:text-white font-bold text-lg px-2 cursor-pointer">&times;</button>
+            </div>
+
+            <!-- Modal Body (Cropper Viewport) -->
+            <div class="p-4 flex-grow overflow-hidden flex flex-col items-center justify-center bg-slate-950">
+                <div class="w-full max-h-[55vh] flex items-center justify-center overflow-hidden">
+                    <img id="cropperImage" src="" alt="Crop Source" class="max-w-full block">
+                </div>
+            </div>
+
+            <!-- Modal Toolbar Controls -->
+            <div class="bg-slate-100 border-t border-slate-200 px-4 py-2.5 flex items-center justify-between flex-wrap gap-2 text-xs">
+                <!-- Ratio Selection -->
+                <div class="flex items-center gap-1.5">
+                    <span class="font-bold text-slate-700">Rasio:</span>
+                    <button type="button" id="btnRatioLanyard" onclick="setCropRatio(95/135)" class="px-2.5 py-1 bg-slate-900 text-white font-semibold">95:135 (Lanyard)</button>
+                    <button type="button" id="btnRatioFree" onclick="setCropRatio(NaN)" class="px-2.5 py-1 bg-white border border-slate-300 text-slate-700 font-semibold">Bebas (Free)</button>
+                </div>
+
+                <!-- Zoom & Rotate Actions -->
+                <div class="flex items-center gap-1">
+                    <button type="button" onclick="cropper && cropper.zoom(0.1)" class="px-2 py-1 bg-white border border-slate-300 hover:bg-slate-50 font-bold" title="Zoom In">+</button>
+                    <button type="button" onclick="cropper && cropper.zoom(-0.1)" class="px-2 py-1 bg-white border border-slate-300 hover:bg-slate-50 font-bold" title="Zoom Out">-</button>
+                    <button type="button" onclick="cropper && cropper.rotate(90)" class="px-2 py-1 bg-white border border-slate-300 hover:bg-slate-50 font-bold" title="Putar 90&deg;">&#8635; 90&deg;</button>
+                    <button type="button" onclick="cropper && cropper.reset()" class="px-2 py-1 bg-white border border-slate-300 hover:bg-slate-50 text-[11px] font-semibold">Reset</button>
+                </div>
+
+                <!-- Apply Actions -->
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="closeCropModal()" class="px-3 py-1.5 bg-white border border-slate-300 text-slate-700 font-semibold hover:bg-slate-50">
+                        Batal
+                    </button>
+                    <button type="button" onclick="applyCroppedImage()" class="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold flex items-center gap-1.5">
+                        <span>Terapkan Hasil Crop</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Live Customization & Cropper Script -->
     <script>
         // State Konfigurasi
         const state = {
@@ -874,6 +1032,7 @@
             company_size: {{ $idCardConfig['company_size'] ?? 11 }},
             company_color: "{{ $idCardConfig['company_color'] ?? '#0f172a' }}",
             company_style: "{{ $idCardConfig['company_style'] ?? 'badge' }}",
+            company_bg: "{{ $idCardConfig['company_bg'] ?? '#ffffff' }}",
             show_position: {{ (!isset($idCardConfig['show_position']) || $idCardConfig['show_position']) ? 'true' : 'false' }},
             position_size: {{ $idCardConfig['position_size'] ?? 11 }},
             position_color: "{{ $idCardConfig['position_color'] ?? '#64748b' }}",
@@ -886,10 +1045,14 @@
             show_footer: {{ (!isset($idCardConfig['show_footer']) || $idCardConfig['show_footer']) ? 'true' : 'false' }},
             content_y_offset: {{ $idCardConfig['content_y_offset'] ?? 0 }},
             text_align: "{{ $idCardConfig['text_align'] ?? 'center' }}",
+            text_backdrop: "{{ $idCardConfig['text_backdrop'] ?? 'none' }}",
+            text_shadow: {{ !empty($idCardConfig['text_shadow']) ? 'true' : 'false' }},
         };
 
-        // File object jika ada file baru diupload
+        // File/Blob siap upload
         let pendingBgFile = null;
+        let cropper = null;
+        let rawImageSource = "{{ $idCardConfig['background_image'] ?? '' }}";
 
         // Tab Switching
         function switchTab(tabId) {
@@ -914,10 +1077,10 @@
             const text = document.getElementById('editorToggleText');
             if (panel.classList.contains('hidden')) {
                 panel.classList.remove('hidden');
-                text.innerText = 'Sembunyikan Panel Editor';
+                text.innerText = 'Sembunyikan Editor';
             } else {
                 panel.classList.add('hidden');
-                text.innerText = 'Buka Panel Editor';
+                text.innerText = 'Buka Editor';
             }
         }
 
@@ -942,6 +1105,7 @@
             root.style.setProperty('--id-company-size', `${state.company_size}px`);
             root.style.setProperty('--id-company-color', state.company_color);
             root.style.setProperty('--id-company-display', state.show_company ? 'inline-block' : 'none');
+            root.style.setProperty('--id-company-bg', state.company_bg);
 
             root.style.setProperty('--id-position-size', `${state.position_size}px`);
             root.style.setProperty('--id-position-color', state.position_color);
@@ -959,6 +1123,8 @@
             root.style.setProperty('--id-content-y-offset', `${state.content_y_offset}px`);
             root.style.setProperty('--id-text-align', state.text_align);
 
+            root.style.setProperty('--id-text-shadow', state.text_shadow ? '0 1px 3px rgba(0,0,0,0.5)' : 'none');
+
             // Update company style class
             document.querySelectorAll('.id-card-company').forEach(el => {
                 if (state.company_style === 'plain') {
@@ -969,35 +1135,146 @@
                     el.classList.add('style-badge');
                 }
             });
+
+            // Update backdrop plate class
+            document.querySelectorAll('.text-backdrop-plate').forEach(el => {
+                el.classList.remove('plate-none', 'plate-frosted-light', 'plate-frosted-dark');
+                if (state.text_backdrop === 'frosted-light') {
+                    el.classList.add('plate-frosted-light');
+                } else if (state.text_backdrop === 'frosted-dark') {
+                    el.classList.add('plate-frosted-dark');
+                } else {
+                    el.classList.add('plate-none');
+                }
+            });
         }
 
-        // Live Handlers: Background
-        function handleBgImageUpload(event) {
+        // ==========================================
+        // CROPPER.JS INTEGRATION
+        // ==========================================
+        function handleFileSelectForCrop(event) {
             const file = event.target.files[0];
             if (!file) return;
 
-            pendingBgFile = file;
             const reader = new FileReader();
             reader.onload = function(e) {
-                state.background_image = e.target.result;
-                document.getElementById('bgPreviewThumb').src = e.target.result;
-                document.getElementById('bgFileName').innerText = file.name;
-                document.getElementById('bgPreviewContainer').classList.remove('hidden');
-                document.getElementById('btnRemoveBg').classList.remove('hidden');
-                applyStyles();
+                rawImageSource = e.target.result;
+                openCropModal(e.target.result);
             };
             reader.readAsDataURL(file);
         }
 
+        function openCropModalWithCurrent() {
+            if (!rawImageSource) return;
+            openCropModal(rawImageSource);
+        }
+
+        function openCropModal(imageSrc) {
+            const modal = document.getElementById('cropModal');
+            const cropImage = document.getElementById('cropperImage');
+            
+            cropImage.src = imageSrc;
+            modal.classList.remove('hidden');
+
+            if (cropper) {
+                cropper.destroy();
+            }
+
+            // Init Cropper dengan rasio Lanyard 95:135
+            setTimeout(() => {
+                cropper = new Cropper(cropImage, {
+                    aspectRatio: 95 / 135,
+                    viewMode: 1,
+                    autoCropArea: 1,
+                    responsive: true,
+                    checkCrossOrigin: false,
+                    background: false,
+                });
+            }, 100);
+        }
+
+        function setCropRatio(ratio) {
+            if (!cropper) return;
+            cropper.setAspectRatio(ratio);
+            const btnLanyard = document.getElementById('btnRatioLanyard');
+            const btnFree = document.getElementById('btnRatioFree');
+            if (isNaN(ratio)) {
+                btnFree.classList.add('bg-slate-900', 'text-white');
+                btnFree.classList.remove('bg-white', 'text-slate-700');
+                btnLanyard.classList.remove('bg-slate-900', 'text-white');
+                btnLanyard.classList.add('bg-white', 'text-slate-700');
+            } else {
+                btnLanyard.classList.add('bg-slate-900', 'text-white');
+                btnLanyard.classList.remove('bg-white', 'text-slate-700');
+                btnFree.classList.remove('bg-slate-900', 'text-white');
+                btnFree.classList.add('bg-white', 'text-slate-700');
+            }
+        }
+
+        function closeCropModal() {
+            const modal = document.getElementById('cropModal');
+            modal.classList.add('hidden');
+            if (cropper) {
+                cropper.destroy();
+                cropper = null;
+            }
+            document.getElementById('inputBgImage').value = '';
+        }
+
+        function applyCroppedImage() {
+            if (!cropper) return;
+
+            // Dapatkan canvas hasil crop resolusi tinggi (950 x 1350 px = 10x ratio)
+            const canvas = cropper.getCroppedCanvas({
+                width: 950,
+                height: 1350,
+                imageSmoothingEnabled: true,
+                imageSmoothingQuality: 'high',
+            });
+
+            if (!canvas) return;
+
+            const croppedDataUrl = canvas.toDataURL('image/jpeg', 0.92);
+            state.background_image = croppedDataUrl;
+
+            // Simpan blob untuk form data upload
+            canvas.toBlob(blob => {
+                pendingBgFile = new File([blob], 'id_card_background_cropped.jpg', { type: 'image/jpeg' });
+            }, 'image/jpeg', 0.92);
+
+            // Update UI preview
+            document.getElementById('bgPreviewThumb').src = croppedDataUrl;
+            document.getElementById('bgFileName').innerText = 'Gambar hasil crop (95:135)';
+            document.getElementById('bgPreviewContainer').classList.remove('hidden');
+            document.getElementById('btnReCrop').classList.remove('hidden');
+            document.getElementById('btnRemoveBg').classList.remove('hidden');
+
+            applyStyles();
+            closeCropModal();
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Gambar Berhasil Dipotong!',
+                text: 'Background ID Card sudah diperbarui sesuai potongan.',
+                timer: 1500,
+                showConfirmButton: false,
+                toast: true,
+                position: 'top-end'
+            });
+        }
+
         function removeBgImage() {
             pendingBgFile = null;
+            rawImageSource = '';
             state.background_image = '';
             document.getElementById('inputBgImage').value = '';
             document.getElementById('bgPreviewContainer').classList.add('hidden');
+            document.getElementById('btnReCrop').classList.add('hidden');
             document.getElementById('btnRemoveBg').classList.add('hidden');
             applyStyles();
         }
 
+        // Live Handlers: Background Controls
         function updateBgOpacity(val) {
             state.bg_opacity = parseInt(val, 10);
             document.getElementById('labelBgOpacity').innerText = val + '%';
@@ -1019,6 +1296,16 @@
         // Live Handlers: Typography & Text
         function updateFontFamily(val) {
             state.font_family = val;
+            applyStyles();
+        }
+
+        function updateTextBackdrop(val) {
+            state.text_backdrop = val;
+            applyStyles();
+        }
+
+        function updateTextShadow(checked) {
+            state.text_shadow = checked;
             applyStyles();
         }
 
@@ -1162,7 +1449,7 @@
                     formData.append(key, state[key]);
                 });
 
-                // Append file if newly uploaded
+                // Append file if newly cropped/uploaded
                 if (pendingBgFile) {
                     formData.append('background_image_file', pendingBgFile);
                 }
@@ -1180,6 +1467,7 @@
                 if (resData.success) {
                     if (resData.config && resData.config.background_image) {
                         state.background_image = resData.config.background_image;
+                        rawImageSource = resData.config.background_image;
                     }
                     pendingBgFile = null;
 
