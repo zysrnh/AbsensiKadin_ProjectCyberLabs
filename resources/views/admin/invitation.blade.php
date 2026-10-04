@@ -375,12 +375,13 @@
             </div>
 
             <!-- Card: Database Calon Tamu Undangan & Blast Massal -->
-            <div class="card-3d p-5 space-y-4">
-                <div class="border-b border-slate-100 pb-3 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <div class="card-3d p-4 sm:p-5 space-y-3.5">
+                <!-- Header Card: Judul & Action Buttons -->
+                <div class="border-b border-slate-100 pb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <div>
                         <div class="flex items-center gap-2">
                             <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Database Calon Tamu Undangan</h2>
-                            <span id="tabCountBadge" class="px-2.5 py-0.5 bg-blue-50 text-blue-700 text-[10px] font-bold rounded-full border border-blue-200 font-mono">
+                            <span id="tabCountBadge" class="px-2 py-0.5 bg-blue-50 text-blue-700 text-[10px] font-bold rounded-md border border-blue-200 font-mono">
                                 {{ $invitationGuests->count() }} Calon Tamu
                             </span>
                         </div>
@@ -388,22 +389,22 @@
                     </div>
 
                     <!-- Tombol Aksi Tambah & Import Kontak -->
-                    <div class="flex items-center flex-wrap gap-2">
+                    <div class="flex items-center gap-2 flex-shrink-0">
                         <button 
                             type="button" 
                             onclick="openAddGuestModal()" 
-                            class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl border border-blue-600 transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                            class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-lg transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
                         >
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
                             </svg>
-                            <span>+ Tambah Tamu</span>
+                            <span>Tambah Tamu</span>
                         </button>
 
                         <button 
                             type="button" 
                             onclick="openImportGuestsModal()" 
-                            class="px-3 py-1.5 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl border border-slate-200 transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                            class="px-3 py-1.5 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-lg border border-slate-200 hover:border-slate-300 transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
                         >
                             <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
@@ -413,58 +414,49 @@
                     </div>
                 </div>
 
-                <!-- Tab Navigasi & Filter Pencarian -->
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <!-- Tab Navigasi & Filter Pencarian (1 Baris) -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
                     <!-- Tab Selector -->
-                    <div class="flex items-center gap-1 p-1 bg-slate-100 rounded-xl border border-slate-200/80 text-xs w-fit">
+                    <div class="flex items-center gap-1 p-1 bg-slate-100 rounded-lg border border-slate-200 text-xs w-full sm:w-auto">
                         <button 
                             type="button" 
                             id="tabBtnGuests" 
                             onclick="switchGuestTab('guest')" 
-                            class="px-3 py-1.5 font-bold rounded-lg bg-white text-slate-900 shadow-2xs transition-all cursor-pointer flex items-center gap-1.5"
+                            class="flex-1 sm:flex-initial px-3 py-1 font-bold rounded-md bg-white text-slate-900 shadow-2xs transition-all cursor-pointer flex items-center justify-center gap-1.5"
                         >
                             <span>Calon Tamu (Target Blast)</span>
-                            <span class="px-1.5 py-0.2 bg-blue-100 text-blue-700 rounded-full text-[10px] font-mono">{{ $invitationGuests->count() }}</span>
+                            <span class="px-1.5 py-0.2 bg-blue-100 text-blue-700 rounded text-[10px] font-mono font-bold">{{ $invitationGuests->count() }}</span>
                         </button>
                         <button 
                             type="button" 
                             id="tabBtnParticipants" 
                             onclick="switchGuestTab('participant')" 
-                            class="px-3 py-1.5 font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all cursor-pointer flex items-center gap-1.5"
+                            class="flex-1 sm:flex-initial px-3 py-1 font-semibold rounded-md text-slate-600 hover:text-slate-900 transition-all cursor-pointer flex items-center justify-center gap-1.5"
                         >
-                            <span>Peserta yang Sudah Daftar</span>
-                            <span class="px-1.5 py-0.2 bg-slate-200 text-slate-600 rounded-full text-[10px] font-mono">{{ $participants->count() }}</span>
+                            <span>Peserta Terdaftar</span>
+                            <span class="px-1.5 py-0.2 bg-slate-200 text-slate-600 rounded text-[10px] font-mono font-bold">{{ $participants->count() }}</span>
                         </button>
                     </div>
 
                     <!-- Search Input -->
-                    <div class="w-full sm:w-60">
+                    <div class="relative w-full sm:w-60">
+                        <svg class="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
                         <input 
                             type="text" 
                             id="searchGuestInput" 
                             placeholder="Cari nama atau nomor..." 
-                            class="input-3d w-full px-3.5 py-1.5 bg-slate-50 border border-slate-200 text-xs rounded-xl focus:outline-none focus:border-blue-600 focus:bg-white"
+                            class="w-full pl-8.5 pr-3 py-1.5 bg-slate-50 border border-slate-200 text-xs text-slate-800 placeholder-slate-400 rounded-lg focus:outline-none focus:border-blue-600 focus:bg-white transition"
                             oninput="filterGuestTable()"
                         >
                     </div>
                 </div>
 
-                <!-- Checkbox Toolbar & Bulk Action -->
-                <div class="p-3 bg-slate-50/80 border border-slate-200/80 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3">
-                    <div class="flex items-center gap-3 w-full sm:w-auto">
-                        <label class="flex items-center gap-2 text-xs font-semibold text-slate-800 cursor-pointer select-none">
-                            <input 
-                                type="checkbox" 
-                                id="selectAllCheckbox" 
-                                onchange="toggleSelectAll(this)" 
-                                class="rounded-sm border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer"
-                            >
-                            <span>Pilih Semua</span>
-                        </label>
-                        <span class="text-slate-300">|</span>
-                        <span id="selectedCountBadge" class="text-xs font-medium text-slate-500">
-                            0 kontak dipilih
-                        </span>
+                <!-- Slim Action Bar: Counter & Blast Button -->
+                <div class="px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-lg flex items-center justify-between gap-3 text-xs">
+                    <div class="flex items-center gap-2">
+                        <span id="selectedCountBadge" class="font-medium text-slate-600">0 kontak dipilih</span>
                     </div>
 
                     <!-- Tombol Blast Twilio Massal -->
@@ -473,7 +465,7 @@
                         id="btnBulkTwilio" 
                         onclick="sendBulkTwilio()" 
                         disabled
-                        class="w-full sm:w-auto btn-3d-blue px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 disabled:border-slate-300 disabled:shadow-none disabled:cursor-not-allowed text-white font-bold text-xs rounded-xl border border-blue-600 transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs"
+                        class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-40 disabled:hover:bg-blue-600 disabled:cursor-not-allowed text-white font-bold text-xs rounded-md transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
                     >
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -483,12 +475,17 @@
                 </div>
 
                 <!-- TAB 1: Daftar Calon Tamu Undangan -->
-                <div id="containerGuests" class="overflow-x-auto border border-slate-200/80 rounded-xl max-h-[380px] overflow-y-auto">
+                <div id="containerGuests" class="overflow-x-auto border border-slate-200 rounded-lg max-h-[380px] overflow-y-auto">
                     <table class="w-full text-left text-xs text-slate-700 divide-y divide-slate-200">
                         <thead class="bg-slate-50 text-[11px] font-bold text-slate-700 uppercase tracking-wider sticky top-0 z-10 shadow-2xs">
                             <tr>
                                 <th scope="col" class="w-10 px-3 py-2.5 text-center">
-                                    &bull;
+                                    <input 
+                                        type="checkbox" 
+                                        class="master-checkbox rounded-sm border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer w-4 h-4"
+                                        onchange="toggleSelectAll(this)"
+                                        title="Pilih semua yang tampil"
+                                    >
                                 </th>
                                 <th scope="col" class="px-3.5 py-2.5">Nama & Instansi</th>
                                 <th scope="col" class="px-3.5 py-2.5">WhatsApp</th>
@@ -503,7 +500,7 @@
                                     <input 
                                         type="checkbox" 
                                         value="{{ $g->id }}" 
-                                        class="guest-checkbox rounded-sm border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer"
+                                        class="guest-checkbox rounded-sm border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer w-4 h-4"
                                         onchange="onGuestCheckboxChange()"
                                     >
                                 </td>
@@ -533,7 +530,7 @@
                                         type="button" 
                                         onclick="pickGuestToEditor('{{ addslashes($g->name) }}', '{{ $g->phone }}')" 
                                         title="Muat data ke form editor atas"
-                                        class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-[10px] rounded-lg border border-slate-200 transition cursor-pointer"
+                                        class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-[10px] rounded-md border border-slate-200 transition cursor-pointer"
                                     >
                                         Pilih
                                     </button>
@@ -542,7 +539,7 @@
                                         type="button" 
                                         onclick="directWaWeb('{{ addslashes($g->name) }}', '{{ $g->phone }}')" 
                                         title="Langsung chat WhatsApp Web"
-                                        class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] rounded-lg transition cursor-pointer shadow-2xs"
+                                        class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] rounded-md transition cursor-pointer shadow-2xs"
                                     >
                                         WA Web
                                     </button>
@@ -551,7 +548,7 @@
                                         type="button" 
                                         onclick="deleteGuest({{ $g->id }}, '{{ addslashes($g->name) }}')" 
                                         title="Hapus calon tamu"
-                                        class="px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-[10px] rounded-lg border border-rose-200 transition cursor-pointer"
+                                        class="px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-[10px] rounded-md border border-rose-200 transition cursor-pointer"
                                     >
                                         Hapus
                                     </button>
@@ -559,8 +556,25 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="5" class="px-4 py-8 text-center text-slate-400 text-xs">
-                                    Belum ada calon tamu undangan yang ditambahkan. Klik tombol <strong>"+ Tambah Tamu"</strong> atau <strong>"Paste Banyak Nomor"</strong> di atas.
+                                <td colspan="5" class="px-6 py-10 text-center">
+                                    <div class="flex flex-col items-center justify-center max-w-sm mx-auto">
+                                        <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 mb-2">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                                            </svg>
+                                        </div>
+                                        <h4 class="text-xs font-bold text-slate-800">Belum Ada Calon Tamu</h4>
+                                        <p class="text-[11px] text-slate-400 mt-0.5 mb-3">Input nomor WhatsApp atau paste daftar kontak untuk mulai blast undangan.</p>
+                                        <div class="flex items-center gap-2">
+                                            <button type="button" onclick="openAddGuestModal()" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-md transition cursor-pointer shadow-2xs flex items-center gap-1">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+                                                <span>Tambah Tamu</span>
+                                            </button>
+                                            <button type="button" onclick="openImportGuestsModal()" class="px-3 py-1.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-bold text-xs rounded-md transition cursor-pointer shadow-2xs">
+                                                Paste Banyak Nomor
+                                            </button>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                             @endforelse
@@ -569,12 +583,17 @@
                 </div>
 
                 <!-- TAB 2: Daftar Peserta yang Sudah Mendaftar -->
-                <div id="containerParticipants" class="overflow-x-auto border border-slate-200/80 rounded-xl max-h-[380px] overflow-y-auto hidden">
+                <div id="containerParticipants" class="overflow-x-auto border border-slate-200 rounded-lg max-h-[380px] overflow-y-auto hidden">
                     <table class="w-full text-left text-xs text-slate-700 divide-y divide-slate-200">
                         <thead class="bg-slate-50 text-[11px] font-bold text-slate-700 uppercase tracking-wider sticky top-0 z-10 shadow-2xs">
                             <tr>
                                 <th scope="col" class="w-10 px-3 py-2.5 text-center">
-                                    &bull;
+                                    <input 
+                                        type="checkbox" 
+                                        class="master-checkbox rounded-sm border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer w-4 h-4"
+                                        onchange="toggleSelectAll(this)"
+                                        title="Pilih semua yang tampil"
+                                    >
                                 </th>
                                 <th scope="col" class="px-3.5 py-2.5">Nama & Instansi</th>
                                 <th scope="col" class="px-3.5 py-2.5">WhatsApp</th>
@@ -589,7 +608,7 @@
                                     <input 
                                         type="checkbox" 
                                         value="{{ $p->id }}" 
-                                        class="guest-checkbox rounded-sm border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer"
+                                        class="guest-checkbox rounded-sm border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer w-4 h-4"
                                         onchange="onGuestCheckboxChange()"
                                     >
                                 </td>
@@ -610,7 +629,7 @@
                                         type="button" 
                                         onclick="pickGuestToEditor('{{ addslashes($p->name) }}', '{{ $p->phone }}')" 
                                         title="Muat data ke form editor atas"
-                                        class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-[10px] rounded-lg border border-slate-200 transition cursor-pointer"
+                                        class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-[10px] rounded-md border border-slate-200 transition cursor-pointer"
                                     >
                                         Pilih
                                     </button>
@@ -618,7 +637,7 @@
                                         type="button" 
                                         onclick="directWaWeb('{{ addslashes($p->name) }}', '{{ $p->phone }}')" 
                                         title="Langsung chat WhatsApp Web"
-                                        class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] rounded-lg transition cursor-pointer shadow-2xs"
+                                        class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] rounded-md transition cursor-pointer shadow-2xs"
                                     >
                                         WA Web
                                     </button>
@@ -1366,18 +1385,17 @@
 
         // Uncheck all checkboxes on switch
         document.querySelectorAll('.guest-checkbox').forEach(cb => cb.checked = false);
-        const selectAll = document.getElementById('selectAllCheckbox');
-        if (selectAll) selectAll.checked = false;
+        document.querySelectorAll('.master-checkbox').forEach(cb => { cb.checked = false; cb.indeterminate = false; });
 
         if (tab === 'guest') {
-            btnGuests.className = "px-3 py-1.5 font-bold rounded-lg bg-white text-slate-900 shadow-2xs transition-all cursor-pointer flex items-center gap-1.5";
-            btnParticipants.className = "px-3 py-1.5 font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all cursor-pointer flex items-center gap-1.5";
+            btnGuests.className = "flex-1 sm:flex-initial px-3 py-1 font-bold rounded-md bg-white text-slate-900 shadow-2xs transition-all cursor-pointer flex items-center justify-center gap-1.5";
+            btnParticipants.className = "flex-1 sm:flex-initial px-3 py-1 font-semibold rounded-md text-slate-600 hover:text-slate-900 transition-all cursor-pointer flex items-center justify-center gap-1.5";
             containerGuests.classList.remove('hidden');
             containerParticipants.classList.add('hidden');
             badge.textContent = "{{ $invitationGuests->count() }} Calon Tamu";
         } else {
-            btnParticipants.className = "px-3 py-1.5 font-bold rounded-lg bg-white text-slate-900 shadow-2xs transition-all cursor-pointer flex items-center gap-1.5";
-            btnGuests.className = "px-3 py-1.5 font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all cursor-pointer flex items-center gap-1.5";
+            btnParticipants.className = "flex-1 sm:flex-initial px-3 py-1 font-bold rounded-md bg-white text-slate-900 shadow-2xs transition-all cursor-pointer flex items-center justify-center gap-1.5";
+            btnGuests.className = "flex-1 sm:flex-initial px-3 py-1 font-semibold rounded-md text-slate-600 hover:text-slate-900 transition-all cursor-pointer flex items-center justify-center gap-1.5";
             containerParticipants.classList.remove('hidden');
             containerGuests.classList.add('hidden');
             badge.textContent = "{{ $participants->count() }} Peserta Terdaftar";
@@ -1421,7 +1439,7 @@
         const btnBulk = document.getElementById('btnBulkTwilio');
         btnBulk.disabled = (count === 0);
 
-        const selectAll = document.getElementById('selectAllCheckbox');
+        const selectAll = activeContainer.querySelector('.master-checkbox');
         if (selectAll) {
             selectAll.checked = (count > 0 && count === total);
             selectAll.indeterminate = (count > 0 && count < total);
