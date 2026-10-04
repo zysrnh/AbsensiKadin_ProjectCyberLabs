@@ -177,7 +177,9 @@ class DashboardController extends Controller
             'venue' => $cleanVenue,
         ];
 
-        return view('admin.id-card', compact('participants', 'eventSettings'));
+        $idCardConfig = json_decode(Setting::get('id_card_config', '{}'), true) ?: [];
+
+        return view('admin.id-card', compact('participants', 'eventSettings', 'idCardConfig'));
     }
 
     /**
@@ -231,7 +233,62 @@ class DashboardController extends Controller
             'venue' => $cleanVenue,
         ];
 
-        return view('admin.id-card', compact('participants', 'eventSettings'));
+        $idCardConfig = json_decode(Setting::get('id_card_config', '{}'), true) ?: [];
+
+        return view('admin.id-card', compact('participants', 'eventSettings', 'idCardConfig'));
+    }
+
+    /**
+     * Simpan kustomisasi format ID Card Lanyard
+     */
+    public function saveIdCardSettings(Request $request)
+    {
+        $existing = json_decode(Setting::get('id_card_config', '{}'), true) ?: [];
+        $data = $request->except(['_token', 'background_image_file']);
+
+        // Handle upload gambar background custom jika ada
+        if ($request->hasFile('background_image_file')) {
+            $file = $request->file('background_image_file');
+            $filename = 'id_card_bg_' . time() . '.' . $file->getClientOriginalExtension();
+            $destinationPath = public_path('uploads/id_card');
+
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
+            }
+
+            $file->move($destinationPath, $filename);
+            $data['background_image'] = asset('uploads/id_card/' . $filename);
+        }
+
+        $merged = array_merge($existing, $data);
+        Setting::set('id_card_config', json_encode($merged));
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Pengaturan ID Card berhasil disimpan!',
+                'config' => $merged,
+            ]);
+        }
+
+        return back()->with('success', 'Pengaturan ID Card berhasil disimpan!');
+    }
+
+    /**
+     * Reset kustomisasi format ID Card ke default bawaan
+     */
+    public function resetIdCardSettings(Request $request)
+    {
+        Setting::set('id_card_config', null);
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Format ID Card berhasil di-reset ke default.',
+            ]);
+        }
+
+        return back()->with('success', 'Format ID Card berhasil di-reset ke default.');
     }
 
     /**

@@ -44,6 +44,8 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     // Cetak ID Card Lanyard / Name Tag Peserta
     Route::get('/participants/id-cards/bulk', [DashboardController::class, 'printBulkIdCards'])->name('admin.participants.id-cards.bulk');
     Route::get('/participants/{participant}/id-card', [DashboardController::class, 'printIdCard'])->name('admin.participants.id-card');
+    Route::post('/participants/id-cards/settings', [DashboardController::class, 'saveIdCardSettings'])->name('admin.participants.id-cards.settings.save');
+    Route::post('/participants/id-cards/settings/reset', [DashboardController::class, 'resetIdCardSettings'])->name('admin.participants.id-cards.settings.reset');
     
     // Pengaturan Template WA & Twilio
     Route::get('/wa-settings', [WaSettingController::class, 'index'])->name('admin.wa-settings');
