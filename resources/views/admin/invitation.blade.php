@@ -10,7 +10,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
             <h1 class="text-2xl font-black text-slate-900 tracking-tight">Kirim Undangan Pendaftaran Acara</h1>
-            <p class="text-xs text-slate-500 mt-0.5">Bagikan tautan pendaftaran acara resmi kepada tamu VIP melalui Salin Teks, WhatsApp Web, atau Twilio API.</p>
+            <p class="text-xs text-slate-500 mt-0.5">Bagikan tautan pendaftaran acara resmi kepada tamu VIP melalui Salin Teks, WhatsApp Web, atau Twilio API dengan lampiran flyer acara.</p>
         </div>
 
         <div class="flex items-center flex-wrap gap-2">
@@ -120,6 +120,90 @@
                 </div>
             </div>
 
+            <!-- Card: Lampiran Flyer Acara (Gambar WhatsApp) -->
+            <div class="card-3d p-5 space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-xl bg-violet-50 text-violet-700 border border-violet-200/80 flex items-center justify-center shrink-0">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Lampiran Flyer Acara (Gambar WhatsApp)</h2>
+                            <p class="text-[11px] text-slate-400">Lampirkan poster/flyer acara secara otomatis saat pesan WhatsApp dikirimkan.</p>
+                        </div>
+                    </div>
+
+                    <!-- Status Pill -->
+                    <span id="flyerStatusBadge" class="px-2.5 py-1 text-[10px] font-bold rounded-full border uppercase font-mono {{ !empty($eventFlyerUrl) ? 'bg-violet-50 text-violet-800 border-violet-200' : 'bg-slate-100 text-slate-500 border-slate-200' }}">
+                        {{ !empty($eventFlyerUrl) ? 'Flyer Tersedia' : 'Belum Ada Flyer' }}
+                    </span>
+                </div>
+
+                <div class="space-y-3.5">
+                    <!-- Toggle Switch -->
+                    <label class="inline-flex items-center gap-2.5 cursor-pointer">
+                        <input 
+                            type="checkbox" 
+                            id="attachFlyerToggle" 
+                            class="rounded-sm border-slate-300 text-slate-900 focus:ring-0 focus:ring-offset-0 cursor-pointer w-4 h-4"
+                            {{ !empty($eventFlyerUrl) ? 'checked' : '' }}
+                            onchange="onToggleFlyerAttachment()"
+                        >
+                        <span class="text-xs font-semibold text-slate-700">Lampirkan gambar flyer pada pesan WhatsApp (Twilio Media & Live Preview)</span>
+                    </label>
+
+                    <div class="flex flex-col sm:flex-row items-center gap-4 p-3.5 bg-slate-50 border border-slate-200 rounded-xl">
+                        <!-- Thumbnail Flyer -->
+                        <div class="w-20 h-24 sm:w-20 sm:h-20 rounded-lg overflow-hidden border border-slate-200 bg-white flex items-center justify-center shrink-0">
+                            <img id="cardFlyerThumb" src="{{ $eventFlyerUrl ?: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=300&q=80' }}" alt="Thumbnail Flyer" class="w-full h-full object-cover {{ empty($eventFlyerUrl) ? 'opacity-40' : '' }}">
+                        </div>
+
+                        <div class="flex-1 space-y-1.5 text-left w-full sm:w-auto">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-bold text-slate-800" id="cardFlyerName">
+                                    {{ !empty($eventFlyer) ? basename($eventFlyer) : 'Default Event Poster' }}
+                                </span>
+                                <span class="text-[10px] font-mono text-slate-400">JPG, PNG, WEBP</span>
+                            </div>
+                            <p class="text-[11px] text-slate-500 leading-normal">
+                                Poster ini akan dikirim sebagai media foto WhatsApp di atas teks undangan resmi. Anda juga dapat menyisipkan tag <code class="font-mono text-slate-700 bg-slate-200/70 px-1 py-0.5 rounded-sm">{link_flyer}</code> pada isi pesan.
+                            </p>
+                            
+                            <div class="flex flex-wrap items-center gap-2 pt-1">
+                                <!-- Hidden file input -->
+                                <input type="file" id="flyerFileInput" accept="image/png,image/jpeg,image/jpg,image/webp" class="hidden" onchange="uploadFlyerAjax(this)">
+                                
+                                <button 
+                                    type="button" 
+                                    onclick="document.getElementById('flyerFileInput').click()" 
+                                    id="btnUploadFlyer"
+                                    class="px-3 py-1.5 bg-white hover:bg-slate-50 text-slate-700 font-bold text-[11px] rounded-lg border border-slate-200 shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer"
+                                >
+                                    <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                                    </svg>
+                                    <span>Unggah Flyer / Gambar Baru</span>
+                                </button>
+
+                                <a 
+                                    href="{{ $eventFlyerUrl ?: '#' }}" 
+                                    target="_blank" 
+                                    id="btnDownloadFlyer" 
+                                    class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] rounded-lg border border-slate-200 transition-all flex items-center gap-1 {{ empty($eventFlyerUrl) ? 'hidden' : '' }}"
+                                >
+                                    <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                    </svg>
+                                    <span>Lihat Flyer</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Card: Generator Undangan Tamu -->
             <div class="card-3d p-5 space-y-4">
                 <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
@@ -190,6 +274,9 @@
                         <button type="button" onclick="insertVar('{batas_waktu}')" class="px-2.5 py-1 bg-amber-50 hover:bg-amber-100 text-amber-800 text-[11px] font-mono font-bold rounded-lg border border-amber-200 cursor-pointer transition-all">
                             {batas_waktu}
                         </button>
+                        <button type="button" onclick="insertVar('{link_flyer}')" class="px-2.5 py-1 bg-violet-50 hover:bg-violet-100 text-violet-800 text-[11px] font-mono font-bold rounded-lg border border-violet-200 cursor-pointer transition-all">
+                            {link_flyer}
+                        </button>
                     </div>
                 </div>
 
@@ -231,7 +318,7 @@
                         class="input-3d w-full px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-xs font-mono text-slate-900 focus:outline-none focus:border-blue-600"
                     >
                     <p class="text-[10px] text-slate-500 leading-normal">
-                        Jika diisi, pengiriman via Twilio akan menggunakan template resmi interaktif Meta. Jika kosong, sistem otomatis mengirim pesan teks lengkap di atas.
+                        Jika diisi, pengiriman via Twilio akan menggunakan template resmi interaktif Meta. Jika kosong, sistem otomatis mengirim pesan teks lengkap di atas beserta lampiran gambar.
                     </p>
                 </div>
 
@@ -262,7 +349,7 @@
                         <span>Buka WhatsApp Web</span>
                     </button>
 
-                    <!-- 3. Blast Twilio -->
+                    <!-- 3. Kirim via Twilio REST API -->
                     <button 
                         type="button" 
                         onclick="sendTwilioBroadcast()" 
@@ -278,17 +365,17 @@
 
             </div>
 
-            <!-- Card: Kirim ke Tamu Undangan Terdaftar (Checklist & Blast Massal) -->
+            <!-- Card: Database Tamu Undangan & Blast Massal -->
             <div class="card-3d p-5 space-y-4">
                 <div class="border-b border-slate-100 pb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                     <div>
                         <div class="flex items-center gap-2">
-                            <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Tamu Undangan Terdaftar</h2>
+                            <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Database Tamu Undangan</h2>
                             <span class="px-2.5 py-0.5 bg-slate-100 text-slate-700 text-[10px] font-bold rounded-full border border-slate-200 font-mono">
                                 {{ $participants->count() }} Tamu
                             </span>
                         </div>
-                        <p class="text-[11px] text-slate-400">Pilih tamu dengan checkbox untuk broadcast via Twilio atau klik untuk preview.</p>
+                        <p class="text-[11px] text-slate-400">Pilih tamu untuk blast Twilio massal atau muat ke generator.</p>
                     </div>
 
                     <!-- Input Filter Cari Cepat -->
@@ -296,7 +383,7 @@
                         <input 
                             type="text" 
                             id="searchGuestInput" 
-                            placeholder="Cari nama / instansi..." 
+                            placeholder="Cari nama atau instansi..." 
                             class="input-3d w-full px-3.5 py-2 bg-slate-50 border border-slate-200 text-xs rounded-xl focus:outline-none focus:border-blue-600 focus:bg-white"
                             oninput="filterGuestTable()"
                         >
@@ -434,6 +521,14 @@
                     <!-- Chat Bubble Masuk -->
                     <div class="max-w-[92%] bg-white rounded-2xl rounded-tl-sm shadow-xs p-3.5 space-y-2.5 border border-slate-200/50">
                         
+                        <!-- Flyer Image Attachment in WA Chat Bubble -->
+                        <div id="previewFlyerBubble" class="{{ !empty($eventFlyerUrl) ? '' : 'hidden' }} -mx-1.5 -mt-1.5 mb-2.5 rounded-xl overflow-hidden border border-slate-200/60 bg-slate-100 relative group">
+                            <img id="previewFlyerImg" src="{{ $eventFlyerUrl ?: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1000&q=80' }}" alt="Flyer Acara" class="w-full h-auto max-h-[260px] object-cover">
+                            <div class="absolute bottom-2 right-2 bg-black/60 text-white text-[9px] font-mono px-1.5 py-0.5 rounded-sm">
+                                GAMBAR FLYER
+                            </div>
+                        </div>
+
                         <!-- Text Body Message Live -->
                         <div id="previewInvitationBody" class="text-xs text-slate-800 whitespace-pre-line leading-relaxed font-sans">
                             <!-- Diisi via JavaScript -->
@@ -469,6 +564,7 @@
     const eventData = @json($eventSettings);
     const rawDefaultTemplate = @json($invitationTemplate);
     let deadlineData = @json($deadlineSettings);
+    let currentFlyerUrl = @json($eventFlyerUrl);
 
     const nameInput = document.getElementById('guestNameInput');
     const phoneInput = document.getElementById('guestPhoneInput');
@@ -479,6 +575,7 @@
     function buildTemplate(name) {
         let text = rawDefaultTemplate;
         const deadlineStr = deadlineData.enabled ? (deadlineData.deadline_text || 'Sesuai kuota') : 'Sesuai kuota tersedia';
+        const flyerUrl = currentFlyerUrl || eventData.link_flyer || '{{ route('home') }}';
         text = text.replaceAll('{nama}', name || 'Bapak/Ibu Pimpinan')
                    .replaceAll('{nama_acara}', eventData.nama_acara)
                    .replaceAll('{tanggal}', eventData.tanggal)
@@ -487,8 +584,100 @@
                    .replaceAll('{dresscode}', eventData.dresscode)
                    .replaceAll('{link_form}', eventData.link_form)
                    .replaceAll('{batas_waktu}', deadlineStr)
-                   .replaceAll('{kadaluarsa}', deadlineStr);
+                   .replaceAll('{kadaluarsa}', deadlineStr)
+                   .replaceAll('{link_flyer}', flyerUrl);
         return text;
+    }
+
+    // HANDLER LAMPIRAN FLYER GAMBAR
+    function onToggleFlyerAttachment() {
+        const checked = document.getElementById('attachFlyerToggle').checked;
+        const bubble = document.getElementById('previewFlyerBubble');
+        if (bubble) {
+            if (checked && currentFlyerUrl) {
+                bubble.classList.remove('hidden');
+            } else {
+                bubble.classList.add('hidden');
+            }
+        }
+    }
+
+    function uploadFlyerAjax(input) {
+        if (!input.files || !input.files[0]) return;
+        const file = input.files[0];
+        const formData = new FormData();
+        formData.append('flyer', file);
+
+        const btn = document.getElementById('btnUploadFlyer');
+        const origHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = `<svg class="animate-spin w-3.5 h-3.5 text-slate-700" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg> <span>Mengunggah...</span>`;
+
+        fetch("{{ route('admin.wa.upload-flyer') }}", {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            },
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            btn.disabled = false;
+            btn.innerHTML = origHtml;
+            if (data.success) {
+                currentFlyerUrl = data.url;
+                eventData.link_flyer = data.url;
+
+                document.getElementById('cardFlyerThumb').src = data.url;
+                document.getElementById('cardFlyerThumb').classList.remove('opacity-40');
+                document.getElementById('cardFlyerName').textContent = data.filename;
+                document.getElementById('previewFlyerImg').src = data.url;
+                document.getElementById('attachFlyerToggle').checked = true;
+                document.getElementById('previewFlyerBubble').classList.remove('hidden');
+
+                // Update status badge
+                const badge = document.getElementById('flyerStatusBadge');
+                badge.className = "px-2.5 py-1 text-[10px] font-bold rounded-full border uppercase font-mono bg-violet-50 text-violet-800 border-violet-200";
+                badge.textContent = "Flyer Tersedia";
+
+                // Update download link
+                const downloadBtn = document.getElementById('btnDownloadFlyer');
+                if (downloadBtn) {
+                    downloadBtn.href = data.url;
+                    downloadBtn.classList.remove('hidden');
+                }
+
+                updateInvitationText();
+
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'success',
+                    title: data.message || 'Flyer berhasil diunggah!',
+                    showConfirmButton: false,
+                    timer: 2500,
+                    timerProgressBar: true
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal Mengunggah',
+                    text: data.message || 'File tidak valid.',
+                    confirmButtonColor: '#0f172a'
+                });
+            }
+        })
+        .catch(() => {
+            btn.disabled = false;
+            btn.innerHTML = origHtml;
+            Swal.fire({
+                icon: 'error',
+                title: 'Error Koneksi',
+                text: 'Gagal mengunggah flyer ke server.',
+                confirmButtonColor: '#0f172a'
+            });
+        });
     }
 
     // HANDLER PENGATURAN BATAS KADALUARSA UNDANGAN
@@ -603,6 +792,7 @@
         const initialText = buildTemplate(nameInput.value.trim());
         textArea.value = initialText;
         updatePreview(initialText);
+        onToggleFlyerAttachment();
     }
 
     function updateInvitationText() {
@@ -684,6 +874,7 @@
         const phone = phoneInput.value.trim();
         const name = nameInput.value.trim();
         const message = textArea.value.trim();
+        const attachFlyer = document.getElementById('attachFlyerToggle').checked;
 
         if (!phone) {
             Swal.fire({
@@ -698,7 +889,7 @@
 
         Swal.fire({
             title: 'Kirim Undangan Twilio?',
-            text: `Kirim pesan undangan ke nomor ${phone}?`,
+            text: `Kirim pesan undangan ke nomor ${phone}?` + (attachFlyer ? ' (Menyertakan lampiran gambar flyer)' : ''),
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#1d4ed8',
@@ -727,7 +918,9 @@
                         name: name || 'Bapak/Ibu Pimpinan',
                         phone: phone,
                         custom_message: message,
-                        content_sid: document.getElementById('contentSidInput') ? document.getElementById('contentSidInput').value.trim() : ''
+                        content_sid: document.getElementById('contentSidInput') ? document.getElementById('contentSidInput').value.trim() : '',
+                        attach_flyer: attachFlyer ? 1 : 0,
+                        media_url: attachFlyer ? currentFlyerUrl : null
                     })
                 })
                 .then(res => res.json())
@@ -840,12 +1033,13 @@
     function sendBulkTwilio() {
         const selected = document.querySelectorAll('.guest-checkbox:checked');
         const ids = Array.from(selected).map(cb => cb.value);
+        const attachFlyer = document.getElementById('attachFlyerToggle').checked;
 
         if (ids.length === 0) return;
 
         Swal.fire({
             title: `Blast Twilio ke ${ids.length} Tamu?`,
-            text: `Sistem akan mengirimkan pesan undangan resmi via WhatsApp Twilio ke ${ids.length} tamu terpilih. Lanjutkan?`,
+            text: `Sistem akan mengirimkan pesan undangan resmi via WhatsApp Twilio ke ${ids.length} tamu terpilih.` + (attachFlyer ? ' (Menyertakan lampiran gambar flyer)' : '') + ' Lanjutkan?',
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#1d4ed8',
@@ -873,7 +1067,9 @@
                     body: JSON.stringify({
                         ids: ids,
                         custom_message: textArea.value.trim(),
-                        content_sid: document.getElementById('contentSidInput') ? document.getElementById('contentSidInput').value.trim() : ''
+                        content_sid: document.getElementById('contentSidInput') ? document.getElementById('contentSidInput').value.trim() : '',
+                        attach_flyer: attachFlyer ? 1 : 0,
+                        media_url: attachFlyer ? currentFlyerUrl : null
                     })
                 })
                 .then(res => res.json())

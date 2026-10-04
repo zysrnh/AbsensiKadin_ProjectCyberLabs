@@ -10,7 +10,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
             <h1 class="text-2xl font-black text-slate-900 tracking-tight">Kirim Pengingat & Konfirmasi Kehadiran</h1>
-            <p class="text-xs text-slate-500 mt-0.5">Kirim pengingat acara (H-3, H-1, atau Hari-H) kepada peserta terdaftar dengan opsi konfirmasi kehadiran Yes/No.</p>
+            <p class="text-xs text-slate-500 mt-0.5">Kirim pengingat acara (H-3, H-1, atau Hari-H) kepada peserta terdaftar dengan opsi konfirmasi kehadiran Yes/No dan lampiran flyer acara.</p>
         </div>
 
         <div class="flex items-center flex-wrap gap-2">
@@ -140,6 +140,87 @@
         <!-- Kolom Kiri: Form Generator & Aksi -->
         <div class="lg:col-span-7 space-y-5">
             
+            <!-- Card: Lampiran Flyer Acara (Gambar Reminder) -->
+            <div class="card-3d p-5 space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-8 h-8 rounded-xl bg-violet-50 text-violet-700 border border-violet-200/80 flex items-center justify-center shrink-0">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Lampiran Flyer Acara (Gambar WhatsApp)</h2>
+                            <p class="text-[11px] text-slate-400">Lampirkan poster/flyer acara secara otomatis saat pesan pengingat dikirimkan.</p>
+                        </div>
+                    </div>
+
+                    <!-- Status Pill -->
+                    <span id="reminderFlyerBadge" class="px-2.5 py-1 text-[10px] font-bold rounded-full border uppercase font-mono {{ !empty($eventFlyerUrl) ? 'bg-violet-50 text-violet-800 border-violet-200' : 'bg-slate-100 text-slate-500 border-slate-200' }}">
+                        {{ !empty($eventFlyerUrl) ? 'Flyer Aktif' : 'Tanpa Flyer' }}
+                    </span>
+                </div>
+
+                <div class="space-y-3.5">
+                    <!-- Toggle Switch -->
+                    <label class="inline-flex items-center gap-2.5 cursor-pointer">
+                        <input 
+                            type="checkbox" 
+                            id="attachReminderFlyerToggle" 
+                            class="rounded-sm border-slate-300 text-slate-900 focus:ring-0 focus:ring-offset-0 cursor-pointer w-4 h-4"
+                            {{ !empty($eventFlyerUrl) ? 'checked' : '' }}
+                            onchange="onToggleReminderFlyer()"
+                        >
+                        <span class="text-xs font-semibold text-slate-700">Lampirkan foto flyer pada pesan pengingat WhatsApp (Twilio Media)</span>
+                    </label>
+
+                    <div class="flex flex-col sm:flex-row items-center gap-4 p-3.5 bg-slate-50 border border-slate-200 rounded-xl">
+                        <!-- Thumbnail -->
+                        <div class="w-20 h-24 sm:w-20 sm:h-20 rounded-lg overflow-hidden border border-slate-200 bg-white flex items-center justify-center shrink-0">
+                            <img id="cardReminderFlyerThumb" src="{{ $eventFlyerUrl ?: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=300&q=80' }}" alt="Flyer" class="w-full h-full object-cover {{ empty($eventFlyerUrl) ? 'opacity-40' : '' }}">
+                        </div>
+
+                        <div class="flex-1 space-y-1.5 text-left w-full sm:w-auto">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-bold text-slate-800" id="cardReminderFlyerName">
+                                    {{ !empty($eventFlyer) ? basename($eventFlyer) : 'Default Event Flyer' }}
+                                </span>
+                                <span class="text-[10px] font-mono text-slate-400">Media Reminder</span>
+                            </div>
+                            <p class="text-[11px] text-slate-500 leading-normal">
+                                Poster ini akan otomatis dikirimkan ke nomor peserta di atas teks pesan pengingat acara.
+                            </p>
+                            
+                            <div class="flex flex-wrap items-center gap-2 pt-1">
+                                <input type="file" id="reminderFlyerFileInput" accept="image/png,image/jpeg,image/jpg,image/webp" class="hidden" onchange="uploadReminderFlyerAjax(this)">
+                                
+                                <button 
+                                    type="button" 
+                                    onclick="document.getElementById('reminderFlyerFileInput').click()" 
+                                    id="btnUploadReminderFlyer"
+                                    class="px-3 py-1.5 bg-white hover:bg-slate-50 text-slate-700 font-bold text-[11px] rounded-lg border border-slate-200 shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer"
+                                >
+                                    <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                                    </svg>
+                                    <span>Unggah / Ganti Flyer Baru</span>
+                                </button>
+
+                                <a 
+                                    href="{{ $eventFlyerUrl ?: '#' }}" 
+                                    target="_blank" 
+                                    id="btnViewReminderFlyer" 
+                                    class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] rounded-lg border border-slate-200 transition-all flex items-center gap-1 {{ empty($eventFlyerUrl) ? 'hidden' : '' }}"
+                                >
+                                    <span>Lihat Flyer</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Generator Pesan Pengingat -->
             <div class="card-3d p-5 space-y-4">
                 <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
                     <div>
@@ -224,6 +305,9 @@
                         <button type="button" onclick="insertVar('{link_konfirmasi_batal}')" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 text-[11px] font-mono font-bold rounded-lg cursor-pointer transition-all">
                             {link_konfirmasi_batal}
                         </button>
+                        <button type="button" onclick="insertVar('{link_flyer}')" class="px-2.5 py-1 bg-violet-50 hover:bg-violet-100 border border-violet-200 text-violet-800 text-[11px] font-mono font-bold rounded-lg cursor-pointer transition-all">
+                            {link_flyer}
+                        </button>
                     </div>
                 </div>
 
@@ -265,7 +349,7 @@
                         class="input-3d w-full px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-xs font-mono text-slate-900 focus:outline-none focus:border-blue-600"
                     >
                     <p class="text-[10px] text-slate-500 leading-normal">
-                        Jika diisi, pengiriman via Twilio akan memunculkan tombol interaktif resmi di WhatsApp. Jika kosong, sistem otomatis mengirim pesan teks lengkap dengan tautan konfirmasi 1-klik.
+                        Jika diisi, pengiriman via Twilio akan memunculkan tombol interaktif resmi di WhatsApp. Jika kosong, sistem otomatis mengirim pesan teks lengkap dengan tautan konfirmasi 1-klik beserta lampiran flyer.
                     </p>
                 </div>
 
@@ -345,8 +429,17 @@
                 <!-- Chat Body Simulator -->
                 <div class="bg-slate-100 p-4 min-h-[380px] max-h-[500px] overflow-y-auto space-y-3">
                     
-                    <!-- Bubble Chat Hijau WhatsApp -->
+                    <!-- Bubble Chat WhatsApp -->
                     <div class="bg-white border border-slate-200/80 rounded-2xl rounded-tl-sm p-3.5 shadow-2xs max-w-[95%] space-y-2 text-xs text-slate-800 leading-relaxed">
+                        
+                        <!-- Flyer Image Attachment in WA Chat Bubble -->
+                        <div id="previewReminderFlyerBubble" class="{{ !empty($eventFlyerUrl) ? '' : 'hidden' }} -mx-1.5 -mt-1.5 mb-2.5 rounded-xl overflow-hidden border border-slate-200/60 bg-slate-100 relative">
+                            <img id="previewReminderFlyerImg" src="{{ $eventFlyerUrl ?: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1000&q=80' }}" alt="Flyer Pengingat" class="w-full h-auto max-h-[240px] object-cover">
+                            <div class="absolute bottom-2 right-2 bg-black/60 text-white text-[9px] font-mono px-1.5 py-0.5 rounded-sm">
+                                GAMBAR FLYER
+                            </div>
+                        </div>
+
                         <div id="previewReminderBody" class="whitespace-pre-line font-sans">
                             <!-- Diisi oleh script -->
                         </div>
@@ -489,14 +582,14 @@
                             <td class="p-3 text-center">
                                 @if($p->rsvp_status === 'confirmed_yes')
                                     <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-50 text-emerald-800 border border-emerald-200/80 rounded-full font-bold text-[10px] uppercase font-mono">
-                                        <svg class="w-3 h-3 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <svg class="w-3 cinema-check text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                                         </svg>
                                         Pasti Hadir
                                     </span>
                                 @elseif($p->rsvp_status === 'confirmed_no')
                                     <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-rose-50 text-rose-800 border border-rose-200/80 rounded-full font-bold text-[10px] uppercase font-mono">
-                                        <svg class="w-3 h-3 text-rose-600" fill="currentColor" viewBox="0 0 20 20">
+                                        <svg class="w-3 text-rose-600" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
                                         </svg>
                                         Berhalangan
@@ -547,6 +640,7 @@
 <script>
     const eventData = @json($eventSettings);
     let rawDefaultTemplate = @json($reminderTemplate);
+    let currentReminderFlyerUrl = @json($eventFlyerUrl);
 
     const nameInput = document.getElementById('reminderNameInput');
     const phoneInput = document.getElementById('reminderPhoneInput');
@@ -628,6 +722,7 @@
         const linkTiket = `${baseUrl}/ticket/${qToken}`;
         const linkYes = `${baseUrl}/rsvp/${qToken}/yes`;
         const linkNo = `${baseUrl}/rsvp/${qToken}/no`;
+        const flyerUrl = currentReminderFlyerUrl || eventData.link_flyer || '{{ route('home') }}';
 
         text = text.replaceAll('{nama}', name || 'Bapak/Ibu Pimpinan')
                    .replaceAll('{nama_acara}', eventData.nama_acara)
@@ -638,14 +733,105 @@
                    .replaceAll('{kode_tiket}', qToken)
                    .replaceAll('{link_tiket}', linkTiket)
                    .replaceAll('{link_konfirmasi_hadir}', linkYes)
-                   .replaceAll('{link_konfirmasi_batal}', linkNo);
+                   .replaceAll('{link_konfirmasi_batal}', linkNo)
+                   .replaceAll('{link_flyer}', flyerUrl);
         return text;
+    }
+
+    // Toggle Lampiran Flyer Reminder
+    function onToggleReminderFlyer() {
+        const checked = document.getElementById('attachReminderFlyerToggle').checked;
+        const bubble = document.getElementById('previewReminderFlyerBubble');
+        if (bubble) {
+            if (checked && currentReminderFlyerUrl) {
+                bubble.classList.remove('hidden');
+            } else {
+                bubble.classList.add('hidden');
+            }
+        }
+    }
+
+    function uploadReminderFlyerAjax(input) {
+        if (!input.files || !input.files[0]) return;
+        const file = input.files[0];
+        const formData = new FormData();
+        formData.append('flyer', file);
+
+        const btn = document.getElementById('btnUploadReminderFlyer');
+        const origHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = `<svg class="animate-spin w-3.5 h-3.5 text-slate-700" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg> <span>Mengunggah...</span>`;
+
+        fetch("{{ route('admin.wa.upload-flyer') }}", {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            },
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            btn.disabled = false;
+            btn.innerHTML = origHtml;
+            if (data.success) {
+                currentReminderFlyerUrl = data.url;
+                eventData.link_flyer = data.url;
+
+                document.getElementById('cardReminderFlyerThumb').src = data.url;
+                document.getElementById('cardReminderFlyerThumb').classList.remove('opacity-40');
+                document.getElementById('cardReminderFlyerName').textContent = data.filename;
+                document.getElementById('previewReminderFlyerImg').src = data.url;
+                document.getElementById('attachReminderFlyerToggle').checked = true;
+                document.getElementById('previewReminderFlyerBubble').classList.remove('hidden');
+
+                const badge = document.getElementById('reminderFlyerBadge');
+                badge.className = "px-2.5 py-1 text-[10px] font-bold rounded-full border uppercase font-mono bg-violet-50 text-violet-800 border-violet-200";
+                badge.textContent = "Flyer Aktif";
+
+                const viewBtn = document.getElementById('btnViewReminderFlyer');
+                if (viewBtn) {
+                    viewBtn.href = data.url;
+                    viewBtn.classList.remove('hidden');
+                }
+
+                updateReminderText();
+
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'success',
+                    title: data.message || 'Flyer reminder berhasil diunggah!',
+                    showConfirmButton: false,
+                    timer: 2500,
+                    timerProgressBar: true
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal Mengunggah',
+                    text: data.message || 'File tidak valid.',
+                    confirmButtonColor: '#0f172a'
+                });
+            }
+        })
+        .catch(() => {
+            btn.disabled = false;
+            btn.innerHTML = origHtml;
+            Swal.fire({
+                icon: 'error',
+                title: 'Error Koneksi',
+                text: 'Gagal mengunggah flyer ke server.',
+                confirmButtonColor: '#0f172a'
+            });
+        });
     }
 
     function initPage() {
         const initialText = buildTemplate(nameInput.value.trim(), currentGuestToken);
         textArea.value = initialText;
         updatePreview(initialText);
+        onToggleReminderFlyer();
     }
 
     function updateReminderText() {
@@ -742,6 +928,7 @@
         const name = nameInput.value.trim();
         const message = textArea.value.trim();
         const contentSid = contentSidInput.value.trim();
+        const attachFlyer = document.getElementById('attachReminderFlyerToggle').checked;
 
         if (!phone) {
             Swal.fire({
@@ -756,7 +943,7 @@
 
         Swal.fire({
             title: 'Kirim Pengingat Twilio?',
-            text: `Kirim pesan reminder ke nomor ${phone}?`,
+            text: `Kirim pesan reminder ke nomor ${phone}?` + (attachFlyer ? ' (Menyertakan lampiran gambar flyer)' : ''),
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#2563eb',
@@ -784,7 +971,9 @@
                     body: JSON.stringify({
                         phone: phone,
                         custom_message: message,
-                        content_sid: contentSid
+                        content_sid: contentSid,
+                        attach_flyer: attachFlyer ? 1 : 0,
+                        media_url: attachFlyer ? currentReminderFlyerUrl : null
                     })
                 })
                 .then(res => res.json())
@@ -916,12 +1105,13 @@
     function sendBulkTwilio() {
         const selected = document.querySelectorAll('.guest-checkbox:checked');
         const ids = Array.from(selected).map(cb => cb.value);
+        const attachFlyer = document.getElementById('attachReminderFlyerToggle').checked;
 
         if (ids.length === 0) return;
 
         Swal.fire({
             title: `Blast Reminder ke ${ids.length} Peserta?`,
-            text: `Sistem akan mengirimkan pesan pengingat agenda acara via WhatsApp Twilio ke ${ids.length} peserta terpilih. Lanjutkan?`,
+            text: `Sistem akan mengirimkan pesan pengingat agenda acara via WhatsApp Twilio ke ${ids.length} peserta terpilih.` + (attachFlyer ? ' (Menyertakan lampiran gambar flyer)' : '') + ' Lanjutkan?',
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#2563eb',
@@ -949,7 +1139,9 @@
                     body: JSON.stringify({
                         ids: ids,
                         custom_message: textArea.value.trim(),
-                        content_sid: contentSidInput.value.trim()
+                        content_sid: contentSidInput.value.trim(),
+                        attach_flyer: attachFlyer ? 1 : 0,
+                        media_url: attachFlyer ? currentReminderFlyerUrl : null
                     })
                 })
                 .then(res => res.json())

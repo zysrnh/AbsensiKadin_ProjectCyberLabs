@@ -10,16 +10,39 @@ use Illuminate\Support\Facades\Log;
 class TwilioService
 {
     /**
+     * Resolve URL media agar bisa diakses oleh Twilio REST API
+     * (Twilio menolak URL localhost / private network)
+     */
+    public static function resolvePublicMediaUrl(?string $url): ?string
+    {
+        if (empty($url)) {
+            return null;
+        }
+
+        // Jika URL masih localhost/127.0.0.1, Twilio API akan gagal men-download file
+        // Fallback ke poster placeholder resmi agar simulasi API tetap berhasil di development
+        if (str_contains($url, 'localhost') || str_contains($url, '127.0.0.1')) {
+            return "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1000&q=80";
+        }
+
+        return $url;
+    }
+
+    /**
      * Parse template pesan dengan data peserta (Mode Sandbox / Freeform)
      */
     public static function parseTemplate(string $template, Participant $participant): string
     {
+        $flyerPath = Setting::get('event_flyer', '');
+        $flyerUrl = !empty($flyerPath) ? asset($flyerPath) : route('home');
+
         $replacements = [
             '{nama}' => $participant->name,
             '{instansi}' => $participant->company ?? '-',
             '{jabatan}' => $participant->position ?? '-',
             '{kode_tiket}' => $participant->qr_token,
             '{link_tiket}' => route('participants.card', $participant->qr_token),
+            '{link_flyer}' => $flyerUrl,
         ];
 
         return str_replace(array_keys($replacements), array_values($replacements), $template);
@@ -28,14 +51,24 @@ class TwilioService
     /**
      * Kirim pesan tiket WhatsApp via Twilio untuk satu peserta secara dinamis
      * Mendukung Mode Freeform / Sandbox maupun Mode Content Template (Meta Approved)
+     * Serta mendukung opsi MediaUrl kustom (Flyer / QR Code)
      */
-    public static function sendTicket(Participant $participant, ?string $toPhoneOverride = null, ?string $customTemplate = null): array
-    {
+    public static function sendTicket(
+        Participant $participant, 
+        ?string $toPhoneOverride = null, 
+        ?string $customTemplate = null,
+        ?string $mediaUrlOverride = null
+    ): array {
         $mode = Setting::get('twilio_mode', 'freeform');
         $contentSid = Setting::get('twilio_template_id', '');
         $attachQr = Setting::get('wa_attach_qr', '1') === '1';
         $mediaUrl = null;
-        if ($attachQr) {
+
+        if ($mediaUrlOverride !== null) {
+            $mediaUrl = ($mediaUrlOverride === 'none' || empty($mediaUrlOverride)) 
+                ? null 
+                : self::resolvePublicMediaUrl($mediaUrlOverride);
+        } elseif ($attachQr) {
             $localQr = route('participants.qr-image', $participant->qr_token);
             if (str_contains($localQr, 'localhost') || str_contains($localQr, '127.0.0.1')) {
                 $mediaUrl = "https://api.qrserver.com/v1/create-qr-code/?size=500x500&qzone=4&margin=25&ecc=H&data=" . urlencode($participant->qr_token);
@@ -76,17 +109,22 @@ class TwilioService
     }
 
     /**
-     * Kirim undangan pendaftaran via Twilio (Mendukung Content SID Meta Template 8 Variabel)
+     * Kirim undangan pendaftaran via Twilio (Mendukung Content SID Meta Template 8 Variabel & Lampiran Media Flyer)
      */
     public static function sendInvitation(
         string $toPhone, 
         ?string $name = null, 
         ?string $customMessage = null, 
-        ?string $contentSidOverride = null
+        ?string $contentSidOverride = null,
+        ?string $mediaUrl = null
     ): array {
         $mode = Setting::get('twilio_mode', 'freeform');
         $contentSid = $contentSidOverride ?: Setting::get('twilio_invitation_template_id', '');
         $guestName = $name ?: 'Bapak/Ibu Pimpinan';
+        $resolvedMediaUrl = self::resolvePublicMediaUrl($mediaUrl);
+
+        $flyerPath = Setting::get('event_flyer', '');
+        $flyerUrl = !empty($flyerPath) ? asset($flyerPath) : route('home');
 
         if ($mode === 'template' && !empty($contentSid)) {
             $deadlineEnabled = Setting::get('registration_deadline_enabled', '0') === '1';
@@ -107,25 +145,39 @@ class TwilioService
             return self::send(
                 toPhone: $toPhone,
                 message: null,
+                mediaUrl: $resolvedMediaUrl,
                 contentSid: $contentSid,
                 contentVariables: $variables
             );
         }
 
+        $rawMessage = $customMessage ?: "Yth. Bapak/Ibu {$guestName},\nSilakan mendaftar di " . route('home');
+        $finalMessage = str_replace('{link_flyer}', $flyerUrl, $rawMessage);
+
         return self::send(
             toPhone: $toPhone,
-            message: $customMessage ?: "Yth. Bapak/Ibu {$guestName},\nSilakan mendaftar di " . route('home')
+            message: $finalMessage,
+            mediaUrl: $resolvedMediaUrl
         );
     }
 
     /**
-     * Kirim pesan reminder via Twilio dengan dukungan link RSVP Yes/No atau Content SID Quick Reply
+     * Kirim pesan reminder via Twilio dengan dukungan link RSVP Yes/No atau Content SID Quick Reply & Lampiran Media Flyer
      */
-    public static function sendReminder(Participant $participant, ?string $toPhoneOverride = null, ?string $customTemplate = null, ?string $contentSidOverride = null): array
-    {
+    public static function sendReminder(
+        Participant $participant, 
+        ?string $toPhoneOverride = null, 
+        ?string $customTemplate = null, 
+        ?string $contentSidOverride = null,
+        ?string $mediaUrl = null
+    ): array {
         $mode = Setting::get('twilio_mode', 'freeform');
         $contentSid = $contentSidOverride ?: Setting::get('twilio_reminder_template_id', '');
         $targetPhone = $toPhoneOverride ?: $participant->phone;
+        $resolvedMediaUrl = self::resolvePublicMediaUrl($mediaUrl);
+
+        $flyerPath = Setting::get('event_flyer', '');
+        $flyerUrl = !empty($flyerPath) ? asset($flyerPath) : route('home');
 
         if ($mode === 'template' && !empty($contentSid)) {
             $variables = [
@@ -141,6 +193,7 @@ class TwilioService
             return self::send(
                 toPhone: $targetPhone,
                 message: null,
+                mediaUrl: $resolvedMediaUrl,
                 contentSid: $contentSid,
                 contentVariables: $variables
             );
@@ -156,19 +209,20 @@ class TwilioService
             . "Mohon konfirmasi kesediaan kehadiran Bapak/Ibu melalui tautan berikut:\n"
             . "✅ *Pasti Hadir:* {link_konfirmasi_hadir}\n"
             . "❌ *Berhalangan:* {link_konfirmasi_batal}\n\n"
-            . "Terima kasih atas kerja samanya.\n*Panitia KADIN Indonesia 2026*";
+            . "Terima kasih atas kerja samanya.\n*Panitia Wonderful 2026*";
 
         $template = $customTemplate ?: Setting::get('wa_reminder_template', $defaultReminder);
 
         $replacements = [
             '{nama}' => $participant->name,
-            '{nama_acara}' => Setting::get('event_title', 'Musyawarah & Temu Bisnis KADIN Indonesia 2026'),
-            '{tanggal}' => Setting::get('event_date', '28 Oktober 2026'),
-            '{waktu}' => Setting::get('event_time', '08:30 - 16:30 WIB'),
-            '{venue}' => Setting::get('event_venue_name', 'Grand Ballroom Menara Kadin Indonesia'),
+            '{nama_acara}' => Setting::get('event_title', 'The Executive Roundtable — From AI Ambition to Enterprise Impact'),
+            '{tanggal}' => Setting::get('event_date', '27 Oktober 2026'),
+            '{waktu}' => Setting::get('event_time', '15.30 - 19.00 WIB'),
+            '{venue}' => Setting::get('event_venue_name', 'SCBD Area'),
             '{dresscode}' => Setting::get('event_dresscode', 'Batik Formal / Pakaian Bisnis Rapi'),
             '{kode_tiket}' => $participant->qr_token,
             '{link_tiket}' => route('participants.card', $participant->qr_token),
+            '{link_flyer}' => $flyerUrl,
             '{link_konfirmasi_hadir}' => route('participants.rsvp', ['token' => $participant->qr_token, 'status' => 'yes']),
             '{link_konfirmasi_batal}' => route('participants.rsvp', ['token' => $participant->qr_token, 'status' => 'no']),
         ];
@@ -177,7 +231,8 @@ class TwilioService
 
         return self::send(
             toPhone: $targetPhone,
-            message: $message
+            message: $message,
+            mediaUrl: $resolvedMediaUrl
         );
     }
 
@@ -231,7 +286,7 @@ class TwilioService
             $postData['Body'] = $message ?? '';
         }
 
-        // Jika ada lampiran gambar QR (MediaUrl dikirim langsung sebagai foto/media WhatsApp)
+        // Jika ada lampiran gambar/flyer/QR (MediaUrl dikirim langsung sebagai foto/media WhatsApp)
         if ($mediaUrl) {
             $postData['MediaUrl'] = $mediaUrl;
         }

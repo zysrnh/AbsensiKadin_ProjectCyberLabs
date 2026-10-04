@@ -68,6 +68,9 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::post('/reminder/send-single', [WaSettingController::class, 'sendSingleReminder'])->name('admin.reminder.send-single');
     Route::post('/reminder/send-bulk', [WaSettingController::class, 'sendBulkReminder'])->name('admin.reminder.send-bulk');
 
+    // Upload Flyer WhatsApp AJAX
+    Route::post('/wa/upload-flyer', [WaSettingController::class, 'uploadFlyer'])->name('admin.wa.upload-flyer');
+
     // Pengaturan Acara (Luma Event Landing)
     Route::get('/event-settings', [EventSettingController::class, 'index'])->name('admin.event-settings');
     Route::post('/event-settings', [EventSettingController::class, 'update'])->name('admin.event-settings.update');

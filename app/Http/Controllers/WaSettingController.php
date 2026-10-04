@@ -60,6 +60,43 @@ class WaSettingController extends Controller
     }
 
     /**
+     * Upload Flyer / Gambar Media WhatsApp via AJAX
+     */
+    public function uploadFlyer(Request $request)
+    {
+        $request->validate([
+            'flyer' => 'required|image|mimes:jpeg,png,jpg,webp,gif|max:5120',
+        ]);
+
+        if ($request->hasFile('flyer')) {
+            $file = $request->file('flyer');
+            $filename = 'wa_flyer_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $destPath = public_path('uploads/flyers');
+            if (!file_exists($destPath)) {
+                mkdir($destPath, 0755, true);
+            }
+            $file->move($destPath, $filename);
+            $relative = 'uploads/flyers/' . $filename;
+            
+            // Simpan sebagai flyer acara aktif
+            Setting::set('event_flyer', $relative);
+
+            return response()->json([
+                'success' => true,
+                'url' => asset($relative),
+                'path' => $relative,
+                'filename' => $filename,
+                'message' => 'Flyer berhasil diunggah dan disimpan sebagai media aktif!',
+            ]);
+        }
+
+        return response()->json([
+            'success' => false, 
+            'message' => 'File gambar tidak ditemukan atau tidak valid.'
+        ], 400);
+    }
+
+    /**
      * Kirim blast pesan undangan pendaftaran via Twilio API
      */
     public function sendInvitation(Request $request)
@@ -70,15 +107,27 @@ class WaSettingController extends Controller
             'message' => 'nullable|string',
             'custom_message' => 'nullable|string',
             'content_sid' => 'nullable|string',
+            'attach_flyer' => 'nullable',
+            'media_url' => 'nullable|string',
         ]);
 
         $message = $request->message ?? $request->custom_message;
+
+        $attachFlyer = $request->boolean('attach_flyer') || $request->attach_flyer === '1' || $request->attach_flyer === 1 || $request->attach_flyer === 'true';
+        $mediaUrl = null;
+        if ($request->filled('media_url')) {
+            $mediaUrl = $request->media_url;
+        } elseif ($attachFlyer) {
+            $flyer = Setting::get('event_flyer', '');
+            $mediaUrl = !empty($flyer) ? asset($flyer) : null;
+        }
 
         $result = TwilioService::sendInvitation(
             toPhone: $request->phone,
             name: $request->name,
             customMessage: $message,
-            contentSidOverride: $request->content_sid
+            contentSidOverride: $request->content_sid,
+            mediaUrl: $mediaUrl
         );
 
         return response()->json($result, $result['success'] ? 200 : 400);
@@ -215,6 +264,9 @@ class WaSettingController extends Controller
             'deadline_text' => $deadlineText,
         ];
 
+        $eventFlyer = Setting::get('event_flyer', '');
+        $eventFlyerUrl = !empty($eventFlyer) ? asset($eventFlyer) : '';
+
         $eventSettings = [
             'nama_acara' => Setting::get('event_title', 'The Executive Roundtable — From AI Ambition to Enterprise Impact'),
             'tanggal' => Setting::get('event_date', '27 Oktober 2026'),
@@ -223,12 +275,21 @@ class WaSettingController extends Controller
             'dresscode' => Setting::get('event_dresscode', 'By invitation only. Kindly confirm your attendance with the GWI team'),
             'link_form' => route('participants.invitation'),
             'batas_waktu' => $deadlineEnabled ? $deadlineText : 'Sesuai kuota tersedia',
+            'link_flyer' => $eventFlyerUrl ?: route('home'),
         ];
 
         $participants = Participant::latest()->get();
         $contentSidInvitation = Setting::get('twilio_invitation_template_id', '');
 
-        return view('admin.invitation', compact('invitationTemplate', 'eventSettings', 'participants', 'deadlineSettings', 'contentSidInvitation'));
+        return view('admin.invitation', compact(
+            'invitationTemplate', 
+            'eventSettings', 
+            'participants', 
+            'deadlineSettings', 
+            'contentSidInvitation',
+            'eventFlyer',
+            'eventFlyerUrl'
+        ));
     }
 
     /**
@@ -241,6 +302,8 @@ class WaSettingController extends Controller
             'ids.*' => 'exists:participants,id',
             'custom_message' => 'nullable|string',
             'content_sid' => 'nullable|string',
+            'attach_flyer' => 'nullable',
+            'media_url' => 'nullable|string',
         ]);
 
         $participants = Participant::whereIn('id', $request->ids)->get();
@@ -276,9 +339,20 @@ class WaSettingController extends Controller
         $eventDresscode = Setting::get('event_dresscode', 'By invitation only. Kindly confirm your attendance with the GWI team');
         $linkForm = route('home');
         
+        $flyerPath = Setting::get('event_flyer', '');
+        $flyerUrl = !empty($flyerPath) ? asset($flyerPath) : route('home');
+
         $deadlineEnabled = Setting::get('registration_deadline_enabled', '0') === '1';
         $deadlineText = Setting::get('registration_deadline_text', '27 Oktober 2026, 23:59 WIB');
         $batasWaktu = $deadlineEnabled ? $deadlineText : 'Sesuai kuota tersedia';
+
+        $attachFlyer = $request->boolean('attach_flyer') || $request->attach_flyer === '1' || $request->attach_flyer === 1 || $request->attach_flyer === 'true';
+        $mediaUrl = null;
+        if ($request->filled('media_url')) {
+            $mediaUrl = $request->media_url;
+        } elseif ($attachFlyer) {
+            $mediaUrl = !empty($flyerPath) ? asset($flyerPath) : null;
+        }
 
         $sentCount = 0;
         $failCount = 0;
@@ -294,6 +368,7 @@ class WaSettingController extends Controller
                 '{link_form}',
                 '{batas_waktu}',
                 '{kadaluarsa}',
+                '{link_flyer}',
             ], [
                 $participant->name,
                 $eventTitle,
@@ -304,13 +379,15 @@ class WaSettingController extends Controller
                 $linkForm,
                 $batasWaktu,
                 $batasWaktu,
+                $flyerUrl,
             ], $template);
 
             $result = TwilioService::sendInvitation(
                 toPhone: $participant->phone,
                 name: $participant->name,
                 customMessage: $msg,
-                contentSidOverride: $request->content_sid
+                contentSidOverride: $request->content_sid,
+                mediaUrl: $mediaUrl
             );
 
             if ($result['success']) {
@@ -379,7 +456,10 @@ class WaSettingController extends Controller
             'qr_token' => 'CL26-EXMPL01',
         ]);
 
-        return view('admin.tickets', compact('template', 'participants', 'sample'));
+        $eventFlyer = Setting::get('event_flyer', '');
+        $eventFlyerUrl = !empty($eventFlyer) ? asset($eventFlyer) : '';
+
+        return view('admin.tickets', compact('template', 'participants', 'sample', 'eventFlyer', 'eventFlyerUrl'));
     }
 
     /**
@@ -391,6 +471,8 @@ class WaSettingController extends Controller
             'phone' => 'required|string',
             'participant_id' => 'nullable|exists:participants,id',
             'custom_message' => 'nullable|string',
+            'media_type' => 'nullable|string', // 'qr', 'flyer', 'none'
+            'media_url' => 'nullable|string',
         ]);
 
         if ($request->filled('participant_id')) {
@@ -405,10 +487,21 @@ class WaSettingController extends Controller
             ]);
         }
 
+        $mediaUrlOverride = null;
+        if ($request->input('media_type') === 'flyer' || $request->boolean('attach_flyer')) {
+            $flyer = Setting::get('event_flyer', '');
+            $mediaUrlOverride = $request->filled('media_url') ? $request->media_url : (!empty($flyer) ? asset($flyer) : null);
+        } elseif ($request->input('media_type') === 'none') {
+            $mediaUrlOverride = 'none';
+        } elseif ($request->filled('media_url')) {
+            $mediaUrlOverride = $request->media_url;
+        }
+
         $result = TwilioService::sendTicket(
             participant: $participant,
             toPhoneOverride: $request->phone,
-            customTemplate: $request->custom_message
+            customTemplate: $request->custom_message,
+            mediaUrlOverride: $mediaUrlOverride
         );
 
         return response()->json($result, $result['success'] ? 200 : 400);
@@ -423,6 +516,8 @@ class WaSettingController extends Controller
             'ids' => 'required|array',
             'ids.*' => 'exists:participants,id',
             'custom_message' => 'nullable|string',
+            'media_type' => 'nullable|string',
+            'media_url' => 'nullable|string',
         ]);
 
         $participants = Participant::whereIn('id', $request->ids)->get();
@@ -434,13 +529,24 @@ class WaSettingController extends Controller
             ], 400);
         }
 
+        $mediaUrlOverride = null;
+        if ($request->input('media_type') === 'flyer' || $request->boolean('attach_flyer')) {
+            $flyer = Setting::get('event_flyer', '');
+            $mediaUrlOverride = $request->filled('media_url') ? $request->media_url : (!empty($flyer) ? asset($flyer) : null);
+        } elseif ($request->input('media_type') === 'none') {
+            $mediaUrlOverride = 'none';
+        } elseif ($request->filled('media_url')) {
+            $mediaUrlOverride = $request->media_url;
+        }
+
         $sentCount = 0;
         $failCount = 0;
 
         foreach ($participants as $participant) {
             $result = TwilioService::sendTicket(
                 participant: $participant,
-                customTemplate: $request->custom_message
+                customTemplate: $request->custom_message,
+                mediaUrlOverride: $mediaUrlOverride
             );
 
             if ($result['success']) {
@@ -476,7 +582,6 @@ class WaSettingController extends Controller
             . "Terima kasih atas kerja samanya.\n*Panitia Wonderful 2026*";
 
         $reminderTemplate = Setting::get('wa_reminder_template', $defaultReminderTemplate);
-        // Replace any lingering KADIN / C LEVEL text if template still has old default
         $reminderTemplate = str_replace([
             'Panitia KADIN Indonesia 2026',
             'Panitia KADIN 2026',
@@ -506,12 +611,16 @@ class WaSettingController extends Controller
         $contentSidReminder = Setting::get('twilio_reminder_template_id', '');
         $participants = Participant::latest()->get();
 
+        $eventFlyer = Setting::get('event_flyer', '');
+        $eventFlyerUrl = !empty($eventFlyer) ? asset($eventFlyer) : '';
+
         $eventSettings = [
             'nama_acara' => Setting::get('event_title', 'The Executive Roundtable — From AI Ambition to Enterprise Impact'),
             'tanggal' => Setting::get('event_date', '27 Oktober 2026'),
             'waktu' => Setting::get('event_time', '15.30 - 19.00 WIB'),
             'venue' => Setting::get('event_venue_name', 'SCBD Area'),
             'dresscode' => Setting::get('event_dresscode', 'By invitation only. Kindly confirm your attendance with the GWI team'),
+            'link_flyer' => $eventFlyerUrl ?: route('home'),
         ];
 
         $sample = $participants->first() ?? new Participant([
@@ -527,7 +636,9 @@ class WaSettingController extends Controller
             'contentSidReminder',
             'participants',
             'eventSettings',
-            'sample'
+            'sample',
+            'eventFlyer',
+            'eventFlyerUrl'
         ));
     }
 
@@ -560,6 +671,8 @@ class WaSettingController extends Controller
             'participant_id' => 'nullable|exists:participants,id',
             'custom_message' => 'nullable|string',
             'content_sid' => 'nullable|string',
+            'attach_flyer' => 'nullable',
+            'media_url' => 'nullable|string',
         ]);
 
         if ($request->filled('participant_id')) {
@@ -574,11 +687,21 @@ class WaSettingController extends Controller
             ]);
         }
 
+        $attachFlyer = $request->boolean('attach_flyer') || $request->attach_flyer === '1' || $request->attach_flyer === 1 || $request->attach_flyer === 'true';
+        $mediaUrl = null;
+        if ($request->filled('media_url')) {
+            $mediaUrl = $request->media_url;
+        } elseif ($attachFlyer) {
+            $flyer = Setting::get('event_flyer', '');
+            $mediaUrl = !empty($flyer) ? asset($flyer) : null;
+        }
+
         $result = TwilioService::sendReminder(
             participant: $participant,
             toPhoneOverride: $request->phone,
             customTemplate: $request->custom_message,
-            contentSidOverride: $request->content_sid
+            contentSidOverride: $request->content_sid,
+            mediaUrl: $mediaUrl
         );
 
         return response()->json($result, $result['success'] ? 200 : 400);
@@ -594,6 +717,8 @@ class WaSettingController extends Controller
             'ids.*' => 'exists:participants,id',
             'custom_message' => 'nullable|string',
             'content_sid' => 'nullable|string',
+            'attach_flyer' => 'nullable',
+            'media_url' => 'nullable|string',
         ]);
 
         $participants = Participant::whereIn('id', $request->ids)->get();
@@ -605,6 +730,15 @@ class WaSettingController extends Controller
             ], 400);
         }
 
+        $attachFlyer = $request->boolean('attach_flyer') || $request->attach_flyer === '1' || $request->attach_flyer === 1 || $request->attach_flyer === 'true';
+        $mediaUrl = null;
+        if ($request->filled('media_url')) {
+            $mediaUrl = $request->media_url;
+        } elseif ($attachFlyer) {
+            $flyer = Setting::get('event_flyer', '');
+            $mediaUrl = !empty($flyer) ? asset($flyer) : null;
+        }
+
         $sentCount = 0;
         $failCount = 0;
 
@@ -612,7 +746,8 @@ class WaSettingController extends Controller
             $result = TwilioService::sendReminder(
                 participant: $participant,
                 customTemplate: $request->custom_message,
-                contentSidOverride: $request->content_sid
+                contentSidOverride: $request->content_sid,
+                mediaUrl: $mediaUrl
             );
 
             if ($result['success']) {
