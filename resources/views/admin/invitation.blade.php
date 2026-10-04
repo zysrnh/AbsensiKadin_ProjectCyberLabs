@@ -374,26 +374,76 @@
 
             </div>
 
-            <!-- Card: Database Tamu Undangan & Blast Massal -->
+            <!-- Card: Database Calon Tamu Undangan & Blast Massal -->
             <div class="card-3d p-5 space-y-4">
-                <div class="border-b border-slate-100 pb-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <div class="border-b border-slate-100 pb-3 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                     <div>
                         <div class="flex items-center gap-2">
-                            <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Database Tamu Undangan</h2>
-                            <span class="px-2.5 py-0.5 bg-slate-100 text-slate-700 text-[10px] font-bold rounded-full border border-slate-200 font-mono">
-                                {{ $participants->count() }} Tamu
+                            <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Database Calon Tamu Undangan</h2>
+                            <span id="tabCountBadge" class="px-2.5 py-0.5 bg-blue-50 text-blue-700 text-[10px] font-bold rounded-full border border-blue-200 font-mono">
+                                {{ $invitationGuests->count() }} Calon Tamu
                             </span>
                         </div>
-                        <p class="text-[11px] text-slate-400">Pilih tamu untuk blast Twilio massal atau muat ke generator.</p>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Input atau simpan daftar kontak yang ingin diundang, lalu pilih untuk blast Twilio massal.</p>
                     </div>
 
-                    <!-- Input Filter Cari Cepat -->
-                    <div class="w-full sm:w-64">
+                    <!-- Tombol Aksi Tambah & Import Kontak -->
+                    <div class="flex items-center flex-wrap gap-2">
+                        <button 
+                            type="button" 
+                            onclick="openAddGuestModal()" 
+                            class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl border border-blue-600 transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                        >
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                            </svg>
+                            <span>+ Tambah Tamu</span>
+                        </button>
+
+                        <button 
+                            type="button" 
+                            onclick="openImportGuestsModal()" 
+                            class="px-3 py-1.5 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl border border-slate-200 transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                        >
+                            <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                            </svg>
+                            <span>Paste Banyak Nomor</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tab Navigasi & Filter Pencarian -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <!-- Tab Selector -->
+                    <div class="flex items-center gap-1 p-1 bg-slate-100 rounded-xl border border-slate-200/80 text-xs w-fit">
+                        <button 
+                            type="button" 
+                            id="tabBtnGuests" 
+                            onclick="switchGuestTab('guest')" 
+                            class="px-3 py-1.5 font-bold rounded-lg bg-white text-slate-900 shadow-2xs transition-all cursor-pointer flex items-center gap-1.5"
+                        >
+                            <span>Calon Tamu (Target Blast)</span>
+                            <span class="px-1.5 py-0.2 bg-blue-100 text-blue-700 rounded-full text-[10px] font-mono">{{ $invitationGuests->count() }}</span>
+                        </button>
+                        <button 
+                            type="button" 
+                            id="tabBtnParticipants" 
+                            onclick="switchGuestTab('participant')" 
+                            class="px-3 py-1.5 font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all cursor-pointer flex items-center gap-1.5"
+                        >
+                            <span>Peserta yang Sudah Daftar</span>
+                            <span class="px-1.5 py-0.2 bg-slate-200 text-slate-600 rounded-full text-[10px] font-mono">{{ $participants->count() }}</span>
+                        </button>
+                    </div>
+
+                    <!-- Search Input -->
+                    <div class="w-full sm:w-60">
                         <input 
                             type="text" 
                             id="searchGuestInput" 
-                            placeholder="Cari nama atau instansi..." 
-                            class="input-3d w-full px-3.5 py-2 bg-slate-50 border border-slate-200 text-xs rounded-xl focus:outline-none focus:border-blue-600 focus:bg-white"
+                            placeholder="Cari nama atau nomor..." 
+                            class="input-3d w-full px-3.5 py-1.5 bg-slate-50 border border-slate-200 text-xs rounded-xl focus:outline-none focus:border-blue-600 focus:bg-white"
                             oninput="filterGuestTable()"
                         >
                     </div>
@@ -409,11 +459,11 @@
                                 onchange="toggleSelectAll(this)" 
                                 class="rounded-sm border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer"
                             >
-                            <span>Pilih Semua Tamu</span>
+                            <span>Pilih Semua</span>
                         </label>
                         <span class="text-slate-300">|</span>
                         <span id="selectedCountBadge" class="text-xs font-medium text-slate-500">
-                            0 tamu dipilih
+                            0 kontak dipilih
                         </span>
                     </div>
 
@@ -432,8 +482,8 @@
                     </button>
                 </div>
 
-                <!-- Tabel Daftar Tamu Terdaftar -->
-                <div class="overflow-x-auto border border-slate-200/80 rounded-xl max-h-[360px] overflow-y-auto">
+                <!-- TAB 1: Daftar Calon Tamu Undangan -->
+                <div id="containerGuests" class="overflow-x-auto border border-slate-200/80 rounded-xl max-h-[380px] overflow-y-auto">
                     <table class="w-full text-left text-xs text-slate-700 divide-y divide-slate-200">
                         <thead class="bg-slate-50 text-[11px] font-bold text-slate-700 uppercase tracking-wider sticky top-0 z-10 shadow-2xs">
                             <tr>
@@ -441,13 +491,100 @@
                                     &bull;
                                 </th>
                                 <th scope="col" class="px-3.5 py-2.5">Nama & Instansi</th>
-                                <th scope="col" class="px-3 py-2.5">WhatsApp</th>
-                                <th scope="col" class="px-3 py-2.5 text-right">Aksi Cepat</th>
+                                <th scope="col" class="px-3.5 py-2.5">WhatsApp</th>
+                                <th scope="col" class="px-3.5 py-2.5 text-center">Status</th>
+                                <th scope="col" class="px-3.5 py-2.5 text-right">Aksi Cepat</th>
                             </tr>
                         </thead>
                         <tbody id="guestTableBody" class="divide-y divide-slate-100 bg-white">
+                            @forelse($invitationGuests as $g)
+                            <tr class="hover:bg-slate-50 transition-colors guest-row-item" data-type="guest" data-name="{{ strtolower($g->name) }}" data-phone="{{ $g->phone }}" data-company="{{ strtolower($g->company ?? '') }}">
+                                <td class="px-3 py-2.5 text-center">
+                                    <input 
+                                        type="checkbox" 
+                                        value="{{ $g->id }}" 
+                                        class="guest-checkbox rounded-sm border-slate-300 text-slate-900 focus:ring-slate-900 cursor-pointer"
+                                        onchange="onGuestCheckboxChange()"
+                                    >
+                                </td>
+                                <td class="px-3.5 py-2.5">
+                                    <span class="font-bold text-slate-900 block leading-tight">{{ $g->name }}</span>
+                                    <span class="text-[11px] text-slate-500">{{ $g->company ?: '-' }} @if(!empty($g->position) && $g->position !== '-') &bull; {{ $g->position }} @endif</span>
+                                </td>
+                                <td class="px-3.5 py-2.5 font-mono text-slate-800 text-[11px]">
+                                    {{ $g->phone }}
+                                </td>
+                                <td class="px-3.5 py-2.5 text-center whitespace-nowrap">
+                                    @if($g->status === 'sent')
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                            Terkirim ({{ $g->sent_at ? $g->sent_at->format('d/m H:i') : '' }})
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-600 border border-slate-200">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                                            Belum Dikirim
+                                        </span>
+                                    @endif
+                                </td>
+                                <td class="px-3.5 py-2.5 text-right whitespace-nowrap space-x-1">
+                                    <!-- Pilih ke Generator Atas -->
+                                    <button 
+                                        type="button" 
+                                        onclick="pickGuestToEditor('{{ addslashes($g->name) }}', '{{ $g->phone }}')" 
+                                        title="Muat data ke form editor atas"
+                                        class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-[10px] rounded-lg border border-slate-200 transition cursor-pointer"
+                                    >
+                                        Pilih
+                                    </button>
+                                    <!-- WA Web Langsung -->
+                                    <button 
+                                        type="button" 
+                                        onclick="directWaWeb('{{ addslashes($g->name) }}', '{{ $g->phone }}')" 
+                                        title="Langsung chat WhatsApp Web"
+                                        class="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] rounded-lg transition cursor-pointer shadow-2xs"
+                                    >
+                                        WA Web
+                                    </button>
+                                    <!-- Hapus Calon Tamu -->
+                                    <button 
+                                        type="button" 
+                                        onclick="deleteGuest({{ $g->id }}, '{{ addslashes($g->name) }}')" 
+                                        title="Hapus calon tamu"
+                                        class="px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-[10px] rounded-lg border border-rose-200 transition cursor-pointer"
+                                    >
+                                        Hapus
+                                    </button>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="5" class="px-4 py-8 text-center text-slate-400 text-xs">
+                                    Belum ada calon tamu undangan yang ditambahkan. Klik tombol <strong>"+ Tambah Tamu"</strong> atau <strong>"Paste Banyak Nomor"</strong> di atas.
+                                </td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- TAB 2: Daftar Peserta yang Sudah Mendaftar -->
+                <div id="containerParticipants" class="overflow-x-auto border border-slate-200/80 rounded-xl max-h-[380px] overflow-y-auto hidden">
+                    <table class="w-full text-left text-xs text-slate-700 divide-y divide-slate-200">
+                        <thead class="bg-slate-50 text-[11px] font-bold text-slate-700 uppercase tracking-wider sticky top-0 z-10 shadow-2xs">
+                            <tr>
+                                <th scope="col" class="w-10 px-3 py-2.5 text-center">
+                                    &bull;
+                                </th>
+                                <th scope="col" class="px-3.5 py-2.5">Nama & Instansi</th>
+                                <th scope="col" class="px-3.5 py-2.5">WhatsApp</th>
+                                <th scope="col" class="px-3.5 py-2.5 text-center">Status Presensi</th>
+                                <th scope="col" class="px-3.5 py-2.5 text-right">Aksi Cepat</th>
+                            </tr>
+                        </thead>
+                        <tbody id="participantTableBody" class="divide-y divide-slate-100 bg-white">
                             @forelse($participants as $p)
-                            <tr class="hover:bg-slate-50 transition-colors guest-row" data-name="{{ strtolower($p->name) }}" data-company="{{ strtolower($p->company) }}">
+                            <tr class="hover:bg-slate-50 transition-colors guest-row-item" data-type="participant" data-name="{{ strtolower($p->name) }}" data-phone="{{ $p->phone }}" data-company="{{ strtolower($p->company) }}">
                                 <td class="px-3 py-2.5 text-center">
                                     <input 
                                         type="checkbox" 
@@ -460,11 +597,15 @@
                                     <span class="font-bold text-slate-900 block leading-tight">{{ $p->name }}</span>
                                     <span class="text-[11px] text-slate-500">{{ $p->company }} &bull; {{ $p->position }}</span>
                                 </td>
-                                <td class="px-3 py-2.5 font-mono text-slate-800 text-[11px]">
+                                <td class="px-3.5 py-2.5 font-mono text-slate-800 text-[11px]">
                                     {{ $p->phone }}
                                 </td>
-                                <td class="px-3 py-2.5 text-right whitespace-nowrap space-x-1">
-                                    <!-- Pilih ke Generator Atas -->
+                                <td class="px-3.5 py-2.5 text-center whitespace-nowrap">
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                                        Terdaftar di Web
+                                    </span>
+                                </td>
+                                <td class="px-3.5 py-2.5 text-right whitespace-nowrap space-x-1">
                                     <button 
                                         type="button" 
                                         onclick="pickGuestToEditor('{{ addslashes($p->name) }}', '{{ $p->phone }}')" 
@@ -473,7 +614,6 @@
                                     >
                                         Pilih
                                     </button>
-                                    <!-- WA Web Langsung -->
                                     <button 
                                         type="button" 
                                         onclick="directWaWeb('{{ addslashes($p->name) }}', '{{ $p->phone }}')" 
@@ -486,8 +626,8 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="4" class="px-4 py-8 text-center text-slate-400 text-xs">
-                                    Belum ada tamu atau peserta yang terdaftar di database.
+                                <td colspan="5" class="px-4 py-8 text-center text-slate-400 text-xs">
+                                    Belum ada peserta yang mendaftar di sistem.
                                 </td>
                             </tr>
                             @endforelse
@@ -562,6 +702,129 @@
 
     </div>
 
+</div>
+
+<!-- Modal 1: Tambah Calon Tamu Satuan -->
+<div id="modalAddGuest" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="card-3d w-full max-w-md overflow-hidden p-0 border border-slate-200 shadow-2xl bg-white rounded-2xl">
+        <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+            <div>
+                <h3 class="text-xs font-black text-slate-900 uppercase tracking-wider">Tambah Calon Tamu Undangan</h3>
+                <p class="text-[11px] text-slate-500 mt-0.5">Simpan kontak calon tamu untuk dikirimi undangan pendaftaran.</p>
+            </div>
+            <button type="button" onclick="closeAddGuestModal()" class="w-8 h-8 rounded-xl bg-white hover:bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center font-bold text-base transition-colors cursor-pointer border border-slate-200">&times;</button>
+        </div>
+
+        <form id="formAddGuest" onsubmit="submitAddGuest(event)" class="p-5 space-y-3.5">
+            <div>
+                <label for="newGuestName" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                    Nama Lengkap <span class="text-rose-500">*</span>
+                </label>
+                <input 
+                    type="text" 
+                    id="newGuestName" 
+                    required 
+                    placeholder="Contoh: Bpk. Ir. Hendro Wibowo" 
+                    class="input-3d w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white font-medium"
+                >
+            </div>
+
+            <div>
+                <label for="newGuestPhone" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                    Nomor WhatsApp <span class="text-rose-500">*</span>
+                </label>
+                <input 
+                    type="tel" 
+                    id="newGuestPhone" 
+                    required 
+                    placeholder="Contoh: 081234567890 atau 628123456789" 
+                    class="input-3d w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white font-mono font-medium"
+                >
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label for="newGuestCompany" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                        Instansi / Perusahaan
+                    </label>
+                    <input 
+                        type="text" 
+                        id="newGuestCompany" 
+                        placeholder="Contoh: PT CyberLabs" 
+                        class="input-3d w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white font-medium"
+                    >
+                </div>
+
+                <div>
+                    <label for="newGuestPosition" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                        Jabatan
+                    </label>
+                    <input 
+                        type="text" 
+                        id="newGuestPosition" 
+                        placeholder="Contoh: Direktur" 
+                        class="input-3d w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white font-medium"
+                    >
+                </div>
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
+                <button type="button" onclick="closeAddGuestModal()" class="px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl border border-slate-200 cursor-pointer">
+                    Batal
+                </button>
+                <button type="submit" id="btnSubmitAddGuest" class="btn-3d-blue px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl border border-blue-600 cursor-pointer">
+                    Simpan Calon Tamu
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal 2: Paste Cepat Banyak Kontak Sekaligus -->
+<div id="modalImportGuests" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="card-3d w-full max-w-lg overflow-hidden p-0 border border-slate-200 shadow-2xl bg-white rounded-2xl">
+        <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+            <div>
+                <h3 class="text-xs font-black text-slate-900 uppercase tracking-wider">Paste Banyak Kontak Sekaligus</h3>
+                <p class="text-[11px] text-slate-500 mt-0.5">Copas nomor WhatsApp atau daftar nama dari Excel / Chat.</p>
+            </div>
+            <button type="button" onclick="closeImportGuestsModal()" class="w-8 h-8 rounded-xl bg-white hover:bg-slate-100 text-slate-500 hover:text-slate-800 flex items-center justify-center font-bold text-base transition-colors cursor-pointer border border-slate-200">&times;</button>
+        </div>
+
+        <form id="formImportGuests" onsubmit="submitImportGuests(event)" class="p-5 space-y-3.5">
+            <div class="p-3 bg-blue-50/70 border border-blue-100 rounded-xl text-left space-y-1">
+                <span class="text-[11px] font-bold text-blue-900 block">Format yang didukung (satu baris per kontak):</span>
+                <p class="text-[11px] text-blue-800 font-mono leading-tight">
+                    08123456789, Bpk. Hendro, PT CyberLabs<br>
+                    08987654321, Ibu Maya<br>
+                    085711223344
+                </p>
+                <span class="text-[10px] text-blue-700 block italic pt-0.5">*Tanda pemisah bisa koma, tab (dari copy Excel), atau titik-koma.</span>
+            </div>
+
+            <div>
+                <label for="rawContactsInput" class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
+                    Daftar Nomor / Kontak <span class="text-rose-500">*</span>
+                </label>
+                <textarea 
+                    id="rawContactsInput" 
+                    rows="7" 
+                    required 
+                    placeholder="Tempel / Paste daftar nomor di sini..." 
+                    class="input-3d w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-blue-600 focus:bg-white font-mono"
+                ></textarea>
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
+                <button type="button" onclick="closeImportGuestsModal()" class="px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl border border-slate-200 cursor-pointer">
+                    Batal
+                </button>
+                <button type="submit" id="btnSubmitImportGuests" class="btn-3d-blue px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl border border-blue-600 cursor-pointer">
+                    Simpan Semua Kontak
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
 
 <!-- Modal Cropper Gambar Flyer -->
@@ -1091,9 +1354,45 @@
         });
     }
 
+    let currentActiveTab = 'guest';
+
+    function switchGuestTab(tab) {
+        currentActiveTab = tab;
+        const btnGuests = document.getElementById('tabBtnGuests');
+        const btnParticipants = document.getElementById('tabBtnParticipants');
+        const containerGuests = document.getElementById('containerGuests');
+        const containerParticipants = document.getElementById('containerParticipants');
+        const badge = document.getElementById('tabCountBadge');
+
+        // Uncheck all checkboxes on switch
+        document.querySelectorAll('.guest-checkbox').forEach(cb => cb.checked = false);
+        const selectAll = document.getElementById('selectAllCheckbox');
+        if (selectAll) selectAll.checked = false;
+
+        if (tab === 'guest') {
+            btnGuests.className = "px-3 py-1.5 font-bold rounded-lg bg-white text-slate-900 shadow-2xs transition-all cursor-pointer flex items-center gap-1.5";
+            btnParticipants.className = "px-3 py-1.5 font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all cursor-pointer flex items-center gap-1.5";
+            containerGuests.classList.remove('hidden');
+            containerParticipants.classList.add('hidden');
+            badge.textContent = "{{ $invitationGuests->count() }} Calon Tamu";
+        } else {
+            btnParticipants.className = "px-3 py-1.5 font-bold rounded-lg bg-white text-slate-900 shadow-2xs transition-all cursor-pointer flex items-center gap-1.5";
+            btnGuests.className = "px-3 py-1.5 font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all cursor-pointer flex items-center gap-1.5";
+            containerParticipants.classList.remove('hidden');
+            containerGuests.classList.add('hidden');
+            badge.textContent = "{{ $participants->count() }} Peserta Terdaftar";
+        }
+
+        filterGuestTable();
+    }
+
     // CHECKBOX & BULK ACTIONS
     function toggleSelectAll(master) {
-        const checkboxes = document.querySelectorAll('.guest-checkbox');
+        const activeContainer = currentActiveTab === 'guest' 
+            ? document.getElementById('containerGuests') 
+            : document.getElementById('containerParticipants');
+        
+        const checkboxes = activeContainer.querySelectorAll('.guest-checkbox');
         checkboxes.forEach(cb => {
             const row = cb.closest('tr');
             if (row && row.style.display !== 'none') {
@@ -1108,11 +1407,15 @@
     }
 
     function updateBulkUI() {
-        const selected = document.querySelectorAll('.guest-checkbox:checked');
+        const activeContainer = currentActiveTab === 'guest' 
+            ? document.getElementById('containerGuests') 
+            : document.getElementById('containerParticipants');
+
+        const selected = activeContainer.querySelectorAll('.guest-checkbox:checked');
         const count = selected.length;
-        const total = document.querySelectorAll('.guest-checkbox').length;
+        const total = activeContainer.querySelectorAll('.guest-checkbox').length;
         
-        document.getElementById('selectedCountBadge').textContent = `${count} tamu dipilih`;
+        document.getElementById('selectedCountBadge').textContent = `${count} kontak dipilih`;
         document.getElementById('bulkCountNum').textContent = count;
         
         const btnBulk = document.getElementById('btnBulkTwilio');
@@ -1127,11 +1430,16 @@
 
     function filterGuestTable() {
         const query = document.getElementById('searchGuestInput').value.toLowerCase().trim();
-        const rows = document.querySelectorAll('.guest-row');
+        const activeContainer = currentActiveTab === 'guest' 
+            ? document.getElementById('containerGuests') 
+            : document.getElementById('containerParticipants');
+
+        const rows = activeContainer.querySelectorAll('.guest-row-item');
         rows.forEach(row => {
             const name = row.getAttribute('data-name') || '';
+            const phone = row.getAttribute('data-phone') || '';
             const company = row.getAttribute('data-company') || '';
-            if (name.includes(query) || company.includes(query)) {
+            if (name.includes(query) || phone.includes(query) || company.includes(query)) {
                 row.style.display = '';
             } else {
                 row.style.display = 'none';
@@ -1167,17 +1475,193 @@
         window.open(`https://wa.me/${cleanPhone}?text=${encoded}`, '_blank');
     }
 
+    // Modal Tambah Calon Tamu
+    function openAddGuestModal() {
+        document.getElementById('modalAddGuest').classList.remove('hidden');
+        document.getElementById('newGuestName').focus();
+    }
+
+    function closeAddGuestModal() {
+        document.getElementById('modalAddGuest').classList.add('hidden');
+        document.getElementById('formAddGuest').reset();
+    }
+
+    function submitAddGuest(e) {
+        e.preventDefault();
+        const btn = document.getElementById('btnSubmitAddGuest');
+        const origText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = `<svg class="animate-spin w-3 h-3 text-white inline mr-1" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg> Menyimpan...`;
+
+        fetch("{{ route('admin.invitation.guests.store') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                name: document.getElementById('newGuestName').value.trim(),
+                phone: document.getElementById('newGuestPhone').value.trim(),
+                company: document.getElementById('newGuestCompany').value.trim(),
+                position: document.getElementById('newGuestPosition').value.trim(),
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            btn.disabled = false;
+            btn.innerHTML = origText;
+            if (data.success) {
+                closeAddGuestModal();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil Disimpan!',
+                    text: data.message,
+                    timer: 1800,
+                    showConfirmButton: false
+                }).then(() => {
+                    location.reload();
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: data.message || 'Terjadi kesalahan saat menyimpan.',
+                    confirmButtonColor: '#0f172a'
+                });
+            }
+        })
+        .catch(() => {
+            btn.disabled = false;
+            btn.innerHTML = origText;
+            Swal.fire({
+                icon: 'error',
+                title: 'Error Koneksi',
+                text: 'Gagal menghubungi server.',
+                confirmButtonColor: '#0f172a'
+            });
+        });
+    }
+
+    // Modal Import / Paste Banyak Kontak
+    function openImportGuestsModal() {
+        document.getElementById('modalImportGuests').classList.remove('hidden');
+        document.getElementById('rawContactsInput').focus();
+    }
+
+    function closeImportGuestsModal() {
+        document.getElementById('modalImportGuests').classList.add('hidden');
+        document.getElementById('formImportGuests').reset();
+    }
+
+    function submitImportGuests(e) {
+        e.preventDefault();
+        const btn = document.getElementById('btnSubmitImportGuests');
+        const origText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = `<svg class="animate-spin w-3 h-3 text-white inline mr-1" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg> Mengimpor...`;
+
+        fetch("{{ route('admin.invitation.guests.import') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                raw_contacts: document.getElementById('rawContactsInput').value.trim()
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            btn.disabled = false;
+            btn.innerHTML = origText;
+            if (data.success) {
+                closeImportGuestsModal();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil Diimpor!',
+                    text: data.message,
+                    timer: 2000,
+                    showConfirmButton: false
+                }).then(() => {
+                    location.reload();
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: data.message || 'Tidak ada nomor yang berhasil diimpor.',
+                    confirmButtonColor: '#0f172a'
+                });
+            }
+        })
+        .catch(() => {
+            btn.disabled = false;
+            btn.innerHTML = origText;
+            Swal.fire({
+                icon: 'error',
+                title: 'Error Koneksi',
+                text: 'Gagal menghubungi server.',
+                confirmButtonColor: '#0f172a'
+            });
+        });
+    }
+
+    // Hapus Calon Tamu
+    function deleteGuest(id, name) {
+        Swal.fire({
+            title: `Hapus Tamu "${name}"?`,
+            text: 'Data calon tamu ini akan dihapus dari daftar undangan.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#e11d48',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Ya, Hapus',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`{{ url('/admin/invitation/guests') }}/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Calon tamu berhasil dihapus!',
+                            showConfirmButton: false,
+                            timer: 1800
+                        }).then(() => {
+                            location.reload();
+                        });
+                    }
+                });
+            }
+        });
+    }
+
     // Kirim Bulk Twilio
     function sendBulkTwilio() {
-        const selected = document.querySelectorAll('.guest-checkbox:checked');
+        const activeContainer = currentActiveTab === 'guest' 
+            ? document.getElementById('containerGuests') 
+            : document.getElementById('containerParticipants');
+
+        const selected = activeContainer.querySelectorAll('.guest-checkbox:checked');
         const ids = Array.from(selected).map(cb => cb.value);
         const attachFlyer = document.getElementById('attachFlyerToggle').checked;
 
         if (ids.length === 0) return;
 
         Swal.fire({
-            title: `Blast Twilio ke ${ids.length} Tamu?`,
-            text: `Sistem akan mengirimkan pesan undangan resmi via WhatsApp Twilio ke ${ids.length} tamu terpilih.` + (attachFlyer ? ' (Menyertakan lampiran gambar flyer)' : '') + ' Lanjutkan?',
+            title: `Blast Twilio ke ${ids.length} Kontak?`,
+            text: `Sistem akan mengirimkan pesan undangan resmi via WhatsApp Twilio ke ${ids.length} kontak terpilih.` + (attachFlyer ? ' (Menyertakan lampiran flyer acara)' : '') + ' Lanjutkan?',
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#1d4ed8',
@@ -1204,6 +1688,7 @@
                     },
                     body: JSON.stringify({
                         ids: ids,
+                        target_type: currentActiveTab,
                         custom_message: textArea.value.trim(),
                         content_sid: document.getElementById('contentSidInput') ? document.getElementById('contentSidInput').value.trim() : '',
                         attach_flyer: attachFlyer ? 1 : 0,
@@ -1218,6 +1703,8 @@
                             title: 'Blast Selesai!',
                             text: data.message,
                             confirmButtonColor: '#0f172a'
+                        }).then(() => {
+                            location.reload();
                         });
                     } else {
                         Swal.fire({

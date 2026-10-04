@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\InvitationGuest;
 use App\Models\Participant;
 use App\Models\Setting;
 use App\Services\TwilioService;
@@ -279,17 +280,137 @@ class WaSettingController extends Controller
         ];
 
         $participants = Participant::latest()->get();
+        $invitationGuests = InvitationGuest::latest()->get();
         $contentSidInvitation = Setting::get('twilio_invitation_template_id', '');
 
         return view('admin.invitation', compact(
             'invitationTemplate', 
             'eventSettings', 
             'participants', 
+            'invitationGuests',
             'deadlineSettings', 
             'contentSidInvitation',
             'eventFlyer',
             'eventFlyerUrl'
         ));
+    }
+
+    /**
+     * Tambah satu calon tamu undangan baru
+     */
+    public function storeInvitationGuest(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'phone' => 'required|string|max:35',
+            'company' => 'nullable|string|max:255',
+            'position' => 'nullable|string|max:255',
+        ]);
+
+        $guest = InvitationGuest::create([
+            'name' => $validated['name'],
+            'phone' => $validated['phone'],
+            'company' => $validated['company'] ?: '-',
+            'position' => $validated['position'] ?: '-',
+            'status' => 'pending',
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Calon tamu berhasil ditambahkan.',
+            'guest' => $guest,
+        ]);
+    }
+
+    /**
+     * Import / Paste massal banyak kontak calon tamu undangan
+     */
+    public function importInvitationGuests(Request $request)
+    {
+        $request->validate([
+            'raw_contacts' => 'required|string',
+        ]);
+
+        $lines = preg_split('/\r\n|\r|\n/', $request->raw_contacts);
+        $imported = 0;
+
+        foreach ($lines as $line) {
+            $line = trim($line);
+            if (empty($line)) continue;
+
+            // Split by tab, comma, semicolon, or pipe
+            $parts = preg_split('/[\t,;|]/', $line);
+            $parts = array_map('trim', $parts);
+            $parts = array_values(array_filter($parts, fn($p) => $p !== ''));
+
+            if (empty($parts)) continue;
+
+            $name = '';
+            $phone = '';
+            $company = '-';
+            $position = '-';
+
+            // Identify parts
+            foreach ($parts as $p) {
+                $digits = preg_replace('/[^0-9]/', '', $p);
+                // If it looks like a phone number and we don't have phone yet
+                if (strlen($digits) >= 8 && empty($phone) && (str_starts_with($digits, '0') || str_starts_with($digits, '62') || str_starts_with($digits, '8'))) {
+                    $phone = $p;
+                } elseif (empty($name)) {
+                    $name = $p;
+                } elseif ($company === '-') {
+                    $company = $p;
+                } elseif ($position === '-') {
+                    $position = $p;
+                }
+            }
+
+            // Fallback if phone wasn't detected by prefix rule
+            if (empty($phone)) {
+                foreach ($parts as $p) {
+                    $digits = preg_replace('/[^0-9]/', '', $p);
+                    if (strlen($digits) >= 8) {
+                        $phone = $p;
+                        break;
+                    }
+                }
+            }
+
+            // Fallback if name is empty
+            if (empty($name)) {
+                $name = 'Bapak/Ibu Pimpinan';
+            }
+
+            if (!empty($phone)) {
+                InvitationGuest::create([
+                    'name' => $name,
+                    'phone' => $phone,
+                    'company' => $company ?: '-',
+                    'position' => $position ?: '-',
+                    'status' => 'pending',
+                ]);
+                $imported++;
+            }
+        }
+
+        return response()->json([
+            'success' => $imported > 0,
+            'imported_count' => $imported,
+            'message' => "Berhasil menyimpan {$imported} kontak calon tamu undangan.",
+        ]);
+    }
+
+    /**
+     * Hapus satu calon tamu undangan
+     */
+    public function destroyInvitationGuest(InvitationGuest $guest)
+    {
+        $guest->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Calon tamu berhasil dihapus.',
+        ]);
     }
 
     /**
@@ -299,16 +420,21 @@ class WaSettingController extends Controller
     {
         $request->validate([
             'ids' => 'required|array',
-            'ids.*' => 'exists:participants,id',
+            'target_type' => 'nullable|string', // 'guest' or 'participant'
             'custom_message' => 'nullable|string',
             'content_sid' => 'nullable|string',
             'attach_flyer' => 'nullable',
             'media_url' => 'nullable|string',
         ]);
 
-        $participants = Participant::whereIn('id', $request->ids)->get();
+        $targetType = $request->get('target_type', 'guest');
+        if ($targetType === 'participant') {
+            $recipients = Participant::whereIn('id', $request->ids)->get();
+        } else {
+            $recipients = InvitationGuest::whereIn('id', $request->ids)->get();
+        }
 
-        if ($participants->isEmpty()) {
+        if ($recipients->isEmpty()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Tidak ada tamu yang dipilih.',
@@ -357,7 +483,7 @@ class WaSettingController extends Controller
         $sentCount = 0;
         $failCount = 0;
 
-        foreach ($participants as $participant) {
+        foreach ($recipients as $recipient) {
             $msg = str_replace([
                 '{nama}',
                 '{nama_acara}',
@@ -370,7 +496,7 @@ class WaSettingController extends Controller
                 '{kadaluarsa}',
                 '{link_flyer}',
             ], [
-                $participant->name,
+                $recipient->name,
                 $eventTitle,
                 $eventDate,
                 $eventTime,
@@ -383,8 +509,8 @@ class WaSettingController extends Controller
             ], $template);
 
             $result = TwilioService::sendInvitation(
-                toPhone: $participant->phone,
-                name: $participant->name,
+                toPhone: $recipient->phone,
+                name: $recipient->name,
                 customMessage: $msg,
                 contentSidOverride: $request->content_sid,
                 mediaUrl: $mediaUrl
@@ -392,6 +518,12 @@ class WaSettingController extends Controller
 
             if ($result['success']) {
                 $sentCount++;
+                if ($targetType === 'guest' && $recipient instanceof InvitationGuest) {
+                    $recipient->update([
+                        'status' => 'sent',
+                        'sent_at' => now(),
+                    ]);
+                }
             } else {
                 $failCount++;
             }

@@ -56,6 +56,9 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::post('/invitation/send', [WaSettingController::class, 'sendInvitation'])->name('admin.invitation.send');
     Route::post('/invitation/send-bulk', [WaSettingController::class, 'sendBulkInvitation'])->name('admin.invitation.send-bulk');
     Route::post('/invitation/deadline', [WaSettingController::class, 'updateInvitationDeadline'])->name('admin.invitation.deadline');
+    Route::post('/invitation/guests', [WaSettingController::class, 'storeInvitationGuest'])->name('admin.invitation.guests.store');
+    Route::post('/invitation/guests/import', [WaSettingController::class, 'importInvitationGuests'])->name('admin.invitation.guests.import');
+    Route::delete('/invitation/guests/{guest}', [WaSettingController::class, 'destroyInvitationGuest'])->name('admin.invitation.guests.destroy');
 
     // Kirim & Kelola Tiket Presensi QR Peserta
     Route::get('/send-tickets', [WaSettingController::class, 'ticketPage'])->name('admin.tickets');
