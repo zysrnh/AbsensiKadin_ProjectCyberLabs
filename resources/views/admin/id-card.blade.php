@@ -6,10 +6,10 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Cetak ID Card Lanyard - Wonderful 2026</title>
     
-    <!-- Google Fonts: Multi-Family -->
+    <!-- Google Fonts: Koleksi Lengkap Font ID Card & Event -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Montserrat:wght@400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&family=Playfair+Display:wght@400;600;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800;900&family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cinzel:wght@500;600;700;800;900&family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;700;900&family=Inter:wght@400;500;600;700;800;900&family=Kanit:wght@400;500;600;700;800;900&family=Manrope:wght@400;500;600;700;800&family=Merriweather:wght@400;700;900&family=Montserrat:wght@400;500;600;700;800;900&family=Nunito:wght@400;600;700;800;900&family=Oswald:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Playfair+Display:wght@400;600;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800;900&family=Raleway:wght@400;500;600;700;800;900&family=Roboto:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Syne:wght@500;600;700;800&family=Urbanist:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -77,57 +77,89 @@
             transition: background-color 0.25s ease, color 0.25s ease;
         }
 
+        /* Custom Dropdown Stylings (Menghilangkan panah default browser yang kaku) */
+        .select-custom {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569' stroke-width='2.2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1.1rem 1.1rem;
+            padding-right: 2.5rem !important;
+            cursor: pointer;
+        }
+
         /* Dark Workspace Theme */
         body.dark-workspace {
-            background-color: #0b0f17 !important;
+            background-color: #090d16 !important;
             color: #f8fafc !important;
         }
         body.dark-workspace .card-3d {
-            background: #111827 !important;
-            border-color: rgba(55, 65, 81, 0.9) !important;
-            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4) !important;
+            background: #0f172a !important;
+            border-color: rgba(51, 65, 85, 0.8) !important;
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5) !important;
         }
         body.dark-workspace .card-3d .border-b {
-            border-color: #1f2937 !important;
+            border-color: #1e293b !important;
         }
         body.dark-workspace .card-3d .bg-slate-50,
         body.dark-workspace .card-3d .bg-slate-50\/50,
-        body.dark-workspace .card-3d .bg-slate-50\/70 {
-            background-color: #1a2234 !important;
+        body.dark-workspace .card-3d .bg-slate-50\/70,
+        body.dark-workspace .card-3d .bg-slate-100\/60 {
+            background-color: #131c31 !important;
+        }
+        body.dark-workspace .card-3d .bg-blue-50\/40 {
+            background-color: #13233e !important;
+            border-color: #1e3a68 !important;
         }
         body.dark-workspace .card-3d h1,
         body.dark-workspace .card-3d h2,
         body.dark-workspace .card-3d h3,
         body.dark-workspace .card-3d label,
-        body.dark-workspace .card-3d strong {
-            color: #f8fafc !important;
+        body.dark-workspace .card-3d strong,
+        body.dark-workspace .card-3d .text-slate-900,
+        body.dark-workspace .card-3d .text-slate-800,
+        body.dark-workspace .card-3d .text-slate-700 {
+            color: #f1f5f9 !important;
         }
         body.dark-workspace .card-3d p,
-        body.dark-workspace .card-3d span.text-slate-500 {
+        body.dark-workspace .card-3d .text-slate-500,
+        body.dark-workspace .card-3d .text-slate-600 {
             color: #94a3b8 !important;
         }
-        body.dark-workspace .card-3d select,
+        body.dark-workspace .card-3d .border-slate-200,
+        body.dark-workspace .card-3d .border-slate-200\/90,
+        body.dark-workspace .card-3d .border-slate-200\/60 {
+            border-color: #1e293b !important;
+        }
+        body.dark-workspace .select-custom,
         body.dark-workspace .card-3d input[type="text"] {
-            background-color: #1e293b !important;
+            background-color: #19243b !important;
             border-color: #334155 !important;
-            color: #f8fafc !important;
+            color: #ffffff !important;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8' stroke-width='2.2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+        }
+        body.dark-workspace .select-custom option,
+        body.dark-workspace .select-custom optgroup {
+            background-color: #0f172a !important;
+            color: #ffffff !important;
         }
         body.dark-workspace .card-3d input[type="range"] {
             background-color: #334155 !important;
         }
         body.dark-workspace .btn-3d-white {
-            background-color: #1e293b !important;
+            background-color: #19243b !important;
             border-color: #334155 !important;
-            color: #e2e8f0 !important;
-            box-shadow: 0 2px 0 #0f172a, 0 4px 10px -2px rgba(0, 0, 0, 0.25) !important;
+            color: #f1f5f9 !important;
+            box-shadow: 0 2px 0 #0b1120, 0 4px 10px -2px rgba(0, 0, 0, 0.3) !important;
         }
         body.dark-workspace .btn-3d-white:hover {
-            background-color: #27354a !important;
+            background-color: #22304d !important;
             border-color: #475569 !important;
             color: #ffffff !important;
         }
 
-        /* 3D Depth Card (Sesuai Dashboard Luar) */
+        /* 3D Depth Card */
         .card-3d {
             background: #ffffff;
             border: 1px solid rgba(226, 232, 240, 0.9);
@@ -327,14 +359,17 @@
 
         /* Custom Scrollbar for Editor */
         .custom-scrollbar::-webkit-scrollbar {
-            width: 5px;
+            width: 6px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
             background: transparent;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
             background: #cbd5e1;
-            border-radius: 4px;
+            border-radius: 6px;
+        }
+        body.dark-workspace .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #334155;
         }
 
         /* Modal Backdrop */
@@ -388,7 +423,7 @@
             }
             .id-card-box {
                 box-shadow: none !important;
-                border: 1px dashed #94a3b8 !important; /* Garis panduan potong gunting */
+                border: 1px dashed #94a3b8 !important;
                 border-radius: 0 !important;
                 margin: 0 auto !important;
                 background-color: var(--id-card-bg-color) !important;
@@ -475,7 +510,7 @@
         <!-- ========================================== -->
         <aside id="editorPanel" class="no-print w-full lg:w-96 flex-shrink-0 card-3d p-0 overflow-hidden sticky top-6 max-h-[calc(100vh-3rem)] flex flex-col">
             <!-- Header Panel -->
-            <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+            <div class="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
                 <div>
                     <h2 class="text-xs font-black text-slate-900 uppercase tracking-wider">Editor Desain ID Card</h2>
                     <p class="text-[10px] text-slate-500 mt-0.5">Live update serentak ke semua kartu</p>
@@ -495,7 +530,7 @@
                         type="button" 
                         onclick="applyCardPreset('light')"
                         id="btnPresetLight"
-                        class="btn-3d-white py-2 px-3 bg-white border border-slate-200 rounded-xl font-bold text-xs text-slate-800 flex items-center justify-center gap-2 hover:bg-slate-50 transition-all cursor-pointer"
+                        class="btn-3d-white py-2 px-3 bg-white border border-slate-200 rounded-xl font-bold text-xs text-slate-800 flex items-center justify-center gap-2 hover:bg-slate-50 transition-all cursor-pointer ring-2 ring-blue-500 ring-offset-1"
                     >
                         <span class="w-3 h-3 rounded-full bg-white border border-slate-400"></span>
                         <span>Mode Cerah</span>
@@ -526,8 +561,8 @@
                 </button>
             </div>
 
-            <!-- Tab Contents (Scrollable) -->
-            <div class="p-5 overflow-y-auto custom-scrollbar flex-grow space-y-4 text-xs">
+            <!-- Tab Contents (Scrollable dengan ruang bawah lega pb-24 agar tidak terpotong tombol Simpan) -->
+            <div class="p-5 pb-24 overflow-y-auto custom-scrollbar flex-grow space-y-4 text-xs">
 
                 <!-- ================= TAB 1: BACKGROUND & CROP ================= -->
                 <div id="tab-bg" class="space-y-4">
@@ -607,10 +642,10 @@
                         >
                     </div>
 
-                    <!-- Background Display Mode -->
+                    <!-- Background Display Mode (Custom Dropdown) -->
                     <div>
                         <label class="block font-bold text-slate-700 mb-1.5">Mode Ukuran Gambar</label>
-                        <select id="selectBgSize" onchange="updateBgSize(this.value)" class="w-full border border-slate-200 rounded-xl p-2.5 bg-white text-xs font-semibold focus:border-blue-600 focus:outline-none shadow-xs">
+                        <select id="selectBgSize" onchange="updateBgSize(this.value)" class="select-custom w-full border border-slate-200 rounded-xl p-2.5 bg-white text-xs font-semibold focus:border-blue-600 focus:outline-none shadow-xs">
                             <option value="cover" {{ ($idCardConfig['bg_size'] ?? 'cover') === 'cover' ? 'selected' : '' }}>Cover (Penuhi seluruh kartu)</option>
                             <option value="contain" {{ ($idCardConfig['bg_size'] ?? '') === 'contain' ? 'selected' : '' }}>Contain (Sesuai rasio gambar)</option>
                             <option value="100% 100%" {{ ($idCardConfig['bg_size'] ?? '') === '100% 100%' ? 'selected' : '' }}>Stretch (Peregangan 100% 100%)</option>
@@ -649,17 +684,42 @@
 
                 <!-- ================= TAB 2: FONT, TEKS & KONTRAS ================= -->
                 <div id="tab-text" class="space-y-4 hidden">
-                    <!-- Global Font Family -->
+                    <!-- Global Font Family (Lengkap: 21 Font Populer) -->
                     <div>
-                        <label class="block font-bold text-slate-700 mb-1.5">Jenis Font (Font Family)</label>
-                        <select id="selectFontFamily" onchange="updateFontFamily(this.value)" class="w-full border border-slate-200 rounded-xl p-2.5 bg-white text-xs font-semibold focus:border-blue-600 focus:outline-none shadow-xs">
-                            <option value="Plus Jakarta Sans" {{ ($idCardConfig['font_family'] ?? 'Plus Jakarta Sans') === 'Plus Jakarta Sans' ? 'selected' : '' }}>Plus Jakarta Sans (Default)</option>
-                            <option value="Montserrat" {{ ($idCardConfig['font_family'] ?? '') === 'Montserrat' ? 'selected' : '' }}>Montserrat (Tegas / Modern)</option>
-                            <option value="Inter" {{ ($idCardConfig['font_family'] ?? '') === 'Inter' ? 'selected' : '' }}>Inter (Clean / Netral)</option>
-                            <option value="Poppins" {{ ($idCardConfig['font_family'] ?? '') === 'Poppins' ? 'selected' : '' }}>Poppins (Elegan / Bulat)</option>
-                            <option value="Roboto" {{ ($idCardConfig['font_family'] ?? '') === 'Roboto' ? 'selected' : '' }}>Roboto (Standar)</option>
-                            <option value="Outfit" {{ ($idCardConfig['font_family'] ?? '') === 'Outfit' ? 'selected' : '' }}>Outfit (Futuristik)</option>
-                            <option value="Playfair Display" {{ ($idCardConfig['font_family'] ?? '') === 'Playfair Display' ? 'selected' : '' }}>Playfair Display (Serif / Formal)</option>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <label class="font-bold text-slate-700">Jenis Font (21 Koleksi)</label>
+                            <span class="text-[10px] text-blue-600 font-bold bg-blue-50 px-2 py-0.5 rounded">Google Fonts</span>
+                        </div>
+                        <select id="selectFontFamily" onchange="updateFontFamily(this.value)" class="select-custom w-full border border-slate-200 rounded-xl p-2.5 bg-white text-xs font-semibold focus:border-blue-600 focus:outline-none shadow-xs">
+                            <optgroup label="Modern Sans (Bersih & Elegan)">
+                                <option value="Plus Jakarta Sans" {{ ($idCardConfig['font_family'] ?? 'Plus Jakarta Sans') === 'Plus Jakarta Sans' ? 'selected' : '' }}>Plus Jakarta Sans (Default)</option>
+                                <option value="Inter" {{ ($idCardConfig['font_family'] ?? '') === 'Inter' ? 'selected' : '' }}>Inter (Clean & Netral)</option>
+                                <option value="Montserrat" {{ ($idCardConfig['font_family'] ?? '') === 'Montserrat' ? 'selected' : '' }}>Montserrat (Tegas & Modern)</option>
+                                <option value="Poppins" {{ ($idCardConfig['font_family'] ?? '') === 'Poppins' ? 'selected' : '' }}>Poppins (Geometris Elegan)</option>
+                                <option value="Outfit" {{ ($idCardConfig['font_family'] ?? '') === 'Outfit' ? 'selected' : '' }}>Outfit (Sleek & Futuristik)</option>
+                                <option value="Manrope" {{ ($idCardConfig['font_family'] ?? '') === 'Manrope' ? 'selected' : '' }}>Manrope (Modern Semi-Rounded)</option>
+                                <option value="Urbanist" {{ ($idCardConfig['font_family'] ?? '') === 'Urbanist' ? 'selected' : '' }}>Urbanist (Minimalist Premium)</option>
+                                <option value="DM Sans" {{ ($idCardConfig['font_family'] ?? '') === 'DM Sans' ? 'selected' : '' }}>DM Sans (Solid Corporate)</option>
+                                <option value="Raleway" {{ ($idCardConfig['font_family'] ?? '') === 'Raleway' ? 'selected' : '' }}>Raleway (Artistik & Ringan)</option>
+                                <option value="Nunito" {{ ($idCardConfig['font_family'] ?? '') === 'Nunito' ? 'selected' : '' }}>Nunito (Friendly & Soft)</option>
+                                <option value="Roboto" {{ ($idCardConfig['font_family'] ?? '') === 'Roboto' ? 'selected' : '' }}>Roboto (Standar Android)</option>
+                            </optgroup>
+                            <optgroup label="Event, Headline & Bold (Favorit Lanyard)">
+                                <option value="Bebas Neue" {{ ($idCardConfig['font_family'] ?? '') === 'Bebas Neue' ? 'selected' : '' }}>Bebas Neue (Tinggi & Sangat Tegas)</option>
+                                <option value="Oswald" {{ ($idCardConfig['font_family'] ?? '') === 'Oswald' ? 'selected' : '' }}>Oswald (Kompak & Elegan)</option>
+                                <option value="Kanit" {{ ($idCardConfig['font_family'] ?? '') === 'Kanit' ? 'selected' : '' }}>Kanit (Tebal & Modern Event)</option>
+                                <option value="Syne" {{ ($idCardConfig['font_family'] ?? '') === 'Syne' ? 'selected' : '' }}>Syne (Avant-Garde & High-End)</option>
+                            </optgroup>
+                            <optgroup label="Formal, Luxury & Serif (Eksekutif & Tamu Kehormatan)">
+                                <option value="Playfair Display" {{ ($idCardConfig['font_family'] ?? '') === 'Playfair Display' ? 'selected' : '' }}>Playfair Display (Serif Mewah)</option>
+                                <option value="Cinzel" {{ ($idCardConfig['font_family'] ?? '') === 'Cinzel' ? 'selected' : '' }}>Cinzel (Klasik Resmi / Sertifikat)</option>
+                                <option value="Merriweather" {{ ($idCardConfig['font_family'] ?? '') === 'Merriweather' ? 'selected' : '' }}>Merriweather (Serif Elegan)</option>
+                                <option value="Cormorant Garamond" {{ ($idCardConfig['font_family'] ?? '') === 'Cormorant Garamond' ? 'selected' : '' }}>Cormorant Garamond (Klasik Tradisional)</option>
+                            </optgroup>
+                            <optgroup label="Tech & Monospace">
+                                <option value="Space Grotesk" {{ ($idCardConfig['font_family'] ?? '') === 'Space Grotesk' ? 'selected' : '' }}>Space Grotesk (Tech Startup)</option>
+                                <option value="Space Mono" {{ ($idCardConfig['font_family'] ?? '') === 'Space Mono' ? 'selected' : '' }}>Space Mono (Digital / Kode)</option>
+                            </optgroup>
                         </select>
                     </div>
 
@@ -672,10 +732,10 @@
                             Gunakan plat pelindung agar teks nama tetap kontras dan terbaca jelas di atas gambar latar apa pun:
                         </p>
 
-                        <!-- Pilihan Plat Pelindung Teks -->
+                        <!-- Pilihan Plat Pelindung Teks (Custom Dropdown) -->
                         <div>
                             <label class="block font-bold text-slate-700 mb-1">Lapisan Plat Teks (Backdrop)</label>
-                            <select id="selectTextBackdrop" onchange="updateTextBackdrop(this.value)" class="w-full border border-slate-200 rounded-xl p-2 bg-white text-[11px] font-semibold focus:border-blue-600 focus:outline-none shadow-xs">
+                            <select id="selectTextBackdrop" onchange="updateTextBackdrop(this.value)" class="select-custom w-full border border-slate-200 rounded-xl p-2 bg-white text-[11px] font-semibold focus:border-blue-600 focus:outline-none shadow-xs">
                                 <option value="none" {{ ($idCardConfig['text_backdrop'] ?? 'none') === 'none' ? 'selected' : '' }}>Transparan Polos (Tanpa Plat)</option>
                                 <option value="frosted-light" {{ ($idCardConfig['text_backdrop'] ?? '') === 'frosted-light' ? 'selected' : '' }}>Kaca Putih Semi-Transparan (Rekomendasi)</option>
                                 <option value="frosted-dark" {{ ($idCardConfig['text_backdrop'] ?? '') === 'frosted-dark' ? 'selected' : '' }}>Kaca Gelap Semi-Transparan (Dark Plate)</option>
@@ -731,11 +791,11 @@
                             </div>
                         </div>
 
-                        <!-- Ketebalan & Format Huruf Nama -->
+                        <!-- Ketebalan & Format Huruf Nama (Custom Dropdowns) -->
                         <div class="grid grid-cols-2 gap-2">
                             <div>
                                 <label class="block font-bold text-slate-700 mb-1">Ketebalan</label>
-                                <select id="selectNameWeight" onchange="updateNameWeight(this.value)" class="w-full border border-slate-200 rounded-xl p-2 bg-white text-[11px] font-semibold focus:border-blue-600 focus:outline-none shadow-xs">
+                                <select id="selectNameWeight" onchange="updateNameWeight(this.value)" class="select-custom w-full border border-slate-200 rounded-xl p-2 bg-white text-[11px] font-semibold focus:border-blue-600 focus:outline-none shadow-xs">
                                     <option value="600" {{ ($idCardConfig['name_weight'] ?? '') === '600' ? 'selected' : '' }}>Semi-Bold (600)</option>
                                     <option value="700" {{ ($idCardConfig['name_weight'] ?? '') === '700' ? 'selected' : '' }}>Bold (700)</option>
                                     <option value="800" {{ ($idCardConfig['name_weight'] ?? '') === '800' ? 'selected' : '' }}>Extra Bold (800)</option>
@@ -744,7 +804,7 @@
                             </div>
                             <div>
                                 <label class="block font-bold text-slate-700 mb-1">Kapitalisasi</label>
-                                <select id="selectNameTransform" onchange="updateNameTransform(this.value)" class="w-full border border-slate-200 rounded-xl p-2 bg-white text-[11px] font-semibold focus:border-blue-600 focus:outline-none shadow-xs">
+                                <select id="selectNameTransform" onchange="updateNameTransform(this.value)" class="select-custom w-full border border-slate-200 rounded-xl p-2 bg-white text-[11px] font-semibold focus:border-blue-600 focus:outline-none shadow-xs">
                                     <option value="uppercase" {{ ($idCardConfig['name_transform'] ?? 'uppercase') === 'uppercase' ? 'selected' : '' }}>HURUF BESAR</option>
                                     <option value="capitalize" {{ ($idCardConfig['name_transform'] ?? '') === 'capitalize' ? 'selected' : '' }}>Huruf Kapital Depan</option>
                                     <option value="none" {{ ($idCardConfig['name_transform'] ?? '') === 'none' ? 'selected' : '' }}>Sesuai Input Asli</option>
@@ -804,7 +864,7 @@
                             <div class="grid grid-cols-2 gap-2 pt-1">
                                 <div>
                                     <label class="block font-bold text-slate-700 mb-1">Tampilan</label>
-                                    <select id="selectCompanyStyle" onchange="updateCompanyStyle(this.value)" class="w-full border border-slate-200 rounded-xl p-2 bg-white text-[11px] font-semibold focus:border-blue-600 focus:outline-none shadow-xs">
+                                    <select id="selectCompanyStyle" onchange="updateCompanyStyle(this.value)" class="select-custom w-full border border-slate-200 rounded-xl p-2 bg-white text-[11px] font-semibold focus:border-blue-600 focus:outline-none shadow-xs">
                                         <option value="badge" {{ ($idCardConfig['company_style'] ?? 'badge') === 'badge' ? 'selected' : '' }}>Badge Kotak</option>
                                         <option value="plain" {{ ($idCardConfig['company_style'] ?? '') === 'plain' ? 'selected' : '' }}>Teks Polos</option>
                                     </select>
@@ -940,7 +1000,7 @@
 
                         <!-- Toggle Lubang Lanyard -->
                         <label class="flex items-center justify-between cursor-pointer py-1.5 border-b border-slate-200/60">
-                            <span class="text-xs font-semibold text-slate-700">Lubang Tali Lanyard</span>
+                            <span class="text-xs font-bold text-slate-700">Lubang Tali Lanyard</span>
                             <input 
                                 type="checkbox" 
                                 id="toggleLanyard" 
@@ -952,7 +1012,7 @@
 
                         <!-- Toggle Header Acara -->
                         <label class="flex items-center justify-between cursor-pointer py-1.5 border-b border-slate-200/60">
-                            <span class="text-xs font-semibold text-slate-700">Header Atas Acara</span>
+                            <span class="text-xs font-bold text-slate-700">Header Atas Acara</span>
                             <input 
                                 type="checkbox" 
                                 id="toggleHeader" 
@@ -965,7 +1025,7 @@
                         <!-- Toggle Pita Kategori -->
                         <div class="py-1.5 border-b border-slate-200/60 space-y-2">
                             <label class="flex items-center justify-between cursor-pointer">
-                                <span class="text-xs font-semibold text-slate-700">Pita Kategori Peserta</span>
+                                <span class="text-xs font-bold text-slate-700">Pita Kategori Peserta</span>
                                 <input 
                                     type="checkbox" 
                                     id="toggleRibbon" 
@@ -996,7 +1056,7 @@
 
                         <!-- Toggle Garis Pemisah -->
                         <label class="flex items-center justify-between cursor-pointer py-1.5 border-b border-slate-200/60">
-                            <span class="text-xs font-semibold text-slate-700">Garis Pemisah (Divider)</span>
+                            <span class="text-xs font-bold text-slate-700">Garis Pemisah (Divider)</span>
                             <input 
                                 type="checkbox" 
                                 id="toggleDivider" 
@@ -1008,7 +1068,7 @@
 
                         <!-- Toggle Footer Bawah -->
                         <label class="flex items-center justify-between cursor-pointer py-1.5">
-                            <span class="text-xs font-semibold text-slate-700">Footer Bawah Acara</span>
+                            <span class="text-xs font-bold text-slate-700">Footer Bawah Acara</span>
                             <input 
                                 type="checkbox" 
                                 id="toggleFooter" 
@@ -1023,8 +1083,8 @@
 
             </div>
 
-            <!-- Footer Panel: Status & Actions -->
-            <div class="p-3.5 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-[11px]">
+            <!-- Footer Panel: Status & Actions (Fixed Sticky di Bawah) -->
+            <div class="p-3.5 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-[11px] relative z-10 shadow-sm">
                 <span id="saveStatusIndicator" class="text-slate-500 font-semibold">Siap dicetak</span>
                 <button 
                     type="button" 
@@ -1225,6 +1285,9 @@
         // 1-KLIK PRESET KARTU: MODE CERAH & MODE GELAP
         // ==========================================
         function applyCardPreset(mode) {
+            const btnLight = document.getElementById('btnPresetLight');
+            const btnDark = document.getElementById('btnPresetDark');
+
             if (mode === 'light') {
                 // Preset Cerah
                 state.bg_color = '#ffffff';
@@ -1251,6 +1314,10 @@
                 document.getElementById('pickerRibbonBg').value = '#2563eb';
                 document.getElementById('selectTextBackdrop').value = 'none';
                 document.getElementById('toggleTextShadow').checked = false;
+
+                // Ring indikator
+                btnLight.classList.add('ring-2', 'ring-blue-500', 'ring-offset-1');
+                btnDark.classList.remove('ring-2', 'ring-blue-500', 'ring-offset-1');
 
                 Swal.fire({
                     icon: 'success',
@@ -1287,6 +1354,10 @@
                 document.getElementById('pickerRibbonBg').value = '#1d4ed8';
                 document.getElementById('selectTextBackdrop').value = 'frosted-dark';
                 document.getElementById('toggleTextShadow').checked = true;
+
+                // Ring indikator
+                btnDark.classList.add('ring-2', 'ring-blue-500', 'ring-offset-1');
+                btnLight.classList.remove('ring-2', 'ring-blue-500', 'ring-offset-1');
 
                 Swal.fire({
                     icon: 'success',
@@ -1696,9 +1767,9 @@
             applyStyles();
         }
 
-        // ====================================================
+        // ==========================================
         // SAVE & RESET ACTIONS
-        // ====================================================
+        // ==========================================
         async function saveSettings() {
             const btn = document.getElementById('btnSaveSettings');
             const btnText = document.getElementById('saveBtnText');
@@ -1825,6 +1896,14 @@
                 const text = document.getElementById('workspaceThemeText');
                 if (icon) icon.innerHTML = '&#9788;';
                 if (text) text.innerText = 'Mode Cerah Layar';
+            }
+
+            // Sync initial preset ring
+            if (state.bg_color === '#0f172a') {
+                const btnDark = document.getElementById('btnPresetDark');
+                const btnLight = document.getElementById('btnPresetLight');
+                if (btnDark) btnDark.classList.add('ring-2', 'ring-blue-500', 'ring-offset-1');
+                if (btnLight) btnLight.classList.remove('ring-2', 'ring-blue-500', 'ring-offset-1');
             }
 
             applyStyles();
