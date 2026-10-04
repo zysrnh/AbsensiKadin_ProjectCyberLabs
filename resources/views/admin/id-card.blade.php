@@ -33,6 +33,11 @@
 
             --id-card-font-family: '{{ $idCardConfig['font_family'] ?? 'Plus Jakarta Sans' }}', sans-serif;
 
+            --id-header-title-color: {{ $idCardConfig['header_title_color'] ?? '#0f172a' }};
+            --id-header-sub-color: {{ $idCardConfig['header_sub_color'] ?? '#94a3b8' }};
+            --id-lanyard-hole-bg: {{ $idCardConfig['lanyard_hole_bg'] ?? '#f1f5f9' }};
+            --id-lanyard-hole-border: {{ $idCardConfig['lanyard_hole_border'] ?? '#cbd5e1' }};
+
             --id-name-size: {{ $idCardConfig['name_size'] ?? '22' }}px;
             --id-name-color: {{ $idCardConfig['name_color'] ?? '#020617' }};
             --id-name-weight: {{ $idCardConfig['name_weight'] ?? '900' }};
@@ -69,6 +74,57 @@
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: #f8fafc;
             color: #0f172a;
+            transition: background-color 0.25s ease, color 0.25s ease;
+        }
+
+        /* Dark Workspace Theme */
+        body.dark-workspace {
+            background-color: #0b0f17 !important;
+            color: #f8fafc !important;
+        }
+        body.dark-workspace .card-3d {
+            background: #111827 !important;
+            border-color: rgba(55, 65, 81, 0.9) !important;
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4) !important;
+        }
+        body.dark-workspace .card-3d .border-b {
+            border-color: #1f2937 !important;
+        }
+        body.dark-workspace .card-3d .bg-slate-50,
+        body.dark-workspace .card-3d .bg-slate-50\/50,
+        body.dark-workspace .card-3d .bg-slate-50\/70 {
+            background-color: #1a2234 !important;
+        }
+        body.dark-workspace .card-3d h1,
+        body.dark-workspace .card-3d h2,
+        body.dark-workspace .card-3d h3,
+        body.dark-workspace .card-3d label,
+        body.dark-workspace .card-3d strong {
+            color: #f8fafc !important;
+        }
+        body.dark-workspace .card-3d p,
+        body.dark-workspace .card-3d span.text-slate-500 {
+            color: #94a3b8 !important;
+        }
+        body.dark-workspace .card-3d select,
+        body.dark-workspace .card-3d input[type="text"] {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+            color: #f8fafc !important;
+        }
+        body.dark-workspace .card-3d input[type="range"] {
+            background-color: #334155 !important;
+        }
+        body.dark-workspace .btn-3d-white {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+            color: #e2e8f0 !important;
+            box-shadow: 0 2px 0 #0f172a, 0 4px 10px -2px rgba(0, 0, 0, 0.25) !important;
+        }
+        body.dark-workspace .btn-3d-white:hover {
+            background-color: #27354a !important;
+            border-color: #475569 !important;
+            color: #ffffff !important;
         }
 
         /* 3D Depth Card (Sesuai Dashboard Luar) */
@@ -83,7 +139,7 @@
             transition: transform 0.25s var(--ease-expo), box-shadow 0.25s var(--ease-expo);
         }
 
-        /* Tactile Physical Push Buttons (Sesuai Dashboard Luar) */
+        /* Tactile Physical Push Buttons */
         .btn-3d-dark {
             box-shadow: 0 3px 0 #020617, 0 8px 16px -3px rgba(15, 23, 42, 0.3);
             transition: all 0.15s var(--ease-expo);
@@ -137,8 +193,8 @@
             flex-direction: column;
             justify-content: space-between;
             font-family: var(--id-card-font-family);
-            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
-            transition: box-shadow 0.2s ease;
+            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.12), 0 8px 10px -6px rgba(15, 23, 42, 0.06);
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
         }
 
         /* Layer Background Image Kustom */
@@ -197,7 +253,7 @@
             padding: 12px 14px;
             border-radius: 0.75rem;
             border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
             width: 100%;
         }
         .text-backdrop-plate.plate-frosted-dark .id-card-name {
@@ -211,8 +267,18 @@
         .id-card-lanyard-hole {
             display: var(--id-lanyard-display) !important;
         }
+        .id-card-lanyard-hole-pill {
+            background-color: var(--id-lanyard-hole-bg) !important;
+            border-color: var(--id-lanyard-hole-border) !important;
+        }
         .id-card-header-block {
             display: var(--id-header-display) !important;
+        }
+        .id-card-header-subtitle {
+            color: var(--id-header-sub-color) !important;
+        }
+        .id-card-header-title {
+            color: var(--id-header-title-color) !important;
         }
         .id-card-ribbon {
             display: var(--id-ribbon-display) !important;
@@ -264,7 +330,7 @@
             width: 5px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f8fafc;
+            background: transparent;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
             background: #cbd5e1;
@@ -344,17 +410,29 @@
             </a>
             <div>
                 <h1 class="text-lg sm:text-xl font-black text-slate-900 tracking-tight">Format Cetak & Kustomisasi ID Card</h1>
-                <p class="text-xs text-slate-500 mt-0.5">Total: <strong class="text-slate-800">{{ count($participants) }} ID Card</strong> &bull; Format cetak: <strong>1 Kartu per Halaman</strong> (Ukuran Lanyard B3/B4 95mm &times; 135mm)</p>
+                <p class="text-xs text-slate-500 mt-0.5">Total: <strong class="text-slate-800">{{ count($participants) }} ID Card</strong> &bull; Format cetak: <strong>1 Kartu per Halaman</strong> (Lanyard B3/B4 95mm &times; 135mm)</p>
             </div>
         </div>
 
-        <div class="flex items-center gap-2.5 w-full md:w-auto justify-end flex-wrap">
+        <div class="flex items-center gap-2 w-full md:w-auto justify-end flex-wrap">
+            <!-- Toggle Dark / Light Mode Workspace -->
+            <button 
+                type="button" 
+                id="btnToggleWorkspaceTheme"
+                onclick="toggleWorkspaceTheme()" 
+                class="btn-3d-white px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl border border-slate-200 transition-all flex items-center gap-1.5 cursor-pointer"
+                title="Ganti Mode Tampilan Layar (Cerah / Gelap)"
+            >
+                <span id="workspaceThemeIcon">&#9790;</span>
+                <span id="workspaceThemeText">Mode Gelap Layar</span>
+            </button>
+
             <!-- Toggle Editor Panel Button -->
             <button 
                 type="button" 
                 id="btnToggleEditor"
                 onclick="toggleEditorPanel()"
-                class="btn-3d-white px-4 py-2 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl border border-slate-200 transition-all cursor-pointer"
+                class="btn-3d-white px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl border border-slate-200 transition-all cursor-pointer"
             >
                 <span id="editorToggleText">Sembunyikan Editor</span>
             </button>
@@ -363,7 +441,7 @@
             <button 
                 type="button" 
                 onclick="resetSettings()" 
-                class="btn-3d-white px-3.5 py-2 bg-white hover:bg-red-50 text-slate-600 hover:text-red-600 font-bold text-xs rounded-xl border border-slate-200 transition-all cursor-pointer"
+                class="btn-3d-white px-3 py-2 bg-white hover:bg-red-50 text-slate-600 hover:text-red-600 font-bold text-xs rounded-xl border border-slate-200 transition-all cursor-pointer"
             >
                 Reset Default
             </button>
@@ -403,6 +481,36 @@
                     <p class="text-[10px] text-slate-500 mt-0.5">Live update serentak ke semua kartu</p>
                 </div>
                 <span class="text-[10px] bg-blue-50 text-blue-700 font-bold px-2.5 py-1 rounded-full border border-blue-200/60">Live Editor</span>
+            </div>
+
+            <!-- Quick Theme Presets: 1-Klik Mode Cerah vs Mode Gelap -->
+            <div class="px-4 py-3 bg-slate-100/60 border-b border-slate-200/60">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-[11px] font-black uppercase tracking-wider text-slate-700">Preset Tema Kartu (1-Klik)</span>
+                    <span class="text-[10px] text-slate-500">Cepat & Otomatis</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <!-- Tombol Preset Kartu Mode Cerah -->
+                    <button 
+                        type="button" 
+                        onclick="applyCardPreset('light')"
+                        id="btnPresetLight"
+                        class="btn-3d-white py-2 px-3 bg-white border border-slate-200 rounded-xl font-bold text-xs text-slate-800 flex items-center justify-center gap-2 hover:bg-slate-50 transition-all cursor-pointer"
+                    >
+                        <span class="w-3 h-3 rounded-full bg-white border border-slate-400"></span>
+                        <span>Mode Cerah</span>
+                    </button>
+                    <!-- Tombol Preset Kartu Mode Gelap -->
+                    <button 
+                        type="button" 
+                        onclick="applyCardPreset('dark')"
+                        id="btnPresetDark"
+                        class="btn-3d-dark py-2 px-3 bg-slate-900 border border-slate-900 rounded-xl font-bold text-xs text-white flex items-center justify-center gap-2 hover:bg-slate-800 transition-all cursor-pointer"
+                    >
+                        <span class="w-3 h-3 rounded-full bg-blue-500 border border-blue-300"></span>
+                        <span>Mode Gelap</span>
+                    </button>
+                </div>
             </div>
 
             <!-- Tab Buttons (Gaya Dashboard Luar) -->
@@ -949,15 +1057,15 @@
                             <div>
                                 <!-- Lubang Tali Lanyard Guide -->
                                 <div class="id-card-lanyard-hole w-full pt-3 pb-1 flex flex-col items-center justify-center">
-                                    <div class="w-10 h-2 border border-slate-300 rounded-full bg-slate-100 flex items-center justify-center">
+                                    <div class="id-card-lanyard-hole-pill w-10 h-2 border border-slate-300 rounded-full bg-slate-100 flex items-center justify-center">
                                         <span class="w-3 h-0.5 bg-slate-300 rounded-full"></span>
                                     </div>
                                 </div>
 
                                 <!-- Header Organisasi -->
                                 <div class="id-card-header-block px-5 pt-2 pb-2 text-center">
-                                    <span class="text-[9px] font-black tracking-widest text-slate-400 uppercase block">EXECUTIVE ROUNDTABLE</span>
-                                    <h2 class="text-sm font-black tracking-tight text-slate-900 uppercase mt-0.5">WONDERFUL 2026</h2>
+                                    <span class="id-card-header-subtitle text-[9px] font-black tracking-widest text-slate-400 uppercase block">EXECUTIVE ROUNDTABLE</span>
+                                    <h2 class="id-card-header-title text-sm font-black tracking-tight text-slate-900 uppercase mt-0.5">WONDERFUL 2026</h2>
                                 </div>
 
                                 <!-- Pita Kategori Peserta -->
@@ -1078,6 +1186,10 @@
             bg_size: "{{ $idCardConfig['bg_size'] ?? 'cover' }}",
             bg_position: "{{ $idCardConfig['bg_position'] ?? 'center' }}",
             font_family: "{{ $idCardConfig['font_family'] ?? 'Plus Jakarta Sans' }}",
+            header_title_color: "{{ $idCardConfig['header_title_color'] ?? '#0f172a' }}",
+            header_sub_color: "{{ $idCardConfig['header_sub_color'] ?? '#94a3b8' }}",
+            lanyard_hole_bg: "{{ $idCardConfig['lanyard_hole_bg'] ?? '#f1f5f9' }}",
+            lanyard_hole_border: "{{ $idCardConfig['lanyard_hole_border'] ?? '#cbd5e1' }}",
             name_size: {{ $idCardConfig['name_size'] ?? 22 }},
             name_color: "{{ $idCardConfig['name_color'] ?? '#020617' }}",
             name_weight: "{{ $idCardConfig['name_weight'] ?? '900' }}",
@@ -1108,6 +1220,108 @@
         let pendingBgFile = null;
         let cropper = null;
         let rawImageSource = "{{ $idCardConfig['background_image'] ?? '' }}";
+
+        // ==========================================
+        // 1-KLIK PRESET KARTU: MODE CERAH & MODE GELAP
+        // ==========================================
+        function applyCardPreset(mode) {
+            if (mode === 'light') {
+                // Preset Cerah
+                state.bg_color = '#ffffff';
+                state.name_color = '#020617';
+                state.header_title_color = '#0f172a';
+                state.header_sub_color = '#94a3b8';
+                state.lanyard_hole_bg = '#f1f5f9';
+                state.lanyard_hole_border = '#cbd5e1';
+                state.company_color = '#0f172a';
+                state.company_bg = '#f1f5f9';
+                state.position_color = '#64748b';
+                state.ribbon_bg = '#2563eb';
+                state.ribbon_color = '#ffffff';
+                state.text_backdrop = 'none';
+                state.text_shadow = false;
+
+                // Update input values di form
+                document.getElementById('pickerBgColor').value = '#ffffff';
+                document.getElementById('textBgColor').value = '#ffffff';
+                document.getElementById('pickerNameColor').value = '#020617';
+                document.getElementById('labelNameColorHex').innerText = '#020617';
+                document.getElementById('pickerCompanyColor').value = '#0f172a';
+                document.getElementById('pickerPositionColor').value = '#64748b';
+                document.getElementById('pickerRibbonBg').value = '#2563eb';
+                document.getElementById('selectTextBackdrop').value = 'none';
+                document.getElementById('toggleTextShadow').checked = false;
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Preset Mode Cerah Diterapkan',
+                    text: 'Tampilan kartu diubah ke tema putih bersih.',
+                    timer: 1200,
+                    showConfirmButton: false,
+                    toast: true,
+                    position: 'top-end'
+                });
+            } else if (mode === 'dark') {
+                // Preset Gelap Elegan
+                state.bg_color = '#0f172a';
+                state.name_color = '#ffffff';
+                state.header_title_color = '#ffffff';
+                state.header_sub_color = '#94a3b8';
+                state.lanyard_hole_bg = '#1e293b';
+                state.lanyard_hole_border = '#334155';
+                state.company_color = '#ffffff';
+                state.company_bg = '#1e293b';
+                state.position_color = '#94a3b8';
+                state.ribbon_bg = '#1d4ed8';
+                state.ribbon_color = '#ffffff';
+                state.text_backdrop = 'frosted-dark';
+                state.text_shadow = true;
+
+                // Update input values di form
+                document.getElementById('pickerBgColor').value = '#0f172a';
+                document.getElementById('textBgColor').value = '#0f172a';
+                document.getElementById('pickerNameColor').value = '#ffffff';
+                document.getElementById('labelNameColorHex').innerText = '#FFFFFF';
+                document.getElementById('pickerCompanyColor').value = '#ffffff';
+                document.getElementById('pickerPositionColor').value = '#94a3b8';
+                document.getElementById('pickerRibbonBg').value = '#1d4ed8';
+                document.getElementById('selectTextBackdrop').value = 'frosted-dark';
+                document.getElementById('toggleTextShadow').checked = true;
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Preset Mode Gelap Diterapkan',
+                    text: 'Tampilan kartu diubah ke tema dark elegant.',
+                    timer: 1200,
+                    showConfirmButton: false,
+                    toast: true,
+                    position: 'top-end'
+                });
+            }
+
+            applyStyles();
+        }
+
+        // ==========================================
+        // TOGGLE DARK / LIGHT WORKSPACE THEME
+        // ==========================================
+        function toggleWorkspaceTheme() {
+            const body = document.body;
+            const icon = document.getElementById('workspaceThemeIcon');
+            const text = document.getElementById('workspaceThemeText');
+
+            if (body.classList.contains('dark-workspace')) {
+                body.classList.remove('dark-workspace');
+                icon.innerHTML = '&#9790;';
+                text.innerText = 'Mode Gelap Layar';
+                localStorage.setItem('id_card_workspace_theme', 'light');
+            } else {
+                body.classList.add('dark-workspace');
+                icon.innerHTML = '&#9788;';
+                text.innerText = 'Mode Cerah Layar';
+                localStorage.setItem('id_card_workspace_theme', 'dark');
+            }
+        }
 
         // Tab Switching
         function switchTab(tabId) {
@@ -1150,6 +1364,11 @@
             root.style.setProperty('--id-card-bg-position', state.bg_position);
 
             root.style.setProperty('--id-card-font-family', `'${state.font_family}', sans-serif`);
+
+            root.style.setProperty('--id-header-title-color', state.header_title_color);
+            root.style.setProperty('--id-header-sub-color', state.header_sub_color);
+            root.style.setProperty('--id-lanyard-hole-bg', state.lanyard_hole_bg);
+            root.style.setProperty('--id-lanyard-hole-border', state.lanyard_hole_border);
 
             root.style.setProperty('--id-name-size', `${state.name_size}px`);
             root.style.setProperty('--id-name-color', state.name_color);
@@ -1598,6 +1817,16 @@
 
         // Initialize on Load
         document.addEventListener('DOMContentLoaded', () => {
+            // Restore saved workspace theme
+            const savedWorkspaceTheme = localStorage.getItem('id_card_workspace_theme');
+            if (savedWorkspaceTheme === 'dark') {
+                document.body.classList.add('dark-workspace');
+                const icon = document.getElementById('workspaceThemeIcon');
+                const text = document.getElementById('workspaceThemeText');
+                if (icon) icon.innerHTML = '&#9788;';
+                if (text) text.innerText = 'Mode Cerah Layar';
+            }
+
             applyStyles();
         });
     </script>
