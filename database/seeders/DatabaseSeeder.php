@@ -27,6 +27,9 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+        // 8 Akun Wonderful
+        $this->call(UserSeeder::class);
+
         // Contoh Peserta 1
         Participant::firstOrCreate(
             ['qr_token' => 'KD26-HNDR8890'],
