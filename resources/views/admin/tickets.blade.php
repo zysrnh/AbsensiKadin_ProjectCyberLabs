@@ -10,7 +10,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
             <h1 class="text-2xl font-black text-slate-900 tracking-tight">Kirim Tiket Presensi QR</h1>
-            <p class="text-xs text-slate-500 mt-0.5">Kirimkan kartu tiket masuk ber-QR Code atau Flyer Acara kepada peserta terdaftar via WhatsApp & Twilio API.</p>
+            <p class="text-xs text-slate-500 mt-0.5">Kirimkan kartu tiket masuk ber-QR Code dan flyer acara resmi kepada peserta terdaftar via WhatsApp & Twilio API.</p>
         </div>
 
         <div class="flex items-center flex-wrap gap-2">
@@ -36,95 +36,97 @@
         <!-- Kolom Kiri: Generator Tiket & Tabel Peserta (7 cols) -->
         <div class="lg:col-span-7 space-y-5">
             
-            <!-- Card Pilihan Media Lampiran (QR Code vs Flyer Acara) -->
+            <!-- Card: Lampiran Flyer Acara (Gambar WhatsApp) -->
             <div class="card-3d p-5 space-y-4">
-                <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                     <div class="flex items-center gap-2.5">
-                        <div class="w-8 h-8 rounded-xl bg-blue-50 text-blue-700 border border-blue-200/80 flex items-center justify-center shrink-0">
+                        <div class="w-8 h-8 rounded-xl bg-violet-50 text-violet-700 border border-violet-200/80 flex items-center justify-center shrink-0">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
                         </div>
                         <div>
-                            <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Lampiran Media WhatsApp</h2>
-                            <p class="text-[11px] text-slate-400">Pilih media yang dilampirkan: Gambar Tiket QR Presensi atau Flyer Poster Acara.</p>
+                            <h2 class="text-xs font-bold text-slate-900 uppercase tracking-wider">Lampiran Flyer Acara (Gambar WhatsApp)</h2>
+                            <p class="text-[11px] text-slate-400">Lampirkan poster/flyer acara secara otomatis bersama pesan tiket presensi.</p>
                         </div>
                     </div>
 
-                    <span id="ticketMediaBadge" class="px-2.5 py-1 text-[10px] font-bold rounded-full border uppercase font-mono bg-blue-50 text-blue-800 border-blue-200">
-                        Mode: QR Code
+                    <!-- Status Pill -->
+                    <span id="ticketFlyerStatusBadge" class="px-2.5 py-1 text-[10px] font-bold rounded-full border uppercase font-mono {{ !empty($eventFlyerUrl) ? 'bg-violet-50 text-violet-800 border-violet-200' : 'bg-slate-100 text-slate-500 border-slate-200' }}">
+                        {{ !empty($eventFlyerUrl) ? 'Flyer Tersedia' : 'Belum Ada Flyer' }}
                     </span>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                    <!-- Opsi 1: QR Code Presensi -->
-                    <label class="ticket-media-option flex flex-col p-3 rounded-xl border-2 border-blue-600 bg-blue-50/50 cursor-pointer transition-all text-left">
-                        <div class="flex items-center justify-between mb-1">
-                            <span class="text-xs font-bold text-slate-900">QR Code Tiket</span>
-                            <input type="radio" name="ticket_media_choice" value="qr" checked onchange="onTicketMediaChanged(this)" class="rounded-full text-blue-600 focus:ring-0">
-                        </div>
-                        <span class="text-[10px] text-slate-500 leading-tight">Lampirkan foto QR Code unik tiket peserta</span>
+                <div class="space-y-3.5">
+                    <!-- Toggle Switch -->
+                    <label class="inline-flex items-center gap-2.5 cursor-pointer">
+                        <input 
+                            type="checkbox" 
+                            id="attachTicketFlyerToggle" 
+                            class="rounded-sm border-slate-300 text-slate-900 focus:ring-0 focus:ring-offset-0 cursor-pointer w-4 h-4"
+                            {{ !empty($eventFlyerUrl) ? 'checked' : '' }}
+                            onchange="onToggleTicketFlyer()"
+                        >
+                        <span class="text-xs font-semibold text-slate-700">Lampirkan gambar flyer pada pesan WhatsApp (Twilio Media & Live Preview)</span>
                     </label>
 
-                    <!-- Opsi 2: Flyer Acara Resmi -->
-                    <label class="ticket-media-option flex flex-col p-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 cursor-pointer transition-all text-left">
-                        <div class="flex items-center justify-between mb-1">
-                            <span class="text-xs font-bold text-slate-900">Flyer Acara</span>
-                            <input type="radio" name="ticket_media_choice" value="flyer" onchange="onTicketMediaChanged(this)" class="rounded-full text-blue-600 focus:ring-0">
+                    <div class="flex flex-col sm:flex-row items-center gap-4 p-3.5 bg-slate-50 border border-slate-200 rounded-xl">
+                        <!-- Thumbnail Flyer -->
+                        <div class="w-20 h-24 sm:w-20 sm:h-20 rounded-lg overflow-hidden border border-slate-200 bg-white flex items-center justify-center shrink-0">
+                            <img id="cardTicketFlyerThumb" src="{{ $eventFlyerUrl ?: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=300&q=80' }}" alt="Thumbnail Flyer" class="w-full h-full object-cover {{ empty($eventFlyerUrl) ? 'opacity-40' : '' }}">
                         </div>
-                        <span class="text-[10px] text-slate-500 leading-tight">Lampirkan gambar poster resmi kegiatan</span>
-                    </label>
 
-                    <!-- Opsi 3: Teks Saja -->
-                    <label class="ticket-media-option flex flex-col p-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 cursor-pointer transition-all text-left">
-                        <div class="flex items-center justify-between mb-1">
-                            <span class="text-xs font-bold text-slate-900">Teks Saja</span>
-                            <input type="radio" name="ticket_media_choice" value="none" onchange="onTicketMediaChanged(this)" class="rounded-full text-blue-600 focus:ring-0">
+                        <div class="flex-1 space-y-1.5 text-left w-full sm:w-auto">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-bold text-slate-800" id="cardTicketFlyerName">
+                                    {{ !empty($eventFlyer) ? basename($eventFlyer) : 'Default Event Poster' }}
+                                </span>
+                                <span class="text-[10px] font-mono text-slate-400">JPG, PNG, WEBP</span>
+                            </div>
+                            <p class="text-[11px] text-slate-500 leading-normal">
+                                Poster ini akan dikirim bersamaan dengan kode tiket QR presensi. Anda juga dapat memotong (crop) gambar sebelum disimpan.
+                            </p>
+                            
+                            <div class="flex flex-wrap items-center gap-2 pt-1">
+                                <!-- Hidden file input for new upload -->
+                                <input type="file" id="ticketFlyerFileInput" accept="image/png,image/jpeg,image/jpg,image/webp" class="hidden" onchange="handleTicketFlyerFileSelect(this)">
+                                
+                                <button 
+                                    type="button" 
+                                    onclick="document.getElementById('ticketFlyerFileInput').click()" 
+                                    id="btnUploadTicketFlyer"
+                                    class="px-3 py-1.5 bg-white hover:bg-slate-50 text-slate-700 font-bold text-[11px] rounded-lg border border-slate-200 shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer"
+                                >
+                                    <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                                    </svg>
+                                    <span>Unggah Flyer Baru</span>
+                                </button>
+
+                                <button 
+                                    type="button" 
+                                    onclick="cropCurrentTicketFlyer()" 
+                                    id="btnCropTicketFlyer"
+                                    class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] rounded-lg border border-slate-200 transition-all flex items-center gap-1.5 cursor-pointer {{ empty($eventFlyerUrl) ? 'hidden' : '' }}"
+                                >
+                                    <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" />
+                                    </svg>
+                                    <span>Potong / Crop Flyer</span>
+                                </button>
+
+                                <a 
+                                    href="{{ $eventFlyerUrl ?: '#' }}" 
+                                    target="_blank" 
+                                    id="btnDownloadTicketFlyer" 
+                                    class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] rounded-lg border border-slate-200 transition-all flex items-center gap-1 {{ empty($eventFlyerUrl) ? 'hidden' : '' }}"
+                                >
+                                    <span>Lihat Flyer</span>
+                                </a>
+                            </div>
                         </div>
-                        <span class="text-[10px] text-slate-500 leading-tight">Kirim teks murni tanpa media gambar</span>
-                    </label>
-                </div>
-
-                <!-- Bagian Upload / Detail Flyer (Jika dipilih atau untuk update) -->
-                <div id="ticketFlyerDetailBox" class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex flex-col sm:flex-row items-center gap-3">
-                    <div class="w-14 h-14 rounded-lg overflow-hidden border border-slate-200 bg-white shrink-0">
-                        <img id="ticketFlyerThumb" src="{{ $eventFlyerUrl ?: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=300&q=80' }}" alt="Flyer" class="w-full h-full object-cover">
                     </div>
-                    <div class="flex-1 space-y-1 text-left w-full sm:w-auto">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-bold text-slate-800" id="ticketFlyerNameText">
-                                {{ !empty($eventFlyer) ? basename($eventFlyer) : 'Default Event Flyer' }}
-                            </span>
-                            <span class="text-[10px] font-mono text-slate-400">Media Flyer</span>
-                        </div>
-                        <p class="text-[11px] text-slate-500">
-                            Ingin memperbarui poster acara? Klik tombol unggah di bawah ini:
-                        </p>
-                        <div class="flex items-center gap-2 pt-0.5">
-                            <input type="file" id="ticketFlyerFileInput" accept="image/png,image/jpeg,image/jpg,image/webp" class="hidden" onchange="uploadTicketFlyerAjax(this)">
-                            <button 
-                                type="button" 
-                                onclick="document.getElementById('ticketFlyerFileInput').click()" 
-                                id="btnUploadTicketFlyer"
-                                class="px-2.5 py-1 bg-white hover:bg-slate-50 text-slate-700 font-bold text-[10px] rounded-lg border border-slate-200 shadow-2xs transition-all flex items-center gap-1 cursor-pointer"
-                            >
-                                <svg class="w-3 h-3 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-                                </svg>
-                                <span>Ganti / Unggah Flyer Baru</span>
-                            </button>
-                            <a 
-                                href="{{ $eventFlyerUrl ?: '#' }}" 
-                                target="_blank" 
-                                id="btnViewTicketFlyer" 
-                                class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[10px] rounded-lg border border-slate-200 transition-all {{ empty($eventFlyerUrl) ? 'hidden' : '' }}"
-                            >
-                                Lihat Flyer
-                            </a>
-                        </div>
-                    </div>
                 </div>
-
             </div>
 
             <!-- Card 1: Generator Pesan Tiket QR -->
@@ -469,21 +471,27 @@
                     <!-- Chat Bubble Masuk -->
                     <div class="max-w-[92%] bg-white rounded-2xl rounded-tl-sm shadow-xs p-3.5 space-y-2.5 border border-slate-200/50">
                         
-                        <!-- 1. Media: Flyer Acara Banner Preview (Jika dipilih) -->
-                        <div id="previewTicketFlyerBubble" class="hidden -mx-1.5 -mt-1.5 mb-2 rounded-xl overflow-hidden border border-slate-200/60 bg-slate-100 relative">
-                            <img id="previewTicketFlyerImg" src="{{ $eventFlyerUrl ?: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1000&q=80' }}" alt="Flyer Acara" class="w-full h-auto max-h-[240px] object-cover">
-                            <div class="absolute bottom-2 right-2 bg-black/60 text-white text-[9px] font-mono px-1.5 py-0.5 rounded-sm">
-                                FLYER ACARA
-                            </div>
+                        <!-- 1. Media: Flyer Acara Banner Preview (Clean, no text overlay) -->
+                        <div id="previewTicketFlyerBubble" class="{{ !empty($eventFlyerUrl) ? '' : 'hidden' }} -mx-1.5 -mt-1.5 mb-2 rounded-xl overflow-hidden border border-slate-200/60 bg-slate-100 relative">
+                            <img id="previewTicketFlyerImg" src="{{ $eventFlyerUrl ?: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1000&q=80' }}" alt="Flyer Acara" class="w-full h-auto max-h-[260px] object-cover">
                         </div>
 
-                        <!-- 2. Media: QR Code Container Asli (Default) -->
-                        <div id="previewTicketQrBox" class="bg-slate-50 border border-slate-200/80 rounded-xl p-3 text-center">
+                        <!-- 2. Media: QR Code Container Asli (Jelas terlihat 100%) -->
+                        <div id="previewTicketQrBox" class="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 text-center space-y-2">
                             <div class="flex justify-center">
-                                <div id="previewTicketQrcode" class="p-2 bg-white border border-slate-200 rounded-lg inline-block shadow-2xs"></div>
+                                <div class="p-2.5 bg-white border border-slate-200 rounded-xl inline-block shadow-2xs">
+                                    <img id="previewTicketQrImgTag" 
+                                         src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data={{ urlencode($sample->qr_token) }}" 
+                                         alt="QR Code Tiket" 
+                                         class="w-32 h-32 object-contain mx-auto"
+                                    >
+                                    <div id="previewTicketQrcode" class="hidden"></div>
+                                </div>
                             </div>
-                            <span id="previewTicketQrTokenText" class="font-mono font-bold text-[11px] text-slate-800 mt-2 block">{{ $sample->qr_token }}</span>
-                            <span class="text-[10px] text-slate-400 block">Gambar Tiket QR Masuk Acara</span>
+                            <div>
+                                <span id="previewTicketQrTokenText" class="font-mono font-black text-xs text-slate-900 tracking-wider block">{{ $sample->qr_token }}</span>
+                                <span class="text-[10px] font-semibold text-slate-500 block mt-0.5">E-Ticket QR Presensi Resmi Acara</span>
+                            </div>
                         </div>
 
                         <!-- Text Body Message Live -->
@@ -504,7 +512,7 @@
 
                 <!-- Mockup Chat Input Footer -->
                 <div class="bg-slate-50 border-t border-slate-200 p-3 flex items-center justify-between text-[11px] text-slate-500">
-                    <span>Peserta melihat gambar media tiket langsung di chat</span>
+                    <span>Peserta melihat gambar media & QR tiket langsung di chat</span>
                     <span class="font-mono text-slate-400">WhatsApp App</span>
                 </div>
 
@@ -514,9 +522,64 @@
     </div>
 
 </div>
+
+<!-- Modal Cropper Gambar Flyer Tiket -->
+<div id="cropTicketFlyerModal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="card-3d w-full max-w-2xl max-h-[92vh] flex flex-col overflow-hidden p-0 border border-slate-200 shadow-2xl bg-white rounded-2xl">
+        <!-- Header -->
+        <div class="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between bg-white">
+            <div>
+                <h3 class="text-xs font-black text-slate-900 uppercase tracking-wider">Potong / Crop Gambar Flyer Tiket</h3>
+                <p class="text-[11px] text-slate-500 mt-0.5">Sesuaikan area potongan gambar flyer sebelum dikirimkan bersama tiket.</p>
+            </div>
+            <button type="button" onclick="closeCropTicketFlyerModal()" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center font-bold text-base transition-colors cursor-pointer">&times;</button>
+        </div>
+
+        <!-- Body Viewport -->
+        <div class="p-4 flex-grow overflow-hidden flex flex-col items-center justify-center bg-slate-950">
+            <div class="w-full max-h-[50vh] flex items-center justify-center overflow-hidden rounded-xl">
+                <img id="cropperTicketFlyerImage" src="" alt="Crop Source" class="max-w-full block">
+            </div>
+        </div>
+
+        <!-- Toolbar Controls -->
+        <div class="bg-white border-t border-slate-100 px-5 py-3.5 flex items-center justify-between flex-wrap gap-2.5 text-xs">
+            <!-- Rasio -->
+            <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="font-bold text-slate-600 text-[11px]">Rasio:</span>
+                <button type="button" id="btnRatioPosterTicket" onclick="setCropRatio(4/5, this)" class="crop-ratio-btn px-2.5 py-1.5 bg-slate-900 text-white font-bold rounded-lg border border-slate-900 text-[11px]">4:5 Poster</button>
+                <button type="button" id="btnRatioSquareTicket" onclick="setCropRatio(1/1, this)" class="crop-ratio-btn px-2.5 py-1.5 bg-white border border-slate-200 text-slate-700 font-bold rounded-lg text-[11px]">1:1</button>
+                <button type="button" id="btnRatioBannerTicket" onclick="setCropRatio(16/9, this)" class="crop-ratio-btn px-2.5 py-1.5 bg-white border border-slate-200 text-slate-700 font-bold rounded-lg text-[11px]">16:9</button>
+                <button type="button" id="btnRatioFreeTicket" onclick="setCropRatio(NaN, this)" class="crop-ratio-btn px-2.5 py-1.5 bg-white border border-slate-200 text-slate-700 font-bold rounded-lg text-[11px]">Bebas</button>
+            </div>
+
+            <!-- Tools Zoom & Rotate -->
+            <div class="flex items-center gap-1">
+                <button type="button" onclick="cropper && cropper.zoom(0.1)" class="w-7 h-7 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold rounded-lg flex items-center justify-center text-xs" title="Zoom In">+</button>
+                <button type="button" onclick="cropper && cropper.zoom(-0.1)" class="w-7 h-7 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold rounded-lg flex items-center justify-center text-xs" title="Zoom Out">-</button>
+                <button type="button" onclick="cropper && cropper.rotate(90)" class="px-2 h-7 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold rounded-lg flex items-center justify-center text-[10px]" title="Putar 90&deg;">&#8635; 90&deg;</button>
+                <button type="button" onclick="cropper && cropper.reset()" class="px-2 h-7 bg-white hover:bg-slate-50 border border-slate-200 text-slate-600 font-bold rounded-lg text-[10px]">Reset</button>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex items-center gap-2">
+                <button type="button" onclick="closeCropTicketFlyerModal()" class="px-3 py-1.5 bg-white border border-slate-200 text-slate-700 font-bold text-xs rounded-xl hover:bg-slate-50">
+                    Batal
+                </button>
+                <button type="button" onclick="applyCroppedTicketFlyer()" id="btnApplyTicketCrop" class="btn-3d-blue px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl border border-blue-600 flex items-center gap-1.5 cursor-pointer">
+                    <span>Potong & Terapkan Flyer</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @push('scripts')
+<!-- Cropper.js CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+
 <script>
     const rawDefaultTicketTemplate = @json($template);
     let currentTicketFlyerUrl = @json($eventFlyerUrl);
@@ -529,10 +592,11 @@
     const textArea = document.getElementById('ticketTextArea');
     const previewBody = document.getElementById('previewTicketMessageBody');
     const previewTokenText = document.getElementById('previewTicketQrTokenText');
+    const previewQrImgTag = document.getElementById('previewTicketQrImgTag');
     const charCountEl = document.getElementById('ticketCharCount');
 
     let currentQrCodeInstance = null;
-    let selectedMediaType = 'qr';
+    let cropper = null;
 
     function buildTicketTemplate(data) {
         let text = rawDefaultTicketTemplate;
@@ -557,126 +621,197 @@
         };
     }
 
+    // Render QR Code (Direct image + fallback canvas)
     function renderQr(token) {
+        const cleanToken = token || 'CL26-EXMPL';
+        previewTokenText.textContent = cleanToken;
+        
+        // Selalu update tag <img> agar QR 100% muncul seketika tanpa blank
+        if (previewQrImgTag) {
+            previewQrImgTag.src = `https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(cleanToken)}`;
+        }
+
         const qrEl = document.getElementById("previewTicketQrcode");
-        if (!qrEl) return;
-        qrEl.innerHTML = '';
-        currentQrCodeInstance = new QRCode(qrEl, {
-            text: token || 'CL26-EXMPL',
-            width: 130,
-            height: 130,
-            colorDark : "#0f172a",
-            colorLight : "#ffffff",
-            correctLevel : QRCode.CorrectLevel.M
-        });
-        previewTokenText.textContent = token || '-';
-    }
-
-    // Media Switch Handler (QR vs Flyer vs None)
-    function onTicketMediaChanged(radio) {
-        selectedMediaType = radio.value;
-        const options = document.querySelectorAll('.ticket-media-option');
-        options.forEach(opt => {
-            opt.classList.remove('border-2', 'border-blue-600', 'bg-blue-50/50');
-            opt.classList.add('border', 'border-slate-200', 'bg-white');
-        });
-        radio.closest('.ticket-media-option').classList.add('border-2', 'border-blue-600', 'bg-blue-50/50');
-        radio.closest('.ticket-media-option').classList.remove('border-slate-200', 'bg-white');
-
-        const qrBox = document.getElementById('previewTicketQrBox');
-        const flyerBubble = document.getElementById('previewTicketFlyerBubble');
-        const badge = document.getElementById('ticketMediaBadge');
-
-        if (selectedMediaType === 'qr') {
-            qrBox.classList.remove('hidden');
-            flyerBubble.classList.add('hidden');
-            badge.className = "px-2.5 py-1 text-[10px] font-bold rounded-full border uppercase font-mono bg-blue-50 text-blue-800 border-blue-200";
-            badge.textContent = "Mode: QR Code";
-        } else if (selectedMediaType === 'flyer') {
-            qrBox.classList.add('hidden');
-            flyerBubble.classList.remove('hidden');
-            badge.className = "px-2.5 py-1 text-[10px] font-bold rounded-full border uppercase font-mono bg-violet-50 text-violet-800 border-violet-200";
-            badge.textContent = "Mode: Flyer Acara";
-        } else {
-            qrBox.classList.add('hidden');
-            flyerBubble.classList.add('hidden');
-            badge.className = "px-2.5 py-1 text-[10px] font-bold rounded-full border uppercase font-mono bg-slate-100 text-slate-600 border-slate-200";
-            badge.textContent = "Mode: Teks Saja";
+        if (qrEl && typeof QRCode !== 'undefined') {
+            qrEl.innerHTML = '';
+            try {
+                currentQrCodeInstance = new QRCode(qrEl, {
+                    text: cleanToken,
+                    width: 130,
+                    height: 130,
+                    colorDark : "#0f172a",
+                    colorLight : "#ffffff",
+                    correctLevel : QRCode.CorrectLevel.M
+                });
+            } catch (e) {
+                console.warn("Canvas QR fallback", e);
+            }
         }
     }
 
-    function uploadTicketFlyerAjax(input) {
+    // Toggle Flyer pada Halaman Tiket
+    function onToggleTicketFlyer() {
+        const checked = document.getElementById('attachTicketFlyerToggle').checked;
+        const bubble = document.getElementById('previewTicketFlyerBubble');
+        if (bubble) {
+            if (checked && currentTicketFlyerUrl) {
+                bubble.classList.remove('hidden');
+            } else {
+                bubble.classList.add('hidden');
+            }
+        }
+    }
+
+    // Cropper Functions Tiket
+    function handleTicketFlyerFileSelect(input) {
         if (!input.files || !input.files[0]) return;
         const file = input.files[0];
-        const formData = new FormData();
-        formData.append('flyer', file);
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            openCropTicketFlyerModal(e.target.result);
+        };
+        reader.readAsDataURL(file);
+    }
 
-        const btn = document.getElementById('btnUploadTicketFlyer');
-        const origHtml = btn.innerHTML;
+    function cropCurrentTicketFlyer() {
+        if (!currentTicketFlyerUrl) return;
+        openCropTicketFlyerModal(currentTicketFlyerUrl);
+    }
+
+    function openCropTicketFlyerModal(imageSrc) {
+        const modal = document.getElementById('cropTicketFlyerModal');
+        const cropImg = document.getElementById('cropperTicketFlyerImage');
+        cropImg.src = imageSrc;
+        modal.classList.remove('hidden');
+
+        if (cropper) {
+            cropper.destroy();
+        }
+
+        setTimeout(() => {
+            cropper = new Cropper(cropImg, {
+                aspectRatio: 4 / 5,
+                viewMode: 1,
+                dragMode: 'move',
+                autoCropArea: 0.95,
+                restore: false,
+                guides: true,
+                center: true,
+                highlight: false,
+                cropBoxMovable: true,
+                cropBoxResizable: true,
+                toggleDragModeOnDblclick: false,
+            });
+        }, 150);
+    }
+
+    function closeCropTicketFlyerModal() {
+        const modal = document.getElementById('cropTicketFlyerModal');
+        modal.classList.add('hidden');
+        if (cropper) {
+            cropper.destroy();
+            cropper = null;
+        }
+        document.getElementById('ticketFlyerFileInput').value = '';
+    }
+
+    function setCropRatio(ratio, btn) {
+        if (!cropper) return;
+        cropper.setAspectRatio(ratio);
+
+        const buttons = document.querySelectorAll('.crop-ratio-btn');
+        buttons.forEach(b => {
+            b.className = "crop-ratio-btn px-2.5 py-1.5 bg-white border border-slate-200 text-slate-700 font-bold rounded-lg text-[11px]";
+        });
+        if (btn) {
+            btn.className = "crop-ratio-btn px-2.5 py-1.5 bg-slate-900 text-white font-bold rounded-lg border border-slate-900 text-[11px]";
+        }
+    }
+
+    function applyCroppedTicketFlyer() {
+        if (!cropper) return;
+        const btn = document.getElementById('btnApplyTicketCrop');
         btn.disabled = true;
-        btn.innerHTML = `<svg class="animate-spin w-3 h-3 text-slate-700" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg> <span>Mengunggah...</span>`;
+        btn.innerHTML = `<svg class="animate-spin w-3 h-3 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg> <span>Menyimpan...</span>`;
 
-        fetch("{{ route('admin.wa.upload-flyer') }}", {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Accept': 'application/json'
-            },
-            body: formData
-        })
-        .then(res => res.json())
-        .then(data => {
-            btn.disabled = false;
-            btn.innerHTML = origHtml;
-            if (data.success) {
-                currentTicketFlyerUrl = data.url;
-                document.getElementById('ticketFlyerThumb').src = data.url;
-                document.getElementById('ticketFlyerNameText').textContent = data.filename;
-                document.getElementById('previewTicketFlyerImg').src = data.url;
-                
-                const viewBtn = document.getElementById('btnViewTicketFlyer');
-                if (viewBtn) {
-                    viewBtn.href = data.url;
-                    viewBtn.classList.remove('hidden');
+        const canvas = cropper.getCroppedCanvas({
+            width: 1080,
+            imageSmoothingEnabled: true,
+            imageSmoothingQuality: 'high',
+        });
+
+        canvas.toBlob(function(blob) {
+            const formData = new FormData();
+            formData.append('flyer', blob, 'cropped_ticket_flyer.jpg');
+
+            fetch("{{ route('admin.wa.upload-flyer') }}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                },
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                btn.disabled = false;
+                btn.innerHTML = `<span>Potong & Terapkan Flyer</span>`;
+                closeCropTicketFlyerModal();
+
+                if (data.success) {
+                    currentTicketFlyerUrl = data.url;
+
+                    document.getElementById('cardTicketFlyerThumb').src = data.url;
+                    document.getElementById('cardTicketFlyerThumb').classList.remove('opacity-40');
+                    document.getElementById('cardTicketFlyerName').textContent = data.filename;
+                    document.getElementById('previewTicketFlyerImg').src = data.url;
+                    document.getElementById('attachTicketFlyerToggle').checked = true;
+                    document.getElementById('previewTicketFlyerBubble').classList.remove('hidden');
+
+                    const badge = document.getElementById('ticketFlyerStatusBadge');
+                    badge.className = "px-2.5 py-1 text-[10px] font-bold rounded-full border uppercase font-mono bg-violet-50 text-violet-800 border-violet-200";
+                    badge.textContent = "Flyer Tersedia";
+
+                    const cropBtn = document.getElementById('btnCropTicketFlyer');
+                    if (cropBtn) cropBtn.classList.remove('hidden');
+
+                    const downloadBtn = document.getElementById('btnDownloadTicketFlyer');
+                    if (downloadBtn) {
+                        downloadBtn.href = data.url;
+                        downloadBtn.classList.remove('hidden');
+                    }
+
+                    updateTicketMessage();
+
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Flyer tiket berhasil dipotong dan diterapkan!',
+                        showConfirmButton: false,
+                        timer: 2500,
+                        timerProgressBar: true
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal Menyimpan',
+                        text: data.message || 'Gagal mengunggah flyer.',
+                        confirmButtonColor: '#0f172a'
+                    });
                 }
-
-                // Auto switch to flyer media mode
-                const flyerRadio = document.querySelector('input[name="ticket_media_choice"][value="flyer"]');
-                if (flyerRadio) {
-                    flyerRadio.checked = true;
-                    onTicketMediaChanged(flyerRadio);
-                }
-
-                updateTicketMessage();
-
-                Swal.fire({
-                    toast: true,
-                    position: 'top-end',
-                    icon: 'success',
-                    title: data.message || 'Flyer tiket berhasil diunggah!',
-                    showConfirmButton: false,
-                    timer: 2500,
-                    timerProgressBar: true
-                });
-            } else {
+            })
+            .catch(() => {
+                btn.disabled = false;
+                btn.innerHTML = `<span>Potong & Terapkan Flyer</span>`;
                 Swal.fire({
                     icon: 'error',
-                    title: 'Gagal Mengunggah',
-                    text: data.message || 'File tidak valid.',
+                    title: 'Error Koneksi',
+                    text: 'Gagal menghubungi server.',
                     confirmButtonColor: '#0f172a'
                 });
-            }
-        })
-        .catch(() => {
-            btn.disabled = false;
-            btn.innerHTML = origHtml;
-            Swal.fire({
-                icon: 'error',
-                title: 'Error Koneksi',
-                text: 'Gagal mengunggah flyer ke server.',
-                confirmButtonColor: '#0f172a'
             });
-        });
+        }, 'image/jpeg', 0.92);
     }
 
     function initPage() {
@@ -685,6 +820,7 @@
         textArea.value = initialText;
         updatePreview(initialText);
         renderQr(data.kode_tiket);
+        onToggleTicketFlyer();
     }
 
     function updateTicketMessage() {
@@ -772,6 +908,7 @@
         const phone = phoneInput.value.trim();
         const name = nameInput.value.trim();
         const message = textArea.value.trim();
+        const attachFlyer = document.getElementById('attachTicketFlyerToggle').checked;
 
         if (!phone) {
             Swal.fire({
@@ -784,13 +921,9 @@
             return;
         }
 
-        let mediaDesc = 'QR Code Tiket Presensi';
-        if (selectedMediaType === 'flyer') mediaDesc = 'Flyer Acara Resmi';
-        if (selectedMediaType === 'none') mediaDesc = 'Teks Saja (Tanpa Gambar)';
-
         Swal.fire({
             title: 'Kirim Tiket Twilio?',
-            text: `Kirim tiket presensi ke nomor "${phone}" dengan lampiran: ${mediaDesc}?`,
+            text: `Kirim tiket presensi ke nomor "${phone}"?` + (attachFlyer ? ' (Menyertakan flyer acara & QR presensi)' : ''),
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#1d4ed8',
@@ -818,8 +951,8 @@
                     body: JSON.stringify({
                         phone: phone,
                         custom_message: message,
-                        media_type: selectedMediaType,
-                        media_url: selectedMediaType === 'flyer' ? currentTicketFlyerUrl : null
+                        media_type: attachFlyer ? 'flyer' : 'qr',
+                        media_url: attachFlyer ? currentTicketFlyerUrl : null
                     })
                 })
                 .then(res => res.json())
@@ -945,16 +1078,13 @@
     function sendBulkTicketTwilio() {
         const selected = document.querySelectorAll('.ticket-checkbox:checked');
         const ids = Array.from(selected).map(cb => cb.value);
+        const attachFlyer = document.getElementById('attachTicketFlyerToggle').checked;
 
         if (ids.length === 0) return;
 
-        let mediaDesc = 'QR Code Tiket Masuk';
-        if (selectedMediaType === 'flyer') mediaDesc = 'Flyer Acara Resmi';
-        if (selectedMediaType === 'none') mediaDesc = 'Teks Saja';
-
         Swal.fire({
             title: `Blast Tiket ke ${ids.length} Peserta?`,
-            text: `Sistem akan mengirimkan tiket via WhatsApp Twilio ke seluruh ${ids.length} peserta terpilih dengan lampiran ${mediaDesc}. Lanjutkan?`,
+            text: `Sistem akan mengirimkan tiket via WhatsApp Twilio ke seluruh ${ids.length} peserta terpilih` + (attachFlyer ? ' dengan lampiran flyer acara & QR' : '') + '. Lanjutkan?',
             icon: 'question',
             showCancelButton: true,
             confirmButtonColor: '#1d4ed8',
@@ -982,8 +1112,8 @@
                     body: JSON.stringify({
                         ids: ids,
                         custom_message: textArea.value.trim(),
-                        media_type: selectedMediaType,
-                        media_url: selectedMediaType === 'flyer' ? currentTicketFlyerUrl : null
+                        media_type: attachFlyer ? 'flyer' : 'qr',
+                        media_url: attachFlyer ? currentTicketFlyerUrl : null
                     })
                 })
                 .then(res => res.json())

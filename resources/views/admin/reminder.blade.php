@@ -192,7 +192,7 @@
                             </p>
                             
                             <div class="flex flex-wrap items-center gap-2 pt-1">
-                                <input type="file" id="reminderFlyerFileInput" accept="image/png,image/jpeg,image/jpg,image/webp" class="hidden" onchange="uploadReminderFlyerAjax(this)">
+                                <input type="file" id="reminderFlyerFileInput" accept="image/png,image/jpeg,image/jpg,image/webp" class="hidden" onchange="handleReminderFlyerFileSelect(this)">
                                 
                                 <button 
                                     type="button" 
@@ -204,6 +204,18 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                                     </svg>
                                     <span>Unggah / Ganti Flyer Baru</span>
+                                </button>
+
+                                <button 
+                                    type="button" 
+                                    onclick="cropCurrentReminderFlyer()" 
+                                    id="btnCropReminderFlyer"
+                                    class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] rounded-lg border border-slate-200 transition-all flex items-center gap-1.5 cursor-pointer {{ empty($eventFlyerUrl) ? 'hidden' : '' }}"
+                                >
+                                    <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z" />
+                                    </svg>
+                                    <span>Potong / Crop Flyer</span>
                                 </button>
 
                                 <a 
@@ -435,9 +447,6 @@
                         <!-- Flyer Image Attachment in WA Chat Bubble -->
                         <div id="previewReminderFlyerBubble" class="{{ !empty($eventFlyerUrl) ? '' : 'hidden' }} -mx-1.5 -mt-1.5 mb-2.5 rounded-xl overflow-hidden border border-slate-200/60 bg-slate-100 relative">
                             <img id="previewReminderFlyerImg" src="{{ $eventFlyerUrl ?: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1000&q=80' }}" alt="Flyer Pengingat" class="w-full h-auto max-h-[240px] object-cover">
-                            <div class="absolute bottom-2 right-2 bg-black/60 text-white text-[9px] font-mono px-1.5 py-0.5 rounded-sm">
-                                GAMBAR FLYER
-                            </div>
                         </div>
 
                         <div id="previewReminderBody" class="whitespace-pre-line font-sans">
@@ -634,9 +643,64 @@
     </div>
 
 </div>
+
+<!-- Modal Cropper Gambar Flyer Reminder -->
+<div id="cropReminderFlyerModal" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div class="card-3d w-full max-w-2xl max-h-[92vh] flex flex-col overflow-hidden p-0 border border-slate-200 shadow-2xl bg-white rounded-2xl">
+        <!-- Header -->
+        <div class="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between bg-white">
+            <div>
+                <h3 class="text-xs font-black text-slate-900 uppercase tracking-wider">Potong / Crop Flyer Reminder</h3>
+                <p class="text-[11px] text-slate-500 mt-0.5">Sesuaikan area potongan gambar flyer sebelum dikirimkan bersama pengingat.</p>
+            </div>
+            <button type="button" onclick="closeCropReminderFlyerModal()" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center font-bold text-base transition-colors cursor-pointer">&times;</button>
+        </div>
+
+        <!-- Body Viewport -->
+        <div class="p-4 flex-grow overflow-hidden flex flex-col items-center justify-center bg-slate-950">
+            <div class="w-full max-h-[50vh] flex items-center justify-center overflow-hidden rounded-xl">
+                <img id="cropperReminderFlyerImage" src="" alt="Crop Source" class="max-w-full block">
+            </div>
+        </div>
+
+        <!-- Toolbar Controls -->
+        <div class="bg-white border-t border-slate-100 px-5 py-3.5 flex items-center justify-between flex-wrap gap-2.5 text-xs">
+            <!-- Rasio -->
+            <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="font-bold text-slate-600 text-[11px]">Rasio:</span>
+                <button type="button" id="btnRatioPoster" onclick="setReminderCropRatio(4/5, this)" class="crop-reminder-ratio-btn px-2.5 py-1.5 bg-slate-900 text-white font-bold rounded-lg border border-slate-900 text-[11px]">4:5 Poster</button>
+                <button type="button" id="btnRatioSquare" onclick="setReminderCropRatio(1/1, this)" class="crop-reminder-ratio-btn px-2.5 py-1.5 bg-white border border-slate-200 text-slate-700 font-bold rounded-lg text-[11px]">1:1</button>
+                <button type="button" id="btnRatioBanner" onclick="setReminderCropRatio(16/9, this)" class="crop-reminder-ratio-btn px-2.5 py-1.5 bg-white border border-slate-200 text-slate-700 font-bold rounded-lg text-[11px]">16:9</button>
+                <button type="button" id="btnRatioFree" onclick="setReminderCropRatio(NaN, this)" class="crop-reminder-ratio-btn px-2.5 py-1.5 bg-white border border-slate-200 text-slate-700 font-bold rounded-lg text-[11px]">Bebas</button>
+            </div>
+
+            <!-- Tools Zoom & Rotate -->
+            <div class="flex items-center gap-1">
+                <button type="button" onclick="reminderCropper && reminderCropper.zoom(0.1)" class="w-7 h-7 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold rounded-lg flex items-center justify-center text-xs" title="Zoom In">+</button>
+                <button type="button" onclick="reminderCropper && reminderCropper.zoom(-0.1)" class="w-7 h-7 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold rounded-lg flex items-center justify-center text-xs" title="Zoom Out">-</button>
+                <button type="button" onclick="reminderCropper && reminderCropper.rotate(90)" class="px-2 h-7 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold rounded-lg flex items-center justify-center text-[10px]" title="Putar 90&deg;">&#8635; 90&deg;</button>
+                <button type="button" onclick="reminderCropper && reminderCropper.reset()" class="px-2 h-7 bg-white hover:bg-slate-50 border border-slate-200 text-slate-600 font-bold rounded-lg text-[10px]">Reset</button>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex items-center gap-2">
+                <button type="button" onclick="closeCropReminderFlyerModal()" class="px-3 py-1.5 bg-white border border-slate-200 text-slate-700 font-bold text-xs rounded-xl hover:bg-slate-50">
+                    Batal
+                </button>
+                <button type="button" onclick="applyCroppedReminderFlyer()" id="btnApplyReminderCrop" class="btn-3d-blue px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl border border-blue-600 flex items-center gap-1.5 cursor-pointer">
+                    <span>Potong & Terapkan Flyer</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @push('scripts')
+<!-- Cropper.js CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+
 <script>
     const eventData = @json($eventSettings);
     let rawDefaultTemplate = @json($reminderTemplate);
@@ -751,80 +815,159 @@
         }
     }
 
-    function uploadReminderFlyerAjax(input) {
+    let reminderCropper = null;
+
+    // Cropper Functions
+    function handleReminderFlyerFileSelect(input) {
         if (!input.files || !input.files[0]) return;
         const file = input.files[0];
-        const formData = new FormData();
-        formData.append('flyer', file);
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            openCropReminderFlyerModal(e.target.result);
+        };
+        reader.readAsDataURL(file);
+    }
 
-        const btn = document.getElementById('btnUploadReminderFlyer');
-        const origHtml = btn.innerHTML;
+    function cropCurrentReminderFlyer() {
+        if (!currentReminderFlyerUrl) return;
+        openCropReminderFlyerModal(currentReminderFlyerUrl);
+    }
+
+    function openCropReminderFlyerModal(imageSrc) {
+        const modal = document.getElementById('cropReminderFlyerModal');
+        const cropImg = document.getElementById('cropperReminderFlyerImage');
+        cropImg.src = imageSrc;
+        modal.classList.remove('hidden');
+
+        if (reminderCropper) {
+            reminderCropper.destroy();
+        }
+
+        setTimeout(() => {
+            reminderCropper = new Cropper(cropImg, {
+                aspectRatio: 4 / 5, // Default rasio poster
+                viewMode: 1,
+                dragMode: 'move',
+                autoCropArea: 0.95,
+                restore: false,
+                guides: true,
+                center: true,
+                highlight: false,
+                cropBoxMovable: true,
+                cropBoxResizable: true,
+                toggleDragModeOnDblclick: false,
+            });
+        }, 150);
+    }
+
+    function closeCropReminderFlyerModal() {
+        const modal = document.getElementById('cropReminderFlyerModal');
+        modal.classList.add('hidden');
+        if (reminderCropper) {
+            reminderCropper.destroy();
+            reminderCropper = null;
+        }
+        document.getElementById('reminderFlyerFileInput').value = '';
+    }
+
+    function setReminderCropRatio(ratio, btn) {
+        if (!reminderCropper) return;
+        reminderCropper.setAspectRatio(ratio);
+
+        const buttons = document.querySelectorAll('.crop-reminder-ratio-btn');
+        buttons.forEach(b => {
+            b.className = "crop-reminder-ratio-btn px-2.5 py-1.5 bg-white border border-slate-200 text-slate-700 font-bold rounded-lg text-[11px]";
+        });
+        if (btn) {
+            btn.className = "crop-reminder-ratio-btn px-2.5 py-1.5 bg-slate-900 text-white font-bold rounded-lg border border-slate-900 text-[11px]";
+        }
+    }
+
+    function applyCroppedReminderFlyer() {
+        if (!reminderCropper) return;
+        const btn = document.getElementById('btnApplyReminderCrop');
         btn.disabled = true;
-        btn.innerHTML = `<svg class="animate-spin w-3.5 h-3.5 text-slate-700" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg> <span>Mengunggah...</span>`;
+        btn.innerHTML = `<svg class="animate-spin w-3 h-3 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg> <span>Menyimpan...</span>`;
 
-        fetch("{{ route('admin.wa.upload-flyer') }}", {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Accept': 'application/json'
-            },
-            body: formData
-        })
-        .then(res => res.json())
-        .then(data => {
-            btn.disabled = false;
-            btn.innerHTML = origHtml;
-            if (data.success) {
-                currentReminderFlyerUrl = data.url;
-                eventData.link_flyer = data.url;
+        const canvas = reminderCropper.getCroppedCanvas({
+            width: 1080,
+            imageSmoothingEnabled: true,
+            imageSmoothingQuality: 'high',
+        });
 
-                document.getElementById('cardReminderFlyerThumb').src = data.url;
-                document.getElementById('cardReminderFlyerThumb').classList.remove('opacity-40');
-                document.getElementById('cardReminderFlyerName').textContent = data.filename;
-                document.getElementById('previewReminderFlyerImg').src = data.url;
-                document.getElementById('attachReminderFlyerToggle').checked = true;
-                document.getElementById('previewReminderFlyerBubble').classList.remove('hidden');
+        canvas.toBlob(function(blob) {
+            const formData = new FormData();
+            formData.append('flyer', blob, 'cropped_reminder_flyer.jpg');
 
-                const badge = document.getElementById('reminderFlyerBadge');
-                badge.className = "px-2.5 py-1 text-[10px] font-bold rounded-full border uppercase font-mono bg-violet-50 text-violet-800 border-violet-200";
-                badge.textContent = "Flyer Aktif";
+            fetch("{{ route('admin.wa.upload-flyer') }}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                },
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                btn.disabled = false;
+                btn.innerHTML = `<span>Potong & Terapkan Flyer</span>`;
+                closeCropReminderFlyerModal();
 
-                const viewBtn = document.getElementById('btnViewReminderFlyer');
-                if (viewBtn) {
-                    viewBtn.href = data.url;
-                    viewBtn.classList.remove('hidden');
+                if (data.success) {
+                    currentReminderFlyerUrl = data.url;
+                    eventData.link_flyer = data.url;
+
+                    document.getElementById('cardReminderFlyerThumb').src = data.url;
+                    document.getElementById('cardReminderFlyerThumb').classList.remove('opacity-40');
+                    document.getElementById('cardReminderFlyerName').textContent = data.filename;
+                    document.getElementById('previewReminderFlyerImg').src = data.url;
+                    document.getElementById('attachReminderFlyerToggle').checked = true;
+                    document.getElementById('previewReminderFlyerBubble').classList.remove('hidden');
+
+                    const badge = document.getElementById('reminderFlyerBadge');
+                    badge.className = "px-2.5 py-1 text-[10px] font-bold rounded-full border uppercase font-mono bg-violet-50 text-violet-800 border-violet-200";
+                    badge.textContent = "Flyer Aktif";
+
+                    const cropBtn = document.getElementById('btnCropReminderFlyer');
+                    if (cropBtn) cropBtn.classList.remove('hidden');
+
+                    const viewBtn = document.getElementById('btnViewReminderFlyer');
+                    if (viewBtn) {
+                        viewBtn.href = data.url;
+                        viewBtn.classList.remove('hidden');
+                    }
+
+                    updateReminderText();
+
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Flyer reminder berhasil dipotong dan diterapkan!',
+                        showConfirmButton: false,
+                        timer: 2500,
+                        timerProgressBar: true
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal Mengunggah',
+                        text: data.message || 'File tidak valid.',
+                        confirmButtonColor: '#0f172a'
+                    });
                 }
-
-                updateReminderText();
-
-                Swal.fire({
-                    toast: true,
-                    position: 'top-end',
-                    icon: 'success',
-                    title: data.message || 'Flyer reminder berhasil diunggah!',
-                    showConfirmButton: false,
-                    timer: 2500,
-                    timerProgressBar: true
-                });
-            } else {
+            })
+            .catch(() => {
+                btn.disabled = false;
+                btn.innerHTML = `<span>Potong & Terapkan Flyer</span>`;
                 Swal.fire({
                     icon: 'error',
-                    title: 'Gagal Mengunggah',
-                    text: data.message || 'File tidak valid.',
+                    title: 'Error Koneksi',
+                    text: 'Gagal mengunggah flyer ke server.',
                     confirmButtonColor: '#0f172a'
                 });
-            }
-        })
-        .catch(() => {
-            btn.disabled = false;
-            btn.innerHTML = origHtml;
-            Swal.fire({
-                icon: 'error',
-                title: 'Error Koneksi',
-                text: 'Gagal mengunggah flyer ke server.',
-                confirmButtonColor: '#0f172a'
             });
-        });
+        }, 'image/jpeg', 0.92);
     }
 
     function initPage() {
