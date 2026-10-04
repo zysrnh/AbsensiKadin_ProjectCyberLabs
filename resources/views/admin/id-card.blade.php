@@ -132,12 +132,20 @@
         body.dark-workspace .card-3d .border-slate-200\/60 {
             border-color: #1e293b !important;
         }
-        body.dark-workspace .select-custom,
+        body.dark-workspace .select-custom {
+            background-color: #19243b !important;
+            border-color: #334155 !important;
+            color: #ffffff !important;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8' stroke-width='2.2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E") !important;
+            background-repeat: no-repeat !important;
+            background-position: right 0.75rem center !important;
+            background-size: 1.1rem 1.1rem !important;
+        }
         body.dark-workspace .card-3d input[type="text"] {
             background-color: #19243b !important;
             border-color: #334155 !important;
             color: #ffffff !important;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8' stroke-width='2.2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-image: none !important;
         }
         body.dark-workspace .select-custom option,
         body.dark-workspace .select-custom optgroup {
